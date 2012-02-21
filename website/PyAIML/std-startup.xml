@@ -1,0 +1,23 @@
+<aiml version="1.0">
+
+<!-- This category works with the Standard AIML Set -->
+<category>
+<pattern>LOAD AIML B</pattern>
+<template>
+
+<!-- Load standard AIML set -->
+<learn>PyAIML/standard/std-*.aiml</learn>
+</template>
+</category>
+
+<!-- New test category for development: MPavel -->
+<category>
+<pattern>LOAD TEST</pattern>
+<template>
+
+<!-- Load standard AIML set -->
+<learn>PyAIML/mpavel/mpavel-*.aiml</learn>
+</template>
+</category>
+
+</aiml>
