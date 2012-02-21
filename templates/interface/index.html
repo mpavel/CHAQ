@@ -1,0 +1,48 @@
+{% if user.id %}
+  <p>You are logged in.</p>
+{% else %}
+  <p>You are not logged in. This means your conversation log will not be saved for future reference.</p>
+{% endif %}
+
+<div class="chat">
+  
+  {% if error_message %}
+    <p class="error">{{ error_message }}</p>
+  {% endif %}
+
+  {% if notice_message %}
+    <p class="notice">{{ notice_message }}</p>
+  {% endif %}
+
+  <form method="post" action="/conversation/ask/">
+    {% csrf_token %}
+    <p>
+    <label for="question">Your questions: </label>
+    <input type="text" name="question" id="question" placeholder="Ask your questions" required/>
+    <input type="submit" name="ask-question" value="Ask"/>
+    </p>
+  </form>
+
+  {# {% if conversation.status == 'OK' %} #}
+  <p>Q: {{ conversation.question }}</p>
+  <p>A: {{ conversation.answer }}</p>
+  {# {% endif %} #}
+  
+  <div class="log">
+    {% if conversation_log %}
+      {% for conversation in conversation_log %}
+          <p>
+            <strong>Q:</strong> 
+            {{ conversation.question }}
+            <span>{{ conversation.timestamp }}</span>
+          </p>
+          <p>
+            <<strong>A:</strong> 
+            {{ conversation.answer }}
+          </p>
+      {% endfor %}
+    {% else %}
+      <p>No logs available yet&hellip;</p>
+    {% endif %}
+  </div>
+</div>

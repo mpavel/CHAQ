@@ -1,0 +1,16 @@
+<h1>View Conversation Logs</h1>
+{% if conversation_log %}
+    <ul>
+    {% for conversation in conversation_log %}
+        <li>
+          <a href="/conversation/{{ conversation.id }}/">{{ conversation.question }}</a>
+          <br/>
+          {{ conversation.answer }}
+          <br/>
+          <span>{{ conversation.timestamp }}</span>
+        </li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No logs are available.</p>
+{% endif %}
