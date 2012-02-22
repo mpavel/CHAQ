@@ -107,6 +107,9 @@ TEMPLATE_DIRS = (
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
     '/home/pavel/www/Chaq/templates'
+    # If the 'templates' folder is located under same level as the settings.py, we can use the following:
+    # remember to do "import os.path" at the top of file
+    # os.path.join(os.path.dirname(__file__), 'templates'), 
 )
 
 INSTALLED_APPS = (

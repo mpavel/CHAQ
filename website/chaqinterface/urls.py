@@ -5,7 +5,7 @@ urlpatterns = patterns('chaqinterface.views',
     # url(r'^$', 'website.views.home', name='home'),
     # url(r'^website/', include('website.foo.urls')),
     
-    url(r'^$', 'index'),
-    url(r'^logs/$', 'logs'),
-    url(r'^ask/$', 'ask'),
+    url(r'^$', 'index', name='chaqinterface.index'),
+    url(r'^logs/$', 'logs', name='chaqinterface.logs'),
+    url(r'^ask/$', 'ask', name='chaqinterface.ask'),
 )

@@ -21,22 +21,47 @@ def logs(request):
   )
 
 def ask(request):
+  
+  notice_message = ''
 
-  # get answer from Inference Engine and Knowledge Base or PyAIML interpreter
+  # Check if the question has been asked
+  if 'question' in request.POST:
+    question = request.POST['question']
+    status = 'OK'
+  else:
+    question = ''
+    notice_message = 'You did not ask a question ...'
+    status = 'ERROR'
+
+  # load pyaiml kernel
   k = aiml.Kernel()
-  k.learn("PyAIML/std-startup.xml")
 
-  # k.bootstrap(brainFile = "PyAIML/standard.brn")
+  brainLoaded = False
+  forceReload = False
+  while not brainLoaded:
+    if forceReload:
+      k.bootstrap(learnFiles="PyAIML/std-startup.xml", commands="load aiml b")
+      brainLoaded = True
+      k.saveBrain("PyAIML/standard.brn")
+    else:
+      try:
+        k.bootstrap(brainFile = "PyAIML/standard.brn")
+        brainLoaded = True
+      except:
+        forceReload = True
+  
+  # send the question to pyaiml and fetch the response
+  answer = k.respond(question)
 
-  k.respond('load aiml b')
-  answer = k.respond(request.POST['question'])
   # insert question/answer into user's logs
   # conversation = new Conversation
   # conversation.question = request.POST['question']
   # conversation.answer   = response
+
   conversation = {
-    'question': request.POST['question'],
-    'answer'  : answer,
+    'status'  : status,
+    'question': question,
+    'answer'  : answer
   }
 
   # return to main page and send response back
@@ -44,7 +69,7 @@ def ask(request):
     'interface/index.html', 
     {
       'status'        : 'OK',
-      'notice_message':'Question asked...', 
+      'notice_message': notice_message, 
       'conversation'  : conversation,
     }, 
     context_instance=RequestContext(request)

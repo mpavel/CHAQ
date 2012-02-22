@@ -12,5 +12,5 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
 
     # routing for the chaqinterface
-    url(r'^conversation/', include('chaqinterface.urls')),
+    url(r'^chat/', include('chaqinterface.urls')),
 )
