@@ -8,4 +8,11 @@ urlpatterns = patterns('chaqinterface.views',
     url(r'^$', 'index', name='chaqinterface.index'),
     url(r'^logs/$', 'logs', name='chaqinterface.logs'),
     url(r'^ask/$', 'ask', name='chaqinterface.ask'),
+
+    # static pages
+    url(r'^about/$', 'about', name="chaqinterface.about"),
+
+    # login routes
+    url(r'^register/$',  'register',  name="register"),
+    url(r'^logout/$', 'logout', name="logout"), 
 )

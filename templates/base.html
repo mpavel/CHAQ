@@ -1,43 +1,76 @@
 <!DOCTYPE html>
-<html dir="ltr" lang="en">
+<html lang="en">
 <head>
   <title>Chaq</title>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta charset="utf-8">
   <meta name="description" content="" />
   <meta name="keywords" content="" />
   <meta name="author" content="Pavel Mocan" />
 
-  <link rel="stylesheet" href="../css/default.css?49" media="screen" />
-  <link rel="shortcut icon" href="/images/favicon/favicon.ico" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap.min.css" media="screen" />
+  <link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap-responsive.min.css" media="screen" />
+  <link rel="stylesheet" href="{{ STATIC_URL }}css/style.css" media="screen" />
+
+  <script src="{{ STATIC_URL }}js/script.js"></script>
+
+  <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+  <!--[if lt IE 9]>
+    <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link rel="shortcut icon" href="{{ STATIC_URL }}/img/favicon.ico" />
+  <!--<link rel="shortcut icon" href="images/favicon.ico">
+  <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">-->
 </head>
 <body>
   <ul id="access-links">
     <li><a href="#content">Skip to content</a></li>
     <li><a href="#nav">Skip to navigation</a></li>
   </ul>
-  <div id="wrapper">
+  <div id="wrapper" class="container">
     <div id="header">
-      <hgroup>
-        <h1>Chaq</h1>
-        <h2>Effective Natural Language chat bot for Domain Specific Responses to Human Questions.</h2>
+      <hgroup class="clearfix">
+        <h1 class="span2">Chaq</h1>
+        <h2 class="span6">Effective Natural Language chat bot for <br/>Domain Specific Responses to Human Questions.</h2>
+        <p class="small-account-details span4">
+          {% if request.user.is_authenticated %}
+            Welcome back 
+            {% if user.get_full_name != "" %}
+              {{ user.get_full_name }}.
+            {% else %}
+              {{ user.username }}.
+            {% endif %}
+            <br/><a href="#">View Profile</a> or <a href="/accounts/logout/?next=/">Logout</a>
+          {% else %}
+            You are not logged in. Your conversation log will not be saved.
+            <br/>
+            You can <a href="login/">login</a> or <a href="/chat/register/">register</a>.
+          {% endif %}
+        </p>
       </hgroup>
 
       <nav id="nav">
-        <ol>
-          <li><a href="/">Home</a></li>
-          <li><a href="/chat">Chat</a></li>
-          <li><a href="/about">About</a></li>
-        </ol>
+        <ul class="nav nav-pills">
+          <li {% if request.path == "/" or request.path == "/chat/" or request.path == "/chat/ask/" %} class="active" {% endif %}><a href="/chat/">Chat</a></li>
+          <li {% if request.path == "/chat/about/" %} class="active" {% endif %}><a href="/chat/about/">About</a></li>
+          {% if not request.user.is_authenticated %}
+            <li {% if request.path == "/chat/register/" %} class="active" {% endif %}><a href="/chat/register/">Register</a></li>
+          {% endif %}
+        </ul>
       </nav>
     </div><!-- /header -->
 
     <div id="content">
-      
+      {% block content %}
+      {% endblock content %}
     </div>
 
     <div id="footer">
-      <p>Copyright &copy; 2012 Pavel Mocan. All rights reserved. This is a university project</p>
+      <p>Copyright &copy; 2012 Pavel Mocan. All rights reserved. This is a university project.</p>
     </div><!-- /footer -->
   </div><!-- /wrapper -->
 </body>

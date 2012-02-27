@@ -1,20 +1,9 @@
-<script>
-window.onload = init;
+{% extends "base.html" %}
 
-function init() {
-  var input = document.getElementById('question');
-  input.focus();
-}
-</script>
-
-{% if user.id %}
-  <p>You are logged in.</p>
-{% else %}
-  <p>You are not logged in. This means your conversation log will not be saved for future reference.</p>
-{% endif %}
+{% block content %}
 
 <div class="chat">
-  
+
   {% if error_message %}
     <p class="error">{{ error_message }}</p>
   {% endif %}
@@ -23,12 +12,19 @@ function init() {
     <p class="notice">{{ notice_message }}</p>
   {% endif %}
 
-  <form method="post" action="{% url chaqinterface.ask %}">
+  <form method="post" action="{% url chaqinterface.ask %}" class="well form-inline">
     {% csrf_token %}
     <p>
-    <label for="question">Your question: </label>
-    <input type="text" name="question" id="question" placeholder="Ask your questions" required/>
-    <input type="submit" name="ask-question" value="Ask"/>
+      <label for="topics">Topics:</label>
+      <a href="#" class="label label-info" title="Click to remove topic">PHP</a>
+      <a href="#" class="label label-info" title="Click to remove topic">Security</a>
+      <a href="#" class="label label-info" title="Click to remove topic">Database</a>
+      <button class="btn">+</button>
+    </p>
+    <p>
+      <label for="question">Input: </label>
+      <input type="text" name="question" id="question" placeholder="Ask your questions" required/>
+      <input type="submit" name="ask-question" value="Ask" class="btn"/>
     </p>
   </form>
 
@@ -55,3 +51,5 @@ function init() {
     {% endif %}
   </div>
 </div>
+
+{% endblock content %}

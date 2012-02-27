@@ -1,3 +1,7 @@
+{% extends "base.html" %}
+
+{% block content %}
+
 <h1>View Conversation Logs</h1>
 {% if conversation_log %}
     <ul>
@@ -14,3 +18,5 @@
 {% else %}
     <p>No logs are available.</p>
 {% endif %}
+
+{% endblock content %}
