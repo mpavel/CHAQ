@@ -6,6 +6,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponseRedirect
 import marshal
 import os.path
+import datetime
 
 # check out import code; code.interact(local=dict(globals().items() + locals().items()))
 
@@ -27,14 +28,18 @@ def logout(request):
     print 'should logout now'
 
 def logs(request):
-    conversation_log = Conversation.objects.all().order_by('-timestamp')[:5]
+    if (request.user.is_authenticated()):
+        conversation_log = Conversation.objects.filter(user=request.user).order_by('-timestamp')[:5]
   
-    return render_to_response(
-        'interface/log.html',
-        {
-            'conversation_log': conversation_log,
-        }
-    )
+        return render_to_response(
+            'interface/log.html',
+            {
+                'conversation_log': conversation_log,
+            },
+            context_instance=RequestContext(request)
+        )
+    else:
+        return render_to_response('interface/log.html', context_instance=RequestContext(request))
 
 def ask(request):
 
@@ -42,7 +47,7 @@ def ask(request):
     if request.user.is_authenticated():
         user = User.objects.get(pk=request.user.id)
         session_username = user.username
-        print vars(request.user) #.id
+        # print vars(request.user)
 
     # print "request.session:"
     # for key,val in request.session.items():
@@ -111,9 +116,13 @@ def ask(request):
     print "\n\n"
 
     # insert question/answer into user's logs
-    # conversation = new Conversation
-    # conversation.question = request.POST['question']
-    # conversation.answer   = response
+    if request.user.is_authenticated():
+        db_conversation = Conversation(
+            user = user,
+            question = question,
+            answer = answer
+        )
+        db_conversation.save()
 
     conversation = {
         'status'  : status,

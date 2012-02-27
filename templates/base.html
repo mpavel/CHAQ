@@ -40,11 +40,11 @@
           {% if request.user.is_authenticated %}
             Welcome back 
             {% if user.get_full_name != "" %}
-              {{ user.get_full_name }}.
+              {{ user.get_full_name }}.<br/>
             {% else %}
-              {{ user.username }}.
+              {{ user.username }}.<br/>
             {% endif %}
-            <br/><a href="#">View Profile</a> or <a href="/accounts/logout/?next=/">Logout</a>
+            <a href="#">View Profile</a> or <a href="/accounts/logout/?next=/">Logout</a>
           {% else %}
             You are not logged in. Your conversation log will not be saved.
             <br/>
@@ -56,8 +56,12 @@
       <nav id="nav">
         <ul class="nav nav-pills">
           <li {% if request.path == "/" or request.path == "/chat/" or request.path == "/chat/ask/" %} class="active" {% endif %}><a href="/chat/">Chat</a></li>
+          {% if request.user.is_authenticated %}
+            <li {% if request.path == "/chat/logs/" %} class="active" {% endif %}><a href="/chat/logs/">Logs</a></li>
+          {% endif %}
           <li {% if request.path == "/chat/about/" %} class="active" {% endif %}><a href="/chat/about/">About</a></li>
           {% if not request.user.is_authenticated %}
+            <li {% if request.path == "/login/" %} class="active" {% endif %}><a href="/login/">Login</a></li>
             <li {% if request.path == "/chat/register/" %} class="active" {% endif %}><a href="/chat/register/">Register</a></li>
           {% endif %}
         </ul>
