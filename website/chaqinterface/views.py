@@ -4,9 +4,9 @@ from chaqinterface.models import Conversation
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponseRedirect
+from django.core.paginator import Paginator
 import marshal
 import os.path
-import datetime
 
 # check out import code; code.interact(local=dict(globals().items() + locals().items()))
 
@@ -29,12 +29,25 @@ def logout(request):
 
 def logs(request):
     if (request.user.is_authenticated()):
-        conversation_log = Conversation.objects.filter(user=request.user).order_by('-timestamp')[:5]
-  
+        # conversation_log = Conversation.objects.filter(user=request.user).order_by('-timestamp')[:5]
+        conversation_log = Conversation.objects.filter(user=request.user).order_by('-timestamp')
+        p = Paginator(conversation_log, 5)
+
+        currentPage = 1
+        if 'page' in request.GET:
+            currentPage = int(request.GET['page'])
+        if currentPage not in p.page_range:
+            currentPage = 1
+
+        conversation_log = p.page(currentPage).object_list
+
         return render_to_response(
             'interface/log.html',
             {
                 'conversation_log': conversation_log,
+                'pages': p.page_range,
+                'currentPage': currentPage,
+                'page': p.page(currentPage)
             },
             context_instance=RequestContext(request)
         )

@@ -40,11 +40,11 @@
           {% if request.user.is_authenticated %}
             Welcome back 
             {% if user.get_full_name != "" %}
-              {{ user.get_full_name }}.<br/>
+              {{ user.get_full_name }}. 
             {% else %}
-              {{ user.username }}.<br/>
+              {{ user.username }}. 
             {% endif %}
-            <a href="#">View Profile</a> or <a href="/accounts/logout/?next=/">Logout</a>
+             <a href="/accounts/logout/?next=/">Logout</a>
           {% else %}
             You are not logged in. Your conversation log will not be saved.
             <br/>

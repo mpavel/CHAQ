@@ -72,3 +72,12 @@ form .helptext {
 #content h1 {
     margin-bottom: 15px;
 }
+
+ul.conversation {
+    
+}
+ul.conversation li {
+    margin: 5px 0;
+    padding-bottom: 5px;
+    border-bottom: 1px dotted #dedede;
+}
