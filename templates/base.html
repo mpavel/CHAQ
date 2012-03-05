@@ -40,9 +40,9 @@
           {% if request.user.is_authenticated %}
             Welcome back 
             {% if user.get_full_name != "" %}
-              {{ user.get_full_name }}. 
+              <strong>{{ user.get_full_name }}</strong>. 
             {% else %}
-              {{ user.username }}. 
+              <strong>{{ user.username }}</strong>. 
             {% endif %}
              <a href="/accounts/logout/?next=/">Logout</a>
           {% else %}

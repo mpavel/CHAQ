@@ -28,27 +28,21 @@
     </p>
   </form>
 
-  {% if conversation.status == 'OK' %}
-  <p>Q: {{ conversation.question }}</p>
-  <p>A: {{ conversation.answer }}</p>
-  {% endif %}
-
-  <div class="log">
-    {% if conversation_log %}
+  {% if conversation_log %}
+    <ul class="conversation">
       {% for conversation in conversation_log %}
-          <p>
-            <strong>Q:</strong> 
-            {{ conversation.question }}
-            <span>{{ conversation.timestamp }}</span>
-          </p>
-          <p>
-            <<strong>A:</strong> 
-            {{ conversation.answer }}
-          </p>
+        <li>
+          <span>{{ conversation.timestamp }}</span>
+          <br/>
+          {{ conversation.question }}
+          <br/>
+          {{ conversation.answer }}
+        </li>
       {% endfor %}
-    {% else %}
-      <p>No logs available yet&hellip;</p>
-    {% endif %}
+    </ul>
+  {% else %}
+    <p>No logs available yet&hellip;</p>
+  {% endif %}
   </div>
 </div>
 

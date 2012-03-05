@@ -14,8 +14,10 @@ from PyAIML import aiml
 
 # Create your views here.
 def index(request):
-    return HttpResponseRedirect("/")
-    return render_to_response('interface/index.html', {}, context_instance=RequestContext(request))
+    # get logs
+    conversation_log = Conversation.objects.filter(user=request.user).order_by('-timestamp')[:5]
+
+    return render_to_response('interface/index.html', {'conversation_log': conversation_log}, context_instance=RequestContext(request))
 
 def about(request):
     return render_to_response(
@@ -31,7 +33,7 @@ def logs(request):
     if (request.user.is_authenticated()):
         # conversation_log = Conversation.objects.filter(user=request.user).order_by('-timestamp')[:5]
         conversation_log = Conversation.objects.filter(user=request.user).order_by('-timestamp')
-        p = Paginator(conversation_log, 5)
+        p = Paginator(conversation_log, 10)
 
         currentPage = 1
         if 'page' in request.GET:
@@ -120,9 +122,6 @@ def ask(request):
     sessionFile.close()
 
     # close kernel
-
-    print "Session file written to disk\n"
-
     k.resetBrain()
 
     debug_session_file(session)
@@ -143,6 +142,8 @@ def ask(request):
         'answer'  : answer
     }
 
+    # get logs
+    conversation_log = Conversation.objects.filter(user=request.user).order_by('-timestamp')[:5]
     # return to main page and send response back
     return render_to_response(
         'interface/index.html', 
@@ -150,6 +151,7 @@ def ask(request):
             'status'        : 'OK',
             'notice_message': notice_message, 
             'conversation'  : conversation,
+            'conversation_log': conversation_log
         }, 
         context_instance=RequestContext(request)
     )
