@@ -1,0 +1,23 @@
+<aiml version="1.0">
+
+<!-- Category for reversed AIML -->
+<category>
+<pattern>LOAD RA</pattern>
+<template>
+
+<!-- Load standard AIML set -->
+<learn>reversed/ra-*.aiml</learn>
+</template>
+</category>
+
+<!-- Category for testing the reversed AIML -->
+<category>
+<pattern>LOAD TESTREVERSED</pattern>
+<template>
+
+<!-- Load standard AIML set -->
+<learn>test-reversed/test-ra-*.aiml</learn>
+</template>
+</category>
+
+</aiml>

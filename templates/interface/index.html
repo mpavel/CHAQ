@@ -41,9 +41,14 @@
       {% endfor %}
     </ul>
   {% else %}
-    <p>No logs available yet&hellip;</p>
+    {% if conversation %}
+      <p>
+      Question: {{ conversation.question }}<br/>
+      Answer: {{ conversation.answer }}
+      </p>
+    {% endif %}
+    <p>No logs available &hellip;</p>
   {% endif %}
-  </div>
 </div>
 
 {% endblock content %}

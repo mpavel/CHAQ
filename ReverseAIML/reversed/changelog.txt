@@ -1,0 +1,101 @@
+CHANGELOG
+****************
+
+Reversedaiml-0.5
+********************
+
+- Main grammar elements, the configuration and questions were split into 7 files:ra-adj.aiml ra-adverb.aiml ra-noun.aiml ra-prep.aiml ra-verb.aiml ra-main.aiml ra-questions.aiml
+
+- adjctives are identified; the most subjective ones are omitted in questions.
+
+- The value of the answer is written in the generated code inside a new variable "ans". 
+
+For example with the input: Charles loves lena.
+
+ <category><pattern> DOES CHARLES LOVE LENA</pattern><template><set name="ans">Yes</set>. Charles loves lena.</template></category>
+ <category><pattern> WHO DOES CHARLES LOVE</pattern><template><set name="ans">Lena</set>. Charles loves lena.</template></category>
+ <category><pattern> WHO LOVES LENA</pattern><template><set name="ans">Charles</set>. Charles loves lena.</template></category>
+  
+
+## added a HELP category with new options: 
+
+	+ The values of it, he, she and they, when determined, can be written in the generated code. 
+	
+	<category><pattern> DOES CHARLES LOVE LENA</pattern><template><set name="ans">Yes</set>. Charles loves lena.<think><setname="he">charles</set><set name="she">lena</set></think></template></category>
+	<category><pattern> WHO DOES CHARLES LOVE</pattern><template><set name="ans">Lena</set>. Charles loves lena.<think><set name="he">charles</set><set name="she">lena</set></think></template></category>
+	<category><pattern> WHO LOVES LENA</pattern><template><set name="ans">Charles</set>. Charles loves lena.<think><set name="he">charles</set><set name="she">lena</set></think></template></category>
+	
+	+ the original sentence can be saved in a distinct category, these categories can be counted up to SENTENCE999999.
+	
+	<category><pattern>SENTENCE1 </srai></pattern><template>Charles loves lena. </template></category>
+	<category><pattern> DOES CHARLES LOVE LENA</pattern><template><set name="ans">Yes</set>. <srai>SENTENCE1 </srai><think><set name="he">charles</set><set name="she">lena</set></think></template></category>
+	<category><pattern> WHO DOES CHARLES LOVE</pattern><template><set name="ans">Lena</set>. <srai>SENTENCE1 </srai><think><setname="he">charles</set><set name="she">lena</set></think></template></category>
+	<category><pattern> WHO LOVES LENA</pattern><template><set name="ans">Charles</set>. <srai>SENTENCE1 </srai><think><set name="he">charles</set><set name="she">lena</set></think></template></category>
+	
+	<category><pattern>SENTENCE2 </srai></pattern><template>Lena is nice. </template></category>
+	<category><pattern> HOW IS LENA </pattern><template><set name="ans">NICE</set>. <srai>SENTENCE2 </srai><think><set name="she">lena</set></think></template></category>
+	
+	+ Reversedaiml can create code that will match any input containing the subject or the object:
+	
+	<category><pattern> CHARLES</pattern><template>Charles loves lena. <think><set name="he">charles</set><set name="she">lena</set></think> </template></category>
+	<category><pattern> CHARLES *</pattern><template><srai>charles</srai></template></category>
+	<category><pattern> _ CHARLES *</pattern><template><srai>charles</srai></template></category>
+	<category><pattern> _ CHARLES</pattern><template><srai>charles</srai></template></category>
+	<category><pattern> LENA</pattern><template>Charles loves lena. <think><set name="he">charles</set><set name="she">lena</set></think> </template></category>
+	<category><pattern> LENA *</pattern><template><srai>lena</srai></template></category>
+	<category><pattern> _ LENA *</pattern><template><srai>lena</srai></template></category>
+	<category><pattern> _ LENA</pattern><template><srai>lena</srai></template></category>
+	
+	+ You can set a treebranch prefix. It can be useful for using topic context without the topic tag, and of course to use reversedaiml with a completely prefixed aiml set... (Hopefully in the next charlix)
+	
+	<category><pattern>SENTENCE3 </srai></pattern><template>Charles loves lena. </template></category>
+	<category><pattern>LOVESTORY DOES CHARLES LOVE LENA</pattern><template><set name="ans">Yes</set>. <srai>SENTENCE3 </srai><think><set name="he">charles</set><set name="she">lena</set></think></template></category>
+	<category><pattern>LOVESTORY WHO DOES CHARLES LOVE</pattern><template><set name="ans">Lena</set>. <srai>SENTENCE3 </srai><think><set name="he">charles</set><set name="she">lena</set></think></template></category>
+	<category><pattern>LOVESTORY WHO LOVES LENA</pattern><template><set name="ans">Charles</set>. <srai>SENTENCE3 </srai><think><set name="he">charles</set><set name="she">lena</set></think></template></category>
+
+## For more information on options, submit "HELP"
+
+ 
+-  Some indirect objects and verbs with particles or (and) prepositions are processed better:
+  
+ <category><pattern>SENTENCE5 </srai></pattern><template>Charles compliments lena on her eyes. </template></category>
+ <category><pattern> DOES CHARLES COMPLIMENT LENA</pattern><template><set name="ans">Yes</set>. <srai>SENTENCE5 </srai><think><set name="he">charles</set><set name="she">lena</set></think></template></category>
+ <category><pattern> WHO DOES CHARLES COMPLIMENT</pattern><template><set name="ans">Lena ON her eyes</set>. <srai>SENTENCE5 </srai><think><set name="he">charles</set><set name="she">lena</set></think></template></category>
+ <category><pattern> WHAT DOES CHARLES COMPLIMENT</pattern><template><set name="ans">Lena ON her eyes</set>. <srai>SENTENCE5</srai><think><set name="he">charles</set><set name="she">lena</set></think></template></category>
+ <category><pattern> WHO DOES CHARLES COMPLIMENT ON HER EYES</pattern><template><set name="ans">Lena</set>. <srai>SENTENCE5 </srai><think><set name="he">charles</set><set name="she">lena</set></think></template></category>
+ <category><pattern> WHAT DOES CHARLES COMPLIMENT LENA ON</pattern><template><set name="ans">ON her eyes</set>. <srai>SENTENCE5 </srai><think><set name="he">charles</set><set name="she">lena</set></think></template></category>
+  <category><pattern> WHO COMPLIMENTS LENA</pattern><template><set name="ans">Charles</set>. <srai>SENTENCE5 </srai><think><set name="he">charles</set><set name="she">lena</set></think></template></category>
+ <category><pattern> WHO COMPLIMENTS ON HER EYES</pattern><template><set name="ans">Charles</set>. <srai>SENTENCE5 </srai><think><set name="he">charles</set><set name="she">lena</set></think></template></category>
+ <category><pattern> WHO COMPLIMENTS LENA ON HER EYES</pattern><template><set name="ans">Charles</set>. <srai>SENTENCE5 </srai><think><set name="he">charles</set><set name="she">lena</set></think></template></category>
+
+- indirect speech is split better:
+  
+ <category><pattern>SENTENCE6 </srai></pattern><template>Charles said that he misses lena. </template></category>
+ <category><pattern> DID CHARLES SAY THAT HE MISSES LENA</pattern><template><set name="ans">Yes</set>. <srai>SENTENCE6 </srai><think><set name="he">charles</set><set name="it">that he misses lena</set></think></template></category>
+ <category><pattern> WHAT DID CHARLES SAY</pattern><template><set name="ans">That he misses lena</set>. <srai>SENTENCE6 </srai><think><set name="he">charles</set><set name="it">that he misses lena</set></think></template></category>
+ <category><pattern> WHO SAID THAT HE MISSES LENA</pattern><template><set name="ans">Charles</set>. <srai>SENTENCE6 </srai><think><set name="he">charles</set><set name="it">that he misses lena</set></think></template></category>
+ <category><pattern>SENTENCE7 </srai></pattern><template>Charles said that he misses lena. </template></category>
+ <category><pattern> DOES CHARLES MISS LENA</pattern><template><set name="ans">Yes</set>. <srai>SENTENCE7 </srai><think><set name="she">lena</set></think></template></category>
+ <category><pattern> WHO DOES CHARLES MISS</pattern><template><set name="ans">Lena</set>. <srai>SENTENCE7 </srai><think><setname="she">lena</set></think></template></category>
+ <category><pattern> WHO MISSES LENA</pattern><template><set name="ans">Charles</set>. <srai>SENTENCE7 </srai><think><set name="she">lena</set></think></template></category>
+
+- removed all condition tags because interpreters don't handle * and empty variables the same way. So reversedaiml should work with any interpreters allowing unlimited recursions 
+
+- more comments and improved code visibility. (hoping that the code can be reused)
+
+- One more time: lots of testing and other improvements.
+
+Reversedaiml-0.4
+********************
+No more topic setting to get a separate treebranch; instead, a simple initialization through the pick-up category.
+Better analysis of the objects and subjects of verbs: a list of people hyponyms enables it to guess if objects and subjects are persons or things  (to choose between who and what), and sometimes their gender (he, she and they can be set).
+Passive form sentences are transformed to active in a recursion. For example: "Robots are created by people" becomes "People create robots".
+Lots of testing and improvements.
+
+Reversedaiml-0.3
+********************
+Better recognition of the objects and subjects of verbs. 
+Infintive verbs, tenses, numbers, dates and adverbs are managed better. 
+The topic setting is automatic.
+Lots of testing was done, so all in all some of the questions generated should be relevant. 
+Implementation of "it" (first verb's subject).

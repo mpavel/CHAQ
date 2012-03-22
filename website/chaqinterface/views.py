@@ -14,8 +14,10 @@ from PyAIML import aiml
 
 # Create your views here.
 def index(request):
-    # get logs
-    conversation_log = Conversation.objects.filter(user=request.user).order_by('-timestamp')[:5]
+    conversation_log = None
+    if (request.user.is_authenticated()):
+        # get logs
+        conversation_log = Conversation.objects.filter(user=request.user).order_by('-timestamp')[:5]
 
     return render_to_response('interface/index.html', {'conversation_log': conversation_log}, context_instance=RequestContext(request))
 
@@ -127,6 +129,7 @@ def ask(request):
     debug_session_file(session)
     print "\n\n"
 
+    conversation_log = None
     # insert question/answer into user's logs
     if request.user.is_authenticated():
         db_conversation = Conversation(
@@ -135,6 +138,8 @@ def ask(request):
             answer = answer
         )
         db_conversation.save()
+        # get logs
+        conversation_log = Conversation.objects.filter(user=request.user).order_by('-timestamp')[:5]
 
     conversation = {
         'status'  : status,
@@ -142,8 +147,6 @@ def ask(request):
         'answer'  : answer
     }
 
-    # get logs
-    conversation_log = Conversation.objects.filter(user=request.user).order_by('-timestamp')[:5]
     # return to main page and send response back
     return render_to_response(
         'interface/index.html', 
