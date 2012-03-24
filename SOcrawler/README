@@ -1,0 +1,5 @@
+SOcrawler
+
+Simple Stack Overflow crawler. It gets the 'hot' questions from different topics in random order and the accepted answer for each one, saving them in a local database.
+
+The crawler is part of my honours project as part of a larger project and is used to collect reliable FAQs for different domains.
