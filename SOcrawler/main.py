@@ -1,3 +1,4 @@
+#!/usr/bin/python
 """
 It would be great to try and create some sort of graph of all the questions/answers and see if they point to one another, also trying to get the best one out of the connected ones. For example, say there are 5 questions regarding parsing HTML with PHP: x1, x2, x3, x4, x5. From these 5, x3 and x4 have a reference of x1 as being the same question with a very good answer. Can we find out about this kind of stuff? I think we should, if we filter through <a> tags that have a link following the patter of the questions: stackoverflow.com/questions/QuestionID/some-page-title - where we are looking for QuestionID. But how do we then know that x1, x2 and x5 are also connected??? Could search engine 'tech/methods' help us in this??? Or semantic analysis on the bodies of texts? This would be very important especially in multiple versions of the same question. For example how you would do the same think in PHP4 vs PHP5, or Python 2 vs Python 3. The inference engine should realize there is a newer version of an answer, but from a different question, and use that as the basis of the answer generation.
 
@@ -11,8 +12,14 @@ Should I also save information about a user such as reputation and accept rate?
 import sys, json, urllib2, gzip, StringIO, random, time, marshal, os.path, MySQLdb
 # httplib.HTTPConnection.debuglevel = 1
 
+def log(string):
+    string = str(string) + "\n"
+    # print string
+    with open("/home/pavel/www/Chaq/SOcrawler/log.txt", "a") as logfile:
+        logfile.write(string)
+
 # The start date to start crawling from: 2008-01-01 00:00:00
-start_date_timestamp = 1199145600
+start_date_timestamp = 1217548800
 # Set crawler's user-agent - in case of any problems SO will know who/where to contact me
 _user_agent = 'ChaqCrawler/1.0 +http://www.mpavel.ro/socrawler/'
 # Save crawled questions data for the current session
@@ -31,7 +38,7 @@ try:
                           passwd = 'crawlpass12',
                           db = 'socrawler')
 except MySQLdb.Error, e:
-    print "Error %d: %s" % (e.args[0], e.args[1])
+    log("Error %d: %s" % (e.args[0], e.args[1]))
     sys.exit(1)
 
 def getResource(uri):
@@ -46,11 +53,11 @@ def getResource(uri):
     try:
         first_data_stream = opener.open(request);
     except urllib2.URLError:
-        print 'Error opening URL: ' + uri
+        log('Error opening URL: ' + uri)
         return False
 
     # Dictionary of headers sent in response after connecting to server
-    print first_data_stream.headers
+    log(first_data_stream.headers)
 
     compressed_data = first_data_stream.read()
     # Get the compressed data from the memory and into a file-like object
@@ -69,7 +76,7 @@ def saveUnreachableAnswers():
         _unreachable_answers.append(answer)
     # Save to file for use next time crawler loads
     saveFile(_unreachable_answers, 'unreachableAnswers.ses')
-    print 'Unreachable answers this session: ' + str(_unreachable_answers)
+    log('Unreachable answers this session: ' + str(_unreachable_answers))
 
 def getAnswers():
     global _answers_list
@@ -94,7 +101,7 @@ def getAnswers():
         
         answers_url = 'http://api.stackoverflow.com/1.1/answers/' + str(answers) + '?body=true&comments=false&pagesize=' + str(_answers_batch)
 
-        print answers_url
+        log(answers_url)
 
         answers = getResource(answers_url)
         answers = json.loads(answers)
@@ -108,7 +115,7 @@ def getAnswers():
         i += 1
     # If there are answers unreachable due to the service being unavailable or whatever else
     # we add them to a queue and save the file for the next time the crawler runs
-    saveUnreachableAnswers();
+    saveUnreachableAnswers()
 
 def saveAnswer(answer):
     global _db
@@ -123,10 +130,13 @@ def saveAnswer(answer):
 
     query_values = (answerID, questionID, date, up_vote, down_vote, score, body)
     c = _db.cursor()
-    c.execute("""
+    try:
+        c.execute("""
         INSERT INTO 
             answer(id, qid, date, up_vote, down_vote, score, body) 
             VALUES(%s, %s, %s, %s, %s, %s, %s)""", query_values)
+    except MySQLdb.Error, e:
+        log("Error %d: %s" % (e.args[0], e.args[1]))
 
 
 def getQuestions(startDate, endDate, tag):
@@ -134,7 +144,7 @@ def getQuestions(startDate, endDate, tag):
 
     question_url = 'http://api.stackoverflow.com/1.1/questions?answers=false&body=true&comments=false&sort=hot&pagesize=100&tagged=' + str(tag) + '&fromdate=' + str(startDate) + '&todate=' + str(endDate)
 
-    print question_url
+    log(question_url)
 
     data = getResource(question_url)
     _data = json.loads(data)
@@ -151,6 +161,7 @@ def saveQuestion(question, tag):
         answerID = question['accepted_answer_id']
     else:
         # Just return if there is no accepted answer to the question ...
+        # Or I could send the question to a special function to fetch the answer with top votes, and add that to the _answers_list
         return
     questionID     = int(question['question_id'])
     title          = unicode(question['title'])
@@ -168,12 +179,15 @@ def saveQuestion(question, tag):
     # insert question details into database
     query_values = (questionID, title, body, tags, date, up_vote, down_vote, score, favorite_count, viewed)
     c = _db.cursor()
-    c.execute("""
+    try:
+        c.execute("""
         INSERT INTO 
             question(id, title, body, tags, date, up_vote, down_vote, score, favorite_count, viewed) 
             VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)""", query_values)
-    # add answerID to list
-    _answers_list.append(answerID)
+        # add answerID to list
+        _answers_list.append(answerID)
+    except MySQLdb.Error, e:
+        log("Error %d: %s" % (e.args[0], e.args[1]))
 
 def loadFile(filename):
     if os.path.isfile(filename):
@@ -190,23 +204,25 @@ def saveFile(data, filename):
     sessionFile.close();
 
 if __name__ == "__main__":
-    print '=================== STACK OVERFLOW CRAWLER START ==================='
-    print '=================== ' + time.strftime("%Y-%m-%d %H:%M:%S") + ' ============================'
-    print '===================================================================='
+    # log("\n=================== STACK OVERFLOW CRAWLER START ===================")
+    log("\n=================== " + time.strftime("%Y-%m-%d %H:%M:%S") + " ============================")
+    log("====================================================================\n")
 
     # First thing to do is check if there are any answers that haven't been able to be loaded on last crawl, and fetch them
     unreachable_answers = loadFile('unreachableAnswers.ses')
     if unreachable_answers is not False:
         for answer in unreachable_answers:
             _answers_list.append(answer)
-        getAnswers()
-        print 'Retrying previously unreachable answers: ' + str(unreachable_answers)
+        if len(_answers_list) > 0:
+            getAnswers()
+            log('Retrying previously unreachable answers: ' + str(unreachable_answers))
 
     # After this, continue with any new questions, incrementing the dates, etc
     session_filename = 'session.ses'
     # Load crawler session file, containing the tags and last start date for each tag
     tags = {}
     tags = loadFile(session_filename)
+    # log(tags)
     if not tags:
         # Create new session.ses file, assuming everything starts from 0 again
         # Meaning, the crawler is reset, and start_date_timestamp is back to 2007-01-01
@@ -221,8 +237,7 @@ if __name__ == "__main__":
     # Select a random tag from the list to crawl more questions
     random_tag_key = random.randrange(1,len(tags),1) - 1
     # Get the tag, as selected from the random number
-    # tag = tags.keys()[random_tag_key]
-    tag = 'php'
+    tag = tags.keys()[random_tag_key]
     start_date = tags[tag]
 
     # Calculate end date, add 345600 to start date (+4 days)
@@ -233,7 +248,7 @@ if __name__ == "__main__":
     if end_date > now:
         end_date = now
     
-    print 'Random tag: ' + tag + ' | Start: ' + time.ctime(start_date) + ' | End: ' + time.ctime(end_date)
+    log('Random tag: ' + tag + ' | Start: ' + time.ctime(start_date) + ' | End: ' + time.ctime(end_date))
 
     # Start the actual crawl process, by fetching the questions
     # Plus, if the crawl is successfull, write the new tags dictionary, containing the updated end_date, to the session file.
@@ -250,4 +265,4 @@ if __name__ == "__main__":
         getAnswers()
 
     else:
-        print 'No questions between ' + time.ctime(start_date) + ' and ' + time.ctime(end_date)
+        log('No questions between ' + time.ctime(start_date) + ' and ' + time.ctime(end_date))
