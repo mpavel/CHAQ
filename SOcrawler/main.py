@@ -7,6 +7,11 @@ A new mysql user/db are used for this as it is a separate component of the syste
 It would also be great to have the below code incorporated into a class StackOverflowCrawler which is implementing a Crawler Interface. Then use a main script, running every x minutes on a Cron job, implementing the Factory Design pattern and randomly calling all the available crawlers - something like this could be used for when multiple sites are crawled for information, but we need a standard way of fetching information from each of those sites: question and accepted/correct/viable answer ... especially from sites that do not have an available API and the 'standard' route of following URIs has to be followed, such as a Search Engine would have to.
 
 Should I also save information about a user such as reputation and accept rate?
+
+The Crawler could do checking on updated answers also. It could pick batches of 100 questions and testing the accepted answers' IDs against the ones in the database, and updating them accordingly.
+
+$ crontab -e
+*/1 * * * * /home/pavel/www/Chaq/SOcrawler/main.py
 """
 
 import sys, json, urllib2, gzip, StringIO, random, time, marshal, os.path, MySQLdb
@@ -83,6 +88,7 @@ def getAnswers():
     global _answers_batch
 
     answer_count = len(_answers_list)
+    log('Total answers received: ' + str(answer_count))
     i = 0
 
     while (answer_count != 0):
@@ -218,6 +224,7 @@ if __name__ == "__main__":
             log('Retrying previously unreachable answers: ' + str(unreachable_answers))
 
     # After this, continue with any new questions, incrementing the dates, etc
+    # TODO: write session file to absolute path, the below will save it to /home/user/
     session_filename = 'session.ses'
     # Load crawler session file, containing the tags and last start date for each tag
     tags = {}
@@ -227,7 +234,7 @@ if __name__ == "__main__":
         # Create new session.ses file, assuming everything starts from 0 again
         # Meaning, the crawler is reset, and start_date_timestamp is back to 2007-01-01
         # Rather than what it used to be for each tag.
-        tag_list = ['c#', 'java', 'php', 'javascript', 'jquery', 'android', 'iphone', 'c++', 'asp.net', '.net', 'python', 'mysql', 'html', 'sql', 'ruby-on-rails', 'css', 'ajax', 'linux', 'django', 'json', 'perl', 'git', 'wordpress']
+        tag_list = ['c#', 'java', 'php', 'javascript', 'jquery', 'android', 'iphone', 'c++', 'asp.net', '.net', 'python', 'mysql', 'html', 'sql', 'ruby-on-rails', 'css', 'ajax', 'linux', 'django', 'json', 'perl', 'git', 'wordpress', 'c']
         tags = {}
         for tag in tag_list:
             tags[tag] = start_date_timestamp
@@ -246,7 +253,10 @@ if __name__ == "__main__":
     now = int(time.time())
     # Check if end_date_timestamp is less than now
     if end_date > now:
-        end_date = now
+        # and stop execution ... no point in doing any requests for future timestamps
+        log('STOP. End date is greater than now.\n')
+        sys.exit(1)
+        # end_date = now
     
     log('Random tag: ' + tag + ' | Start: ' + time.ctime(start_date) + ' | End: ' + time.ctime(end_date))
 
@@ -258,6 +268,7 @@ if __name__ == "__main__":
         saveFile(tags, session_filename)
     
     total_questions = _data['total']
+    log('Total questions received: ' + str(total_questions))
     if total_questions > 0:
         for question in _data['questions']:
             saveQuestion(question, tag)
