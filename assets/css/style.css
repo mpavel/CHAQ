@@ -17,6 +17,16 @@
     word-wrap: break-word;
     margin-left: 0;
 }
+@media (max-width: 979px) {
+    #header h1 {
+        font-size: 40px;
+    }
+    #header hgroup h2 {
+        font-size: 12px;
+        line-height: 15px;
+        margin-top: 23px;
+    }
+}
 #header h2 {
     font-size: 17px;
     line-height: 20px;

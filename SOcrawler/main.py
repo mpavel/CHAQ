@@ -207,7 +207,7 @@ def loadFile(filename):
 def saveFile(data, filename):
     sessionFile = file(filename, "wb")
     marshal.dump(data, sessionFile)
-    sessionFile.close();
+    sessionFile.close()
 
 if __name__ == "__main__":
     # log("\n=================== STACK OVERFLOW CRAWLER START ===================")

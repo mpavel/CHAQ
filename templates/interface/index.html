@@ -22,9 +22,9 @@
       <button class="btn">+</button>
     </p>
     <p>
-      <label for="question">Input: </label>
+      <label for="question">Ask: </label>
       <input type="text" name="question" id="question" placeholder="Ask your questions" required/>
-      <input type="submit" name="ask-question" value="Ask" class="btn"/>
+      <input type="submit" name="ask-question" value="Go!" class="btn"/>
     </p>
   </form>
 
@@ -47,7 +47,7 @@
       Answer: {{ conversation.answer }}
       </p>
     {% endif %}
-    <p>No logs available &hellip;</p>
+    <p class="alert alert-error">No logs available until you log in &hellip;</p>
   {% endif %}
 </div>
 
