@@ -1,0 +1,61 @@
+<?xml version="1.0" ?>
+<aiml version="1.0">
+  <meta content="SimpleAIMLGenerator" name="author"/>
+  <meta content="en" name="language"/>
+  <category>
+    <pattern>
+      BEST BLOG HOST FOR PROGRAMMERS COD FORMAT
+    </pattern>
+    <template>
+<![CDATA[<p>To the best of my knowledge, none of the mainstream blogging services have this built in. It is a function of design and template. I would go with <a href="http://Wordpress.org" rel="nofollow" title="Bristol University Language Engineering Course">Wordpress</a> because it is the best. For code formatting:</p><br/><br/><ol><br/><li>Design your own styles and functionality if you are up to the challenge</li><br/><li>Check out the <a href="http://code.google.com/p/syntaxhighlighter/" rel="nofollow">SyntaxHighlighter</a> JavaScript project (used by <a href="http://www.hanselman.com/blog/TheWeeklySourceCode24ExtensibilityEditionPlugInsProvidersAttributesAddInsAndModulesInNET.aspx" rel="nofollow">Hanselman</a>). You should be able to integrate this pretty easily into any blogging system. (See my <a href="http://ellisweb.net/2008/08/using-syntaxhighlighter-to-format-code-in-wordpress/" rel="nofollow">blog post</a> on integrating this with WordPress).</li><br/><li>Use <a href="http://windowslivewriter.spaces.live.com/" rel="nofollow">Windows Live Writer</a> with the <a href="http://gallery.live.com/liveItemDetail.aspx?li=1f57bd9b-a692-4593-9e9e-e2962d9c0eee&amp;bt=9&amp;pl=8" rel="nofollow">Insert Code</a> plugin (this will automatically format the code that you paste in properly and post it right to your blog. See here for an example).</li><br/></ol><br/><br/><p>Note: If you want to have the most flexibility for constructing your blog template and functionality as you want it to be, you would need to use Self-hosted <a href="http://WordPress.org" rel="nofollow">WordPress.org</a>, not the hosted <a href="http://WordPress.com" rel="nofollow">WordPress.com</a>.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      ON WORDPRESS THEME DEVELOP
+    </pattern>
+    <template>
+<![CDATA[<p>I think that the best way to learn is to look at how other people construct their themes. The first one to start one is the Default Kubrick theme that is included in the standard WordPress install. It has all of the basics and will show you some advanced techniques like including sidebar widgets. Next, in conjunction with the docs on <a href="http://codex.wordpress.org/Theme_Development" rel="nofollow" title="InfoQ">theme development</a> (previously mentioned by Mark), <a href="http://codex.wordpress.org/Blog_Design_and_Layout" rel="nofollow" title="JavaLobby">Blog Design and Layout</a> and <a href="http://codex.wordpress.org/Using_Themes" rel="nofollow">Using Themes</a>, go to the <a href="http://wordpress.org/extend/themes/" rel="nofollow">Theme Directory</a> on the Wordpress.org site, download a couple of popular themes, and go through them, looking up any <a href="http://codex.wordpress.org/Stepping_Into_Template_Tags" rel="nofollow">template tags</a> or techniques that you don't understand. After you do this, you should be more than well-equipped to write your own theme from scratch, or modify an existing theme to your needs. </p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      DATABAS QUERI STATIST ON WORDPRESS SITE
+    </pattern>
+    <template>
+<![CDATA[<p>Try adding this to the bottom of the footer in your template:</p><br/><br/><pre><code>&lt;?php echo $wpdb-&gt;num_queries; ?&gt; &lt;?php _e('queries'); ?&gt;. &lt;?php timer_stop(1); ?&gt; &lt;?php _e('seconds'); ?&gt;<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      USE AND OPER ON TAG AND CATEGORI TABL IN WORDPRESS
+    </pattern>
+    <template>
+<![CDATA[<p>I misunderstood you.  I thought you wanted Nuclear or Deals.  The below should give you only Nuclear and Deals.</p><br/><br/><p><hr /></p><br/><br/><p>select p.*<br/>from wp_posts p, wp_terms t, wp_term_taxonomy tt, wp_term_relationship tr,<br/>wp_terms t2, wp_term_taxonomy tt2, wp_term_relationship tr2<br/>wp_terms t2, wp_term_taxonomy tt2, wp_term_relationship tr2</p><br/><br/><p>where p.id = tr.object_id and t.term_id = tt.term_id and tr.term_taxonomy_id = tt.term_taxonomy_id</p><br/><br/><p>and p.id = tr2.object_id and t2.term_id = tt2.term_id and tr2.term_taxonomy_id = tt2.term_taxonomy_id</p><br/><br/><p>and p.id = tr3.object_id and t3.term_id = tt3.term_id and tr3.term_taxonomy_id = tt3.term_taxonomy_id</p><br/><br/><p>and (tt.taxonomy = 'category' and tt.term_id = t.term_id and t.name = 'Category1')<br/>and (tt2.taxonomy = 'post_tag' and tt2.term_id = t2.term_id and t2.name = 'Nuclear')<br/>and (tt3.taxonomy = 'post_tag' and tt3.term_id = t3.term_id and t3.name = 'Deals')</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      MEDIAWIKI INTEGR
+    </pattern>
+    <template>
+<![CDATA[<p><a href="http://insites.ingenesis.net/2008/08/17/wordpress-bbpress-mediawiki/" rel="nofollow">This tutorial</a> should get you on the right track to integrating Mediawiki into your WordPress install.  It's certainly going to be a <em>lot</em> easier than hacking WordPress to have wiki features, especially with the sort of granular permissions you're describing.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      SEEK CODE HIGHLIGHT RECOMMEND FOR WORDPRESS
+    </pattern>
+    <template>
+<![CDATA[<p>I use <a href="http://wordpress.org/extend/plugins/wp-syntax/" rel="nofollow">WP-Syntax</a> and it's worked very well for me. It's supported every language I've thrown at it so far, and the colors can be customized for a particular theme (though the defaults look just fine too)</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      PREVIEW THEME IN WORDPRESS
+    </pattern>
+    <template>
+<![CDATA[<p>It's open source - use the source, Luke.</p><br/><br/><p>Look in wp-admin/js/theme-preview.js</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      MEDIAWIKI COOKI INTEGR
+    </pattern>
+    <template>
+<![CDATA[<p>They both support <a href="http://openid.net/" rel="nofollow">OpenId</a> now.</p><br/><br/><ul><br/><li><a href="http://www.mediawiki.org/wiki/Extension%3aOpenID" rel="nofollow">MediaWiki's extension</a></li><br/><li><a href="http://wordpress.org/extend/plugins/openid/" rel="nofollow">WordPress's plugin</a></li><br/></ul><br/><br/><p>There are probably other options for using OpenId, but I think that is the best solution available.</p><br/>]]>    </template>
+  </category>
+</aiml>

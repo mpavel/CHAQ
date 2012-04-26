@@ -1,0 +1,306 @@
+<?xml version="1.0" ?>
+<aiml version="1.0">
+  <meta content="SimpleAIMLGenerator" name="author"/>
+  <meta content="en" name="language"/>
+  <category>
+    <pattern>
+      OF REMEMB ME IN A RAIL APPLIC
+    </pattern>
+    <template>
+<![CDATA[<p>I have spent a while thinking about this and came to some conclusions.  Rails session cookies are tamper-proof by default, so you really don't have to worry about a cookie being modified on the client end.</p><br/><br/><p>Here is what I've done:</p><br/><br/><ul><br/><li>Session cookie is set to be long-lived (6 months or so)</li><br/><li>Inside the session store<br/><ul><br/><li>An 'expires on' date that is set to login + 24 hours</li><br/><li>user id</li><br/><li>Authenticated = true  so I can allow for anonymous user sesssions (not dangerous because of the cookie tamper protection)</li><br/></ul></li><br/><li>I add a before_filter in the Application Controller that checks the 'expires on' part of the session.</li><br/></ul><br/><br/><p>When the user checks the "Remember Me" box, I just set the session[:expireson] date to be login + 2 weeks.  No one can steal the cookie and stay logged in forever or masquerade as another user because the rails session cookie is tamper-proof.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      FREQUENT SYSTEMEXIT IN RUBI WHEN MAKE HTTP CALL
+    </pattern>
+    <template>
+<![CDATA[<p>Using fcgi with Ruby is known to be very buggy. </p><br/><br/><p>Practically everybody has moved to <a href="http://mongrel.rubyforge.org/" rel="nofollow">Mongrel</a> for this reason, and I recommend you do the same.</p>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      UNPROCESS VIEW PATH FOUND ERROR WITH EXCEPTIONNOTIFI PLUGIN IN RAIL 2.1
+    </pattern>
+    <template>
+<![CDATA[<p>You ought to upgrade to the newest Exception Notification plugin which is in <a href="http://github.com/rails/exception_notification/tree/master" rel="nofollow">its new home at GitHub</a>.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      WITH WINDOW VISTA BEST SETUP
+    </pattern>
+    <template>
+<![CDATA[<p>I don't know about "best", because that's a subjective question, but I can tell you what setup I use and recommend:</p><br/><br/><p><strong>Editor</strong>: <a href="http://e-texteditor.com" rel="nofollow">E Text Editor</a><br><br/>TextMate seems to be the editor of choice for Rails on Mac. E Text Editor is essentially TextMate for Windows. Its bundles are broadly compatible with TextMate's including the Rails 2 bundle which is included with the basic install.</p><br/><br/><p>Alternatively, if you're into the whole Visual Studio ecosystem, then <a href="http://www.rubyinside.com/ruby-in-steel-pe-free-visual-studio-based-ruby-and-rails-ide-for-windows-1228.html" rel="nofollow"><strong>Ruby in Steel PE</strong></a> might be a better bet. It's a really nice all-in-one package that actually comes with (a stripped-down version of) Visual Studio now.</p><br/><br/><p><strong>Environment</strong>: <a href="http://www.virtualbox.org/" rel="nofollow">VirtualBox</a> running Ubuntu Server<br><br/>Deploying a Rails app can be a pain at the best of times; deploying a Rails app from a Windows environment onto a *nix server is even worse. Plus, <a href="http://railsforum.com/viewtopic.php?id=7219" rel="nofollow">running Rails apps on Windows is slow</a>. Running your tests is slow. So I use VirtualBox to host a VM on my Windows machine that mirrors my target deployment environment as closely as possible. In my case I run Ubuntu Server because there are a really nice set of step-by-step tutorials for getting up-and-running with a full Ubuntu-based Rails stack on the <a href="http://articles.slicehost.com/ubuntu-hardy" rel="nofollow">SliceHost wiki</a>. </p><br/><br/><p>Here are the benefits of developing using a VM:</p><br/><br/><ul><br/><li>I map a network drive to the VM so that I can edit the code on it directly from Windows using E Text Editor. The VM acts and feels just like a command line window. So you don't feel like you're in a completely alien environment.</li><br/><li>It runs Rails and other Ruby scripts (like tests) faster than running it natively in Windows</li><br/><li>Everything is contained and <a href="http://servervirtualization.blogs.techtarget.com/2008/06/25/getting-to-know-sun-xvm-virtualbox-snapshots/" rel="nofollow">snapshottable</a>, so I can experiment and generally play around without worrying about breaking anything. If something does break, I just roll back to a previous good state.</li><br/><li>It uses hardly any RAM. It will typically use less that 100MB (it's currently using ~43MB, but I don't have a Rails app spun-up). Contrast this with, say, Firefox which will typically be hogging >200MB and you realize that running a Linux-based VM like this is amazingly efficient.</li><br/><li>I can move my environment between machines</li><br/><li>I have much more robust deployment workflow</li><br/><li>I can limit the VM to have exactly the same amount of RAM as the server I'll be hosting on. E.g., if I'm to be using a SliceHost 256MB slice, I would limit the RAM to 256MB.</li><br/><li>I can build a seperate environment for different hosts. If I wanted to host on Joyent, for example, I could build an Open Solaris VM</li><br/><li>Gems and other binaries won't need recompiling for your target environment</li><br/><li>It's "a good thing"™ to get to grips with the environment your Rails app is likely to be running on. Seeing as most, if not all, commercial Rails hosts run some sort of *nix derivative, you're going to want to be comfortable with the *nix environment.</li><br/></ul><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      NEW RUBI ON RAIL APPLIC USE MYSQL INSTEAD OF SQLITE
+    </pattern>
+    <template>
+<![CDATA[<p>If you already have a rails project, change the adapter in the <code>config/database.yml</code> file to <code>mysql</code> and make sure you specify a valid username and password, and optionally, a socket:</p><br/><br/><pre><code>development:<br>  adapter: mysql<br>  database: db_name_dev<br>  username: koploper<br>  password:<br>  host: localhost<br>  socket: /tmp/mysql.sock<br></code></pre>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      SELL PYTHON TO A CLIENT BOSS PERSON WITH LOT OF CASH
+    </pattern>
+    <template>
+<![CDATA[<p>This is one of those cases that really boil down to personal preference or situational details. If you're more comfortable and experienced with Python, then say so. Are they asking you to justify it because they're more comfortable with one of the other environments? After you're done, will the system be passed off to someone else for long-term maintenance?</p><br/><br/><p>If they ask you to use a technology or language that you're not as familiar with, then make sure they know up-front that it's going to take you longer.</p>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      RUBI ON RAIL ANI GOOD FOR GRAIL
+    </pattern>
+    <template>
+<![CDATA[<p>Mmh, I don't know how to say this. Some people might bash me over this. </p><br/><br/><h2>Language (Groovy and Ruby)</h2><br/><br/><p>As a language I reckon Ruby is more funky compared to Groovy. Groovy only exists to ease Java programmer as you don't need to learn too much new syntax. But overall I reckon is not as funky as Ruby. Groovy wouldn't be the JVM language that is worth to learn based on attender's vote in this year's JavaOne but instead Scala is the one to go. Besides that, <a href="http://macstrac.blogspot.com/2009/04/scala-as-long-term-replacement-for.html" rel="nofollow">the original creator of Groovy himself does not have faith in the language he created himself</a> in the first place. </p><br/><br/><h2>Community and Job openings</h2><br/><br/><p>As for the community, Grails community is not as big as Rails, though since the acquirement by Spring more and more people are using it in serious application.  Rails has more job openings in the market compared to Grails (that is if you want to invest in looking a new job). </p><br/><br/><h2>The framework (Grails and Rails)</h2><br/><br/><p>But, as a framework, if you really care about maintainability and need access to Java framework and legacy Java system, Grails is the way to go as it provides cleaner access to Java. Grails itself is built upon several popular Java framework (Spring &amp; Hibernate). Rails itself IMHO is funky like Ruby itself, but it's funkyness costs you maintainability. <a href="http://merbist.com/2008/11/09/merb-1-0-released/" rel="nofollow">Matz himself prefers Merb over Rails 2</a> because Rails create a DSL on top of Ruby which is really against the Ruby philosophy. And I reckon because Rails itself is opiniated, which in turn if you don't have the same opinion as the creator, it might not fit your needs.</p><br/><br/><p><strong>Conclusion</strong></p><br/><br/><p>So in your case, learn Grails as that is the company's consensus (you need to respect the consensus) and if you still want to secure your job. But, invest some time learning Rails and Ruby too if you want to open a chance getting a new job in the future.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      ML HOW DO I SET A DYMAN CLASS VALU
+    </pattern>
+    <template>
+<![CDATA[<p>Not sure. Maybe:</p><br/><br/><blockquote><br/>  <p>%span{:class =&gt; item.dashboardstatus.cssclass }= item.dashboardstatus.status</p><br/></blockquote>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      ALL THE ACTIV RECORD HATE
+    </pattern>
+    <template>
+<![CDATA[<p>There's <a href="http://en.wikipedia.org/wiki/Active_record_pattern" rel="nofollow">ActiveRecord the Design Pattern</a> and <a href="http://api.rubyonrails.com/classes/ActiveRecord/Base.html" rel="nofollow">ActiveRecord the Rails ORM Library</a>, and there's also a ton of knock-offs for .NET, and other languages.</p><br/><br/><p>These are all different things. They mostly follow that design pattern, but extend and modify it in many different ways, so before anyone says "ActiveRecord Sucks" it needs to be qualified by saying "which ActiveRecord, there's heaps?"</p><br/><br/><p>I'm only familiar with Rails' ActiveRecord, I'll try address all the complaints which have been raised in context of using it.</p><br/><br/><blockquote><br/>  <p>@BlaM</p><br/>  <br/>  <p>The problem that I see with Active Records is, that it's always just about one table</p><br/></blockquote><br/><br/><p>Code:</p><br/><br/><pre><code>class Person<br/>    belongs_to :company<br/>end<br/>people = Person.find(:all, :include =&gt; :company )<br/></code></pre><br/><br/><p>This generates SQL with <code>LEFT JOIN companies on companies.id = person.company_id</code>, and automatically generates associated Company objects so you can do <code>people.first.company</code> and it doesn't need to hit the database because the data is already present.</p><br/><br/><blockquote><br/>  <p>@pix0r</p><br/>  <br/>  <p>The inherent problem with Active Record is that database queries are automatically generated and executed to populate objects and modify database records</p><br/></blockquote><br/><br/><p>Code:</p><br/><br/><pre><code>person = Person.find_by_sql("giant complicated sql query")<br/></code></pre><br/><br/><p>This is discouraged as it's ugly, but for the cases where you just plain and simply need to write raw SQL, it's easily done.</p><br/><br/><blockquote><br/>  <p>@Tim Sullivan</p><br/>  <br/>  <p>...and you select several instances of the model, you're basically doing a "select * from ..."</p><br/></blockquote><br/><br/><p>Code:</p><br/><br/><pre><code>people = Person.find(:all, :select=&gt;'name, id')<br/></code></pre><br/><br/><p>This will only select the name and ID columns from the database, all the other 'attributes' in the mapped objects will just be nil, unless you manually reload that object, and so on.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      MIXIN AND CALL SUPER METHOD
+    </pattern>
+    <template>
+<![CDATA[<p>You can use this:</p><br/><br/><pre><code>super if defined?(super)<br/></code></pre><br/><br/><p>Here is an example:</p><br/><br/><pre><code>class A<br/>end<br/><br/>class B &lt; A<br/>  def t<br/>    super if defined?(super)<br/>    puts "Hi from B"<br/>  end<br/>end<br/><br/>B.new.t<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      SQLITE3 RUBY 1.2.2 NOT WORK ON OS X
+    </pattern>
+    <template>
+<![CDATA[<p>Jamis has just released 1.2.4, and the comment history on that bug suggests that the fix is in 1.2.3 and later versions.  As a quick test, I did the following on an OS X 10.5 box with Ruby 1.8.6:</p><br/><br/><pre><code>sudo gem install sqlite3-ruby<br/></code></pre><br/><br/><p>(verified version number of 1.2.4)</p><br/><br/><pre><code>rails test<br/></code></pre><br/><br/><p>(used default <code>database.yml</code> with sqlite3)</p><br/><br/><pre><code>cd test<br/>./script/generate model Person name:string<br/>rake db:migrate<br/></code></pre><br/><br/><p>Ran fine.  The error would have happened when sqlite3 was <code>require</code>d before the migration finished, so it looks like they've fixed the issue.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      CRON JOB WORK PROPERLI
+    </pattern>
+    <template>
+<![CDATA[<p>Are you sure the temporary file is being created correctly when running as a cron job? The working directory for your script will either be specified in the HOME environment variable, or the /etc/passwd entry for the user that installed the cron job. If deploy does not have write permissions for the directory in which it is executing, then you could specify an absolute path for the dump file to fix the problem.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      ID AUTHENT IN RUBI ON RAIL
+    </pattern>
+    <template>
+<![CDATA[<p>Have you watched Ryan Bates' excellent <a href="http://railscasts.com/episodes/68-openid-authentication" rel="nofollow" title="interoperability">Railscast</a> on OpenID Authentication?</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      IDE TO USE FOR DEVELOP IN RUBI ON RAIL ON WINDOW
+    </pattern>
+    <template>
+<![CDATA[<p>Try both NetBeans and RadRails for maybe a week each, then you can find which works best for you.  The best advice is to learn your tool.  If you are not checking out something new about your editor, something that could potentially save you time (regexp, etc) then you are doing yourself a huge disservice.</p><br/><br/><p>I have been using Eclipse/Aptana/RadRails and unlike Gaius have been pretty happy with it.<br/>I recommend the Eclipse IDE for Java Developers from Eclipse Downloads: http://www.eclipse.org/downloads/</p><br/><br/><p>Then grab Aptana Studio, following these <a href="http://www.aptana.com/docs/index.php/Plugging_Aptana_into_an_existing_Eclipse_configuration#Eclipse_3.4_Instructions" rel="nofollow">instructions</a>.</p><br/><br/><p>When Eclipse restarts Aptana will have a view, click on rad rails and you are good to go.  Just make sure you have ruby installed already, or it becomes a pain to resolve.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      SECUR DATABASE.YML
+    </pattern>
+    <template>
+<![CDATA[<p>You'll also want to make sure that your SSH system is well secured to prevent people from logging in <em>as</em> your Capistrano bot.  I'd suggest restricting access to password-protected key pairs.</p><br/><br/><p>Encrypting the .yml file on the server is useless since you have to give the bot the key, which would be stored . . . on the same server.  Encrypting it on your machine is probably a good idea.  Capistrano can decrypt it before sending.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      BE AS DRI AS POSSIBL IN A RUBI ON RAIL APP
+    </pattern>
+    <template>
+<![CDATA[<p>I would lean towards using a parent class, with subclassing for the different ways you intend to actually use the attachments in your application. It may not be the DRYest solution available, however, it lends itself to a logical pattern rather well.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      TIP ON GET RAIL TO RUN WITH AN ACCESS BACK END
+    </pattern>
+    <template>
+<![CDATA[<p>It's a long shot but there's an <a href="http://odbc-rails.rubyforge.org/" rel="nofollow">ODBC adapter for ActiveRecord</a> that might work.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      SSOCI SOURC AND SEARCH KEYWORD WITH ACCOUNT CREATION
+    </pattern>
+    <template>
+<![CDATA[<p>Your best bet IMO would be to use javascript to look for a cookie named "origReferrer" or something like that and if that cookie doesn't exist you should create one (with an expiry of ~24hours) and fill it with the current referrer.</p><br/><br/><p>That way you'll have preserved the original referrer all the way from your users first visit and when your users have completed whatever steps you want them to have completed (ie, account creation) you can read back that cookie on the server and do whatever parsing/analyzing you want.</p><br/><br/><p>Andy Brice explains the technique in his blog post <a href="http://successfulsoftware.net/2008/08/17/cookie-tracking-for-profit-and-pleasure/" rel="nofollow">Cookie tracking for profit and pleasure</a>.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      CTS AS READ RAIL PLUGIN ISSU
+    </pattern>
+    <template>
+<![CDATA[<p>The following will work</p><br/><br/><pre><code>&lt;%= Post.find_unread_by(current_user).size %&gt;<br/></code></pre><br/><br/><p>or</p><br/><br/><pre><code>&lt;%= Post.find_unread_by(current_user).length %&gt;<br/></code></pre><br/><br/><p>However if you check your development.log you should see that it gets the unread count by </p><br/><br/><ol><br/><li>Retrieving all the posts</li><br/><li>Retrieving all the posts read by the user</li><br/><li>Removing all of 2. from 1. in ruby</li><br/></ol><br/><br/><p>This will be very bad performance wise with lots of posts. </p><br/><br/><p>A better way would be to retrieve the posts read by the current user and then use ActiveRecord::Calculations to get a count without retrieving all the posts in the database</p><br/><br/><pre><code>Post.count(:conditions =&gt; [ "id NOT IN (?)", Post.find_read_by(current_user)])<br/></code></pre><br/><br/><p>This should go into your Post model to follow best practices of not having finders in the view  or controller </p><br/><br/><h2>Post.rb</h2><br/><br/><pre><code>def self.unread_post_count_for_user(user)<br/>  count(:conditions =&gt; [ "id NOT IN (?)", Post.find_read_by(user)])<br/>end<br/></code></pre><br/><br/><p>Then your view will just be</p><br/><br/><pre><code>&lt;%= Post.unread_post_count_for_user(current-user) %&gt;<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      SOLUT FOR AUTHENT IN RUBI ON RAIL
+    </pattern>
+    <template>
+<![CDATA[<p>AuthLogic appears to be the new kid on the block and seems to be the next evolution of restful_authentication, easier to use, etc</p><br/><br/><p><a href="http://github.com/binarylogic/authlogic/tree/master">http://github.com/binarylogic/authlogic/tree/master</a></p><br/><br/><p>Edit: now that Rails 3 is out, Devise seems to be the new, new kid on the block</p><br/><br/><p><a href="https://github.com/plataformatec/devise">https://github.com/plataformatec/devise</a></p><br/><br/><p>Ruby Toolbox is a great site for finding the current best solution in various categories (based on the number of GitHub watchers):</p><br/><br/><p><a href="http://ruby-toolbox.com/categories/rails_authentication.html">http://ruby-toolbox.com/categories/rails_authentication.html</a></p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      WYSIWYG EDITOR GEM FOR RAIL
+    </pattern>
+    <template>
+<![CDATA[<p>Though it's certainly not a direct answer, in the past I've found I prefer to use RedCloth (or a Markdown parser if you don't enjoy Textile) and use a simple textarea with an AJAXy preview. Generally speaking, WYSIWYG editors have a long history of creating redundant tags and similar, leading to potentially broken pieces of HTML.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      REPRES CROSS MODEL INFORM IN MVC
+    </pattern>
+    <template>
+<![CDATA[<p>As Brian said, you can create another model that marshals out the work that needs doing. There is <a href="http://railscasts.com/episodes/121-non-active-record-model" rel="nofollow">a great Railscast</a> on how to do this type of thing.</p><br/><br/><p>HTH</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      RAKE TASK FOR BACK UP THE DATA IN YOUR DATABAS
+    </pattern>
+    <template>
+<![CDATA[<p>The below script is a simplified version taken from <a href="http://github.com/engineyard/eycap/tree/master" rel="nofollow">eycap</a>, specifically from <a href="http://github.com/engineyard/eycap/tree/master/lib/eycap/recipes/database.rb" rel="nofollow">this file</a>.</p><br/><br/><pre><code>set :dbuser "user"<br/>set :dbhost "host"<br/>set :database "db"<br/><br/>namespace :db do<br/>  desc "Get the database password from user"<br/>  task :get_password do<br/>    set(:dbpass) do<br/>      Capistrano::CLI.ui.ask "Enter mysql password: "<br/>    end<br/>  end<br/><br/>  task :backup_name, :only =&gt; { :primary =&gt; true } do<br/>    now = Time.now<br/>    run "mkdir -p #{shared_path}/db_backups"<br/>    backup_time = [now.year,now.month,now.day,now.hour,now.min,now.sec].join('-')<br/>    set :backup_file, "#{shared_path}/db_backups/#{database}-snapshot-#{backup_time}.sql"<br/>  end<br/><br/>  desc "Dump database to backup file"<br/>  task :dump, :roles =&gt; :db, :only =&gt; {:primary =&gt; true} do<br/>    backup_name<br/>    run "mysqldump --add-drop-table -u #{dbuser} -h #{dbhost} -p#{dbpass} #{database} | bzip2 -c &gt; #{backup_file}.bz2"<br/>  end<br/>end<br/></code></pre><br/><br/><p>Edit: Yeah, I guess I missed the point that you were looking for a rake task and not a capistrano task, but I don't have a rake one on hand, sorry.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      GRACE SHUT DOWN A MONGREL WEB SERVER
+    </pattern>
+    <template>
+<![CDATA[<p>I've done a little more investigation into the Mongrel source and it turns out that Mongrel installs a signal handler to catch an standard process kill (TERM) and do a graceful shutdown, so I don't need a special procedure after all.</p><br/><br/><p>You can see this working from the log output you get when killing a Mongrel while it's processing a request. For example:</p><br/><br/><pre><code>** TERM signal received.<br/>Thu Aug 28 00:52:35 +0000 2008: Reaping 2 threads for slow workers because of 'shutdown'<br/>Waiting for 2 requests to finish, could take 60 seconds.Thu Aug 28 00:52:41 +0000 2008: Reaping 2 threads for slow workers because of 'shutdown'<br/>Waiting for 2 requests to finish, could take 60 seconds.Thu Aug 28 00:52:43 +0000 2008 (13051) Rendering layoutfalsecontent_typetext/htmlactionindex within layouts/application<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      RAIL PRE EPOCH DATE ON WINDOW
+    </pattern>
+    <template>
+<![CDATA[<p>If you only need dates (no times), the Date class in ruby should handle dates before 1970. But it has only a resolution of days. I don't know if there are solutions, if you also need times before 1970<br/><a href="http://safari.ibmpressbooks.com/0768667208/ch07lev1sec18" rel="nofollow">(source)</a></p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      SUPPORT SSL CLIENT CERTIF AUTHENT
+    </pattern>
+    <template>
+<![CDATA[<p>These are usually referred to as client side certificates.</p><br/><br/><p>I've not actually used it but a modified version of restful-authentication can be found here <a href="http://github.com/labria/restful-authentication/tree/master" rel="nofollow">here</a> that looks like what your after.</p><br/><br/><p>I found this via <a href="http://drnicwilliams.com/2008/02/22/zero-sign-on-with-client-certificates/" rel="nofollow">Dr. Nic's post</a></p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      HTML WITH HPRICOT AND RAIL
+    </pattern>
+    <template>
+<![CDATA[<p>Model, model, model, model, model.  Skinny controllers, simple views.</p><br/><br/><p>The RedHandedHomePage model does the parsing on initialization, then call 'def render' in the controller, set output to an instance variable, and print that in a view.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      COMBIN NAME SCOPE INTO A NEW NAME SCOPE
+    </pattern>
+    <template>
+<![CDATA[<p>Well I'm still new to rails and I'm not sure exactly what you're going for here, but if you're just going for code reuse why not use a regular class method? <br/><pre><code><br/>        def self.ab(a, b)<br/>            a(a).b(b)<br/>        end<br/>    </pre></code></p><br/><br/><p>You could make that more flexible by taking *args instead of a and b, and then possibly make one or the other optional.  If you're stuck on named_scope, can't you extend it to do much the same thing?  </p><br/><br/><p>Let me know if I'm totally off base with what you're wanting to do. </p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      A GIT SUBDIRECTORI IN CAPISTRANO
+    </pattern>
+    <template>
+<![CDATA[<p>You can have two git repositories (client and server) and add them to a "super-project" (app). In this "super-project" you can add the two repositories as submodules (check <a href="https://git.wiki.kernel.org/articles/g/i/t/GitSubmoduleTutorial_c489.html" rel="nofollow">this tutorial</a>).</p><br/><br/><p>Another possible solution (a bit more dirty) is to have separate branches for client and server, and then you can pull from the 'server' branch.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      REQUIR RUBYGEM 0.9.4. PLEAS INSTAL RUBYGEM
+    </pattern>
+    <template>
+<![CDATA[<p>Just finally found <a href="http://www.shorepound.net/wpblog/?p=65" rel="nofollow">answer</a>... I was missing a gem, and thrown off by bad error message from Rails...</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      PASS SPECIAL CHAR WITH OBSERVE FIELD
+    </pattern>
+    <template>
+<![CDATA[<p>This is an escaping issue (as stated by others).</p><br/><br/><p>You'll want to change your observe_field :with statement to something like:</p><br/><br/><pre><code>  :with =&gt; "'postbody=' + encodeURIComponent(value)"<br/></code></pre><br/><br/><p>Then in your controller:</p><br/><br/><pre><code>def textile_to_html<br/>  text = URI.unescape(params['postbody'])<br/>  ...<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      TEST OBSERV WITH RSPEC IN A RUBI ON RAIL APPLIC
+    </pattern>
+    <template>
+<![CDATA[<p>You are on the right track, but I have run into a number of frustrating unexpected message errors when using rSpec, observers, and mock objects. When I am spec testing my model, I don't want to have to handle observer behavior in my message expectations. </p><br/><br/><p>In your example, there isn't a really good way to spec "set_status" on the model without knowledge of what the observer is going to do to it. </p><br/><br/><p>Therefore, I like to use the <a href="http://evang.eli.st/blog/2007/11/22/better-rails-testing-decoupling-observers" rel="nofollow">"No Peeping Toms" plugin.</a> Given your code above and using the No Peeping Toms plugin, I would spec the model like this: </p><br/><br/><pre><code>describe Person do <br/>  it "should set status correctly" do <br/>    @p = Person.new(:status =&gt; "foo")<br/>    @p.set_status("bar")<br/>    @p.save<br/>    @p.status.should eql("bar")<br/>  end<br/>end<br/></code></pre><br/><br/><p>You can spec your model code without having to worry that there is an observer out there that is going to come in and clobber your value. You'd spec that separately in the person_observer_spec like this: </p><br/><br/><pre><code>describe PersonObserver do<br/>  it "should clobber the status field" do <br/>    @p = mock_model(Person, :status =&gt; "foo")<br/>    @obs = PersonObserver.instance<br/>    @p.should_receive(:set_status).with("aha!")<br/>    @obs.after_save<br/>  end<br/>end<br/></code></pre><br/><br/><p>If you REALLY REALLY want to test the coupled Model and Observer class, you can do it like this:</p><br/><br/><pre><code>describe Person do <br/>  it "should register a status change with the person observer turned on" do<br/>    Person.with_observers(:person_observer) do<br/>      lambda { @p = Person.new; @p.save }.should change(@p, :status).to("aha!)<br/>    end<br/>  end<br/>end<br/></code></pre><br/><br/><p>99% of the time, I'd rather spec test with the observers turned off. It's just easier that way. </p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      SHAREPOINT FROM OUTSID THE WEBUI
+    </pattern>
+    <template>
+<![CDATA[<p>Agree with Adam. Querying the Sharepoint Database is a big no-no, as Microsoft does not guarantee that the Schema is in any way stable. Only access the database if there is really no other way.</p><br/><br/><p>As for Sharepoint, usually the Lists.asmx Web Service is what you want to look at first.</p><br/><br/><p><a href="http://www.c-sharpcorner.com/UploadFile/mahesh/WSSInNet01302007093018AM/WSSInNet.aspx" rel="nofollow">http://www.c-sharpcorner.com/UploadFile/mahesh/WSSInNet01302007093018AM/WSSInNet.aspx</a></p><br/><br/><p><a href="http://geekswithblogs.net/mcassell/archive/2007/08/22/Accessing-Sharepoint-Data-through-Web-Services.aspx" rel="nofollow">http://geekswithblogs.net/mcassell/archive/2007/08/22/Accessing-Sharepoint-Data-through-Web-Services.aspx</a></p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      CALL JAVASCRIPT S ONSUBMIT EVENT PROGRAMAT ON A FORM
+    </pattern>
+    <template>
+<![CDATA[<p>If you didn't actually want to submit the form, but just invoke whatever code happened to be in the onsubmit, you could possibly do this: (untested)</p><br/><br/><pre><code>var code = document.getElementById('formId').getAttribute('onsubmit');<br/>eval(code);<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      THE RADRAIL PLUGIN FOR APTANA STUDIO OFFLIN
+    </pattern>
+    <template>
+<![CDATA[<p>I wrote down <a href="http://madcoderspeak.blogspot.com/2008/02/showmethemoney-15-aptana-radrails-hell.html" rel="nofollow">my duel with Aptana Rails</a> - See if this helps you.<br/>There is a link on manual installation that may be what you're looking for.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      YWAY TO RUN RUBI ON RAIL APPLIC ON A WINDOW BOX
+    </pattern>
+    <template>
+<![CDATA[<p>Windows is not the usual place to deploy production Rails apps, but there are people who do it. Mongrel was originally written to give better deployment options for Windows. As it turned out the UNIX deployment options weren't that good either. :)</p><br/><br/><p>Start with the Ruby One Click installer so you have a sane installation of ruby and rubygems.</p><br/><br/><p>From there, you install the rails gem and the gem for your database like you normally would. Most if not all of the databases have Windows gems. </p><br/><br/><p>Make sure to install mongrel_service to be able to control each mongrel like a normal windows service. See <code>mongrel_rails service::install -h</code> for details.</p><br/><br/><p>Once you have your mongrels set up, it's similar to a UNIX deployment. You set up a reverse proxy, such as Apache2 and you're set.</p><br/><br/><p>You might run into some gems (such as <a href="http://backgroundrb.rubyforge.org/" rel="nofollow">BackgroundRB</a>) that will not work under Windows because they have C code that either rely on UNIX libraries or expect a UNIX-like build system at installation time. However, all of the really important Rails gems, such as Mongrel and the database adapters, have gems with pre-built binaries available, so you'll be fine.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      NAME OF A WINDOW IN ROR
+    </pattern>
+    <template>
+<![CDATA[<p>You have to use JavaScript for this:</p><br/><br/><pre><code>&lt;script type="text/javascript"&gt;<br/>  window.name = "MyWindow";<br/>&lt;/script&gt;<br/></code></pre><br/><br/><p>Of course you could easily package this up into a Rails helper method. For example, in <code>app/helpers/application_helper.rb</code> add a new method:</p><br/><br/><pre><code>def window_name(name)<br/>  content_for(:window_name) do<br/>    "&lt;script type=\"text/javascript\"&gt;window.name = \"#{name}\";&lt;/script&gt;"<br/>  end<br/>end<br/></code></pre><br/><br/><p>Next, in your layout file, add this line somewhere within the HTML <code>&lt;head&gt;</code> element:</p><br/><br/><pre><code>&lt;%= yield :window_name %&gt;<br/></code></pre><br/><br/><p>Finally, in your view templates, simply add a line like this (can be anywhere you want) to output the correct JavaScript:</p><br/><br/><pre><code>&lt;% window_name 'MyWindow' %&gt;<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      COUNT THE NUMBER OF RECORD THAT HAVE A UNIQU VALU IN A PARTICULAR FIELD IN ROR
+    </pattern>
+    <template>
+<![CDATA[<p>What you're going for is the following SQL:</p><br/><br/><pre><code>SELECT COUNT(DISTINCT date) FROM records<br/></code></pre><br/><br/><p>ActiveRecord has this built in:</p><br/><br/><pre><code>Record.count('date', :distinct =&gt; true)<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      INSTANTRAIL WITH APTANA OR ANI OTHER IDE
+    </pattern>
+    <template>
+<![CDATA[<p>Here's a tutorial: <a href="http://ruby.meetup.com/73/boards/view/viewthread?thread=2203432" rel="nofollow">http://ruby.meetup.com/73/boards/view/viewthread?thread=2203432</a></p><br/><br/><p>I don't know if it's any good.</p><br/><br/><p>And here's one with InstantRails+Netbeans: <a href="http://weblogs.java.net/blog/bleonard/archive/2007/03/instant_rails_w.html" rel="nofollow">http://weblogs.java.net/blog/bleonard/archive/2007/03/instant_rails_w.html</a></p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      RAIL AUTHENT ISSU
+    </pattern>
+    <template>
+<![CDATA[<p>Please check your routes.</p><br/><br/><p>Not all routes are created equally. Routes have priority defined by the order of appearance of the routes in the config/routes.rb file. The priority goes from top to bottom. The last route in that file is at the lowest priority and will be applied last. If no route matches, <strong>404</strong> is returned.</p><br/><br/><p>More info: <a href="http://api.rubyonrails.org/classes/ActionController/Routing.html" rel="nofollow">http://api.rubyonrails.org/classes/ActionController/Routing.html</a></p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      DB MIGRAT FROM APPLIC
+    </pattern>
+    <template>
+<![CDATA[<p>To answer part of your question, here's how you'd run a rake task from inside Rails code:</p><br/><br/><pre><code>require 'rake'<br/>load 'path/to/task.rake'<br/><br/>Rake::Task['foo:bar:baz'].invoke<br/></code></pre><br/><br/><p>Mind you, I have no idea how (or why) you could have one database per user.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      USE SOAP WITH RUBI
+    </pattern>
+    <template>
+<![CDATA[<p>We used the built in <code>soap/wsdlDriver</code> class, which is actually SOAP4R.<br/>It's dog slow, but really simple. The SOAP4R that you get from gems/etc is just an updated version of the same thing.</p><br/><br/><p>Example code:</p><br/><br/><pre><code>require 'soap/wsdlDriver'<br/><br/>client = SOAP::WSDLDriverFactory.new( 'http://site.com/service.wsdl' ).create_rpc_driver<br/>result = client.doStuff();<br/></code></pre><br/><br/><p>That's about it</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      MAIN DIFFER BETWEEN NEW ASP.NET MVC FRAMEWORK AND TYPIC JAVA STRUT PROJECT
+    </pattern>
+    <template>
+<![CDATA[<p>I think you're mostly right. While my MVC experience is largely with RoR, I read up on Struts before the opportunity to work with it evaporated.</p><br/><br/><p>IIRC, Struts and RoR are both fairly clean implementations of MVC as I see it defined on <a href="http://en.wikipedia.org/wiki/Model-view-controller" rel="nofollow">Wikipedia</a>, to pick an obvious reference.</p><br/><br/><p>What's more interesting is that ASP.NET's MVC framework appears also to be a fairly close match. I was listening to a <a href="http://slickthought.net/spaghetticode/podcast/spaghetticode-ruby.mp3" rel="nofollow">podcast</a> that, amongst other things, seemed to confirm this. Why interesting? Because Microsoft didn't crazy trying to outdo what was already out there, just make the same thing available within their environment. How much simpler would web page design and styling be if they'd taken that approach when developing IE?</p><br/><br/><p>Of course, it's not always that simple: how much poorer would the web experience be if MS hadn't "extended" the standards and given us, or example, XmlHttpRequest() ? We'd probably still be waiting for it to be approved by the standards body so someone could invent AJAX...</p><br/>]]>    </template>
+  </category>
+</aiml>

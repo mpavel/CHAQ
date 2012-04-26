@@ -1,0 +1,75 @@
+<?xml version="1.0" ?>
+<aiml version="1.0">
+  <meta content="SimpleAIMLGenerator" name="author"/>
+  <meta content="en" name="language"/>
+  <category>
+    <pattern>
+      PERSIST DATA IN .NET WEB SERVIC
+    </pattern>
+    <template>
+<![CDATA[<p>Extending on <a href="http://stackoverflow.com/questions/11761/persisting-data-in-net-web-service-memory#11779" rel="nofollow" title="excanvas">Ice^^Heat</a>'s idea, you might want to think about where you would cache - either cache the contents of the json file in the Application cache like so:  </p><br/><br/><pre><code>Context.Cache.Insert("foo", _<br/>                 Foo, _<br/>                 Nothing, _<br/>                 DateAdd(DateInterval.Minute, 30, Now()), _<br/>                 System.Web.Caching.Cache.NoSlidingExpiration)<br/></code></pre><br/><br/><p>And then generate the results you need from that on every hit. Alternatively you can cache the webservice output on the function definition:  </p><br/><br/><pre><code>&lt;WebMethod(CacheDuration:=60)&gt; _<br/>Public Function HelloWorld() As String<br/>    Return "Hello World"<br/>End Function<br/></code></pre><br/><br/><p>Info gathered from <a href="http://msdn.microsoft.com/en-us/library/aa480499.aspx" rel="nofollow">XML Web Service Caching Strategies</a>.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      CONFIGUR FILE
+    </pattern>
+    <template>
+<![CDATA[<p>XML XML XML XML.  We're talking <em>config files here</em>.  There is no "angle bracket tax" if you're not serializing objects in a performance-intense situation.  </p><br/><br/><p>Config files must be human readable and human understandable, in addition to machine readable.  XML is a good compromise between the two.</p><br/><br/><p>If your shop has people that are afraid of that new-fangled XML technology, I feel bad for you.  </p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      REASON NOT TO USE JSONP FOR AJA X REQUEST
+    </pattern>
+    <template>
+<![CDATA[<p>Downside? It's fairly limited - you trigger a "GET" request and get back some script that's executed. You don't get error handling if your server throws an error, so you need to wrap all errors in JSON as well. You can't really cancel or retry the request. You're at the mercy of the various browser author opinions of "correct" behavior for dynamically-generated <code>&lt;script&gt;</code> tags. Debugging is somewhat more difficult. </p><br/><br/><p>That said, i've used it on occasion, and haven't suffered. YMMV.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      OB AIR HANDL JSON OBJECT FROM SERVER
+    </pattern>
+    <template>
+<![CDATA[<p>You can find a <a href="http://www.JSON.org/js.html" rel="nofollow">JSON parser written in JavaScript here</a> (<a href="http://www.JSON.org/json2.js" rel="nofollow">source code here</a>). You can also use the as3corelib JSON parser from JavaScript, there's <a href="http://help.adobe.com/en_US/AIR/1.1/devappshtml/WS5b3ccc516d4fbf351e63e3d118666ade46-7ed9.html" rel="nofollow">a description of how to access ActionScript libraries from JavaScript here</a>.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      ENCOD IN .GETJSON JQUERI
+    </pattern>
+    <template>
+<![CDATA[<p>I think that you'll probably have to use <a href="http://docs.jquery.com/Ajax/jQuery.ajax#options" rel="nofollow"><code>$.ajax()</code></a> if you want to change the encoding, see the <code>contentType</code> param below (the <code>success</code> and <code>error</code> callbacks assume you have <code>&lt;div id="success"&gt;&lt;/div&gt;</code> and <code>&lt;div id="error"&gt;&lt;/div&gt;</code> in the html):</p><br/><br/><pre><code>$.ajax({<br/>    type: "POST",<br/>    url: "SomePage.aspx/GetSomeObjects",<br/>    contentType: "application/json; charset=utf-8",<br/>    dataType: "json",<br/>    data: "{id: '" + someId + "'}",<br/>    success: function(json) {<br/>        $("#success").html("json.length=" + json.length);<br/>        itemAddCallback(json);<br/>    },<br/>    error: function (xhr, textStatus, errorThrown) {<br/>        $("#error").html(xhr.responseText);<br/>    }<br/>});<br/></code></pre><br/><br/><p>I actually just had to do this about an hour ago, what a coincidence!</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      PL SQL LIBRARI FOR AUTO GENER JSON DO YOU RECOMMEND
+    </pattern>
+    <template>
+<![CDATA[<p>Check out PL/JSON.  You can see it at <a href="http://oracleoss.com/" rel="nofollow">http://oracleoss.com/</a></p><br/><br/><p>It's at version 0.5 right now.  It can generate JSON but not read it.  I'm writing the parser and it will be added before v1.0.</p><br/><br/><p>LewisC<br/><a href="http://database-geek.com" rel="nofollow">http://database-geek.com</a></p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      FORMAT A JAVASCRIPT DATE TO BE SERIAL BY JQUERI
+    </pattern>
+    <template>
+<![CDATA[<p>This <a href="http://msdn.microsoft.com/en-us/library/ey1cdcx8.aspx" rel="nofollow">MSDN article</a> has some example Date strings that are parse-able is that what you're looking for?</p><br/><br/><pre><code>string dateString = "5/1/2008 8:30:52 AM";<br/>DateTime date1 = DateTime.Parse(dateString, CultureInfo.InvariantCulture);<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      BUILT IN WAY IN .NET AJAX TO MANUAL SERIAL AN OBJECT TO A JSON STRING
+    </pattern>
+    <template>
+<![CDATA[<p>This should do the trick</p><br/><br/><pre><code>Dim jsonSerialiser As New System.Web.Script.Serialization.JavaScriptSerializer<br/>Dim jsonString as String = jsonSerialiser.Serialize(yourObject)<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      JSON WITH PHP
+    </pattern>
+    <template>
+<![CDATA[<p>Use the library. If you try to generate it manually, I predict with 99% certainty that the resulting text will be invalid in some way. Especially with more esoteric features like Unicode strings or exponential notation.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      NEWLIN IN JSON
+    </pattern>
+    <template>
+<![CDATA[<p>I guess this is what you want:</p><br/><br/><pre><code>var data = '{"count" : 1, "stack" : "sometext\\n\\n"}';<br/></code></pre><br/><br/><p>(You need to escape the "\" in your string, otherwise it will become a newline in the JSON source, not the JSON data.)</p><br/>]]>    </template>
+  </category>
+</aiml>

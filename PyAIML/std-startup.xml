@@ -1,0 +1,24 @@
+<aiml version="1.0">
+
+<!-- This category works with the Standard AIML Set -->
+<category>
+<pattern>LOAD AIML B</pattern>
+<template>
+
+<!-- Load standard AIML set -->
+<learn>standard/std-*.aiml</learn>
+</template>
+</category>
+
+<!-- New test category for development: MPavel -->
+<category>
+<pattern>LOAD STACK OVERFLOW</pattern>
+<template>
+
+<!-- Load standard AIML set -->
+<learn>stack-overflow/*.aiml</learn>
+<learn>standard/std-*.aiml</learn>
+</template>
+</category>
+
+</aiml>

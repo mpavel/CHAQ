@@ -1,0 +1,677 @@
+<?xml version="1.0" ?>
+<aiml version="1.0">
+  <meta content="SimpleAIMLGenerator" name="author"/>
+  <meta content="en" name="language"/>
+  <category>
+    <pattern>
+      C SOCKET API IN C + + ON Z O
+    </pattern>
+    <template>
+<![CDATA[<p>Keep a copy of the IBM manuals handy:</p><br/><br/><p><a href="http://publibz.boulder.ibm.com/cgi-bin/bookmgr%5FOS390/BOOKS/EDCLB1A0/CCONTENTS?DT=20090607203246"> z/OS V1R11.0 XL C/C++ Run-Time Library Reference</a><br/><a href="http://publibz.boulder.ibm.com/cgi-bin/bookmgr%5FOS390/BOOKS/CBCPG1A0/CCONTENTS?DT=20090606065305"> z/OS V1R11.0 XL C/C++ Programming Guide</a></p><br/><br/><p>The IBM publications are generally very good, but you need to get used to their format, as well as knowing where to look for an answer.  You'll find quite often that a feature that you want to use is guarded by a "feature test macro"</p><br/><br/><p>You should ask your friendly system programmer to install the <a href="http://www-03.ibm.com/servers/eserver/zseries/zos/le/manpgs.html">XL C/C++ Run-Time Library Reference: Man Pages<br/></a> on your system.  Then you can do things like "man connect" to pull up the man page for the socket connect() API.  When I do that, this is what I see:</p><br/><br/><p>FORMAT</p><br/><br/><p>X/Open</p><br/><br/><pre><code>#define _XOPEN_SOURCE_EXTENDED 1<br/>#include &lt;sys/socket.h&gt;<br/><br/>int connect(int socket, const struct sockaddr *address, socklen_t address_len);<br/></code></pre><br/><br/><p>Berkeley Sockets</p><br/><br/><pre><code>#define _OE_SOCKETS<br/>#include &lt;sys/types.h&gt;<br/>#include &lt;sys/socket.h&gt;<br/><br/>int connect(int socket, struct sockaddr *address, int address_len);<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      GETTIMEOFDAY ( ) GUARANTE TO BE OF MICROSECOND RESOLUT
+    </pattern>
+    <template>
+<![CDATA[<p>Maybe. But you have bigger problems. <code>gettimeofday()</code> can result in incorrect timings if there are processes on your system that change the timer (ie, ntpd). On a "normal" linux, though, I believe the resolution of <code>gettimeofday()</code> is 10us. It can jump forward and backward and time, consequently, based on the processes running on your system. This effectively makes the answer to your question no.</p><br/><br/><p>You should look into <code>clock_gettime(CLOCK_MONOTONIC)</code> for timing intervals. It suffers from several less issues due to things like multi-core systems and external clock settings.</p><br/><br/><p>Also, look into the clock_getres() function.</p>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      GTK IMPLEMENT OF MESSAGEBOX
+    </pattern>
+    <template>
+<![CDATA[<p>Hmm, ok.  I'd suggest code like this, then:</p><br/><br/><pre><code>typedef struct {<br>    int type;<br>    int result;<br>} DialogData;<br><br>static gboolean<br>display_dialog(gpointer user_data)<br>{<br>    DialogData *dialog_data = user_data;<br>    GtkWidget *dialog;<br><br>    if (dialog_data-&gt;type &amp; MB_YESNO)<br>        dialog = gtk_message_dialog_new(...);<br>    else<br>        dialog = gtk_message_dialog_new(...);<br><br>    // Set title, etc.<br><br>    dialog_data-&gt;result = gtk_dialog_run(...);<br><br>    gtk_main_quit();  // Quits the main loop run in MessageBox()<br><br>    return FALSE;<br>}<br><br>int MessageBox(...)<br>{<br>    DialogData dialog_data;<br><br>    dialog_data.type = type;<br><br>    gtk_idle_add(display_dialog, &amp;dialog_data);<br><br>    gtk_main();<br><br>    // Do stuff based on dialog_data.result<br>}<br></code></pre><br/><br/><p>The struct is because you need to pass around a couple pieces of data.  The <code>gtk_idle_add()</code> call adds a method to be run when the main loop is running and idle, and the <code>FALSE</code> return value from the <code>display_dialog()</code> call means that it's only run once.  After we get the result from the dialog, we quit the main loop.  That'll cause the <code>gtk_main()</code> in your main <code>MessageBox()</code> method to return, and you'll be able to access the result from there.</p><br/><br/><p>Hope this helps!</p>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      A MALLOC DOUBL FREE ERROR WITH REALLOC ( )
+    </pattern>
+    <template>
+<![CDATA[<p>As a general rule, you should <strong>never</strong> do a free or realloc on a user provided buffer. You don't know where the user allocated the space (in your module, in another DLL) so you cannot use any of the allocation functions on a user buffer.</p><br/><br/><p>Provided that you now cannot do any reallocation within your function, you should change a little its behavior like doing only one replacement, so the user will be able to compute the resulting string max length and provide you with a buffer long enough for this one replacement to occur.</p><br/><br/><p>Then you could create another function to do the multiple replacements, but you will have to allocate the whole space for the resulting string and copy the user input string. Then you must provide a way to delete the string you allocated.</p><br/><br/><p>Resulting in:</p><br/><br/><pre><code>void  strrep(char *input, char *search, char *replace);<br>char* strrepm(char *input, char *search, char *replace);<br>void  strrepmfree(char *input);<br></code></pre>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      ROCKBOX AUDIO FORMAT
+    </pattern>
+    <template>
+<![CDATA[<p>I've never worked with Rockbox, but I did some snooping around, and I found <a href="http://www.rockbox.org/mail/archive/rockbox-dev-archive-2008-07/0059.shtml" rel="nofollow">this</a> link. It may give you the answer for what you need. Or is this a general question about how function pointers work?</p>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      STL LIKE LIBRARI FOR C
+    </pattern>
+    <template>
+<![CDATA[<p>The <a href="http://library.gnome.org/devel/glib/stable/" rel="nofollow">Glib</a> library used on the Gnome project may also be some use. Moreover it is pretty well tested.</p><br/><br/><p>IBM developer works has a good tutorial on its use: <a href="http://www.ibm.com/developerworks/linux/tutorials/l-glib/resources.html" rel="nofollow">Manage C data using the GLib collections</a></p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      A STATIC CODE ANALYSI TOOL
+    </pattern>
+    <template>
+<![CDATA[<p>Don't overlook the compiler itself.</p><br/><br/><p>Read the compiler's documentation and find all the warnings and errors it can provide, and then enable as many as make sense for you.</p><br/><br/><p>Also make sure to tell your compiler to treat warnings like errors so you're forced to fix them right away.  ("-Werror" on gcc)</p><br/><br/><p>Also: "-Wall" on gcc does <em>not</em> enable all warnings, don't be fooled.</p><br/><br/><p>Also also: check out valgrind (free!) - it "automatically detect[s] many memory management and threading bugs, and profile[s] your programs in detail."</p><br/><br/><p>Valgrind isn't a static checker, but it's a great tool!  http://valgrind.org</p>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      C + + LIBRARI FOR READ MIDI SIGNAL FROM A USB MIDI DEVIC
+    </pattern>
+    <template>
+<![CDATA[<p><a href="http://portmedia.sourceforge.net/portmidi/" rel="nofollow">PortMidi</a> is another open source cross-platform MIDI I/O library worth checking out.  On the other hand, if you are working on a sysex type of app, then direct Win32 works easily enough.</p><br/><br/><p>Just came across another open source cross-platform framework that includes MIDI support: <a href="http://www.rawmaterialsoftware.com/juce/" rel="nofollow">Juce</a>.</p><br/><br/><p>Also, I should note that there isn't anything special about a USB connected MIDI device.  It will still be presented as a MIDI device in Windows and you will use standard MIDI APIs (mmsystem) to communicate with it.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      MULTIDIMENSION ARRAY AS FUNCTION ARGUMENT IN C
+    </pattern>
+    <template>
+<![CDATA[<p>You can do this with any data type. Simply make it a double pointer:</p><br/><br/><pre><code>typedef struct {<br>  int myint;<br>  char* mystring;<br>} data;<br><br>data** array;<br></code></pre><br/><br/><p>But don't forget you still have to malloc the variable, and it does get a bit complex:</p><br/><br/><pre><code>//initialize<br>int x,y,w,h;<br>w = 10; //width of array<br>h = 20; //height of array<br><br>//malloc the 'y' dimension<br>array = malloc(sizeof(data*) * h);<br><br>//iterate over 'y' dimension<br>for(y=0;y&lt;h;y++){<br>  //malloc the 'x' dimension<br>  array[y] = malloc(sizeof(data) * w);<br><br>  //iterate over the 'x' dimension<br>  for(x=0;x&lt;w;x++){<br>    //malloc the string in the data structure<br>    array[y][x].mystring = malloc(sizeof(char) * 50); //50 chars<br><br>    //initialize<br>    array[y][x].myint = 6;<br>    array[y][x].mystring = "w00t";<br>  }<br>}<br></code></pre><br/><br/><p>The code to deallocate the structure looks similar - don't forget to call free() on everything you malloced! (Also, in robust applications you should <a href="http://www.google.com/search?q=check+malloc+return" rel="nofollow">check the return of malloc()</a>.)</p><br/><br/><p>Now let's say you want to pass this to a function. You can still use the double pointer, because you probably want to do manipulations on the data structure, not the pointer to pointers of data structures:</p><br/><br/><pre><code>int whatsMyInt(data** arrayPtr, int x, int y){<br>  return arrayPtr[y][x].myint;<br>}<br></code></pre><br/><br/><p>Call this function with:</p><br/><br/><pre><code>printf("My int is %d.\n", whatsMyInt(array, 2, 4));<br></code></pre><br/><br/><p>Output:</p><br/><br/><pre><code>My int is 6.<br></code></pre>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      .INDEXOF FUNCTION IN C
+    </pattern>
+    <template>
+<![CDATA[<p>I think that</p><br/><br/><blockquote><br/>  <p>size_t strcspn ( const char * str1, const char * str2 );</p><br/></blockquote><br/><br/><p>is what you want. Here is an example pulled from <a href="http://www.cplusplus.com/reference/clibrary/cstring/strcspn.html">here</a>:</p><br/><br/><pre><code>/* strcspn example */<br/>#include &lt;stdio.h&gt;<br/>#include &lt;string.h&gt;<br/><br/>int main ()<br/>{<br/>  char str[] = "fcba73";<br/>  char keys[] = "1234567890";<br/>  int i;<br/>  i = strcspn (str,keys);<br/>  printf ("The first number in str is at position %d.\n",i+1);<br/>  return 0;<br/>}<br/></code></pre>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      HAVE EXPERI CREAT A SHARE LIBRARI IN MATLAB
+    </pattern>
+    <template>
+<![CDATA[<p>I won't help much but I remember that I was able to wrap MATLAB simulation into DLL and then call it from Delphi app. It work really well.</p><br/><br/><p>Anyway: good luck!!!</p>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      BARRIER TO UNDERSTAND POINTER AND WHAT CAN BE DONE TO OVERCOM THEM
+    </pattern>
+    <template>
+<![CDATA[<p>Pointers is a concept that for many can be confusing at first, in particular when it comes to copying pointer values around and still referencing the same memory block.</p><br/><br/><p>I've found that the best analogy is to consider the pointer as a piece of paper with a house address on it, and the memory block it references as the actual house. All sorts of operations can thus be easily explained.</p><br/><br/><p>I've added some Delphi code down below, and some comments where appropriate. I chose Delphi since my other main programming language, C#, does not exhibit things like memory leaks in the same way.</p><br/><br/><p>If you only wish to learn the high-level concept of pointers, then you should ignore the parts labelled "Memory layout" in the explanation below. They are intended to give examples of what memory could look like after operations, but they are more low-level in nature. However, in order to accurately explain how buffer overruns really work, it was important that I added these diagrams.</p><br/><br/><p><em>Disclaimer: For all intents and purposes, this explanation and the example memory<br/>layouts are vastly simplified. There's more overhead and a lot more details you would<br/>need to know if you need to deal with memory on a low-level basis. However, for the<br/>intents of explaining memory and pointers, it is accurate enough.</em></p><br/><br/><hr><br/><br/><p>Let's assume the THouse class used below looks like this:</p><br/><br/><pre><code>type<br/>    THouse = class<br/>    private<br/>        FName : array[0..9] of Char;<br/>    public<br/>        constructor Create(name: PChar);<br/>    end;<br/></code></pre><br/><br/><p>When you initialize the house object, the name given to the constructor is copied into the private field FName. There is a reason it is defined as a fixed-size array.</p><br/><br/><p>In memory, there will be some overhead associated with the house allocation, I'll illustrate this below like this:</p><br/><br/><pre><br/>---[ttttNNNNNNNNNN]---<br/>     ^   ^<br/>     |   |<br/>     |   +- the FName array<br/>     |<br/>     +- overhead<br/></pre><br/><br/><p>The "tttt" area is overhead, there will typically be more of this for various types of runtimes and languages, like 8 or 12 bytes. It is imperative that whatever values are stored in this area never gets changed by anything other than the memory allocator or the core system routines, or you risk crashing the program.</p><br/><br/><hr><br/><br/><p><strong>Allocate memory</strong></p><br/><br/><p>Get an entrepreneur to build your house, and give you the address to the house. In contrast to the real world, memory allocation cannot be told where to allocate, but will find a suitable spot with enough room, and report back the address to the allocated memory.</p><br/><br/><p>In other words, the entrepreneur will choose the spot.</p><br/><br/><pre><code>THouse.Create('My house');<br/></code></pre><br/><br/><p>Memory layout:</p><br/><br/><pre><br/>---[ttttNNNNNNNNNN]---<br/>    1234My house<br/></pre><br/><br/><hr><br/><br/><p><strong>Keep a variable with the address</strong></p><br/><br/><p>Write the address to your new house down on a piece of paper. This paper will serve as your reference to your house. Without this piece of paper, you're lost, and cannot find the house, unless you're already in it.</p><br/><br/><pre><code>var<br/>    h: THouse;<br/>begin<br/>    h := THouse.Create('My house');<br/>    ...<br/></code></pre><br/><br/><p>Memory layout:</p><br/><br/><pre><br/>    h<br/>    v<br/>---[ttttNNNNNNNNNN]---<br/>    1234My house<br/></pre><br/><br/><hr><br/><br/><p><strong>Copy pointer value</strong>  </p><br/><br/><p>Just write the address on a new piece of paper. You now have two pieces of paper that will get you to the same house, not two separate houses. Any attempts to follow the address from one paper and rearrange the furniture at that house will make it seem that <em>the other house</em> has been modified in the same manner, unless you can explicitly detect that it's actually just one house.</p><br/><br/><p><em>Note</em> This is usually the concept that I have the most problem explaining to people, two pointers does not mean two objects or memory blocks.</p><br/><br/><pre><code>var<br/>    h1, h2: THouse;<br/>begin<br/>    h1 := THouse.Create('My house');<br/>    h2 := h1; // copies the address, not the house<br/>    ...<br/></code></pre><br/><br/><pre><br/>    h1<br/>    v<br/>---[ttttNNNNNNNNNN]---<br/>    1234My house<br/>    ^<br/>    h2<br/></pre><br/><br/><hr><br/><br/><p><strong>Freeing the memory</strong>  </p><br/><br/><p>Demolish the house. You can then later on reuse the paper for a new address if you so wish, or clear it to forget the address to the house that no longer exists.</p><br/><br/><pre><code>var<br/>    h: THouse;<br/>begin<br/>    h := THouse.Create('My house');<br/>    ...<br/>    h.Free;<br/>    h := nil;<br/></code></pre><br/><br/><p>Here I first construct the house, and get hold of its address. Then I do something to the house (use it, the ... code, left as an exercise for the reader), and then I free it. Lastly I clear the address from my variable.</p><br/><br/><p>Memory layout:</p><br/><br/><pre><br/>    h                        &lt;--+<br/>    v                           +- before free<br/>---[ttttNNNNNNNNNN]---          |<br/>    1234My house             &lt;--+<br/><br/>    h (now points nowhere)   &lt;--+<br/>                                +- after free<br/>----------------------          | (note, memory might still<br/>    xx34My house             &lt;--+  contain some data)<br/></pre><br/><br/><hr><br/><br/><p><strong>Dangling pointers</strong></p><br/><br/><p>You tell your entrepreneur to destroy the house, but you forget to erase the address from your piece of paper. When later on you look at the piece of paper, you've forgotten that the house is no longer there, and goes to visit it, with failed results (see also the part about an invalid reference below).</p><br/><br/><pre><code>var<br/>    h: THouse;<br/>begin<br/>    h := THouse.Create('My house');<br/>    ...<br/>    h.Free;<br/>    ... // forgot to clear h here<br/>    h.OpenFrontDoor; // will most likely fail<br/></code></pre><br/><br/><p>Using <code>h</code> after the call to <code>.Free</code> <em>might</em> work, but that is just pure luck. Most likely it will fail, at a customers place, in the middle of a critical operation.</p><br/><br/><pre><br/>    h                        &lt;--+<br/>    v                           +- before free<br/>---[ttttNNNNNNNNNN]---          |<br/>    1234My house             &lt;--+<br/><br/>    h                        &lt;--+<br/>    v                           +- after free<br/>----------------------          |<br/>    xx34My house             &lt;--+<br/></pre><br/><br/><p>As you can see, h still points to the remnants of the data in memory, but<br/>since it might not be complete, using it as before might fail.</p><br/><br/><hr><br/><br/><p><strong>Memory leak</strong>  </p><br/><br/><p>You lose the piece of paper and cannot find the house. The house is still standing somewhere though, and when you later on want to construct a new house, you cannot reuse that spot.</p><br/><br/><pre><code>var<br/>    h: THouse;<br/>begin<br/>    h := THouse.Create('My house');<br/>    h := THouse.Create('My house'); // uh-oh, what happened to our first house?<br/>    ...<br/>    h.Free;<br/>    h := nil;<br/></code></pre><br/><br/><p>Here we overwrote the contents of the <code>h</code> variable with the address of a new house, but the old one is still standing... somewhere. After this code, there is no way to reach that house, and it will be left standing. In other words, the allocated memory will stay allocated until the application closes, at which point the operating system will tear it down.</p><br/><br/><p>Memory layout after first allocation:</p><br/><br/><pre><br/>    h<br/>    v<br/>---[ttttNNNNNNNNNN]---<br/>    1234My house<br/></pre><br/><br/><p>Memory layout after second allocation:</p><br/><br/><pre><br/>                       h<br/>                       v<br/>---[ttttNNNNNNNNNN]---[ttttNNNNNNNNNN]<br/>    1234My house       5678My house<br/></pre><br/><br/><p>A more common way to get this method is just to forget to free something, instead of overwriting it as above. In Delphi terms, this will occur with the following method:</p><br/><br/><pre><code>procedure OpenTheFrontDoorOfANewHouse;<br/>var<br/>    h: THouse;<br/>begin<br/>    h := THouse.Create('My house');<br/>    h.OpenFrontDoor;<br/>    // uh-oh, no .Free here, where does the address go?<br/>end;<br/></code></pre><br/><br/><p>After this method has executed, there's no place in our variables that the address to the house exists, but the house is still out there.</p><br/><br/><p>Memory layout:</p><br/><br/><pre><br/>    h                        &lt;--+<br/>    v                           +- before losing pointer<br/>---[ttttNNNNNNNNNN]---          |<br/>    1234My house             &lt;--+<br/><br/>    h (now points nowhere)   &lt;--+<br/>                                +- after losing pointer<br/>---[ttttNNNNNNNNNN]---          |<br/>    1234My house             &lt;--+<br/></pre><br/><br/><p>As you can see, the old data is left intact in memory, and will not<br/>be reused by the memory allocator. The allocator keeps track of which<br/>areas of memory has been used, and will not reuse them unless you<br/>free it.</p><br/><br/><hr><br/><br/><p><strong>Freeing the memory but keeping a (now invalid) reference</strong>  </p><br/><br/><p>Demolish the house, erase one of the pieces of paper but you also have another piece of paper with the old address on it, when you go to the address, you won't find a house, but you might find something that resembles the ruins of one.</p><br/><br/><p>Perhaps you will even find a house, but it is not the house you were originally given the address to, and thus any attempts to use it as though it belongs to you might fail horribly.</p><br/><br/><p>Sometimes you might even find that a neighbouring address has a rather big house set up on it that occupies three address (Main Street 1-3), and your address goes to the middle of the house. Any attempts to treat that part of the large 3-address house as a single small house might also fail horribly.</p><br/><br/><pre><code>var<br/>    h1, h2: THouse;<br/>begin<br/>    h1 := THouse.Create('My house');<br/>    h2 := h1; // copies the address, not the house<br/>    ...<br/>    h1.Free;<br/>    h1 := nil;<br/>    h2.OpenFrontDoor; // uh-oh, what happened to our house?<br/></code></pre><br/><br/><p>Here the house was torn down, through the reference in <code>h1</code>, and while <code>h1</code> was cleared as well, <code>h2</code> still has the old, out-of-date, address. Access to the house that is no longer standing might or might not work.</p><br/><br/><p>This is a variation of the dangling pointer above. See its memory layout.</p><br/><br/><hr><br/><br/><p><strong>Buffer overrun</strong>  </p><br/><br/><p>You move more stuff into the house than you can possibly fit, spilling into the neighbours house or yard. When the owner of that neighbouring house later on comes home, he'll find all sorts of things he'll consider his own.</p><br/><br/><p>This is the reason I chose a fixed-size array. To set the stage, assume that<br/>the second house we allocate will, for some reason, be placed before the<br/>first one in memory. In other words, the second house will have a lower<br/>address than the first one. Also, they're allocated right next to each other.</p><br/><br/><p>Thus, this code:</p><br/><br/><pre><code>var<br/>    h1, h2: THouse;<br/>begin<br/>    h1 := THouse.Create('My house');<br/>    h2 := THouse.Create('My other house somewhere');<br/>                         ^-----------------------^<br/>                          longer than 10 characters<br/>                         0123456789 &lt;-- 10 characters<br/></code></pre><br/><br/><p>Memory layout after first allocation:</p><br/><br/><pre><br/>                        h1<br/>                        v<br/>-----------------------[ttttNNNNNNNNNN]<br/>                        5678My house<br/></pre><br/><br/><p>Memory layout after second allocation:</p><br/><br/><pre><br/>    h2                  h1<br/>    v                   v<br/>---[ttttNNNNNNNNNN]----[ttttNNNNNNNNNN]<br/>    1234My other house somewhereouse<br/>                        ^---+--^<br/>                            |<br/>                            +- overwritten<br/></pre><br/><br/><p>The part that will most often cause crash is when you overwrite important parts<br/>of the data you stored that really should not be randomly changed. For instance<br/>it might not be a problem that parts of the name of the h1-house was changed,<br/>in terms of crashing the program, but overwriting the overhead of the<br/>object will most likely crash when you try to use the broken object,<br/>as will overwriting links that is stored to<br/>other objects in the object.</p><br/><br/><hr><br/><br/><p><strong>Linked lists</strong>  </p><br/><br/><p>When you follow an address on a piece of paper, you get to a house, and at that house there is another piece of paper with a new address on it, for the next house in the chain, and so on.</p><br/><br/><pre><code>var<br/>    h1, h2: THouse;<br/>begin<br/>    h1 := THouse.Create('Home');<br/>    h2 := THouse.Create('Cabin');<br/>    h1.NextHouse := h2;<br/></code></pre><br/><br/><p>Here we create a link from our home house to our cabin. We can follow the chain until a house has no <code>NextHouse</code> reference, which means it's the last one. To visit all our houses, we could use the following code:</p><br/><br/><pre><code>var<br/>    h1, h2: THouse;<br/>    h: THouse;<br/>begin<br/>    h1 := THouse.Create('Home');<br/>    h2 := THouse.Create('Cabin');<br/>    h1.NextHouse := h2;<br/>    ...<br/>    h := h1;<br/>    while h &lt;&gt; nil do<br/>    begin<br/>        h.LockAllDoors;<br/>        h.CloseAllWindows;<br/>        h := h.NextHouse;<br/>    end;<br/></code></pre><br/><br/><p>Memory layout (added NextHouse as a link in the object, noted with<br/>the four LLLL's in the below diagram):</p><br/><br/><pre><br/>    h1                      h2<br/>    v                       v<br/>---[ttttNNNNNNNNNNLLLL]----[ttttNNNNNNNNNNLLLL]<br/>    1234Home       +        5678Cabin      +<br/>                   |        ^              |<br/>                   +--------+              * (no link)<br/></pre><br/><br/><hr><br/><br/><p><strong>In basic terms, what is a memory address?</strong></p><br/><br/><p>A memory address is in basic terms just a number. If you think of memory<br/>as a big array of bytes, the very first byte has the address 0, the next one<br/>the address 1 and so on upwards. This is simplified, but good enough.</p><br/><br/><p>So this memory layout:</p><br/><br/><pre><br/>    h1                 h2<br/>    v                  v<br/>---[ttttNNNNNNNNNN]---[ttttNNNNNNNNNN]<br/>    1234My house       5678My house<br/></pre><br/><br/><p>Might have these two address (the leftmost - is address 0):</p><br/><br/><ul><br/><li>h1 = 4</li><br/><li>h2 = 23</li><br/></ul><br/><br/><p>Which means that our linked list above might actuall look like this:</p><br/><br/><pre><br/>    h1 (=4)                 h2 (=28)<br/>    v                       v<br/>---[ttttNNNNNNNNNNLLLL]----[ttttNNNNNNNNNNLLLL]<br/>    1234Home      0028      5678Cabin     0000<br/>                   |        ^              |<br/>                   +--------+              * (no link)<br/></pre><br/><br/><p>It is typical to store an address that "points nowhere" as a zero-address.</p><br/><br/><hr><br/><br/><p><strong>In basic terms, what is a pointer?</strong></p><br/><br/><p>A pointer is just a variable holding a memory address. You can typically ask the programming<br/>language to give you its number, but most programming languages and runtimes tries to<br/>hide the fact that there is a number beneath, just because the number itself does not<br/>really hold any meaning to you. It is best to think of a pointer as a black box, ie.<br/>you don't really know or care about how it is actually implemented, just as long as it<br/>works.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      TYPE ABSTRACT IN EMBED SYSTEM
+    </pattern>
+    <template>
+<![CDATA[<p>I use type abstraction very rarely. Here are my arguments, sorted in increasing order of subjectivity:</p><br/><br/><ol><br/><li><p>Local variables are different from struct members and arrays in the sense that you want them to fit in a register. On a 32b/64b target, a local <code>int16_t</code> can make code slower compared to a local int since the compiler will have to add operations to /force/ overflow according to the semantics of <code>int16_t</code>. While C99 defines an <code>intfast_t</code> typedef, AFAIK a plain int will fit in a register just as well, and it sure is a shorter name.</p></li><br/><li><p>Organizations which like these typedefs almost invariably end up with several of them (<code>INT32, int32_t, INT32_T</code>, ad infinitum). Organizations using built-in types are thus better off, in a way, having just one set of names. I wish people used the typedefs from stdint.h or windows.h or anything existing; and when a target doesn't have that .h file, how hard is it to add one?</p></li><br/><li><p>The typedefs can theoretically aid portability, but I, for one, never gained a thing from them. Is there a useful system you can port from a 32b target to a 16b one? Is there a 16b system that isn't trivial to port to a 32b target? Moreover, if most vars are ints, you'll actually gain something from the 32 bits on the new target, but if they are <code>int16_t</code>, you won't. And the places which are hard to port tend to require manual inspection anyway; before you try a port, you don't know where they are. Now, if someone thinks it's so easy to port things if you have typedefs all over the place - when time comes to port, which happens to few systems, write a script converting all names in the code base. This should work according to the "no manual inspection required" logic, and it postpones the effort to the point in time where it actually gives benefit.</p></li><br/><li><p>Now if portability may be a theoretical benefit of the typedefs, <i>readability</i> sure goes down the drain. Just look at stdint.h: <code>{int,uint}{max,fast,least}{8,16,32,64}_t</code>. Lots of types. A program has lots of variables; is it really that easy to understand which need to be <code>int_fast16_t</code> and which need to be <code>uint_least32_t</code>? How many times are we silently converting between them, making them entirely pointless? (I particularly like BOOL/Bool/eBool/boolean/bool/int conversions. Every program written by an orderly organization mandating typedefs is littered with that).</p></li><br/><li><p>Of course in C++ we could make the type system more strict, by wrapping numbers in template class instantiations with overloaded operators and stuff. This means that you'll now get error messages of the form "class Number&lt;int,Least,32&gt; has no operator+ overload for argument of type class Number&lt;unsigned long long,Fast,64&gt;, candidates are..." I don't call this "readability", either. Your chances of implementing these wrapper classes correctly are microscopic, and most of the time you'll wait for the innumerable template instantiations to compile.</p></li><br/></ol><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      LPHA BLEND SPRITE IN NINTENDO DS HOMEBREW
+    </pattern>
+    <template>
+<![CDATA[<p>As a generic reference, i once wrote <a href="http://sylvainhb.blogspot.com/2006/09/alpha-blending.html" rel="nofollow">a small blog entry</a> about that issue. Basically, you first have to define which layer is alpha-blended against which other layer(s). Afaik,</p><br/><br/><ul><br/><li>the source layer(s) must be over destination layer(s) to have some blending displayed. that means the priority of source layers should be numerically lower than the the priority of destination layers.</li><br/><li>the source layer is what is going to be translucent, the destination(s) is what is going to be seen through (and yes, i find this rather confusing).</li><br/></ul><br/><br/><p>For the <a href="http://sylvainhb.blogspot.com/2011/09/oam-alpha.html" rel="nofollow">sprites, specifically</a>, you then have 3 ways to achieve alpha-blending depending on what you need and what you're "ready to pay" for it:</p><br/><br/><ul><br/><li>You can make all the sprites have some alpha-blending by turning on <code>BLEND_SRC_SPRITE</code> in <code>REG_BLDCNT[_SUB]</code> ... not that useful. </li><br/><li>You can selectively turn on blending of some sprites by using <code>ATTR0_TYPE_BLENDED</code>. The blending level will be the same for all sprites (and layers)</li><br/><li>bitmap-type sprites use direct colors (bypassing the palettes), so the <code>ATTR2_PALETTE()</code> field of GBA sprites is useless and has been recycled into <code>ATTR2_ALPHA</code>. </li><br/></ul><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      REDEFIN VERSION PACKAG ETC
+    </pattern>
+    <template>
+<![CDATA[<p>Some notes:</p><br/><br/><ul><br/><li>you didn't mention how config.h was included - with quotes or angle brackets.  See <a href="http://stackoverflow.com/questions/21593/what-is-the-difference-between-include-filename-and-include-filename" rel="nofollow">this other question</a> for more information on the difference.  In short, config.h is typically included with quotes, not angle brackets, and this should make the preprocessor prefer the config.h from the project's own directory (which is usually what you want)</li><br/><li>You say that a subproject should be including the enclosing project's config.h  Normally this is not at all what you want.  The subproject is standalone, and its PACKAGE and VERSION should be the one of that subproject, not yours.  If you include libxml in your xmlreader project for example, you would still want the libxml code to be compiled with PACKAGE libxml and VERSION (whatever the libxml version is).</li><br/><li>It is usually a big mistake to have config.h be included from public headers.  config.h is always private to your project or the subproject, and should only be included from .c files.  So, if your vendor's documentation says to include their "vendor.h" and that public header includes config.h somehow, then that is a no-no.  Similarly, if your project is a library, don't include config.h anywhere from your publically installed headers.</li><br/></ul><br/><br/><p>Hope that helps!</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      SHIFT OPER IN C
+    </pattern>
+    <template>
+<![CDATA[<p>According to <a href="http://rads.stackoverflow.com/amzn/click/0131103628" rel="nofollow" title="Jonathan Livingston Seagull">K&amp;R Second edition (the bible)</a> the results are implementation-defined for right-shifts of signed values.</p><br/><br/><p><a href="http://en.wikipedia.org/wiki/Arithmetic_shift" rel="nofollow" title="Bootstrap">Wikipedia</a> says that C/C++ 'usually' implements an arithmetic shift on signed values.</p><br/><br/><p>Basically you need to either test your compiler or not rely on it. My VS2008 help for the current MS C++ compiler says they do an arithmetic shift.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      PRINTF STATEMENT IN C ( PRINTF PRIMER )
+    </pattern>
+    <template>
+<![CDATA[<p>Danny is mostly right.</p><br/><br/><p>a. unsigned decimal, minimum 4 characters, space padded<br><br/>b. floating point, minimum 16 digits before the decimal (0 padded), 1 digit after the decimal<br><br/>c. hex, minimum 4 characters, 0 padded, letters are printed in upper case<br><br/>d. same as above, but minimum 2 characters<br><br/>e. e is assumed to be an int, converted to an unsigned char and printed<br><br/>f. same as e<br><br/>g. This is likely a typo, the 4 has no effect.  If it were "%.4s", then a maximum of 4 characters from the string would be printed.  It is interesting to note that in this case, the string does not need to be null terminated.</p><br/><br/><p>Edit: <a href="http://stackoverflow.com/users/430/jj33" rel="nofollow">jj33</a> points out 2 errors in b and g above <a href="http://stackoverflow.com/questions/7981/decoding-printf-statements-in-c-printf-primer#8051" rel="nofollow">here</a>.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      DETERMIN THE SIZE OF A FILE IN C
+    </pattern>
+    <template>
+<![CDATA[<p>Based on NilObject's code:</p><br/><br/><pre><code>#include &lt;sys/stat.h&gt;<br/><br/>off_t fsize(const char *filename) {<br/>    struct stat st; <br/><br/>    if (stat(filename, &amp;st) == 0)<br/>        return st.st_size;<br/><br/>    return -1; <br/>}<br/></code></pre><br/><br/><p>Changes:</p><br/><br/><ul><br/><li>Made the filename argument a <code>const char</code>.</li><br/><li>Corrected the <code>struct stat</code> definition, which was missing the variable name.</li><br/><li>Returns <code>-1</code> on error instead of <code>0</code>, which would be ambiguous for an empty file. <code>off_t</code> is a signed type so this is possible.</li><br/></ul><br/><br/><p>If you want <code>fsize()</code> to print a message on error, you can use this:</p><br/><br/><pre><code>#include &lt;sys/stat.h&gt;<br/>#include &lt;string.h&gt;<br/>#include &lt;stdio.h&gt;<br/>#include &lt;errno.h&gt;<br/><br/>off_t fsize(const char *filename) {<br/>    struct stat st;<br/><br/>    if (stat(filename, &amp;st) == 0)<br/>        return st.st_size;<br/><br/>    fprintf(stderr, "Cannot determine size of %s: %s\n",<br/>            filename, strerror(errno));<br/><br/>    return -1;<br/>}<br/></code></pre><br/><br/><p>On 32-bit systems you should compile this with the option <code>-D_FILE_OFFSET_BITS=64</code>, otherwise <code>off_t</code> will only hold values up to 2 GB. See the "Using LFS" section of <a href="http://www.suse.de/~aj/linux_lfs.html" rel="nofollow">Large File Support in Linux</a> for details.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      BOOK ON BEST PRACTIC AND GUIDELIN IN DEVELOP A SDK IN C
+    </pattern>
+    <template>
+<![CDATA[<p>Good question! I haven't seen any good book on this topic. But I have seen these things about the importance of making an effort and some general thoughts.</p><br/><br/><p><a href="http://lcsd05.cs.tamu.edu/slides/keynote.pdf" rel="nofollow" title="http://www.scribd.com/doc/2547864/msnetformattingstrings">PDF</a></p><br/><br/><p><a href="http://video.google.com/videoplay?docid=-3733345136856180693" rel="nofollow">Video</a></p><br/><br/><p>Personally I'd focus on:</p><br/><br/><ol><br/><li>Try to create what is expected of a framework, intuitively. </li><br/><li>Hide internal workings in header files that is not part of the delivery headers.</li><br/><li>Repeat a used pattern, ie first parameter is always the "context"</li><br/><li>Use common patterns from other SDK's, ie directional same as strcpy(dst, src) or zero is "OK"</li><br/></ol><br/><br/><p>Well stuff like that...</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      PASS A FUNCTION AS A PARAMET IN C
+    </pattern>
+    <template>
+<![CDATA[<p><strong>Declaration</strong></p><br/><br/><p>A prototype for a function which takes a function parameter looks like the following:</p><br/><br/><pre><code>void func ( void (*f)(int) );<br/></code></pre><br/><br/><p>This states that the parameter f will be a pointer to a function which has a void return type and which takes a single int parameter. The following function (print) is an example of a function which could be passed to func as a parameter because it is the proper type:</p><br/><br/><pre><code>void print ( int x ) {<br/>  cout &lt;&lt; x &lt;&lt; endl;<br/>}<br/></code></pre><br/><br/><p><strong>Function Call</strong></p><br/><br/><p>When calling a function with a function parameter, the value passed must be a pointer to a function. Use the function's name (without parens) for this:</p><br/><br/><pre><code>func(print);<br/></code></pre><br/><br/><p>would call func, passing the print function to it.</p><br/><br/><p><strong>Function Body</strong></p><br/><br/><p>As with any parameter, func can now use the parameter's name in the function body to access the value of the parameter. Let's say that func will apply the function it is passed to the numbers 0-4. Consider, first, what the loop would look like to call print directly:</p><br/><br/><pre><code>for ( int ctr = 0 ; ctr &lt; 5 ; ctr++ ) {<br/>  print(ctr);<br/>}<br/></code></pre><br/><br/><p>Since func's parameter declaration says that f is the name for a pointer to the desired function, we recall first that if f is a pointer then *f is the thing that f points to (i.e. the function print in this case). As a result, just replace every occurrence of print in the loop above with *f:</p><br/><br/><pre><code>void func ( void (*f)(int) ) {<br/>  for ( int ctr = 0 ; ctr &lt; 5 ; ctr++ ) {<br/>    (*f)(ctr);<br/>  }<br/>}<br/></code></pre><br/><br/><p>From <a href="http://math.hws.edu/bridgeman/courses/331/f05/handouts/c-c++-notes.html" rel="nofollow">http://math.hws.edu/bridgeman/courses/331/f05/handouts/c-c++-notes.html</a></p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      TOOL FOR MAKEFIL GENER
+    </pattern>
+    <template>
+<![CDATA[<p>Other suggestions you may want to consider:</p><br/><br/><ul><br/><li><p><a href="http://www.scons.org/" rel="nofollow" title="Coding Guidelines for Cocoa">Scons</a> is a cross-platform, cross-compiler build library, uses Python scruipting for the build systems. Used in a variety of large projects, and performs very well.</p></li><br/><li><p>If you're using Qt, <a href="http://doc.trolltech.com/4.4/qmake-manual.html" rel="nofollow" title="Apple Developer Connection">QMake</a> is a nice build system too.</p></li><br/><li><p><a href="http://www.cmake.org/HTML/index.html" rel="nofollow">CMake</a> is also pretty sweet.</p></li><br/><li><p>Finally, <a href="http://www.google.co.uk/search?q=cross+platform+build+system" rel="nofollow">If all else fails...</a></p></li><br/></ul><br/><br/><p>Cheers,</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      HEXADECIM NUMBER TO BASE 10 EFFICI IN C
+    </pattern>
+    <template>
+<![CDATA[<p>You want <a href="http://www.cplusplus.com/reference/clibrary/cstdlib/strtol.html" rel="nofollow" title="I/O management and disk scheduling">strtol</a>. The page explains it well.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      OTHER PROCESS MEMORI IN OS X BSD
+    </pattern>
+    <template>
+<![CDATA[<p>Matasano Chargen had a good post a while back on porting some debugging code to OS X, which included learning how to read and write memory in another process (among other things).</p><br/><br/><p><a href="http://www.matasano.com/log/1100/what-ive-been-doing-on-my-summer-vacation-or-it-has-to-work-otherwise-gdb-wouldnt/">It has to work, otherwise GDB wouldn't</a>:</p><br/><br/><blockquote><br/>  <p>It turns out Apple, in their infinite wisdom, had gutted ptrace(). The OS X man page lists the following request codes:</p><br/>  <br/>  <ul><br/>  <li>PT_ATTACH - to pick a process to debug</li><br/>  <li>PT_DENY_ATTACH - so processes can stop themselves from being debugged<br /><br/>  [...]</li><br/>  </ul><br/>  <br/>  <p>No mention of reading or writing memory or registers. Which would have been discouraging if the man page had not also mentioned PT_GETREGS, PT_SETREGS, PT_GETFPREGS, and PT_SETFPREGS in the error codes section. So, I checked ptrace.h. There I found:</p><br/>  <br/>  <ul><br/>  <li>PT_READ_I - to read instruction words</li><br/>  <li>PT_READ_D - to read data words</li><br/>  <li>PT_READ_U - to read U area data if you're old enough to remember what the U area is<br /><br/>  [...]</li><br/>  </ul><br/>  <br/>  <p>There's one problem solved. I can read and write memory for breakpoints. But I still can't get access to registers, and I need to be able to mess with EIP.</p><br/></blockquote><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      DIFFER BETWEEN THE ON EXIT ( ) AND ATEXIT ( ) FUNCTION
+    </pattern>
+    <template>
+<![CDATA[<p>According to <a href="http://www.delorie.com/gnu/docs/glibc/libc_560.html" rel="nofollow">this link</a> I found, it seems there are a few differences.  <code>on_exit</code> will let you pass in an argument that is passed in to the <code>on_exit</code> function when it is called... which might let you set up some pointers to do some cleanup work on when it is time to exit.</p><br/><br/><p>Furthermore, it appears that <code>on_exit</code> was a SunOS specific function that may not be compatible on all platforms... so you may want to stick with atexit, despite it being more restrictive.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      C C + + PROGRAM HOW DOE THE SYSTEM ( WINDOW LINUX MAC OS X ) CALL THE MAIN ( ) FUNCTION
+    </pattern>
+    <template>
+<![CDATA[<p>The .exe file (or equivalent on other platforms) contains an 'entry point' address.  To a first approximation, the OS loads the relevant sections of the .EXE file into ram, and then jumps to the entry point.</p><br/><br/><p>As others have said, this entry point will not be 'main', but will instead be a part of the runtime library - it will do things like initialising static objects, setting up the argc/argv parameters, setting up stdin/stdout/stderr, etc.   When it's done all that, it will call your main() function.  When main exits, the runtime goes through an analagous process of passing your return code back to the environment, calling static destructors, calling _atexit routines, etc.</p><br/><br/><p>If you have MS tools (perhaps not the freebie ones), then you have all the runtime source, and an easy way to look at it is to put a breakpoint on the closing brace of your main() method, and single step back up into the runtime.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      SEVER C C + + LIBRARI INTO ONE
+    </pattern>
+    <template>
+<![CDATA[<p>On Unix like systems, the ld and ar utilities can do this. Check out <a href="http://en.wikipedia.org/wiki/Ar_(Unix)" rel="nofollow">http://en.wikipedia.org/wiki/Ar_(Unix)</a> or lookup the man pages on any linux box or through google, e.g 'unix man ar'.</p><br/><br/><p>Please note that you might be better off linking to a shared (dynamic) library. This would add a dependency to your executable but will dramatically reduce its size, especially if you're writing a graphic application.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      RANK AN ARRAY ( SORT ) BY VALU WITH A TWIST
+    </pattern>
+    <template>
+<![CDATA[<p>Since you're using C++, I would do it something like this. The <code>SortIntPointers</code> function can be any sort algorithm, the important part is that it sorts the array of pointers based on the <code>int</code> that they are pointing to. Once that is done, you can go through the array of pointers and assign their sorted index which will end up in the original position in the original array.</p><br/><br/><pre><code>int* intArray; // set somewhere else<br/>int arrayLen;  // set somewhere else  <br/><br/>int** pintArray = new int*[arrayLen];<br/>for(int i = 0; i &lt; arrayLen; ++i)<br/>{<br/>    pintArray[i] = &amp;intArray[i];<br/>}<br/><br/>// This function sorts the pointers according to the values they<br/>// point to. In effect, it sorts intArray without losing the positional<br/>// information.<br/>SortIntPointers(pintArray, arrayLen);<br/><br/>// Dereference the pointers and assign their sorted position.<br/>for(int i = 0; i &lt; arrayLen; ++i)<br/>{<br/>    *pintArray[i] = i;<br/>}<br/></code></pre><br/><br/><p>Hopefully that's clear enough.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      C + + ERROR WITH CODE THAT HA MIN ( ) MAX ( ) CALL
+    </pattern>
+    <template>
+<![CDATA[<p>Check if your code is including the <strong>windows.h</strong> header file and either your code or other third-party headers have their own <strong>min()</strong>/<strong>max()</strong> definitions. If yes, then prepend your <strong>windows.h</strong> inclusion with a definition of <strong>NOMINMAX</strong> like this:</p><br/><br/><pre><code>#define NOMINMAX<br/>#include &lt;windows.h&gt;<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      CAMERA CAPTUR RESOLUT IN OPENCV
+    </pattern>
+    <template>
+<![CDATA[<p>There doesn't seem to be a solution. The resolution can be increased to <strong>640x480</strong> using <a href="http://tech.groups.yahoo.com/group/OpenCV/message/28735" rel="nofollow">this hack</a> shared by <em>lifebelt77</em>. Here are the details reproduced:</p><br/><br/><p>Add to <strong>highgui.h</strong>:</p><br/><br/><pre><code>#define CV_CAP_PROP_DIALOG_DISPLAY 8<br/>#define CV_CAP_PROP_DIALOG_FORMAT 9<br/>#define CV_CAP_PROP_DIALOG_SOURCE 10<br/>#define CV_CAP_PROP_DIALOG_COMPRESSION 11<br/>#define CV_CAP_PROP_FRAME_WIDTH_HEIGHT 12<br/></code></pre><br/><br/><p>Add the function <strong>icvSetPropertyCAM_VFW</strong> to <strong>cvcap.cpp</strong>:</p><br/><br/><pre><code>static int icvSetPropertyCAM_VFW( CvCaptureCAM_VFW* capture, int property_id, double value )<br/>{<br/>    int result = -1;<br/>    CAPSTATUS capstat;<br/>    CAPTUREPARMS capparam;<br/>    BITMAPINFO btmp;<br/><br/>    switch( property_id )<br/>    {<br/>        case CV_CAP_PROP_DIALOG_DISPLAY:<br/>            result = capDlgVideoDisplay(capture-&gt;capWnd);<br/>            //SendMessage(capture-&gt;capWnd,WM_CAP_DLG_VIDEODISPLAY,0,0);<br/>            break;<br/><br/>        case CV_CAP_PROP_DIALOG_FORMAT:<br/>            result = capDlgVideoFormat(capture-&gt;capWnd);<br/>            //SendMessage(capture-&gt;capWnd,WM_CAP_DLG_VIDEOFORMAT,0,0);<br/>            break;<br/><br/>        case CV_CAP_PROP_DIALOG_SOURCE:<br/>            result = capDlgVideoSource(capture-&gt;capWnd);<br/>            //SendMessage(capture-&gt;capWnd,WM_CAP_DLG_VIDEOSOURCE,0,0);<br/>            break;<br/><br/>        case CV_CAP_PROP_DIALOG_COMPRESSION:<br/>            result = capDlgVideoCompression(capture-&gt;capWnd);<br/>            break;<br/><br/>        case CV_CAP_PROP_FRAME_WIDTH_HEIGHT:<br/>            capGetVideoFormat(capture-&gt;capWnd, &amp;btmp, sizeof(BITMAPINFO));<br/>            btmp.bmiHeader.biWidth = floor(value/1000);<br/>            btmp.bmiHeader.biHeight = value-floor(value/1000)*1000;<br/>            btmp.bmiHeader.biSizeImage = btmp.bmiHeader.biHeight *<br/>            btmp.bmiHeader.biWidth * btmp.bmiHeader.biPlanes *<br/>            btmp.bmiHeader.biBitCount / 8;<br/>            capSetVideoFormat(capture-&gt;capWnd, &amp;btmp, sizeof(BITMAPINFO));<br/>            break;<br/><br/>        default:<br/>            break;<br/>    }<br/><br/>    return result;<br/>}<br/></code></pre><br/><br/><p>and edit <strong>captureCAM<em>VFW</em>vtable</strong> as following:</p><br/><br/><pre><code>static CvCaptureVTable captureCAM_VFW_vtable =<br/>{<br/>6,<br/>(CvCaptureCloseFunc)icvCloseCAM_VFW,<br/>(CvCaptureGrabFrameFunc)icvGrabFrameCAM_VFW,<br/>(CvCaptureRetrieveFrameFunc)icvRetrieveFrameCAM_VFW,<br/>(CvCaptureGetPropertyFunc)icvGetPropertyCAM_VFW,<br/>(CvCaptureSetPropertyFunc)icvSetPropertyCAM_VFW, // was NULL<br/>(CvCaptureGetDescriptionFunc)0<br/>};<br/></code></pre><br/><br/><p>Now rebuilt <strong>highgui.dll</strong>.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      PRO C COPE WITH # WARN DIRECT
+    </pattern>
+    <template>
+<![CDATA[<p>According to the <em>Pro*C/C++ Programmer's Guide</em> (chapter 5 "Advanced Topics"), Pro*C silently ignores a number of preprocessor directives including #error and #pragma, but sadly not #warning.  Since your warning directives are included in a header file, you might be able to use the ORA_PROC macro:</p><br/><br/><pre><code>#ifndef  ORA_PROC<br/>#include &lt;irrelevant.h&gt;<br/>#endif<br/></code></pre><br/><br/><p>For some reason, Pro*C errors out if you try to hide a straight #warning that way, however.  </p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      A DEBUG ONLI FUNCTION THAT TAKE A VARIABL ARGUMENT LIST LIKE PRINTF ( )
+    </pattern>
+    <template>
+<![CDATA[<p>I still do it the old way, by defining a macro (XTRACE, below) which correlates to either a no-op or a function call with a variable argument list. Internally, call vsnprintf so you can keep the printf syntax:</p><br/><br/><pre><code>#include &lt;stdio.h&gt;<br/><br/>void XTrace0(LPCTSTR lpszText)<br/>{<br/>   ::OutputDebugString(lpszText);<br/>}<br/><br/>void XTrace(LPCTSTR lpszFormat, ...)<br/>{<br/>    va_list args;<br/>    va_start(args, lpszFormat);<br/>    int nBuf;<br/>    TCHAR szBuffer[512]; // get rid of this hard-coded buffer<br/>    nBuf = _vsntprintf(szBuffer, 511, lpszFormat, args);<br/>    ::OutputDebugString(szBuffer);<br/>    va_end(args);<br/>}<br/></code></pre><br/><br/><p>Then a typical #ifdef switch:</p><br/><br/><pre><code>#ifdef _DEBUG<br/>#define XTRACE XTrace<br/>#else<br/>#define XTRACE<br/>#endif<br/></code></pre><br/><br/><p>Well that can be cleaned up quite a bit but it's the basic idea.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      A SEARCH ALGORITHM IN C
+    </pattern>
+    <template>
+<![CDATA[<p>Yes, but only very slightly. A much bigger performance improvement can be achieved by using better algorithms (for example keeping the list sorted and doing a binary search).</p><br/><br/><p>In general optimizing a given algorithm only gets you so far. Choosing a better algorithm (even if it's not completely optimized) can give you a considerable (order of magnitude) performance improvement.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      FINDFIRSTCHANGENOTIF THE BEST API TO USE FOR FILE SYSTEM CHANG NOTIF ON WINDOW
+    </pattern>
+    <template>
+<![CDATA[<p>FindFirstChangeNotification is fine, but for slightly more ultimate power you should be using ReadDirectoryChangesW. (In fact, it's even recommended in the documentation!)</p><br/><br/><p>It doesn't require a function pointer, it does require you to manually decode a raw buffer, it uses Unicode file names, but it is generally better and more flexible.</p><br/><br/><p>On the other hand, if you want to do what FileMon does, you should probably do what FileMon does and use <a href="http://msdn.microsoft.com/en-us/library/ms790748.aspx" rel="nofollow">IFS to create and install a file system filter</a>.</p><br/><br/><p>MSN</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      SPAWN ANOTH PROCESS IN C
+    </pattern>
+    <template>
+<![CDATA[<pre><code>#include &lt;stdlib.h&gt;<br/><br/>int main()<br/>{<br/>    system("echo HAI");<br/><br/>    return 0;<br/>}<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      SORT AN ARRAY OF DOUBL POINTER BASE ON THE VALU THEY POINT TO
+    </pattern>
+    <template>
+<![CDATA[<p>You're close. You're referencing the address of the array items when you swap, which isn't necessary. The items in the array are pointers, and that's what needs to be swapped.</p><br/><br/><p>See below:</p><br/><br/><pre><code>void SortArray( int ** pArray, int ArrayLength )<br/>{<br/>    int i, j, flag = 1;    // set flag to 1 to begin initial pass<br/>    int * temp;             // holding variable orig with no *<br/>    for(i = ArrayLength - 1; i &gt; 0 &amp;&amp; flag; i--)<br/>    {<br/>        flag = 0;<br/>        for (j = 0; j &lt; i; j++)<br/>        {<br/>            if (*pArray[j] &gt; *pArray[j+1])      // ascending order simply changes to &lt;<br/>            { <br/>                temp = pArray[j];             // swap elements<br/>                pArray[j] = pArray[j+1];<br/>                pArray[j+1] = temp;<br/>                flag = 1;               // indicates that a swap occurred.<br/>            }<br/>        }<br/>    }<br/>}<br/></code></pre><br/><br/><p>Also, check out <a href="http://rant.blackapache.net/2008/08/14/sorting-algorithms-the-bubble-sort/" rel="nofollow">this lovely blog post on Bubble Sorting</a> in case you're interested (sorry, shameless plug :)). Hope that helps you with your homework ;)</p><br/><br/><p><hr /></p><br/><br/><p>Edit: Note the subtle "optimisation" where you count back from the array length and only increment up until 'i' in the inner loop. This saves you from needlessly reparsing items that have already been sorted.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      COME AFTER THE
+    </pattern>
+    <template>
+<![CDATA[<p><a href="http://en.wikipedia.org/wiki/Printf#printf_format_placeholders" rel="nofollow"><a href="http://en.wikipedia.org/wiki/Printf#printf_format_placeholders" rel="nofollow">http://en.wikipedia.org/wiki/Printf#printf_format_placeholders</a></a> is Wikipedia's reference for format placeholders in printf. <a href="http://www.cplusplus.com/reference/clibrary/cstdio/printf.html" rel="nofollow"><a href="http://www.cplusplus.com/reference/clibrary/cstdio/printf.html" rel="nofollow">http://www.cplusplus.com/reference/clibrary/cstdio/printf.html</a></a> is also helpful</p><br/><br/><p>Basically in a simple form it's %[width].[precision][type]. Width allows you to make sure that the variable which is being printed is at least a certain length (useful for tables etc). Precision allows you to specify the precision a number is printed to (eg. decimal places etc) and the informs C/C++ what the variable you've given it is (character, integer, double etc).</p><br/><br/><p>Hope this helps</p><br/><br/><p><strong>UPDATE:</strong></p><br/><br/><p>To clarify using your examples:</p><br/><br/><pre><code>printf( "%10.1f     %10.2\n", radius, area );<br/></code></pre><br/><br/><p>%10.1f (referring to the first argument: radius) means make it 10 characters long (ie. pad with spaces), and print it as a float with one decimal place.</p><br/><br/><p>%10.2 (referring to the second argument: area) means make it 10 character long (as above) and print with two decimal places.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      BLOCKS JAVA CLOSUR IN C
+    </pattern>
+    <template>
+<![CDATA[<p>The concept of closures requires the concept of contexts. C's context is based on the stack and the registers of the CPU, so to create a block/closure, you need to be able to manipulate the stack pointer in a correct (and reentrant) way, and store/restore registers as needed.</p><br/><br/><p>The way this is done by interpreters or virtual machines is to have a <code>context</code> structure or something similar, and not use the stack and registers directly. This structure keeps track of a stack and optionally some registers, if you're designing a register based VM. At least, that's the simplest way to do it (though slightly less performant than actually mapping things correctly).</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      LOG WATCHER
+    </pattern>
+    <template>
+<![CDATA[<p>You can use fseek() to clear the eof condition on the stream.  Essentially, read to the end of the file, sleep for a while, fseek() (without changing your position) to clear eof, the read to end of file again.  wash, rinse, repeat.  man fseek(3) for details.</p><br/><br/><p>Here's what it looks like in perl.  perl's seek() is essentially a wrapper for fseek(3), so the logic is the same:</p><br/><br/><pre><code>wembley 0 /home/jj33/swap &gt;#&gt; cat p<br/>my $f = shift;<br/>open(I, "&lt;$f") || die "Couldn't open $f: $!\n";<br/><br/>while (1) {<br/>  seek(I, 0, 1);<br/>  while (defined(my $l = &lt;I&gt;)) {<br/>    print "Got: $l";<br/>  }<br/>  print "Hit EOF, sleeping\n";<br/>  sleep(10);<br/>}<br/>wembley 0 /home/jj33/swap &gt;#&gt; cat tfile<br/>This is<br/>some<br/>text<br/>in<br/>a file<br/>wembley 0 /home/jj33/swap &gt;#&gt; perl p tfile<br/>Got: This is<br/>Got: some<br/>Got: text<br/>Got: in<br/>Got: a file<br/>Hit EOF, sleeping<br/></code></pre><br/><br/><p>Then, in another session:</p><br/><br/><pre><code>wembley 0 /home/jj33/swap &gt; echo "another line of text" &gt;&gt; tfile<br/></code></pre><br/><br/><p>And back to the original program output:</p><br/><br/><pre><code>Hit EOF, sleeping<br/>Got: another line of text<br/>Hit EOF, sleeping<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      MEMSET ( ) CAUS DATA ABORT
+    </pattern>
+    <template>
+<![CDATA[<p><code>malloc</code> can return <code>NULL</code> if no memory is available. You're not checking for that.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      MAJOR DIFFER BETWEEN ANSI C AND K R C
+    </pattern>
+    <template>
+<![CDATA[<p>There may be some confusion here about what "K&amp;R C" is. The term refers to the language as documented in the first edition of "The C Programming Language." Roughly speaking: the input language of the Bell Labs C compiler from around 1969 to around 1988.</p><br/><br/><p>Kernighan and Ritchie were involved in the ANSI standardization process. The "ANSI C" dialect superceded "K&amp;R C" and subsequent editions of "The C Programming Language" adopt the ANSI conventions. "K&amp;R C" is a "dead language," except to the extent that some compilers still accept legacy code.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      COMMUN WITH A MYSQL SERVER
+    </pattern>
+    <template>
+<![CDATA[<p><a href="http://tangentsoft.net/mysql++/" rel="nofollow">MySQL++</a></p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      SUM DIMENS OF AN ARRAY SPECIFI AT RUN TIM
+    </pattern>
+    <template>
+<![CDATA[<p>This could have applications. Lets say you implemented a 2D Conway's Game of Life (which defines a 2D plane, 1 for 'alive', 0 for 'dead') and you stored the Games history for every iteration (which then defines a 3D cube). If you wanted to know how many bacteria there was alive over history, you would use the above algorithm. You could use the same algorithm for a 3D, (and 4D, 5D etc.) version of Game of Life grid.</p><br/><br/><p>I'd say this was a question for recursion, I'm not yet a C programmer but I know it is possible in C. In python,</p><br/><br/><pre><code><br/>def iter_arr(array):<br/>  sum = 0<br/>  for i in array:<br/>    if type(i) == type(list()):<br/>      sum = sum + iter_arr(i)<br/>    else:<br/>      sum = sum + i<br/>  return sum <br/></code></pre><br/><br/><ol><br/><li>Iterate over each element in array</li><br/><li>If element is another array, call the function again</li><br/><li>If element is not array, add it to the sum</li><br/><li>Return sum</li><br/></ol><br/><br/><p>You would then apply this to each element in the 'cared about' dimension.</p><br/><br/><p>This is easier in python due to duck-typing though ...</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      LINUX C C + + IDE FOR A LOW R SCREEN
+    </pattern>
+    <template>
+<![CDATA[<p><a href="http://codeblocks.org/" rel="nofollow">Code::Blocks</a> is a highly configurable IDE. You can set up the various windows in any configuration, disable tool strips, etc. It is also, IMO, the C/C++ IDE for Linux with the best and most powerful modern features (debugging, code completion, code folding, <a href="http://www.codeblocks.org/features" rel="nofollow">etc</a>.)</p><br/><br/><p>You may be able to gain more usable screen space by changing the window manager theme.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      + + I AND I + +
+    </pattern>
+    <template>
+<![CDATA[<ul><br/><li><p>++i will increment the value of i, and then return the incremented value.</p><br/><br/><pre><code> i = 1;<br/> j = ++i;<br/> (i is 2, j is 2)<br/></code></pre></li><br/><li><p>i++ will increment the value of i, but return the pre-incremented value.</p><br/><br/><pre><code> i = 1;<br/> j = i++;<br/> (i is 2, j is 1)<br/></code></pre></li><br/></ul><br/><br/><p>For a for loop, either works.  ++i seems more common, perhaps because that is what is used in K&amp;R.</p><br/><br/><p>In any case, follow the guideline "prefer ++i over i++" and you won't go wrong.</p><br/><br/><p>update: there's a couple of comments regarding the efficiency of ++i and i++.  In any non-student-project compiler, there will be no performance difference.  You can verify this by looking at the generated code, which will be identical.</p><br/><br/><p>update 2:  the efficiency question is interesting... here's my attempt at an answer:</p><br/><br/><p><a href="http://stackoverflow.com/questions/24886/is-there-a-performance-difference-between-i-and-i" rel="nofollow">http://stackoverflow.com/questions/24886/is-there-a-performance-difference-between-i-and-i</a></p><br/><br/><p>update 3:  As On Freund notes, it's different for a C++ object, since operator++() is a function and the compiler can't know to optimize away the creation of a temporary object to hold the intermediate value. </p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      FOR LOOP INITI DECLAR USE OUTSID C99 MODE GCC ERROR
+    </pattern>
+    <template>
+<![CDATA[<p>I'd try to declare i outside of the loop!</p><br/><br/><p>Good luck on solving 3n+1 :-)</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      PERFORM DIFFER BETWEEN I + + AND + + I IN C
+    </pattern>
+    <template>
+<![CDATA[<p>Executive summary:  No.</p><br/><br/><p>i++ could potentially be slower than ++i, since the old value of i<br/>might need to be saved for later use, but in practice all modern<br/>compilers will optimize this away.</p><br/><br/><p>We can demonstrate this by looking at the code for this function,<br/>both with ++i and i++.</p><br/><br/><pre><code>$ cat i++.c<br/>extern void g(int i);<br/>void f()<br/>{<br/>    int i;<br/><br/>    for (i = 0; i &lt; 100; i++)<br/>        g(i);<br/><br/>}<br/></code></pre><br/><br/><p>The files are the same, except for ++i and i++:</p><br/><br/><pre><code>$ diff i++.c ++i.c<br/>6c6<br/>&lt;     for (i = 0; i &lt; 100; i++)<br/>---<br/>&gt;     for (i = 0; i &lt; 100; ++i)<br/></code></pre><br/><br/><p>We'll compile them, and also get the generated assembler:</p><br/><br/><pre><code>$ gcc -c i++.c ++i.c<br/>$ gcc -S i++.c ++i.c<br/></code></pre><br/><br/><p>And we can see that both the generated object and assembler files are the same.</p><br/><br/><pre><code>$ md5 i++.s ++i.s<br/>MD5 (i++.s) = 90f620dda862cd0205cd5db1f2c8c06e<br/>MD5 (++i.s) = 90f620dda862cd0205cd5db1f2c8c06e<br/><br/>$ md5 *.o<br/>MD5 (++i.o) = dd3ef1408d3a9e4287facccec53f7d22<br/>MD5 (i++.o) = dd3ef1408d3a9e4287facccec53f7d22<br/></code></pre><br/><br/><p>~~ <a href="http://stackoverflow.com/users/116/mark-harrison" rel="nofollow" title="Feedback welcomed!  email address on user page.">Mark Harrison</a> ~~ </p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      MEMORI MANAG
+    </pattern>
+    <template>
+<![CDATA[<p>There are two places where variables can be put in memory. When you create a variable like this:</p><br/><br/><pre><code>int  a;<br/>char c;<br/>char d[16];<br/></code></pre><br/><br/><p>The variables are created in the "<strong>stack</strong>". Stack variables are automatically freed when they go out of scope (that is, when the code can't reach them anymore). You might hear them called "automatic" variables, but that has fallen out of fashion.</p><br/><br/><p>Many beginner examples will use only stack variables.</p><br/><br/><p>The stack is nice because it's automatic, but it also has two drawbacks: (1) The compiler needs to know in advance how big the variables are, and (b) the stack space is somewhat limited. For example: in Windows, under default settings for the Microsoft linker, the stack is set to 1 MB, and not all of it is available for your variables.</p><br/><br/><p>If you don't know at compile time how big your array is, or if you need a big array or struct, you need "plan B".</p><br/><br/><p>Plan B is called the "<strong>heap</strong>". You can usually create variables as big as the Operating System will let you, but you have to do it yourself. Earlier postings showed you one way you can do it, although there are other ways:</p><br/><br/><pre><code>int size;<br/>// ...<br/>// Set size to some value, based on information available at run-time. Then:<br/>// ...<br/>char *p = (char *)malloc(size);<br/></code></pre><br/><br/><p>(Note that variables in the heap are not manipulated directly, but via pointers)</p><br/><br/><p>Once you create a heap variable, the problem is that the compiler can't tell when you're done with it, so you lose the automatic releasing. That's where the "manual releasing" you were referring to comes in. Your code is now responsible to decide when the variable is not needed anymore, and release it so the memory can be taken for other purposes. For the case above, with:</p><br/><br/><pre><code>free(p);<br/></code></pre><br/><br/><p>What makes this second option "nasty business" is that it's not always easy to know when the variable is not needed anymore. Forgetting to release a variable when you don't need it will cause your program to consume more memory that it needs to. This situation is called a "leak". The "leaked" memory cannot be used for anything until your program ends and the OS recovers all of its resources. Even nastier problems are possible if you release a heap variable by mistake <em>before</em> you are actually done with it.</p><br/><br/><p>In C and C++, you are responsible to clean up your heap variables like shown above. However, there are languages and environments such as Java and .NET languages like C# that use a different approach, where the heap gets cleaned up on its own. This second method, called "garbage collection", is much easier on the developer but you pay a penalty in overhead and performance. It's a balance.</p><br/><br/><p><em>(I have glossed over many details to give a simpler, but hopefully more leveled answer)</em></p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      SIGPROCMASK ( )
+    </pattern>
+    <template>
+<![CDATA[<p>The idea is that you provide a mask in set, effectively a list of signals.  The how argument says what you should do with the mask in set.</p><br/><br/><p>You can either use SIG_BLOCK to block the signals in the set list, or SIG_UNBLOCK to unblock them.  Neither of these changes the signals that aren't set in the list.  SIG_SETMASK blocks the signals in the list, and unblocks the ones that aren't set in the list.</p><br/><br/><p>For instance, assume that the old blocking list was {SIGSEGV, SIGSUSP} and you call sigprocmask with these arguments:</p><br/><br/><pre><code>sigset_t x;<br/>sigemptyset (&amp;x);<br/>sigaddset(&amp;x, SIGUSR1);<br/>sigprocmask(SIG_BLOCK, &amp;x, NULL)<br/></code></pre><br/><br/><p>The new blocking list will now be {SIGSEGV, SIGSUSP, SIGUSR1}.</p><br/><br/><p>If you call sigprocmask with these arguments now:</p><br/><br/><pre><code>sigprocmask(SIG_UNBLOCK, &amp;x, NULL)<br/></code></pre><br/><br/><p>The new blocking list will go back to being {SIGSEGV, SIGSUSP}.</p><br/><br/><p>If you call sigprocmask with these arguments now:</p><br/><br/><pre><code>sigprocmask(SIG_SETMASK, &amp;x, NULL)<br/></code></pre><br/><br/><p>The new blocking list will now be set to {SIGUSR1}.</p><br/><br/><p>the oldset argument tells you what the previous blocking list was.  If we have this declaration:</p><br/><br/><pre><code>sigset_t y;<br/></code></pre><br/><br/><p>and we call the code in the previous examples like this:</p><br/><br/><pre><code>    sigprocmask(SIG_BLOCK, &amp;x, &amp;y)<br/></code></pre><br/><br/><p>now we have:</p><br/><br/><pre><code>y == {SIGSEGV, SIGSUSP}<br/></code></pre><br/><br/><p>If we now do:</p><br/><br/><pre><code>    sigprocmask(SIG_UNBLOCK, &amp;x, &amp;y)<br/></code></pre><br/><br/><p>we'll get</p><br/><br/><pre><code>y == {SIGSEGV, SIGSUSP, SIGUSR1}<br/></code></pre><br/><br/><p>and if we do:</p><br/><br/><pre><code>    sigprocmask(SIG_SET, &amp;x, &amp;y)<br/></code></pre><br/><br/><p>we'll get this:</p><br/><br/><pre><code>y == {SIGSEGV, SIGSUSP}<br/></code></pre><br/><br/><p>because this is the previous value of the blocking set.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      PRACTIC WHEN USE SWIG WITH C #
+    </pattern>
+    <template>
+<![CDATA[<p>I think the mistake the earlier posters did was read the docs and not look at the examples. </p><br/><br/><p>A few hours ago I needed to interface some C++ classes to C#. I looked in my Swig dir (I already had it for other work), found the directory <code>Examples/csharp/class</code>, browsed the code, loaded the solution, grokked it, copied it, put in my code, it worked, my job was done. </p><br/><br/><p>With that said, generated P/Invoke code isn't a solution for all needs. Depending on your project, it may be just as simple to write some simple API wrappers yourself or write managed C++ (Look up SlimDX for a superb example of this). </p><br/><br/><p>For my needs, it was simple and easy - I had <code>mystuff.dll</code>, and now in addition I can ship  <code>mystuffnet.dll</code>. I'll agree that the doc is difficult to get into.</p><br/><br/><p>Edit: I noticed the OP only mentioned C. For that, you don't really need Swig, just use the <a href="http://msdn.microsoft.com/en-us/library/aa288468%28VS.71%29.aspx#pinvoke%5Fcallingdllexport" rel="nofollow">usual C#/C DLLImport interop syntax</a>. Swig becomes useful when you want to let <strong>C++ classes</strong> be invoked from C#.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      WITH STDBOOL.H C + +
+    </pattern>
+    <template>
+<![CDATA[<p>I found the answer to my own question by finding a more compatible implementation of <code>stdbool.h</code> that is compliant with the C99 standard.</p><br/><br/><pre><code>#ifndef _STDBOOL_H<br/>#define _STDBOOL_H<br/><br/>#include  <br/><br/>/* C99 Boolean types for compilers without C99 support */<br/>/* http://www.opengroup.org/onlinepubs/009695399/basedefs/stdbool.h.html */<br/>#if !defined(__cplusplus)<br/><br/>#if !defined(__GNUC__)<br/>/* _Bool builtin type is included in GCC */<br/>/* ISO C Standard: 5.2.5 An object declared as <br/>type _Bool is large enough to store <br/>the values 0 and 1. */<br/>/* We choose 8 bit to match C++ */<br/>/* It must also promote to integer */<br/>typedef int8_t _Bool; <br/>#endif<br/><br/>/* ISO C Standard: 7.16 Boolean type */<br/>#define bool _Bool<br/>#define true 1<br/>#define false 0<br/>#define __bool_true_false_are_defined 1<br/><br/>#endif<br/><br/>#endif</code></pre><br/><br/><p>This is taken from the <a href="http://sourceforge.net/projects/adacl" rel="nofollow">Ada Class Library</a> project.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      FREE MEMORI LEAK DETECTOR FOR A C C + + PROGRAM AND IT PLUG IN DLL
+    </pattern>
+    <template>
+<![CDATA[<p>I personally use <a href="http://vld.codeplex.com" rel="nofollow">Visual Leak Detector</a>, though it can cause large delays when large blocks are leaked (it displays the contents of the entire leaked block).</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      OVERLOAD FUNCTION IN C + + DLL DEF FILE
+    </pattern>
+    <template>
+<![CDATA[<p>In the code itself, mark the functions you want to export using __declspec(dllexport). For example:</p><br/><br/><pre><code>#define DllExport __declspec(dllexport)<br/><br/>int DllExport  Foo( int a ) {<br/>  // implementation<br/>}<br/>int DllExport Foo( int a, int b ) {<br/>  // implementation<br/>}<br/></code></pre><br/><br/><p>If you do this, you do not need to list the functions in the .def file.</p><br/><br/><p>Alternatively, you may be able to use a default parameter value, like:</p><br/><br/><pre><code>int Foo( int a, int b = -1 )<br/></code></pre><br/><br/><p>This assumes that there exists a value for b that you can use to indicate that it is unused. If -1 is a legal value for b, or if there isn't or shouldn't be a default, this won't work.</p><br/><br/><p>Edit (Adam Haile):  Corrected to use __declspec as __dllspec was not correct so I could mark this as the official answer...it was close enough.  </p><br/><br/><p>Edit (Graeme): Oops - thanks for correcting my typo!</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      ORGAN MY C PROJECT CODE AND IT EXTERN LIBRARI
+    </pattern>
+    <template>
+<![CDATA[<p>First, for external libraries I would use <code>vendor</code>, but that's just a preference.</p><br/><br/><p>Second, I don't think it is a good idea to install <em>other</em> libraries in a system root, without the users knowledge. Most importantly because this will conflict with later installed versions of those libraries. So I think the best place for these libraries would be in the same directory as your application. </p><br/><br/><p>You could also statically compile these libraries into your program.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      GOOGL CALCUL GLITCH COULD FLOAT VS. DOUBL BE A POSSIBL REASON
+    </pattern>
+    <template>
+<![CDATA[<p>in C#, try (double.maxvalue == (double.maxvalue - 100)) , you'll get true ...</p><br/><br/><p>but thats what it is supposed to be:</p><br/><br/><p><a href="http://en.wikipedia.org/wiki/Floating_point#Accuracy_problems" rel="nofollow">http://en.wikipedia.org/wiki/Floating_point#Accuracy_problems</a> </p><br/><br/><p>thinking about it, you have 64 bit representing a number greater than 2^64 (double.maxvalue), so inaccuracy is expected. </p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      NETWORK PROGRAM
+    </pattern>
+    <template>
+<![CDATA[<h2>Berkeley Sockets</h2><br/><br/><p><a href="http://beej.us/guide/bgnet/" rel="nofollow">This is a reasonable guide</a> to Berkeley sockets, which is pretty much what every OS uses for the network API.</p><br/><br/><p>I learned using "Unix Network Programming, Volume 1: The Sockets Networking API" which is an excellent book that not only shows you how to use it, but what happens when you use it, and why you might choose one usage over another.</p><br/><br/><p>Look up "C TCP/IP example" for some example programs to whet your whistle.  Also pay attention to your particular compiler's libraries - there are slight differences in how a the Berkeley API is implemented, which might bite you.</p><br/><br/><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      MFC RESOURC LINK
+    </pattern>
+    <template>
+<![CDATA[<ul><br/><li>For blogs: Your best bet would be the <a href="http://blogs.msdn.com/vcblog/default.aspx" rel="nofollow">Visual C++ Team Blog</a>.</li><br/><li>For books: <a href="http://rads.stackoverflow.com/amzn/click/1572316950" rel="nofollow">Programming Windows with MFC</a> is one of the best book on the subject.</li><br/><li>For tutorials: Simply <a href="http://www.google.ca/search?q=mfc+tutorial&amp;ie=utf-8&amp;oe=utf-8&amp;aq=t&amp;rls=org.mozilla:en-US:official&amp;client=firefox-a" rel="nofollow">search google for various tutorials on MFC</a>.</li><br/></ul><br/><br/><p><img src="http://ecx.images-amazon.com/images/I/711B8M7PXHL._SL500_BO2,204,203,200_PIsitb-dp-500-arrow,TopRight,45,-64_OU01_AA240_SH20_.gif" alt="alt text" /></p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      PYTHON WAY EQUIVAL FOR WHILE ( ( X NEXT ( ) ) END )
+    </pattern>
+    <template>
+<![CDATA[<p>Short answer: there's no way to do inline variable assignment in a while loop in Python. Meaning that I <strong>cannot</strong> say:</p><br/><br/><pre><code>while x=next():<br/>    // do something here!<br/></code></pre><br/><br/><p>Since that's not possible, there are a number of "idiomatically correct" ways of doing this:</p><br/><br/><pre><code>while 1:<br/>    x = next()<br/>    if x != END:<br/>        // Blah<br/>    else:<br/>        break<br/></code></pre><br/><br/><p>Obviously, this is kind of ugly. You can also use one of the "iterator" approaches listed above, but, again, that may not be ideal. Finally, you can use the "pita pocket" approach that I actually just found while googling:</p><br/><br/><pre><code>class Pita( object ):<br/>    __slots__ = ('pocket',)<br/>    marker = object()<br/>    def __init__(self, v=marker):<br/>        if v is not self.marker:<br/>            self.pocket = v<br/>    def __call__(self, v=marker):<br/>        if v is not self.marker:<br/>            self.pocket = v<br/>        return self.pocket<br/></code></pre><br/><br/><p>Now you can do:</p><br/><br/><pre><code>p = Pita()<br/>while p( next() ) != END:<br/>    // do stuff with p.pocket!<br/></code></pre><br/><br/><p>Thanks for this question; learning about the <code>__call__</code> idiom was really cool! :)</p><br/><br/><p>EDIT: I'd like to give credit where credit is due. The 'pita pocket' idiom was found <a href="http://mail.python.org/pipermail/python-list/2003-July/216789.html" rel="nofollow">here</a></p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      ON VISUAL STUDIO
+    </pattern>
+    <template>
+<![CDATA[<p>Answering the purely subject question "recommend me a better C IDE and compiler" I find <a href="http://www.codeblocks.org/" rel="nofollow">Ming32w and Code::blocks (now with combined installer)</a> very useful on windows but YMMV as you are obviously used to the MS IDE and are just struggling with C.</p><br/><br/><p>May I suggest you concentrate on console applications to get a feel for the language first before you attempt to tie it together with a windows UI which in my experience is the hardest bit of windows development.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      WAY TO SHIFT AN ARRAY OF BYTE BY 12 BIT
+    </pattern>
+    <template>
+<![CDATA[<p>Hurray for pointers! </p><br/><br/><p>This code works by looking ahead 12 bits for each byte and copying the proper bits forward. 12 bits is the bottom half (nybble) of the next byte and the top half of 2 bytes away.</p><br/><br/><pre><code>unsigned char length = 10;<br/>unsigned char data[10] = {0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0A,0xBC};<br/>unsigned char *shift = data;<br/>while (shift &lt; data+(length-2)) {<br/>    *shift = (*(shift+1)&amp;0x0F)&lt;&lt;4 | (*(shift+2)&amp;0xF0)&gt;&gt;4;<br/>    shift++;<br/>}<br/>*(data+length-2) = (*(data+length-1)&amp;0x0F)&lt;&lt;4;<br/>*(data+length-1) = 0x00;<br/></code></pre><br/><br/><blockquote><br/>  <p>Justin wrote:<br /><br/>  @Mike, your solution works, but does not carry.  </p><br/></blockquote><br/><br/><p>Well, I'd say a normal shift operation does just that (called overflow), and just lets the extra bits fall off the right or left. It's simple enough to carry if you wanted to - just save the 12 bits before you start to shift. Maybe you want a circular shift, to put the overflowed bits back at the bottom? Maybe you want to realloc the array and make it larger? Return the overflow to the caller? Return a boolean if non-zero data was overflowed? You'd have to define what carry means to you.</p><br/><br/><pre><code>unsigned char overflow[2];<br/>*overflow = (*data&amp;0xF0)&gt;&gt;4;<br/>*(overflow+1) = (*data&amp;0x0F)&lt;&lt;4 | (*(data+1)&amp;0xF0)&gt;&gt;4;<br/>while (shift &lt; data+(length-2)) {<br/>    /* normal shifting */<br/>}  <br/>/* now would be the time to copy it back if you want to carry it somewhere */<br/>*(data+length-2) = (*(data+length-1)&amp;0x0F)&lt;&lt;4 | (*(overflow)&amp;0x0F);<br/>*(data+length-1) = *(overflow+1);  <br/><br/>/* You could return a 16-bit carry int, <br/> * but endian-ness makes that look weird <br/> * if you care about the physical layout */<br/>unsigned short carry = *(overflow+1)&lt;&lt;8 | *overflow;<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      PROCESS CPU USAG IN C
+    </pattern>
+    <template>
+<![CDATA[<p>Check <a href="http://linux.die.net/man/2/getrusage" rel="nofollow">getrusage</a>, I think that should solve your problem.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      OWN PROCESS PRIORITI IN C
+    </pattern>
+    <template>
+<![CDATA[<p>Try:</p><br/><br/><pre><code>#include &lt;sys/time.h&gt;<br/>#include &lt;sys/resource.h&gt;<br/><br/>int main(){<br/>    setpriority(PRIO_PROCESS, 0, -20);<br/>}<br/></code></pre><br/><br/><p>Note that you must be running as superuser for this to work.</p><br/><br/><p>(for more info, type 'man setpriority' at a prompt.)</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      THE FILENAM OF A TEMPFIL TO USE IN LINUX
+    </pattern>
+    <template>
+<![CDATA[<p>You can use the <a href="http://www.linuxmanpages.com/man3/mkstemp.3.php" rel="nofollow"><code>mkstemp(3)</code></a> function for this purpose. Another alternative is the <a href="http://www.linuxmanpages.com/man3/tmpfile.3.php" rel="nofollow"><code>tmpfile(3)</code></a> function.<br/>Which one of them you choose depends on whether you want the file to be opened as a C library file stream (which <code>tmpfile</code> does), or a direct file descriptor (<code>mkstemp</code>). The <code>tmpfile</code> function also deletes the file automatically when you program finishes.</p><br/><br/><p>The advantage of using these functions is that they avoid race conditions between determining the unique filename and creating the file -- so that two programs won't try to create the same file at the same time, for example.</p><br/><br/><p>See the man pages for both functions for more details.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      WXWIDGET FRAMEWORK FOR C
+    </pattern>
+    <template>
+<![CDATA[<p>You can try <a href="http://www.gtk.org/" rel="nofollow">GTK+</a>. I believe wxWidgets implementation for linux is written in GTK+.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      OPEN SOURC B TREE IMPLEMENT IN C
+    </pattern>
+    <template>
+<![CDATA[<p>Check out QDBM: <a href="http://fallabs.com/qdbm/" rel="nofollow">http://fallabs.com/qdbm/</a>.  It's LGPL (can be used in commercial app), implements a disk backed hash and/or B+ tree with arbitrary key/value pairs, and builds on a variety of platforms. </p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      4.X VERSION OF GCC SHOULD ONE USE
+    </pattern>
+    <template>
+<![CDATA[<p>The best quality control for gcc is the linux kernel. GCC is the compiler of choice for basically all major open source C/C++ programs. A released GCC, especially one like 4.3.X, which is in major linux distros, should be pretty good.</p><br/><br/><p>GCC 4.3 also has better support for optimizations on newer cpus.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      IMAG ROTAT BASE ON A LOGO
+    </pattern>
+    <template>
+<![CDATA[<p>You are in the right place using OpenCV, it is an excellent utility. For example, <a href="http://www.nashruddin.com/template-matching-in-opencv-with-example.html" rel="nofollow">this guy</a> used it for template matching, which is fairly similar to what you need to do. Also, the link Roddy specified looks similar to what you want to do.</p><br/><br/><p>I feel that OpenCV is the best library out there for this kind of development.</p><br/><br/><p>@Brian, OpenCV and the IntelIPP are closely linked and very similar (both Intel libs). As far as I know, if OpenCV finds the intel IPP on your computer it will automatically use it under the hood for improved speed.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      CONDIT IN C INTERVIEW QUESTION
+    </pattern>
+    <template>
+<![CDATA[<pre><code>if ( printf("Hello") == 0 )<br/>    printf ("Hello");<br/>else<br/>    printf ("World");<br/></code></pre><br/><br/><p>:-)</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      TIP FOR PHP DEVELOP
+    </pattern>
+    <template>
+<![CDATA[<p>Yes, you're really best off learning C and then Objective-C.  There are some resources that will get you over the C and Objective-C language learning curve:</p><br/><br/><ul><br/><li>Uli Kusterer's online book <a href="http://www.zathras.de/angelweb/masters-of-the-void.htm" rel="nofollow">Masters of the Void</a></li><br/><li>Stephen Kochan's book <a href="http://rads.stackoverflow.com/amzn/click/0672325861" rel="nofollow">Programming in Objective-C</a></li><br/></ul><br/><br/><p>And there are some resources that will get you over the framework learning curve:</p><br/><br/><ul><br/><li>CocoaLab's online book <a href="http://www.cocoalab.com/" rel="nofollow">Become an Xcoder</a></li><br/><li>Aaron Hillegass' book <a href="http://rads.stackoverflow.com/amzn/click/0321503619" rel="nofollow">Cocoa Programming for Mac OS X</a></li><br/></ul><br/><br/><p>Despite what Jeff might say, learning C is important for professional software developers for just this reason.  It's sort of a baseline low-level <em>lingua franca</em> that other innovation happens atop.  The reason Jeff has been able to get away with not learning C is not because you don't need to know C, but because he learned Pascal which is in many ways isomorphic to C.  (It has all the same concepts, including pointers and manual memory management.)</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      GOOD PROJECT TO DEVELOP C SKILL
+    </pattern>
+    <template>
+<![CDATA[<p>Write a command line tool like a ls clone or an encryption tool</p><br/><br/><p>Make it accept all sorts of proper input in standard ways (siwtches, filenames, etc) and have it do something useful.</p><br/><br/><p>If you really want to learn C then throw some liberal pointer usage in there.. object oriented languages evolved from some very clever use of c structures and pointers so it's still worth knowing how the low-level stuff works.</p><br/><br/><p>Once that makes sense, then try something more complicated.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      ASSEMBL OUTPUT FROM A C FILE IN VS2005
+    </pattern>
+    <template>
+<![CDATA[<ol><br/><li>Open the Properties page for a project </li><br/><li>Select the <code>Configuration Properties -&gt; C/C++ -&gt; Output Files</code> branch </li><br/><li>Change the Assembler Output option to something other than <code>No Listing</code> </li><br/><li>Make sure ASM List Location is set to a valid path or sub-path</li><br/><li>Build.</li><br/></ol><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      LIST THE SYMBOL IN A .SO FILE
+    </pattern>
+    <template>
+<![CDATA[<p>The standard tool for listing symbols is <code>nm</code>, you can use it simply like this:</p><br/><br/><pre><code>nm -g yourLib.so<br/></code></pre><br/><br/><p>If you want to see symbols of a C++ library, add the "-C" option which demangle the symbols (it's far more readable demangled).</p><br/><br/><pre><code>nm -gC yourLib.so<br/></code></pre><br/><br/><p>If your .so file is in elf format, you will have to use <code>readelf</code> program to extract symbol information from the binary. </p><br/><br/><pre><code>readelf -Ws /usr/lib/libexample.so<br/></code></pre><br/><br/><p>You only should extract those that are defined in this .so file, not in the libraries referenced by it. Seventh column should contain a number in this case. You can extract the corresponding lines with <code>awk</code>:</p><br/><br/><pre><code>readelf -Ws /usr/lib/libstdc++.so.6 | awk '{print $8}';<br/></code></pre><br/><br/><p>Update: Thanks to Pavel Shved and Gaspin, I've updated the answer</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      BYTE LEVEL LENGTH DESCRIPT
+    </pattern>
+    <template>
+<![CDATA[<p>Really you're only doing four calculations, so <strong><em>readability seems way more important</em></strong> here than efficiency.  My approach to make something like this more readable is to </p><br/><br/><ol><br/><li>Extract common code to a function</li><br/><li>Put similar calculations together to make the patterns more obvious</li><br/><li>Get rid of the intermediate variable print_zeroes and be explicit about the cases in which you output bytes even if they're zero (i.e. the preceding byte was non-zero)</li><br/></ol><br/><br/><p>I've changed the random code block into a function and changed a few variables (underscores are giving me trouble in the markdown preview screen).  I've also assumed that <em>bytes</em> is being passed in, and that whoever is passing it in will pass us a pointer so we can modify it.</p><br/><br/><p>Here's the code:</p><br/><br/><pre><code>/* append byte b to stream, increment index */<br/>/* really needs to check length of stream before appending */<br/>void output( int i, unsigned char b, char stream[], int *index )<br/>{<br/>    printf("byte %d: 0x%02x\n", i, b);<br/>    stream[(*index)++] = b;<br/>}<br/><br/><br/>void answer( char bytestream[], unsigned int *bytes, unsigned int n)<br/>{<br/>    /* mask out four bytes from word n */<br/>    first  = (n &amp; 0xFF000000) &gt;&gt; 24;<br/>    second = (n &amp; 0x00FF0000) &gt;&gt; 16;<br/>    third  = (n &amp; 0x0000FF00) &gt;&gt;  8;<br/>    fourth = (n &amp; 0x000000FF) &gt;&gt;  0;<br/><br/>    /* conditionally output each byte starting with the */<br/>    /* first non-zero byte */<br/>    if (first) <br/>       output( 1, first, bytestream, bytes);<br/><br/>    if (first || second) <br/>       output( 2, second, bytestream, bytes);<br/><br/>    if (first || second || third) <br/>       output( 3, third, bytestream, bytes);<br/><br/>    if (first || second || third || fourth) <br/>       output( 4, fourth, bytestream, bytes);<br/> }<br/></code></pre><br/><br/><p>Ever so slightly more efficient, and <strong><em>maybe</em></strong> easier to understand would be this modification to the last four if statements:</p><br/><br/><pre><code>    if (n&gt;0x00FFFFFF) <br/>       output( 1, first, bytestream, bytes);<br/><br/>    if (n&gt;0x0000FFFF) <br/>       output( 2, second, bytestream, bytes);<br/><br/>    if (n&gt;0x000000FF)  <br/>       output( 3, third, bytestream, bytes);<br/><br/>    if (1) <br/>       output( 4, fourth, bytestream, bytes);<br/></code></pre><br/><br/><p>I agree, however, that compressing this field makes the receiving state machine overly complicated.  But if you can't change the protocol, this code is much easier to read.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      ERROR C2143 WHEN USE A STRUCT
+    </pattern>
+    <template>
+<![CDATA[<p>I forgot that in C you have to declare all your variables before any code.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      WHAT IS THE BEST WAY TO ESTIM THE CODE STATIC DATA SIZE OF PROGRAM
+    </pattern>
+    <template>
+<![CDATA[<p>"size" is the traditional tool.  "readelf" has a lot of options.</p><br/><br/><pre><code>$ size /bin/sh<br/>   text    data     bss     dec     hex filename<br/> 712739   37524   21832  772095   bc7ff /bin/sh<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      CROSS PLATFORM APP IN C
+    </pattern>
+    <template>
+<![CDATA[<p>I maintained for a number of years an ANSI C networking library that was ported to close to 30 different OS's and compilers.  The library didn't have any GUI components, which made it easier.  We ended up abstracting out into dedicated source files any routine that was not consistent across platforms, and used #defines where appropriate in those source files.  This kept the code that was adjusted per platform isolated away from the main business logic of the library.  We also made extensive use of typedefs and our own dedicated types so that we could easily change them per platform if needed.  This made the port to 64-bit platforms fairly easy.</p><br/><br/><p>If you are looking to have GUI components, I would suggest looking at GUI toolkits such as WxWindows or Qt (which are both C++ libraries).</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      PREDDEFIN DATA FOR TYPEDEF ENUM IN C
+    </pattern>
+    <template>
+<![CDATA[<p>@dmckee: I think the suggested solution is good, but for simple data (e.g. if only the name is needed) it could be augmented with auto-generated code. While there are lots of ways to auto-generate code, for something as simple as this I believe you could write a simple XSLT that takes in an XML representation of the enum and outputs the code file.</p><br/><br/><p>The XML would be of the form:</p><br/><br/><pre><code>&lt;EnumsDefinition&gt;<br/>    &lt;Enum name="DogType"&gt;<br/>        &lt;Value name="Vizsla" value="0" /&gt;<br/>        &lt;Value name="Terrier" value="3" /&gt;<br/>        &lt;Value name="YellowLab" value="10" /&gt;<br/>    &lt;/Enum&gt;<br/>&lt;/EnumsDefinition&gt;<br/></code></pre><br/><br/><p>and the resulting code would be something similar to what dmckee suggested in his solution.</p><br/><br/><p>For information of how to write such an XSLT try <a href="http://www.w3schools.com/xsl/" rel="nofollow">here</a> or just search it up in google and find a tutorial that fits. Writing XSLT is not much fun IMO, but it's not that bad either, at least for relatively simple tasks such as these.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      EXECUT A FILE IN CYGWIN
+    </pattern>
+    <template>
+<![CDATA[<p>./a.exe at the prompt</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      SWAP VALU IN C
+    </pattern>
+    <template>
+<![CDATA[<p>The XOR method fails if a and b point to the same address.  The first XOR will clear all of the bits at the memory address pointed to by both variables, so once the function returns (*a == *b == 0), regardless of the initial value.</p><br/><br/><p>More info on the Wiki page:<br/><a href="http://en.wikipedia.org/wiki/XOR_swap_algorithm" rel="nofollow">XOR swap algorithm</a></p><br/><br/><p>Although it's not likely that this issue would come up, I'd always prefer to use the method that's guaranteed to work, not the clever method that fails at unexpected moments.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      TO STAX FOR C
+    </pattern>
+    <template>
+<![CDATA[<p><a href="http://xmlsoft.org/" rel="nofollow">libxml</a> is a heavily used and documented XML library for C, which provides a SAX API. <a href="http://expat.sourceforge.net/" rel="nofollow">Expat</a> is another, but in my experience is not as well documented.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      THE SIZE OF MY ARRAY IN C
+    </pattern>
+    <template>
+<![CDATA[<p>executive summary:</p><br/><br/><pre><code>int a[17];<br/>n = sizeof(a)/sizeof(a[0]);<br/></code></pre><br/><br/><p>To determine the size of your array in bytes, you can use the sizeof<br/>operator:</p><br/><br/><pre><code>int a[17];<br/>int n = sizeof(a);<br/></code></pre><br/><br/><p>On my computer, ints are 4 bytes long, so n is 68.</p><br/><br/><p>To determine the number of elements in the array, we can divide<br/>the total size of the array by the size of the array element.<br/>You could do this with the type, like this</p><br/><br/><pre><code>int a[17];<br/>int n = sizeof(a) / sizeof(int);<br/></code></pre><br/><br/><p>and get the proper answer (68 / 4 = 17), but if the type of<br/>a changed you would have a nasty bug if you forgot to change<br/>the sizeof(int) as well.</p><br/><br/><p>So the preferred divisor is sizeof(a[0]), the size of the<br/>zeroeth element of the array.</p><br/><br/><pre><code>int a[17];<br/>int n = sizeof(a) / sizeof(a[0]));<br/></code></pre><br/><br/><p>Another advantage is that you can now easily parameterize<br/>the array name in a macro and get:</p><br/><br/><pre><code>#define NELEMS(x)  (sizeof(x) / sizeof(x[0]))<br/><br/>int a[17];<br/>int n = NELEMS(a);<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      DEFIN IN C EDITORS... WHI
+    </pattern>
+    <template>
+<![CDATA[<p>It's to guard against <a href="http://www.fredosaurus.com/notes-cpp/preprocessor/ifdef.html" rel="nofollow">multiple definitions</a>.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      SPLINT ( THE C CODE CHECKER ) GIVE AN ERROR WHEN COMPAR A FLOAT TO AN INT
+    </pattern>
+    <template>
+<![CDATA[<p>It's because the set of integer values does not equal the set of float values for the 'int' and 'float' types. For example, the float value 0.5 has no equal in the integer set and the integer value 4519245367 might not exist in the set of values a float can store. So, the checker flags this as an issue to be checked by the programmer.</p><br/><br/><p>Skizz</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      C CODE PRODUC A DOUBL INSTEAD OF A FLOAT
+    </pattern>
+    <template>
+<![CDATA[<p>I think the reason is to ensure that any result can be encompassed. so the natural choice is double as it is the largest data type.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      ARGUMENT FOR PRINTF THAT FORMAT A LONG
+    </pattern>
+    <template>
+<![CDATA[<p>Put an 'l' directly before the specifier.  </p><br/><br/><pre><code>unsigned long n;<br/>printf("%lu", n);<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      UNICOD SUPPORT
+    </pattern>
+    <template>
+<![CDATA[<p>Have a look at this: <a href="http://www.icu-project.org/" rel="nofollow" title="International Components for Unicode">http://www.icu-project.org/</a></p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      DLL FUNCTION FROM VB6
+    </pattern>
+    <template>
+<![CDATA[<p>By using <code>__declspec</code> for export, the function name will get exported <em>mangled</em>, i.e. contain type information to help the C++ compiler resolve overloads.</p><br/><br/><p>VB6 cannot handle mangled names. As a workaround, you have to de-mangle the names. The easiest solution is to link the DLL file using an <a href="http://msdn.microsoft.com/en-us/library/d91k01sh%28VS.80%29.aspx" rel="nofollow">export definition</a> file in VC++. The export definition file is very simple and just contains the name of the DLL and a list of exported functions:</p><br/><br/><pre><code>LIBRARY mylibname<br/>EXPORTS<br/>    myfirstfunction<br/>    secondfunction<br/></code></pre><br/><br/><p>Additionally, you have to specify the <code>stdcall</code> calling convention because that's the only calling convention VB6 can handle. There's a project using assembly injection to handle C calls but I guess you don't want to use this difficult and error-prone method.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      INTELLISENS TO RELIABL WORK IN VISUAL STUDIO 2008
+    </pattern>
+    <template>
+<![CDATA[<p>I've also realized than Intellisense is sometime 'lost', on some big project. Why? No idea.</p><br/><br/><p>This is why we have bought <a href="http://www.wholetomato.com/" rel="nofollow">Visual Assist</a> (from <a href="http://www.wholetomato.com/" rel="nofollow">Tomato software</a>) and disabled Intellisense by deleting the dll feacp.dll in the Visual studio subdirectory (C:\Program Files\Microsoft Visual Studio 8\VC\vcpackages)</p><br/><br/><p>This is not a solution, just a workaround.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      WRAP A FUNCTION WITH VARIABL LENGTH ARGUMENT
+    </pattern>
+    <template>
+<![CDATA[<p>the problem is that you cannot use 'printf' with va_args.  You must use vprintf if you are using variable argument lists.  vprint, vsprintf, vfprintf, etc.  (there are also 'safe' versions in Microsoft's C runtime that will prevent buffer overruns, etc.)</p><br/><br/><p>You sample works as follows:</p><br/><br/><pre><code>void myprintf(char* fmt, ...)<br/>{<br/>    va_list args;<br/>    va_start(args,fmt);<br/>    vprintf(fmt,args);<br/>    va_end(args);<br/>}<br/><br/>int _tmain(int argc, _TCHAR* argv[])<br/>{<br/>    int a = 9;<br/>    int b = 10;<br/>    char v = 'C'; <br/>    myprintf("This is a number: %d and \nthis is a character: %c and \n another number: %d\n",a, v, b);<br/>    return 0;<br/>}<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      DECLAR IS N T A PROTOTYP
+    </pattern>
+    <template>
+<![CDATA[<p>In C foo() and foo(void) are different functions. foo() accepts an infinite number of arguments, while foo(void) accepts 0 arguments. In C++ they mean the same thing. I suggest that you use void consistently when you mean no arguments.</p><br/><br/><p>If you have a variable a, "extern int a;" is a way to tell the compiler that 'a' is a symbol that might be present in a different translation unit (c compiler speak for source file), don't resolve it until link time. On the other hand, symbols which are function names are anyway resolved at link time. The meaning of a storage class specifier on a function (extern, static) only affects its visibility and extern is the default, so extern is actually unnecessary.</p><br/><br/><p>I suggest removing the extern, it is extraneous and is usually omitted. </p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      TRACK # INCLUD DEPEND
+    </pattern>
+    <template>
+<![CDATA[<p>If you have access to GCC/G++, then the <a href="http://gcc.gnu.org/onlinedocs/gcc/Preprocessor-Options.html#Preprocessor-Options" rel="nofollow"><code>-M</code> option</a> will output the dependency list.  It doesn't do any of the extra stuff that the other tools do, but since it is coming from the compiler, there is no chance that it will pick up files from the "wrong" place.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      SCP A FILE PROGRAMAT USE C
+    </pattern>
+    <template>
+<![CDATA[<p><a href="http://www.libssh2.org/wiki/index.php/Main_Page" rel="nofollow">libssh2</a>, perhaps?  I have used the perl binding successfully to scp/sftp files, so I'm assuming it is not much harder to do the same with the core c API.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      GET USER INPUT FOR A MENU DRIVEN CLI IN C
+    </pattern>
+    <template>
+<![CDATA[<p>getchar(), or cgetc(), depending on the platform</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      MARKDOWN TO FORMAT THI CODE PROPERLI
+    </pattern>
+    <template>
+<![CDATA[<p>You can also use the HTML tags &lt;pre&gt;&lt;code&gt; in succession.  I find this easier for pasting code into the window.</p><br/><br/><p><pre><code>#define PRINT(x, format, ...)<br/>if ( x ) <br/>{<br/>    if ( debug_fd != NULL ) <br/>    { <br/>        fprintf(debug_fd, format, ##VA_ARGS); <br/>    } <br/>    else <br/>    { <br/>        fprintf(stdout, format, ##VA_ARGS); <br/>    } <br/>}</pre></code></p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      RDM FOR C LANGUAG NEWBI
+    </pattern>
+    <template>
+<![CDATA[<p>You can use SQLite, MySQL, PostgreSQL, or any other DBMS with a C language binding.</p><br/><br/><ul><br/><li><a href="http://www.sqlite.org/quickstart.html" rel="nofollow">SQLite In 5 Minutes Or Less</a></li><br/><li><a href="http://dev.mysql.com/doc/refman/5.1/en/c.html" rel="nofollow">MySQL C API</a></li><br/><li><a href="http://www.postgresql.org/docs/8.1/static/libpq.html" rel="nofollow">PostgreSQL C API</a></li><br/></ul><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      MULTI THREAD
+    </pattern>
+    <template>
+<![CDATA[<p>The correct (standard) way to do this on C and Windows is with <a href="http://msdn.microsoft.com/en-us/library/kdzttdcb.aspx" rel="nofollow">__beginthreadex</a>.</p><br/><br/><p>This is usually preferred to calling <a href="http://msdn.microsoft.com/en-us/library/kdzttdcb.aspx" rel="nofollow">CreateThread</a> directly as CreateThread doesn't init C runtime support for the thread. So if you create a thread using CreateThread, and call a CRT function, bad stuff can/will happen.</p><br/><br/><p>Note that __beginthreadex calls CreateThread internally, but performs some other work behind the scenes.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      AN EXTERN PROGRAM FROM C AND PARS IT OUTPUT
+    </pattern>
+    <template>
+<![CDATA[<p>For simple problems in unixish environments try <code>popen()</code>. </p><br/><br/><p>From the man page</p><br/><br/><pre><code>The popen() function opens a process by creating a pipe, forking and involking the<br/>shell.<br/></code></pre><br/><br/><p>If you use the read mode this is exactly what you asked for. Don't know if it is implemented in windows.</p><br/><br/><p>For more complicated problems you want to search on inter-process communication.</p><br/>]]>    </template>
+  </category>
+</aiml>

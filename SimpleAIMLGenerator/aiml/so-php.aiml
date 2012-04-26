@@ -1,0 +1,1335 @@
+<?xml version="1.0" ?>
+<aiml version="1.0">
+  <meta content="SimpleAIMLGenerator" name="author"/>
+  <meta content="en" name="language"/>
+  <category>
+    <pattern>
+      LATEST INFORM ON PHP UPCOM RELEAS
+    </pattern>
+    <template>
+<![CDATA[<p>i think the wiki is your best bet <a href="http://wiki.php.net/" rel="nofollow">http://wiki.php.net/</a></p>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      ALLOW PLUGIN FOR A PHP APPLIC
+    </pattern>
+    <template>
+<![CDATA[<p>You could use an Observer pattern.  A simple functional way to accomplish this:</p><br/><br/><pre><code>&lt;?php<br><br>/** Plugin system **/<br><br>$listeners = array();<br><br>/* Create an entry point for plugins */<br>function hook(){<br>  global $listeners;<br><br>  $num_args = func_num_args();<br>  $args = func_get_args();<br><br>  if($num_args &lt; 2)<br>    trigger_error("Insufficient arguments", E_USER_ERROR);<br><br>  // Hook name should always be first argument<br>  $hook_name = array_shift($args);<br><br>  if(!isset($listeners[$hook_name]))<br>    return; // No plugins have registered this hook<br><br>  foreach($listeners[$hook_name] as $func){<br>    $args = $func($args); <br>  }<br><br>  return $args;<br>}<br><br>/* Attach a function to a hook */<br>function add_listener($hook, $function_name){<br>  global $listeners;<br><br>  $listeners[$hook][] = $function_name;<br>}<br><br><br>/////////////////////////<br><br>/** Sample Plugin **/<br>add_listener('a_b', 'my_plugin_func1');<br>add_listener('str', 'my_plugin_func2');<br><br>function my_plugin_func1($args){<br>  return array(4, 5);<br>}<br>function my_plugin_func2($args){<br>  return str_replace('sample', 'CRAZY', $args[0]);<br>}<br><br>/////////////////////////<br><br>/** Sample Application **/<br><br>$a = 1;<br>$b = 2;<br><br>list($a, $b) = hook('a_b', $a, $b);<br><br>$str  = "This is my sample application\n";<br>$str .= "$a + $b = ".($a+$b)."\n";<br>$str .= "$a * $b = ".($a*$b)."\n";<br><br>$str = hook('str', $str);<br><br>echo $str;<br><br>?&gt;<br></code></pre><br/><br/><p><strong>Output:</strong></p><br/><br/><pre><code>This is my CRAZY application<br>4 + 5 = 9<br>4 * 5 = 20<br></code></pre><br/><br/><p><strong>Notes:</strong></p><br/><br/><p>For this example source code, you must declare all your plugins before the actual source code that you want to be extendable.  I've included an example of how to handle single or multiple values being passed to the plugin.  The hardest part of this is writing the actual documentation which lists what arguments get passed to each hook.</p><br/><br/><p>This is just one method of accomplishing a plugin system in PHP.  There are better alternatives, I suggest you check out the WordPress Documentation for more information.</p><br/><br/><p><em>Sorry, it appears underscore characters are replaced by HTML entities by Markdown?  I can re-post this code when this bug gets fixed.</em></p><br/><br/><p><em>Edit: Nevermind, it only appears that way when you are editing</em></p>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      FLAT FILE DATABAS IN PHP
+    </pattern>
+    <template>
+<![CDATA[<p>Well, what is the nature of the flat databases.  Are they large or small.  Is it simple arrays with arrays in them?  if its something simple say userprofiles built as such:</p><br/><br/><pre><code>$user = array("name" =&gt; "dubayou", <br/>              "age" =&gt; 20,<br/>              "websites" =&gt; array("dubayou.com","willwharton.com","codecream.com"),<br/>              "and_one" =&gt; "more");<br/></code></pre><br/><br/><p>and to save or update the <em>db record</em> for that user.</p><br/><br/><pre><code>$dir = "../userdata/";  //make sure to put it bellow what the server can reach.<br/>file_put_contents($dir.$user['name'],serialize($user));<br/></code></pre><br/><br/><p>and to load the <em>record</em> for the user</p><br/><br/><pre><code>function &amp;get_user($name){<br/>     return unserialize(file_get_contents("../userdata/".$name));<br/>}<br/></code></pre><br/><br/><p>but again this implementation will vary on the application and nature of the database you need.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      ACCESS OBJECT PROPERTI FROM WITHIN AN OBJECT METHOD
+    </pattern>
+    <template>
+<![CDATA[<p>This has religious war potential, but it seems to me that if you're using a getter/setter, you should use it internally as well - using both will lead to maintenance problems down the road (e.g. somebody adds code to a setter that <em>needs</em> to run every time that property is set, and the property is being set internally w/o that setter being called).</p>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      TRACK FILE DOWNLOAD WITH APACHE PHP
+    </pattern>
+    <template>
+<![CDATA[<p>The funny thing is i wrote a php media gallery for all my music 2 days ago. I had a similar problem.  Im using <a href="http://musicplayer.sourceforge.net/" rel="nofollow">http://musicplayer.sourceforge.net/</a> for the player. and the playlis are built via php.  all music request go there a script called xfer.php?file=WHATEVER</p><br/><br/><pre><code>$filename = base64_url_decode($_REQUEST['file']);<br/>header("Cache-Control: public");<br/>header("Content-Description: File Transfer");<br/>header('Content-disposition: attachment; filename='.basename($filename));<br/>header("Content-Transfer-Encoding: binary");<br/>header('Content-Length: '. filesize($filename));<br/><br/>//  Put either file counting code here. either a db or static files<br/><br/>//<br/><br/>readfile($filename);  //and spit the user the file<br/><br/><br/>function base64_url_decode($input) {<br/>    return base64_decode(strtr($input, '-_,', '+/='));<br/>}<br/></code></pre><br/><br/><p>And when you call files use something like </p><br/><br/><pre><code>function base64_url_encode($input) {<br/>     return strtr(base64_encode($input), '+/=', '-_,');<br/>}<br/></code></pre><br/><br/><p><a href="http://us.php.net/manual/en/function.base64-encode.php" rel="nofollow">http://us.php.net/manual/en/function.base64-encode.php</a></p><br/><br/><p>If you are using some javascript or a flash player (JW player for example) that requires the actual link to be an mp3 file or whatever, you can append the text "&amp;type=.mp3" so the final linke becomes something like "www.example.com/xfer.php?file=34842ffjfjxfh&amp;type=.mp3". That way it looks like it ends with an mp3 extension without affecting the file link.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      E PHP ERROR LOG PER VIRTUAL HOST
+    </pattern>
+    <template>
+<![CDATA[<p>To set the <em>Apache</em> (<em>not the PHP</em>) log, the easiest way to do this would be to do:</p><br/><br/><pre><code>&lt;VirtualHost IP:Port&gt;<br/>   # Stuff,<br/>   # More Stuff,<br/>   ErrorLog /path/where/you/want/the/error.log<br/>&lt;/VirtualHost&gt;<br/></code></pre><br/><br/><p>If there is no leading "/" it is assumed to be relative.</p><br/><br/><p><a href="http://httpd.apache.org/docs/1.3/mod/core.html#errorlog">Apache Error Log Page</a></p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      GENER A TAG CLOUD FROM AN ARRAY USE H1 THROUGH H6 FOR SIZE
+    </pattern>
+    <template>
+<![CDATA[<p>You will want to add a logarithmic function to it too. (taken from tagadelic, my Drupal module to create tag clouds <a href="http://drupal.org/project/tagadelic" rel="nofollow">http://drupal.org/project/tagadelic</a>):</p><br/><br/><pre><code>  db_query('SELECT COUNT(*) AS count, id, name FROM ... ORDER BY count DESC');<br/>  $steps = 6;<br/>  $tags = array();<br/>  $min = 1e9;<br/>  $max = -1e9;<br/>  while ($tag = db_fetch_object($result)) {<br/>    $tag-&gt;number_of_posts = $tag-&gt;count; #sets the amount of items a certain tag has attached to it<br/>    $tag-&gt;count = log($tag-&gt;count);<br/>    $min = min($min, $tag-&gt;count);<br/>    $max = max($max, $tag-&gt;count);<br/>    $tags[$tag-&gt;tid] = $tag;<br/>  }<br/>  // Note: we need to ensure the range is slightly too large to make sure even<br/>  // the largest element is rounded down.<br/>  $range = max(.01, $max - $min) * 1.0001;<br/><br/>  foreach ($tags as $key =&gt; $value) {<br/>    $tags[$key]-&gt;weight = 1 + floor($steps * ($value-&gt;count - $min) / $range);<br/>  }<br/></code></pre><br/><br/><p>Then in your view or template:</p><br/><br/><pre><code>foreach ($tags as $tag) {<br/>  $output .= "&lt;h$tag-&gt;weight&gt;$tag-&gt;name&lt;/h$tag-&gt;weight&gt;"<br/>}<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      A REMOT FORM IN PHP
+    </pattern>
+    <template>
+<![CDATA[<p>Have your local form post the data to your local processing script.  Then use something like <a href="http://uk.php.net/manual/en/book.curl.php" rel="nofollow">curl</a> to programmatically post the data to the remote server and receieve a response.  You will then have to parse the reponse in some way to retrieve meaningful information.</p>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      SECUR
+    </pattern>
+    <template>
+<![CDATA[<p>There is a couple of things to do in order to keep your session secure:</p><br/><br/><ol><br/><li>Use SSL when authenticating users or performing sensitive operations.</li><br/><li>Regenerate the session id whenever the security level changes (such as logging in). You can even regenerate the session id every request if you wish.</li><br/><li>Have sessions time out</li><br/><li>Don't use register globals</li><br/><li>Store authentication details on the server. That is, don't send details such as username in the cookie.</li><br/><li>Check the <code>$_SERVER['HTTP_USER_AGENT']</code>. This adds a small barrier to session hijacking. You can also check the IP address. But this causes problems for users that have changing IP address due to load balancing on multiple internet connections etc (which is the case in our environment here).</li><br/><li>Lock down access to the sessions on the file system or use custom session handling</li><br/><li>For sensitive operations consider requiring logged in users to provide their authenication details again</li><br/></ol><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      ACCESS EXCHANG USE PHP
+    </pattern>
+    <template>
+<![CDATA[<p>I have not used PHP to do this but have experience in using C# to achieve the same thing.</p><br/><br/><p>The Outlook API is a way of automating Outlook rather than connecting to Exchange directly. I have previously taken this approach in a C# application and it does work although can be buggy.</p><br/><br/><p>If you wish to connect directly to the Exchange server you will need to research extended MAPI.</p><br/><br/><p>In the past I used this wrapper <a href="http://www.codeproject.com/KB/IP/CMapiEx.aspx" rel="nofollow">http://www.codeproject.com/KB/IP/CMapiEx.aspx</a>.</p><br/><br/><p>It is a C# project but I believe you can use some .NET code on a PHP5 Windows server. Alternatively it has a C++ core DLL that you may be a able to use. I have found it to be very good and there are some good example applications.</p><br/><br/><h3>Update:</h3><br/><br/><p>Sorry for the delay no current way to keep track of posts yet.</p><br/><br/><p>I do agree adding more layer on to your application and relying on 3rd party code can be scary (and rightfully so.)</p><br/><br/><p>Today I read another <a href="http://stackoverflow.com/questions/4508/mapi-and-managed-code-experiences" rel="nofollow">interesting post</a> tagged up as MAPI that is on a different subject. The key thing here though is that it has linked to <a href="http://blogs.msdn.com/mstehle/archive/2007/10/03/fyi-why-are-mapi-and-cdo-1-21-not-supported-in-managed-net-code.aspx" rel="nofollow">this important MS article</a>. I have been unaware of the issues until now on using managed code to interface to MAPI although the C++ code in the component should be unaffected by this error as it is unmanaged. </p><br/><br/><p>This blog entry also suggests other ways to connect to MAPI/Exchange server. In this case due to these new facts <a href="http://us3.php.net/imap" rel="nofollow">http://us3.php.net/imap</a> may be the answer as suggested by the other user.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      PHP TO AN AS 400
+    </pattern>
+    <template>
+<![CDATA[<p>Have you looked at connecting to the server using <a href="http://www.unixodbc.org/" rel="nofollow">unixODBC</a>? If I remember correctly it has support for IBM DB2 and compiles on OpenBSD. Check out <a href="http://www.php.net/odbc" rel="nofollow">http://www.php.net/odbc</a> for more information regarding the PHP side.</p><br/><br/><p>If you can't get that to work the option to setup a web service on a Linux server may be all you can do.</p>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      IMPLEMENT UNIT TEST IN PHP
+    </pattern>
+    <template>
+<![CDATA[<p>I've tried SimpleTest and PHPUnit, and stuck with PHPUnit because it works with PHP 5, and SimpleUnit seemed to throw a lot of notices and warnings (I like to develop with full error reporting turned on, there's no excuse for sloppy code). I also came across numerous bugs with SimpleTest (some of which caused me hours of wasted productivity and stress in trying to track them down).</p><br/><br/><p>In terms of how unit-testing helps development, I find TDD (Test Driven Development) to be the best paradigm, because it forces you to think exactly how your code will be used before you write any of it. In fact, since I've adopted unit-testing and tdd, I've rewritten much of my own code because in writing tests for them, I've realised that my method names and functions weren't exactly the most intuitive, and also did some things that they shouldn't have been doing (i.e. like doing two tasks, instead of being specific and just do one each).</p><br/><br/><p>Not only that, but writing tests for your code helps you understand your own code better (i.e. in that it helps you realise when your all-singing-and-dancing class is doing too many different things, and should be split up into different distinct components), and also helps others understand your code (because if you write your tests properly and elegantly, they can see how they're supposed to use your class - it's almost like writing code examples).</p><br/><br/><p>There's a good guide <a href="http://sebastian-bergmann.de/archives/817-Quality-Assurance-in-PHP-Projects.html" rel="nofollow">involving a bowling game here</a> that gives you an insight to both PHPUnit and TDD, and that should help you get started. It starts from slide 14.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      VARIABL PASS BY VALU OR BY REFER
+    </pattern>
+    <template>
+<![CDATA[<p>It's by value according to the <a href="http://fr3.php.net/manual/en/functions.arguments.php" rel="nofollow">PHP Documentation</a>.</p><br/><br/><blockquote><br/>  <p>By default, function arguments are passed by value (so that if the value of the argument within the function is changed, it does not get changed outside of the function). To allow a function to modify its arguments, they must be passed by reference.</p><br/>  <br/>  <p>To have an argument to a function always passed by reference, prepend an ampersand (&amp;) to the argument name in the function definition.</p><br/></blockquote><br/><br/><pre><code>&lt;?php<br>function add_some_extra(&amp;$string)<br>{<br>    $string .= 'and something extra.';<br>}<br>$str = 'This is a string, ';<br>add_some_extra($str);<br>echo $str;    // outputs 'This is a string, and something extra.'<br>?&gt;<br></code></pre>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      DEBUG PHP SCRIPT
+    </pattern>
+    <template>
+<![CDATA[<p>I follow <a href="http://dev.piwik.org/trac/wiki/HowToSetupDevelopmentEnvironmentWindows" rel="nofollow">this article</a> to setup an Eclipse environment that has debugging features like you mentioned. The ability to step into the code is a much better way to debug then the old method of var_dump and print at various points to see where your flow goes wrong. When all else fails though and all I have is SSH and vim I still <code>var_dump()</code>/<code>die()</code> to find where the code goes south.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      XAMPP APACH SERV FILE OUTSID OF HTDOC
+    </pattern>
+    <template>
+<![CDATA[<p>You can relocate it by editing the <strong>DocumentRoot</strong> setting in XAMPP\apache\conf\httpd.conf.</p><br/><br/><p>It should currently be:</p><br/><br/><blockquote><br/>  <p>C:/xampp/htdocs</p><br/></blockquote><br/><br/><p>Change it to:</p><br/><br/><blockquote><br/>  <p>C:/projects/transitCalculator/trunk</p><br/></blockquote>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      AUTHENT USER NAME UNDER APACH USE PLAIN HTTP AUTHENT AND PHP
+    </pattern>
+    <template>
+<![CDATA[<p>I think that you are after this</p><br/><br/><pre><code>$username = $_SERVER['PHP_AUTH_USER'];<br>$password = $_SERVER['PHP_AUTH_PW'];<br></code></pre>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      OBJECT PROPERTI AS DEFAULT FOR METHOD PROPERTI
+    </pattern>
+    <template>
+<![CDATA[<p>This isn't much better:</p><br/><br/><pre><code>public function createShipment($startZip, $endZip, $weight=null){<br>    $weight = !$weight ? $this-&gt;getDefaultWeight() : $weight;<br>}<br><br>// or...<br><br>public function createShipment($startZip, $endZip, $weight=null){<br>    if ( !$weight )<br>        $weight = $this-&gt;getDefaultWeight();<br>}<br></code></pre>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      MECHAN FOR TRACK DB SCHEMA CHANG
+    </pattern>
+    <template>
+<![CDATA[<p>In the Rails world, there's the concept of migrations, scripts in which changes to the database are made in Ruby rather than a database-specific flavour of SQL. Your Ruby migration code ends up being converted into the DDL specific to your current database; this makes switching database platforms very easy. </p><br/><br/><p>For every change you make to the database, you write a new migration. Migrations typically have two methods: an "up" method in which the changes are applied and a "down" method in which the changes are undone. A single command brings the database up to date, and can also be used to bring the database to a specific version of the schema. In Rails, migrations are kept in their own directory in the project directory and get checked into version control just like any other project code.</p><br/><br/><p><a href="http://www.oracle.com/technology/pub/articles/kern-rails-migrations.html" rel="nofollow" title="Oracle guide to Ruby on Rails migrations">This Oracle guide to Rails migrations</a> covers migrations quite well.</p><br/><br/><p>Developers using other languages have looked at migrations and have implemented their own language-specific versions. I know of <strong><a href="http://code.google.com/p/ruckusing/" rel="nofollow" title="Ruckusing">Ruckusing</a></strong>, a PHP migrations system that is modelled after Rails' migrations; it might be what you're looking for.</p>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      T THE MATCH WHEN USE PREG REPLAC IN PHP
+    </pattern>
+    <template>
+<![CDATA[<p>You need to put the match in parentheses, like this:</p><br/><br/><pre><code>preg_replace("/([A-Z])/", "&lt;span class=\"initial\"&gt;$1&lt;/span&gt;", $str)<br/></code></pre>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      TERNARI EXPRESS NOT WORK
+    </pattern>
+    <template>
+<![CDATA[<p>This is broken because 'false' as a string will evaluate to true as a boolean.</p><br/><br/><p>However, this is an unneeded ternary expression, because the resulting values are simple true and false.  This would be equivalent:</p><br/><br/><pre><code>$canMerge = ($condition1 &amp;&amp; $condition2);<br></code></pre>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      SIZE DIFFER AFTER COPI A FILE TO A SERVER V A FTP
+    </pattern>
+    <template>
+<![CDATA[<p>Do you need to open the locfile in binary using "rb"?</p><br/><br/><p>f = open (locfile, "rb")</p>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      IDE FOR LINUX
+    </pattern>
+    <template>
+<![CDATA[<p><a href="http://projects.gnome.org/gedit/" rel="nofollow">gedit</a></p><br/><br/><ul><br/><li>Syntax highlighting</li><br/><li>Fast, lightweight</li><br/><li>Tabs</li><br/><li>GUI</li><br/></ul><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      APACH ERROR IN PHP MYSQL QUERI
+    </pattern>
+    <template>
+<![CDATA[<blockquote><br/>  <p>And if it matters at all, apache@localhost is not the name of the user account that I use to get into the database. I don't have any user accounts with the name apache in them at all for that matter.</p><br/></blockquote><br/><br/><p>If it is saying 'apache@localhost' the username is not getting passed correctly to the MySQL connection. 'apache' is normally the user that runs the httpd process (at least on Redhat-based systems) and if no username is passed during the connection MySQL uses whomever is calling for the connection.</p><br/><br/><p>If you do the connection right in your script, not in a called file, do you get the same error?</p>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      DE SUGGEST ECLIPS IDE VS. ZEND STUDIO ( CONFUS )
+    </pattern>
+    <template>
+<![CDATA[<p><a href="http://www.aptana.com/" rel="nofollow">Aptana</a> can do all of that and is available on any platform (Mac/Linux/PC).</p><br/><br/><p>The only thing Zend has on Apatana is pre-integration of PHPUnit and PHPDocs, which are just plugins for Aptana that you have to do yourself. So really you are spending X amount of $ just to not have to install two plugins.</p><br/><br/><p>I could be completely wrong though... Check it out and let me know what else I'm missing by not paying $200 for Zend. I'm interested to know...</p>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      ERROR UPLOAD A FILE
+    </pattern>
+    <template>
+<![CDATA[<p>As it's Windows, there is no real 777. If you're using <a href="http://fr2.php.net/manual/en/function.chmod.php" rel="nofollow">chmod</a>, check the Windows-related comments.</p><br/><br/><p>Check that the IIS Account can access (read, write, modify) these two folders:</p><br/><br/><pre><code>E:\inetpub\vhosts\mywebsite.com\httpdocs\dump\<br>C:\WINDOWS\Temp\<br></code></pre>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      PARADIGM LANGUAG
+    </pattern>
+    <template>
+<![CDATA[<p>It all depends on the problem you're trying to solve. Obviously you can solve any problem in either style (procedural or OO), but you usually can figure out in the planning stages before you start writing code which style suits you better.</p><br/><br/><p>Some people like to write up use cases and if they see a lot of the same nouns showing up over and over again (e.g., a person withdraws money from the bank), then they go the OO route and use the nouns as their objects. Conversely, if you don't see a lot of nouns and there's really more verbs going on, then procedural or functional may be the way to go.</p><br/><br/><p>Steve Yegge has a <a href="http://steve-yegge.blogspot.com/2006/03/execution-in-kingdom-of-nouns.html" rel="nofollow">great but long post</a> as usual that touches on this from a different perspective that you may find helpful as well.</p>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      PHP FILE THAT REQUIR AN ABSOLUT PATH
+    </pattern>
+    <template>
+<![CDATA[<p>This should work </p><br/><br/><pre><code>$root = realpath($_SERVER["DOCUMENT_ROOT"]);<br><br>include "$root/inc/include1.php";<br></code></pre><br/><br/><hr><br/><br/><p><strong>Edit:</strong> added imporvement by <a href="http://stackoverflow.com/questions/4369/include-files-requiring-an-absolute-path#4388" rel="nofollow">aussieviking</a></p>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      EASILI CONSUM A WEB SERVIC FROM PHP
+    </pattern>
+    <template>
+<![CDATA[<p>I've had great success with <a href="http://www.urdalen.no/wsdl2php/manual.php" rel="nofollow">wsdl2php</a>.  It will automatically create wrapper classes for all objects and methods used in your web service.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      SELL PYTHON TO A CLIENT BOSS PERSON WITH LOT OF CASH
+    </pattern>
+    <template>
+<![CDATA[<p>This is one of those cases that really boil down to personal preference or situational details. If you're more comfortable and experienced with Python, then say so. Are they asking you to justify it because they're more comfortable with one of the other environments? After you're done, will the system be passed off to someone else for long-term maintenance?</p><br/><br/><p>If they ask you to use a technology or language that you're not as familiar with, then make sure they know up-front that it's going to take you longer.</p>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      CONTROL PHP WEB PROJECT
+    </pattern>
+    <template>
+<![CDATA[<p>We were in a similar situation, and here's what we ended up doing:</p><br/><br/><ul><br/><li>Set up two branches -- the release and development branch.</li><br/><li>For the development branch, include a post-commit hook that deploys the repository to the dev server, so you can test.</li><br/><li>Once you're ready, you merge your changes into the release branch. I'd also suggest putting in a post-commit hook for deployment there.</li><br/></ul><br/><br/><p>You can also set up individual development servers for each of the team members, on their workstations. I find that it speeds things up a bit, although you do have some more setup time.</p><br/><br/><p>We had to use a single development server, because we were using a proprietary CMS and ran into licensing issues. So our post-commit hook was a simple FTP bot.</p>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      A SQL SERVER DATABAS WITH PHP
+    </pattern>
+    <template>
+<![CDATA[<p>I suppose you have three options.</p><br/><br/><ol><br/><li><p>Set user permissions so that user x can only read from the database.</p></li><br/><li><p>Set the database into single user mode so only one connection can access it</p><br/><br/><p>sp_dboption 'myDataBaseName', single, true</p></li><br/><li><p>Set the database to readonly</p><br/><br/><p>sp_dboption 'myDataBaseName', read only, true</p></li><br/></ol>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      PERSON LINUX WEB SERVER
+    </pattern>
+    <template>
+<![CDATA[<p>This article has some of the best ways to lock things down:</p><br/><br/><p><a href="http://www.petefreitag.com/item/505.cfm" rel="nofollow">http://www.petefreitag.com/item/505.cfm</a></p><br/><br/><p>Some highlights:</p><br/><br/><ul><br/><li>Make sure no one can browse the directories</li><br/><li>Make sure only root has write privileges to everything, and only root has read privileges to certain config files</li><br/><li>Run mod_security</li><br/></ul><br/><br/><p>The article also takes some pointers from this book:</p><br/><br/><p><a href="http://spendfish.com/product/0596007248" rel="nofollow">Apache Securiy</a> (O'Reilly Press)</p><br/><br/><p>As far as distros, I've run Debain and Ubuntu, but it just depends on how much you want to do. I ran Debian with no X and just ssh'd into it whenever i needed anything. That is a simple way to keep overhead down. Or Ubuntu has some nice GUI things that make it easy to control Apache/MySQL/PHP.</p>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      A GOOD STANDARD CODE LAYOUT FOR A PHP APPLIC
+    </pattern>
+    <template>
+<![CDATA[<p>If I roll anything myself I just adhere to putting anything that doesn't need to be hit directly outside of the public folder:</p><br/><br/><pre><code>includes/<br>templates/<br>www/<br>    js/<br>    css/<br>    images/<br>library/<br></code></pre><br/><br/><p>otherwise I just follow whatever Framework I'm using suggests.</p><br/><br/><p>As for the actual code, like other people have said, just be consistant. It gets to be a pain when you see code like this:</p><br/><br/><pre><code>$varName = 'This!';<br>$var_name = "This!";<br>$varname  = $Some_Other_Name;<br></code></pre><br/><br/><p>Zend has come up with some pretty sane coding guidelines that pretty much conform to PEAR standards. You can read them <a href="http://framework.zend.com/manual/en/coding-standard.html" rel="nofollow">here</a></p>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      CONST ATTRIBUT OF SERI OF CLASS
+    </pattern>
+    <template>
+<![CDATA[<p>You can accomplish this without using eval in pre-5.3 code.  Just use the constant() function:</p><br/><br/><pre><code>&lt;?php<br/><br/>class MyClass<br/>{<br/>    const CONSTANT = 'Const var';<br/>}<br/><br/>$classname = 'MyClass';<br/>echo constant("$classname::CONSTANT");<br/><br/>?&gt;<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      RANDOM GENER PHP
+    </pattern>
+    <template>
+<![CDATA[<p>Adding, multiplying, or truncating a poor random source will give you a poor random result. See <a href="http://random.org/randomness/" rel="nofollow">Introduction to Randomness and Random Numbers</a> for an explanation.</p><br/><br/><p>You're right about PHP rand() function. See the second figure on <a href="http://random.org/analysis/" rel="nofollow">Statistical Analysis</a> for a striking illustration. (The first figure is striking, but it's been drawn by Scott Adams, not plotted with rand()).</p><br/><br/><p>One solution is to use a true random generator such as <a href="http://random.org/integers/" rel="nofollow">random.org</a>. Another, if you're on Linux/BSD/etc. is to use <a href="http://en.wikipedia.org/wiki/Urandom" rel="nofollow">/dev/random</a>. If the randomness is mission critical, you will have to use a <a href="http://en.wikipedia.org/wiki/Hardware_random_number_generator" rel="nofollow">hardware random generator</a>.</p>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      1 TO A FIELD
+    </pattern>
+    <template>
+<![CDATA[<p>I get downmodded for this?</p><br/><br/><pre><code>$sql = "UPDATE skills SET level = level+1 WHERE id = $id";<br>$result = $db-&gt;sql_query($sql);<br>$db-&gt;sql_freeresult($result);<br></code></pre>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      PHP IDE PREFER FREE OR CHEAP
+    </pattern>
+    <template>
+<![CDATA[<p><a href="http://www.netbeans.org/" rel="nofollow">NetBeans</a> is a nice free editor that has been steadily adding support for languages like Ruby, PHP and Python.  I've been using it on a MacBook Pro for Ruby and quite like it.</p><br/><br/><p>It has the standard IDE features like SCM integration and runs on most platforms.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      4 TO PHP5 MIGRAT
+    </pattern>
+    <template>
+<![CDATA[<p>I also once worked on an app which used PHP4's XML support quite heavily, and would have required quite a bit of work to move to PHP5.</p><br/><br/><p>One of the other significant changes I was looking at at the time was the change of the default handling of function parameters. In PHP4 if I remember, they were pass-by-copy unless you specified otherwise, but in PHP5 is changed to pass-by-reference by default. In well written code, that probably won't make a big difference to you, but it could certainly cause problems.</p><br/><br/><p>I think one other thing I found changed is that objects are no longer allowed to overwrite their 'this' field. I would say that was a really bad idea to begin with (and I think it may have not been an intentional feature in PHP4), but I certainly found a few parts of our system that relied on it.</p><br/><br/><p>Hope some of that helps.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      INDEX ARRAY INDEX VS ARRAY INDEX VS ARRAY INDEX
+    </pattern>
+    <template>
+<![CDATA[<p>see @svec and @jeremy above.  All array indices are of type 'int' first, then type 'string', and will be cast to that as PHP sees fit.</p><br/><br/><p>Performance wise, $index should be faster than "$index" and "{$index}" (which are the same).  </p><br/><br/><p>Once you start a double-quote string, PHP will go into interpolation mode and treat it as a string first, but looking for variable markers ($, {}, etc) to replace from the local scope.  This is why in most discussions, true 'static' strings should always be single quotes unless you need the escape-shortcuts like "\n" or "\t", because PHP will not need to try to interpolate the string at runtime and the full string can be compiled statically.</p><br/><br/><p>In this case, doublequoting will first copy the $index into that string, then return the string, where directly using $index will just return the string.</p>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      CODE WORK WITH REGISTER GLOB TURN OFF
+    </pattern>
+    <template>
+<![CDATA[<p>If you set error reporting to E_ALL, it warns in the error log about undefined variables complete with filename and line number (assuming you are logging to a file). However, it will warn only if when it comes across an undefined variable, so I think you will have to test each code path. Running php from the command line doesn't seem to help also.</p><br/><br/><p>There is a debugging tool named xdebug, haven't tried it, but maybe that can be useful?</p>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      AND PHP LOGIN SCRIPT WITH HIDDEN BUTTON
+    </pattern>
+    <template>
+<![CDATA[<p>Regarding security, <strong>you cannot trust what comes from the client</strong>:</p><br/><br/><ul><br/><li>The visitor can see all your code (HTML and Javascript, not PHP) and try stuff</li><br/><li>The visitor may not even use a browser; it's trivially easy to send a request with a script</li><br/></ul><br/><br/><p>This means hiding the buttons is good User Interface design (because you can't use them if you are not logged in). But it's not a security feature. The security feature is checking, on the server, that the visitor is logged in before each action that requires it.</p><br/><br/><p>If you don't intend to show the buttons, it's not useful to send the HTML and images to the browser and then hide them with Javascript. I would check with PHP.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      EDIT IN PHP
+    </pattern>
+    <template>
+<![CDATA[<p>If you are taking a 'fill in the blank' approach, you can precisely position text anywhere you want on the page. So it's relatively easy (if not a bit tedious) to add the missing text to the document. For example with Zend Framework:</p><br/><br/><pre><code>&lt;?php<br/>require_once 'Zend/Pdf.php';<br/><br/>$pdf = Zend_Pdf::load('blank.pdf');<br/>$page = $pdf-&gt;pages[0];<br/>$font = Zend_Pdf_Font::fontWithName(Zend_Pdf_Font::FONT_HELVETICA);<br/>$page-&gt;setFont($font, 12);<br/>$page-&gt;drawText('Hello world!', 72, 720);<br/>$pdf-&gt;save('zend.pdf');<br/></code></pre><br/><br/><p>If you're trying to replace inline content, such as a "[placeholder string]," it gets much more complicated. While it's technically possible to do, you're likely to mess up the layout of the page.</p><br/><br/><p>A PDF document is comprised of a set of primitive drawing operations: line here, image here, text chunk there, etc. It does not contain any information about the layout intent of those primitives.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      DBI LIK LIBRARI FOR PHP
+    </pattern>
+    <template>
+<![CDATA[<p>It's now defunct but <a href="http://phpdbi.sourceforge.net/web/" rel="nofollow" title="Reading List: Fog Creek Software Management Training Program">phpdbi</a> is possibly worth a look. If you're willing to let go of some of your caveats (the framework one), I've found that <a href="http://www.phpdoctrine.org/" rel="nofollow" title="Bootstrap">Doctrine</a> is a pretty neat way of accessing DBs in PHP. Worth investigating anyway.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      THROUGH REL DATE WITH STRTOTIM ( )
+    </pattern>
+    <template>
+<![CDATA[<p>Working from previous calls to the same script isn't really a good idea for this type of thing.</p><br/><br/><p>What you want to do is always pass two values to your script, the date, and the movement. (the below example is simplified so that you only pass the date, and it will always add one day to it)</p><br/><br/><p>Example</p><br/><br/><p><a href="http://www.site.com/addOneDay.php?date=1999-12-31" rel="nofollow">http://www.site.com/addOneDay.php?date=1999-12-31</a></p><br/><br/><pre><code>&lt;?php<br/>   echo Date("Y-m-d",(strtoTime($_GET[date])+86400));<br/>?&gt;<br/></code></pre><br/><br/><p>Please note that you should check to make sure that isset($_GET[date]) before as well</p><br/><br/><p>If you really want to work from previous calls to the same script, you're going to have to do it with sessions, so please specify if that is the case.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      FTP STATU CODE WITH A PHP SCRIPT
+    </pattern>
+    <template>
+<![CDATA[<p>HTTP works slightly differently than FTP though unfortunately. Although both may look the same in your browser, HTTP works off the basis of URI (i.e. to access resource A, you have an identifier which tells you how to access that).</p><br/><br/><p>FTP is very old school server driven. Even anonymous FTP is a bit of a hack, since you still supply a username and password, it's just defined as "anonymous" and your email address.</p><br/><br/><p>Checking if an FTP server is up means checking</p><br/><br/><ol><br/><li><p>That you can connect to the FTP server</p><br/><br/><p>if (!($ftpfd = ftp_connect($hostname))) { ... }</p></li><br/><li><p>That you can login to the server:</p><br/><br/><p>if (!ftp_login($ftpfd, $username, $password)) { ... }</p></li><br/><li><p>Then, if there are further underlying resources that you need to access to test whether a particular site is up, then use an appropiate operation on them. e.g. on a file, maybe use ftp_mdtm() to get the last modified time or on a directory, see if ftp_nlist() works.</p></li><br/></ol><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      NULL AND NULL IN PHP
+    </pattern>
+    <template>
+<![CDATA[<p>Null is case insensitive.</p><br/><br/><p>From the <a href="http://ca3.php.net/manual/en/language.types.null.php" rel="nofollow">documentation</a>:</p><br/><br/><blockquote><br/>  <p>There is only one value of type null, and that is the <strong>case-insensitive</strong> keyword NULL.</p><br/></blockquote><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      FOR THE PHPPGADMIN REPORT DATABAS
+    </pattern>
+    <template>
+<![CDATA[<p>This is just a standard location to store frequently used SQL scripts.  The reports-pgsql.sql script creates a table for storing these queries, the database they are intended to be run on, a title and some descriptive text about what they do.  PhpPgAdmin has functionality to browse and execute these reports.  It's a pretty simple system just meant to aid in organization.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      QUICKBOOK WITH YOUR E COMMERC SITE
+    </pattern>
+    <template>
+<![CDATA[<p>First, this is the key: the <a href="http://marketplace.intuit.com/webconnector/" rel="nofollow" title="Unison Home Page">QuickBooks Web Connector</a>. It's the glue between the web app and QuickBooks.</p><br/><br/><p>For Rails, there is Zach Chandler's <a href="http://github.com/zackchandler/quickbooks_integration_plugin/tree/master" rel="nofollow">QuickBooks Integration Plugin</a>. I don't know of any PHP specific ones, but that should get you started!</p><br/><br/><p>Edit: I found <a href="http://chadsaunders.com/blog/2007/08/03/php-tutorial-for-quickbooks-web-connector/" rel="nofollow">this tutorial</a> for using the Web Connector with PHP. Doesn't have a lot, but links to some code that should help.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      XINC ON OPENBSD S APACH SERVER
+    </pattern>
+    <template>
+<![CDATA[<p>Have you posted the issue on the Xinc <a href="http://code.google.com/p/xinc/issues/list" rel="nofollow">bug tracker</a>? Xinc itself should run fine as it runs both as a daemon and as a web app. As you alluded to, the issue may be that the daemon is not running in a chroot'ed environment where as the web interface is, leading to either side not grabbing the files.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      PHPUNIT TEST IN CERTAIN ORDER
+    </pattern>
+    <template>
+<![CDATA[<p>Maybe there is a design problem in your tests.</p><br/><br/><p>Usually each test must not depend on any other tests, so they can run in any order.</p><br/><br/><p>Each test needs to instantiate and destroy everything it needs to run, that would be the perfect approach, you should never share objects and states between tests.</p><br/><br/><p>Can you be more specific about why you need the same object for N tests?</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      NEED TO RUN PHP APPLIC ON II
+    </pattern>
+    <template>
+<![CDATA[<p>Make sure you get the FastCGI extension for IIS 6.0 or IIS 7.0.  It is the single most important thing you can have when running PHP under IIS.  Also this article should get you setup:</p><br/><br/><p><a href="http://learn.iis.net/page.aspx/247/using-fastcgi-to-host-php-applications-on-iis-60/" rel="nofollow"><a href="http://learn.iis.net/page.aspx/247/using-fastcgi-to-host-php-applications-on-iis-60/" rel="nofollow">http://learn.iis.net/page.aspx/247/using-fastcgi-to-host-php-applications-on-iis-60/</a></a></p><br/><br/><p>Everything beyond this is simple, MySQL and what not.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      PREFER WAY TO CONNECT TO A POSTGRESQL DATABAS FROM PHP
+    </pattern>
+    <template>
+<![CDATA[<p>PDO objects are the new hotness.  I'd recommend that as long as you can ensure that your target platform will always be running PHP 5.2+.</p><br/><br/><p>There are many other database abstraction layers that support PostgreSQL that are compatible with older versions of PHP; I'd recommend <a href="http://adodb.sourceforge.net/" rel="nofollow">ADODB</a>.</p><br/><br/><p>You should really be using PDO or a different abstraction layer even for your MySQL work; that way you won't have this problem again!</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      PROPER PERMISS FOR AN UPLOAD FOLDER WITH PHP APACH
+    </pattern>
+    <template>
+<![CDATA[<p>You can create a new group with both the apache user and FTP user as members and then make the permission on the upload folder 775.  This should give both the apache and FTP users the ability to write to the files in the folder but keep everyone else from modifying them.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      PIE CHART DRAW IN PHP
+    </pattern>
+    <template>
+<![CDATA[<p>I would suggest using <a href="http://code.google.com/apis/chart/" rel="nofollow">Google's charts API</a>.</p><br/><br/><p>For instance:</p><br/><br/><pre><code>&lt;img src="http://chart.apis.google.com/chart?cht=p3&amp;chd=t:60,40&amp;chs=250x100&amp;chl=Hello|World" /&gt;<br/></code></pre><br/><br/><p><img src="http://chart.apis.google.com/chart?cht=p3&amp;chd=t:60,40&amp;chs=250x100&amp;chl=Hello|World" /></p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      FIND UNUS FUNCTION IN PHP PROJECT
+    </pattern>
+    <template>
+<![CDATA[<p>Thanks Greg and Dave for the feedback. Wasn't quite what I was looking for, but I decided to put a bit of time into researching it and came up with this quick and dirty solution:</p><br/><br/><pre><code>&lt;?php<br/>    $functions = array();<br/>    $path = "/path/to/my/php/project";<br/>    define_dir($path, $functions);<br/>    reference_dir($path, $functions);<br/>    echo<br/>    	"&lt;table&gt;" .<br/>    		"&lt;tr&gt;" .<br/>    			"&lt;th&gt;Name&lt;/th&gt;" .<br/>    			"&lt;th&gt;Defined&lt;/th&gt;" .<br/>    			"&lt;th&gt;Referenced&lt;/th&gt;" .<br/>    		"&lt;/tr&gt;";<br/>    foreach ($functions as $name =&gt; $value) {<br/>    	echo<br/>    		"&lt;tr&gt;" . <br/>    			"&lt;td&gt;" . htmlentities($name) . "&lt;/td&gt;" .<br/>    			"&lt;td&gt;" . (isset($value[0]) ? count($value[0]) : "-") . "&lt;/td&gt;" .<br/>    			"&lt;td&gt;" . (isset($value[1]) ? count($value[1]) : "-") . "&lt;/td&gt;" .<br/>    		"&lt;/tr&gt;";<br/>    }<br/>    echo "&lt;/table&gt;";<br/>    function define_dir($path, &amp;$functions) {<br/>    	if ($dir = opendir($path)) {<br/>    		while (($file = readdir($dir)) !== false) {<br/>    			if (substr($file, 0, 1) == ".") continue;<br/>    			if (is_dir($path . "/" . $file)) {<br/>    				define_dir($path . "/" . $file, $functions);<br/>    			} else {<br/>    				if (substr($file, - 4, 4) != ".php") continue;<br/>    				define_file($path . "/" . $file, $functions);<br/>    			}<br/>    		}<br/>    	}		<br/>    }<br/>    function define_file($path, &amp;$functions) {<br/>    	$tokens = token_get_all(file_get_contents($path));<br/>    	for ($i = 0; $i &lt; count($tokens); $i++) {<br/>    		$token = $tokens[$i];<br/>    		if (is_array($token)) {<br/>    			if ($token[0] != T_FUNCTION) continue;<br/>    			$i++;<br/>    			$token = $tokens[$i];<br/>    			if ($token[0] != T_WHITESPACE) die("T_WHITESPACE");<br/>    			$i++;<br/>    			$token = $tokens[$i];<br/>    			if ($token[0] != T_STRING) die("T_STRING");<br/>    			$functions[$token[1]][0][] = array($path, $token[2]);<br/>    		}<br/>    	}<br/>    }<br/>    function reference_dir($path, &amp;$functions) {<br/>    	if ($dir = opendir($path)) {<br/>    		while (($file = readdir($dir)) !== false) {<br/>    			if (substr($file, 0, 1) == ".") continue;<br/>    			if (is_dir($path . "/" . $file)) {<br/>    				reference_dir($path . "/" . $file, $functions);<br/>    			} else {<br/>    				if (substr($file, - 4, 4) != ".php") continue;<br/>    				reference_file($path . "/" . $file, $functions);<br/>    			}<br/>    		}<br/>    	}		<br/>    }<br/>    function reference_file($path, &amp;$functions) {<br/>    	$tokens = token_get_all(file_get_contents($path));<br/>    	for ($i = 0; $i &lt; count($tokens); $i++) {<br/>    		$token = $tokens[$i];<br/>    		if (is_array($token)) {<br/>    			if ($token[0] != T_STRING) continue;<br/>    			if ($tokens[$i + 1] != "(") continue;<br/>    			$functions[$token[1]][1][] = array($path, $token[2]);<br/>    		}<br/>    	}<br/>    }<br/>?&gt;<br/></code></pre><br/><br/><p>I'll probably spend some more time on it so I can quickly find the files and line numbers of the function definitions and references; this information is being gathered, just not displayed.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      PHP AND MYSQL WORK ON II 7.0
+    </pattern>
+    <template>
+<![CDATA[<p>Have you taken a look at this:</p><br/><br/><p><a href="http://learn.iis.net/page.aspx/246/using-fastcgi-to-host-php-applications-on-iis7/" rel="nofollow" title="excanvas"><a href="http://learn.iis.net/page.aspx/246/using-fastcgi-to-host-php-applications-on-iis7/" rel="nofollow">http://learn.iis.net/page.aspx/246/using-fastcgi-to-host-php-applications-on-iis7/</a></a></p><br/><br/><p>MySQL should be pretty straight forward.</p><br/><br/><p>Let us know what problems you're encountering...</p><br/><br/><p>HTH</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      CURL ON WINDOW INSTAL THE SPECIFI MODUL COULD NOT BE FOUND.
+    </pattern>
+    <template>
+<![CDATA[<p>Problem solved!</p><br/><br/><p>Although the error message said <strong>The specified module could not be found</strong>, this is a little misleading -- it's not that it couldn't find php<em>curl.dll, but rather it couldn't find a module that php</em>curl.dll required.  The 2 DLLs it requires are libeay32.dll SSLeay32.dll.</p><br/><br/><p>So, you have to put those 2 DLLs somewhere in your PATH (e.g., C:\Windows\system32).  That's all there is to it.</p><br/><br/><p>HOWEVER, even that did not work for me initially.  So I downloaded the Windows zip of the latest version of PHP, which includes all the necessary DLLs.  I didn't reinstall PHP, I just copied all of the DLLs in the "ext" folder to my PHP extensions folder (as specified in the<br/>extension_dir variable in php.ini), and I copied the versions of libeay32.dll and SSLeay32.dll from the PHP download into my System32 directory.</p><br/><br/><p>I also did an iisreset, but I don't know if that was necessary. </p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      PERFORM
+    </pattern>
+    <template>
+<![CDATA[<p>Profile. Profile. Profile. I'm not sure if there is anything out there for PHP, but it should be simple to write a little tool to insert profiling information in your code. You will want to profile function times and SQL query times.</p><br/><br/><p>So where you have a function:</p><br/><br/><pre><code>function foo($stuff) {<br/>    ...<br/>    return ...;<br/>}<br/></code></pre><br/><br/><p>I would change it to:</p><br/><br/><pre><code>function foo($stuff) {<br/>    trace_push_fn('foo');<br/>    ...<br/>    trace_pop_fn('foo');<br/>    return ...;<br/>}<br/></code></pre><br/><br/><p>(This is one of those cases where multiple returns in a function become a hinderance.)</p><br/><br/><p>And SQL:</p><br/><br/><pre><code>function bar($stuff) {<br/>    trace_push_fn('bar');<br/><br/>    $query = ...;<br/>    trace_push_sql($query);<br/>    mysql_query($query);<br/>    trace_pop_sql($query);<br/><br/>    trace_pop_fn('bar');<br/>    return ...;<br/>}<br/></code></pre><br/><br/><p>In the end, you can generate a full trace of the program execution and use all sorts of techniques to identify your bottlenecks.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      JPEG IMAG RESIZ IN PHP
+    </pattern>
+    <template>
+<![CDATA[<p>People say that ImageMagick is much faster. At best just compare both libraries and measure that.</p><br/><br/><ol><br/><li>Prepare 1000 typical images.</li><br/><li>Write two scripts -- one for GD, one<br/>for ImageMagick.</li><br/><li>Run both of them a few times.</li><br/><li>Compare results (total execution<br/>time, CPU and I/O usage, result<br/>image quality).</li><br/></ol><br/><br/><p>Something which the best everyone else, could not be the best for you.</p><br/><br/><p>Also, in my opinion, ImageMagick has much better API interface.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      CHARACT IN PHP
+    </pattern>
+    <template>
+<![CDATA[<p>That's the <a href="http://en.wikipedia.org/wiki/Byte_Order_Mark" rel="nofollow">BOM (Byte Order Mark)</a> you are seeing.</p><br/><br/><p>In your editor, there should be a way to force saving without BOM which will remove the problem.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      OF ARRAY IN JAVA
+    </pattern>
+    <template>
+<![CDATA[<p>You could do essentially the same code with Hashtables (or some other Map):</p><br/><br/><pre><code>Hashtable&lt;String, Hashtable&lt;String, String&gt;&gt; schedule<br/>    = new Hashtable&lt;String, Hashtable&lt;String, String&gt;&gt;();<br/>schedule.put("A", new Hashtable&lt;String, String&gt;());<br/>schedule.put("B", new Hashtable&lt;String, String&gt;());<br/>schedule.put("C", new Hashtable&lt;String, String&gt;());<br/>schedule.put("D", new Hashtable&lt;String, String&gt;());<br/>schedule.put("E", new Hashtable&lt;String, String&gt;());<br/><br/>schedule.get("A").put("Winter", "M");<br/>schedule.get("A").put("Spring", "tTS");<br/>// Etc...<br/></code></pre><br/><br/><p>Not as elegant, but then again, Java isn't a dynamic language, and it doesn't have hashes on the language level.</p><br/><br/><p>Note: You might be able to do a better solution, this just popped in my head as I read your question.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      RAW EMAIL IN PHP
+    </pattern>
+    <template>
+<![CDATA[<p>What are you hoping to end up with at the end?  The body, the subject, the sender, an attachment?  You should spend some time with <a href="http://www.faqs.org/rfcs/rfc2822.html" rel="nofollow" title="Dr. Explain">RFC2822</a> to understand the format of the mail, but here's the simplest rules for well formed email:</p><br/><br/><pre><code>HEADERS\n<br/>\n<br/>BODY<br/></code></pre><br/><br/><p>That is, the first blank line (double newline) is the separator between the HEADERS and the BODY.  A HEADER looks like this:</p><br/><br/><pre><code>HSTRING:HTEXT<br/></code></pre><br/><br/><p>HSTRING always starts at the beginning of a line and doesn't contain any white space or colons.  HTEXT can contain a wide variety of text, including newlines as long as the newline char is followed by whitespace.</p><br/><br/><p>The "BODY" is really just any data that follows the first double newline.  (There are different rules if you are transmitting mail via SMTP, but processing it over a pipe you don't have to worry about that).</p><br/><br/><p>So, in really simple, circa-1982 <a href="http://www.faqs.org/rfcs/rfc822.html" rel="nofollow">RFC822</a> terms, an email looks like this:</p><br/><br/><pre><code>HEADER: HEADER TEXT<br/>HEADER: MORE HEADER TEXT<br/>  INCLUDING A LINE CONTINUATION<br/>HEADER: LAST HEADER<br/><br/>THIS IS ANY<br/>ARBITRARY DATA<br/>(FOR THE MOST PART)<br/></code></pre><br/><br/><p>Most modern email is more complex than that though.  Headers can be encoded for charsets or <a href="http://www.faqs.org/rfcs/rfc2047.html" rel="nofollow">RFC2047</a> mime words, or a ton of other stuff I'm not thinking of right now.  The bodies are really hard to roll your own code for these days to if you want them to be meaningful.  Almost all email that's generated by an MUA will be <a href="http://www.faqs.org/rfcs/rfc2045.html" rel="nofollow">MIME</a> encoded.  That might be uuencoded text, it might be html, it might be a uuencoded excel spreadsheet.</p><br/><br/><p>I hope this helps provide a framework for understanding some of the very elemental buckets of email.  If you provide more background on what you are trying to do with the data I (or someone else) might be able to provide better direction.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      PHP
+    </pattern>
+    <template>
+<![CDATA[<p>Note that Zend Optimizer and MMCache (or similar applications) are totally different things. While Zend Optimizer tries to optimize the program opcode MMCache will cache the scripts in memory and reuse the precompiled code.</p><br/><br/><p>I did some benchmarks some time ago and you can find the <a href="http://blogs.interdose.com/dominik/2008/04/11/benchmarking-php-eaccelerator-und-andere-opcode-caches/" rel="nofollow">results</a> in my blog (in German though). The basic results:</p><br/><br/><p>Zend Optimizer alone didn't help at all. Actually my scripts were slower than without optimizer.</p><br/><br/><p>When it comes to caches:<br/>* fastest: <a href="http://eaccelerator.net/" rel="nofollow">eAccelerator</a><br/>* <a href="http://xcache.lighttpd.net/" rel="nofollow">XCache</a><br/>* <a href="http://www.php.net/manual/en/book.apc.php" rel="nofollow">APC</a></p><br/><br/><p>And: You DO want to install a opcode cache!</p><br/><br/><p>For example:<br/><img src="http://blogs.interdose.com/dominik/wp-content/uploads/2008/04/opcode_wordpress.png" alt="alt text" /></p><br/><br/><p>This is the duration it took to call the wordpress homepage 10.000 times.</p><br/><br/><p><em>Edit:</em> BTW, eAccelerator contains an optimizer itself.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      SITE WID VARIABL IN PHP
+    </pattern>
+    <template>
+<![CDATA[<p>Most PHP sites should have a file (I call it a header) that you include on every single page of the site. If you put that first line of code in the header file, then include it like this on every page:</p><br/><br/><pre><code> include 'header.php';<br/></code></pre><br/><br/><p>you won't have to use the global keyword or anything, the second line of code you wrote should work.</p><br/><br/><p>Edit: Oh sorry, that won't work inside functions... now I see your problem.</p><br/><br/><p>Edit #2: Ok, take my original advice with the header, but use a <a href="http://php.net/define" rel="nofollow" title="Dr. Explain">define()</a> rather than a variable. Those work inside functions after being included.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      ACCESS ARRAY VALU ON THE FLI
+    </pattern>
+    <template>
+<![CDATA[<p>I wouldn't bother about that extra variable, really. If you want, though, you could also remove it from memory after you've used it:</p><br/><br/><pre><code>$variable = array('a','b','c');<br/>echo $variable[$key];<br/>unset($variable);<br/></code></pre><br/><br/><p>Or, you could write a small function:</p><br/><br/><pre><code>function indexonce(&amp;$ar, $index) {<br/>  return $ar[$index];<br/>}<br/></code></pre><br/><br/><p>and call this with:</p><br/><br/><pre><code>$something = indexonce(array('a', 'b', 'c'), 2);<br/></code></pre><br/><br/><p>The array should be destroyed automatically now.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      CODEIGNIT SPEED
+    </pattern>
+    <template>
+<![CDATA[<p>Code Igniter also has some built-in benchmarking tools:<br/><a href="http://codeigniter.com/user_guide/general/profiling.html" rel="nofollow"><a href="http://codeigniter.com/user_guide/general/profiling.html" rel="nofollow">http://codeigniter.com/user_guide/general/profiling.html</a></a></p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      DIFFER IN USE INLIN STRING VS CONCATEN IN PHP5
+    </pattern>
+    <template>
+<![CDATA[<p>Well, as with all "What might be faster in real life" questions, you can't beat a real life test.</p><br/><br/><pre><code>function timeFunc($function, $runs)<br/>{<br/>  $times = array();<br/><br/>  for ($i = 0; $i &lt; $runs; $i++)<br/>  {<br/>    $time = microtime();<br/>    call_user_func($function);<br/>    $times[$i] = microtime() - $time;<br/>  }<br/><br/>  return array_sum($times) / $runs;<br/>}<br/><br/>function Method1()<br/>{ <br/>  $foo = 'some words';<br/>  for ($i = 0; $i &lt; 10000; $i++)<br/>    $t = "these are $foo";<br/>}<br/><br/>function Method2()<br/>{<br/>  $foo = 'some words';<br/>  for ($i = 0; $i &lt; 10000; $i++)<br/>    $t = "these are {$foo}";<br/>}<br/><br/>function Method3()<br/> {<br/>  $foo = 'some words';<br/>  for ($i = 0; $i &lt; 10000; $i++)<br/>    $t = "these are " . $foo;<br/>}<br/><br/>print timeFunc('Method1', 10) . "\n";<br/>print timeFunc('Method2', 10) . "\n";<br/>print timeFunc('Method3', 10) . "\n";<br/></code></pre><br/><br/><p>Give it a few runs to page everything in, then...</p><br/><br/><p>0.0035568</p><br/><br/><p>0.0035388</p><br/><br/><p>0.0025394</p><br/><br/><p>So, as expected, the interpolation are virtually identical (noise level differences, probably due to the extra characters the interpolation engine needs to handle). Straight up concatenation is about 66% of the speed, which is no great shock. The interpolation parser will look, find nothing to do, then finish with a simple internal string concat. Even if the concat were expensive, the interpolator will still have to do it, <strong>after</strong> all the work to parse out the variable and trim/copy up the original string.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      CONVERT C # CLASS TO PHP
+    </pattern>
+    <template>
+<![CDATA[<p>It is entirely possible to write a PHP application almost entirely in an object-oriented methodology. You will have to write some procedural code to create and launch your first object but beyond that there are plenty of MVC frameworks for PHP that are all object-oriented. One that I would look at as an example is <a href="http://codeigniter.com" rel="nofollow">Code Igniter</a> because it is a little lighter weight in my opinion.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      ZEND MVC WITHOUT MOD REWRIT
+    </pattern>
+    <template>
+<![CDATA[<p>Zend framework should work without <code>mod_rewrite</code>. If you can live with your URL:s looking more like "/path/to/app/index.php/controller/action". If you had mod_rewrite you could do away with the "index.php" bit, but it should work with too.</p><br/><br/><p>It's all a matter of setting up the routes to accept the index.php part.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      BEST COMBIN FROM A GIVEN SET OF MULTIPL SET
+    </pattern>
+    <template>
+<![CDATA[<p>Could alter some of the <a href="http://en.wikipedia.org/wiki/Shortest_path_problem" rel="nofollow">shortest path algorithms</a>, like Dijkstra's, to weight each path by cost but also keep track of time and stop going along a certain path if the time exceeds your threshold.  Should find the cheapest that gets you in under your threshold that way</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      ACCEPT CERTAIN AJAX REQUEST FROM AUTHENT USER
+    </pattern>
+    <template>
+<![CDATA[<p>You were correct in trying to use session variables.  Once your user authenticates, you should store that information in their session so that each subsequent page view will see that.  Make sure you are calling <code>session_start()</code> on both pages (blog.php and delete.php) before accessing $_SESSION.  Also make sure you have cookies enabled -- and if not, you should pass an additional parameter in the query string, usually PHPSESSID=&lt;<code>session_id()</code>>.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      ONE INTERFAC OVERWRIT A METHOD IT INHERIT FROM ANOTH INTERFAC IN PHP
+    </pattern>
+    <template>
+<![CDATA[<p><a href="http://stackoverflow.com/questions/16155/making-one-interface-overwrite-a-method-it-inherits-from-another-interface-in-p#16196" rel="nofollow">@cmcculloh</a> Yeah, in Java you don't define constructors in Interfaces.  This allows you to both extend interfaces and also have a class that implements multiple interfaces (both allowed, and very useful in many cases) without worrying about having to satisfy a particular constructor.</p><br/><br/><p><em>EDIT:</em></p><br/><br/><p><em>Here's my new model:</em></p><br/><br/><p><em>A. Each interface no longer has a constructor method.</em><br /><br/><em>B. All Shippers (UPS, FedEx, etc) now implement iShipper (which extends iVendor) and extend the abstract class Shipper (which has all common non-abstract methods for shippers defined in it, getName(), getZip() etc).</em><br /><br/><em>C. Each Shipper has it's own unique _construct method which overwrites the abstract __construct($vendors_no = null, $shipment = null) method contained in Shipper (I don't remember why I'm allowing those to be optional now though. I'd have to go back through my documentation...).</em></p><br/><br/><p>So:</p><br/><br/><pre><code>interface iVendor{<br/>    public function getName();<br/>    public function getVendors_no();<br/>    public function getZip();<br/>    public function getCountryCode();<br/>    public function setName($name);<br/>    public function setVendors_no($vendors_no);<br/>    public function setZip($zip);<br/>    public function setCountryCode($countryCode);<br/>}<br/><br/>interface iShipper extends iVendor{<br/>    public function getTransitTime($shipment = null);<br/>    public function getTransitCost($shipment = null);<br/>    public function getCurrentShipment();<br/>    public function setCurrentShipment($shipment);<br/>    public function getStatus($shipment = null);<br/>}<br/><br/>abstract class Shipper implements iShipper{  <br/>    abstract public function __construct($vendors_no = null, $shipment = null);  <br/>    //a bunch of non-abstract common methods...  <br/>}<br/><br/>class FedEx extends Shipper implements iShipper{  <br/>    public function __construct($vendors_no = null, $shipment = null){<br/>        //a bunch of setup code...<br/>    }<br/>    //all my FedEx specific methods...<br/>}<br/></code></pre><br/><br/><p><em>Thanks for the help!</em><br /><br/><em>ps. since I have now added this to "your" answer, if there is something about it you don't like/think should be different, feel free to change it...</em></p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      BACK REFER TO PCRE IN PHP
+    </pattern>
+    <template>
+<![CDATA[<p>Your regular expression should follow Perl syntax, meaning it has to start and end with the same character (with some exceptions). Also, the back reference should start with a double slash, to get around PHPs double escaping. This should work (with a quick test):</p><br/><br/><pre><code>$str = "asdfasdf |123123 asdf iakds |302 asdf |11";<br/>$str = preg_replace("/([|]\d*)/", "\\1;", $str);<br/>echo $str; // prints "asdfasdf |123123; asdf iakds |302; asdf |11;"<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      HTMLSPECIALCHARACT EQUIVAL IN .NET
+    </pattern>
+    <template>
+<![CDATA[<p>Try this.</p><br/><br/><pre><code>var encodedHtml = HttpContext.Current.Server.HtmlEncode(...);<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      HTML PARAMET IN PHP
+    </pattern>
+    <template>
+<![CDATA[<p>I think you put</p><br/><br/><pre><code>$_POST['destroy']<br/></code></pre><br/><br/><p>Instead of</p><br/><br/><pre><code>$_GET['destroy']<br/></code></pre><br/><br/><p>You need to use a form if you'd like to use a $_POST variable.  $_GET variables are stored in the URL.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      PERMISS IN PHP
+    </pattern>
+    <template>
+<![CDATA[<p>Use the bitwise OR operator (|) to set bits, use the AND operator (&amp;) to check bits. Your code should look like this:</p><br/><br/><pre><code>&lt;?php<br/><br/>    $guest = 1;<br/>    $editor = 2;<br/>    $admin = 4;<br/><br/>    $user = $editor;<br/><br/>    if( $user &amp; ($editor | $admin) ) {<br/>        echo "Test";    <br/>    }<br/><br/>?&gt;<br/></code></pre><br/><br/><p>If you don't understand binary and exactly what the bitwise operators do, you should go learn it. You'll understand how to do this much better.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      IMPLEMENT FORM BASE AUTHENT WITHOUT A BACK DATABAS
+    </pattern>
+    <template>
+<![CDATA[<p>A few ways you could do this.</p><br/><br/><ol><br/><li><a href="http://fragments.turtlemeat.com/htaccess.php" rel="nofollow">htaccess</a> -- have your webserver handle securing the pages in question (not exactly cgi form based though).</li><br/><li>Use cookies and some sort of hashing algorithm (md5 is good enough) to store the passwords in a flat file where each line in the file is username:passwordhash.  Make sure to <a href="http://www.codinghorror.com/blog/archives/000949.html" rel="nofollow">salt</a> your hashes for extra security vs rainbow tables. (This method is a bit naive... be <em>very</em> careful with security if you go this route)</li><br/><li>use something like a <a href="http://www.sqlite.org/" rel="nofollow">sqlite</a> database just to handle authentication.  Sqlite is compact and simple enough that it may still meet your needs even if you don't want a big db backend.</li><br/></ol><br/><br/><p>Theoretically, you could also store session data in a flat file, even if you can't have a database.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      QUEUE IN PHP
+    </pattern>
+    <template>
+<![CDATA[<p>You could just insert your emails into a Mail Queue database table, and have a separate process check the queue and batch send a certain number at once.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      SVN WITH VISUALSVN SERVER ANYON GOTTEN AUTHENT TO WORK
+    </pattern>
+    <template>
+<![CDATA[<p>This (and lots of problems like it with WebSVN) is why I asked <a href="http://stackoverflow.com/questions/10933/can-you-recommend-a-good-net-web-based-repository-browser-for-svn" rel="nofollow">this</a>.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      AD WHITESPAC TO POST CONTENT
+    </pattern>
+    <template>
+<![CDATA[<p>It turns out it's an encoding issue. The app apparently needs the XML in www-form-urlencoded instead of form-data so I had to change:</p><br/><br/><pre><code># This sets the encoding to multipart/form-data<br/>curl_setopt($curlHandle, CURLOPT_POSTFIELDS, array('XML'=&gt;$request));<br/></code></pre><br/><br/><p>to</p><br/><br/><pre><code># This sets it to application/x-www-form-urlencoded<br/>curl_setopt($curlHandle, CURLOPT_POSTFIELDS, 'XML=' . urlencode($request));<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      PHP SERVER AND MYSQL SERVER IN DIFFER TIME ZONE
+    </pattern>
+    <template>
+<![CDATA[<p>As of PHP 5.1.0 you can use <a href="http://www.php.net/manual/en/function.date-default-timezone-set.php" rel="nofollow"><em>date_default_timezone_set()</em></a> function to set the default timezone used by all date/time functions in a script. </p><br/><br/><p>For MySql (quoted from <a href="http://dev.mysql.com/doc/refman/4.1/en/time-zone-support.html" rel="nofollow">MySQL Server Time Zone Support</a> page)</p><br/><br/><blockquote><br/>  <p>Before MySQL 4.1.3, the server operates only in the system time zone set at startup. Beginning with MySQL 4.1.3, the server maintains several time zone settings, some of which can be modified at runtime. </p><br/></blockquote><br/><br/><p>Of interest to you is per-connection setting of the time zones, which you would use at the beginning of your scripts</p><br/><br/><pre><code>SET timezone = 'Europe/London';<br/></code></pre><br/><br/><p>As for detecting the client timezone setting, you could use a bit of JavaScript to get and save that information to a cookie, and use it on subsequent page reads, to calculate the proper timezone.</p><br/><br/><pre><code>//Returns the offset (time difference) between Greenwich Mean Time (GMT) <br/>//and local time of Date object, in minutes.<br/>var offset = new Date().getTimezoneOffset(); <br/>document.cookie = 'timezoneOffset=' + escape(offset);<br/></code></pre><br/><br/><p>Or you could offer users the chioce to set their time zones themselves.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      12 MINUT AGO ETC IN A PHP WEBPAG
+    </pattern>
+    <template>
+<![CDATA[<p>Here is the php code for the same:</p><br/><br/><pre><code>function time_since($since) {<br/>    $chunks = array(<br/>        array(60 * 60 * 24 * 365 , 'year'),<br/>        array(60 * 60 * 24 * 30 , 'month'),<br/>        array(60 * 60 * 24 * 7, 'week'),<br/>        array(60 * 60 * 24 , 'day'),<br/>        array(60 * 60 , 'hour'),<br/>        array(60 , 'minute'),<br/>        array(1 , 'second')<br/>    );<br/><br/>    for ($i = 0, $j = count($chunks); $i &lt; $j; $i++) {<br/>        $seconds = $chunks[$i][0];<br/>        $name = $chunks[$i][1];<br/>        if (($count = floor($since / $seconds)) != 0) {<br/>            break;<br/>        }<br/>    }<br/><br/>    $print = ($count == 1) ? '1 '.$name : "$count {$name}s";<br/>    return $print;<br/>}<br/></code></pre><br/><br/><p>The function takes the number of seconds as input and outputs text such as:</p><br/><br/><ul><br/><li>10 seconds</li><br/><li>1 minute</li><br/></ul><br/><br/><p>etc</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      SCRIPT TO POPUL MYSQL TABL
+    </pattern>
+    <template>
+<![CDATA[<p>What you are after would be a data generator.</p><br/><br/><p>There is one available <a href="http://www.generatedata.com/" rel="nofollow">here</a> which i had bookmarked but i haven't got around to trying it yet.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      TO COMMAND IN PHP
+    </pattern>
+    <template>
+<![CDATA[<p>They are not adding a real GOTO, but extending the BREAK keyword to use static labels. Basically, it will be enhancing the ability to break out of <s>switch</s> nested if statements. Here's the concept example I found:</p><br/><br/><pre><code>&lt;?php<br/>for ($i = 0; $i &lt; 9; $i++)<br/>{<br/>        if (true) {<br/>                break blah;<br/>        }<br/>        echo "not shown";<br/>blah:<br/>        echo "iteration $i\n";<br/>}<br/>?&gt;<br/></code></pre><br/><br/><p>Of course, once the GOTO "rumor" was out, there was nothing to stop some evil guys to propagate an additional <strong>COMEFROM</strong> joke. Be on your toes.</p><br/><br/><p>See also:</p><br/><br/><p><a href="http://www.php.net/~derick/meeting-notes.html#adding-goto" rel="nofollow">http://www.php.net/~derick/meeting-notes.html#adding-goto</a></p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      FILE PERMISS
+    </pattern>
+    <template>
+<![CDATA[<p>Use <a href="http://php.net/fileperms" rel="nofollow">fileperms()</a> function</p><br/><br/><pre><code>clearstatcache();<br/>echo substr(sprintf('%o', fileperms('/etc/passwd')), -4);<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      TRODUC PYTHON
+    </pattern>
+    <template>
+<![CDATA[<p>I recently introduced Python to my company, which does consulting work for the Post Office.  I did this by waiting until there was a project for which I would be the only programmer, then getting permission to do this new project in Python.  I then did another small project in Python with similarly impressive results.  In addition, I used Python for all of my small throwaway assignments ("can you parse the stats in these files into a CSV file organized by date and site?", etc) and had a quick turnaround time on all of them.</p><br/><br/><p>I also evangelized Python a bit; I went out of my way to NOT be obnoxious about it, but I'd occasionally describe why I liked it so much, talked about the personal projects I use it for in my free time and why it's awesome for me, etc.</p><br/><br/><p>Eventually we started another project and I convinced everyone to use Python for it.  I took care to point everyone to a lot of documentation, including the specific webpages relating to what they were working on, and every time they had a question, I'd explain how to do things properly by explaining the Pythonic approach to things, etc.</p><br/><br/><p>This has worked really well.  However, this might be somewhat different than what you're describing.  In my case I started with moderately small projects and Python is only being used for new projects.  Also, none of my co-workers were really Perl or PHP gurus; they all knew those languages and had been using them for awhile, but it didn't take much effort for them to become more productive in Python than they'd been before.</p><br/><br/><p>So if you're talking about new projects with people who currently use PHP but aren't super-experts and don't love that language, then I think switching to Python is a no-brainer.  However, if you're talking about working with a large existing PHP code base with a lot of very experienced PHP programmers who are happy with their current setup, then switching languages is probably not a good idea.  You're probably somewhere in between, so you'll have to weigh the tradeoffs; hopefully my answer will help you do that.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      ( ER ) WAY TO GET FILE INOD USE PHP
+    </pattern>
+    <template>
+<![CDATA[<p>You could use <a href="http://php.net/fileinode" rel="nofollow">fileinode()</a> but you should run benchmarks if you think it is slow.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      WITH SQL SERVER 2005 +
+    </pattern>
+    <template>
+<![CDATA[<p>You have two options:</p><br/><br/><p>1) <strong>php<em>mssql extension</strong> : If you'd like something that has the same API mysql and mysqli has, then use the php</em>mssql extension. But there is a catch, the bundled ntwdblib.dll file with PHP is not working. You have to find this file from a SQL Server 2000 installation or you can find it on the Internet. This API is supposedly not very reliable but I have been using it without problem for about one year.</p><br/><br/><p><a href="http://ca.php.net/mssql" rel="nofollow">http://ca.php.net/mssql</a></p><br/><br/><p>2) <strong>Microsoft SQL Server 2005 PHP Driver</strong> : If you'd like something more modern but which does not have the same API and is missing some important functions (mssql<em>num</em>rows). The big plus is that it is supported by Microsoft and is likely to work with a future version.</p><br/><br/><p><a href="http://msdn.microsoft.com/en-us/data/cc299381.aspx" rel="nofollow">http://msdn.microsoft.com/en-us/data/cc299381.aspx</a></p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      LOG UNCAUGHT EXCEPT IN PHP
+    </pattern>
+    <template>
+<![CDATA[<p>I really like <a href="http://logging.apache.org/log4php/" rel="nofollow">log4php</a> for logging, even though it's not yet out of the incubator.  I use log4net in just about everything, and have found the style quite natural for me.</p><br/><br/><p>With regard to system crashes, you can log the error to multiple destinations (e.g., have appenders whose threshold is CRITICAL or ERROR that only come into play when things go wrong).  I'm not sure how fail-safe the existing appenders are--if the database is down, how does that appender fail?--but you could quite easily write your own appender that will fail gracefully if it's unable to log.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      POINT OF INTERFAC IN PHP
+    </pattern>
+    <template>
+<![CDATA[<p>The entire point of interfaces is to give you the flexability to have your class be forced to implement multiple interfaces, but still not allow multiple inheritance.  The issues with inheriting from multiple classes are many and varied and the <a href="http://en.wikipedia.org/wiki/Multiple_inheritance" rel="nofollow">wikipeidia</a> page page on it sums them up pretty well.</p><br/><br/><p>Interfaces are a compromise.  Most of the problems with multiple inheritance don't apply to abstract base classes, so most modern languages these days disable multiple inheritance yet call abstract base classes interfaces and allows a class to "implement" as many of those as they want.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      HAVE A PHP STRING IN THE FORMAT YYYY DD MM AND A TIMESTAMP IN MYSQL IS THERE A GOOD WAY TO CONVERT BETWEEN THEM
+    </pattern>
+    <template>
+<![CDATA[<p>Converting from timestamp to format:</p><br/><br/><pre><code>date('Y-m-d', $timestamp);<br/></code></pre><br/><br/><p>Converting from formatted to timestamp:</p><br/><br/><pre><code>mktime(0, 0, 0, $month, $day, $year, $is_dst);<br/></code></pre><br/><br/><p>See <a href="http://www.php.net/manual/en/function.date.php" rel="nofollow">date</a> and <a href="http://www.php.net/manual/en/function.mktime.php" rel="nofollow">mktime</a> for further documentation.</p><br/><br/><p>When it comes to storing it's up to you whether to use the MySQL DATE format for stroing as a formatted date; as an integer for storing as a UNIX timestamp; or you can use MySQL's TIMESTAMP format which converts a numeric timestamp into a readable format. <a href="http://dev.mysql.com/doc/refman/5.0/en/datetime.html" rel="nofollow">Check the MySQL Doc</a> for TIMESTAMP info.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      PHP FRAMEWORK WILL GET ME TO A USABL UI THE FASTEST
+    </pattern>
+    <template>
+<![CDATA[<p>Try using <a href="http://www.symfony-project.org/" rel="nofollow">symfony</a></p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      TO PROFIL A PHP SCRIPT
+    </pattern>
+    <template>
+<![CDATA[<p>The PECL APD extension is very easy to use and gives nice results.<br/><a href="http://www.php.net/apd" rel="nofollow">http://www.php.net/apd</a></p><br/><br/><pre><code>&lt;?php<br/>apd_set_pprof_trace();<br/><br/>//rest of the script<br/>?&gt;<br/></code></pre><br/><br/><p>All you need to do afterward is to parse the generated file using pprofp.</p><br/><br/><p>Example output:</p><br/><br/><pre><code>Trace for /home/dan/testapd.php<br/>Total Elapsed Time = 0.00<br/>Total System Time  = 0.00<br/>Total User Time    = 0.00<br/><br/><br/>Real         User        System             secs/    cumm<br/>%Time (excl/cumm)  (excl/cumm)  (excl/cumm) Calls    call    s/call  Memory Usage Name<br/>--------------------------------------------------------------------------------------<br/>100.0 0.00 0.00  0.00 0.00  0.00 0.00     1  0.0000   0.0009            0 main<br/>56.9 0.00 0.00  0.00 0.00  0.00 0.00     1  0.0005   0.0005            0 apd_set_pprof_trace<br/>28.0 0.00 0.00  0.00 0.00  0.00 0.00    10  0.0000   0.0000            0 preg_replace<br/>14.3 0.00 0.00  0.00 0.00  0.00 0.00    10  0.0000   0.0000            0 str_replace<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      YOU KNOW IT S TIME TO REWRIT AN APPLIC
+    </pattern>
+    <template>
+<![CDATA[<p>There's a secret 3rd option to the rewrite / don't rewrite decision: rewrite it a bit at a time continuously. This is the genius of refactoring, you don't have to make a monolithic decision to blow the whole works to smithereens and start from scratch, you can approach things piecemeal and work towards a better design as an ongoing goal. Don't rebuild the house from the ground up, instead paint the living room, then remodel the kitchen, then rewire the den, then redo the window, then landscape the yard, then fix the roof, etc. Eventually you end up in a <a href="http://en.wikipedia.org/wiki/Ship_of_Theseus#George_Washington.27s_axe" rel="nofollow">Grandfather's Axe</a> situation, allowing you to change more over time than you probably ever feasibly could in one huge chunk.</p><br/><br/><p>You can do this at many different levels, making little improvements with most every checkin (using extract method, rename variable/method, etc.) to make chunks of code more readable and more maintainable. Or making big improvements using dedicated budgets, still working incrementally from point A to point B but having the firm goal of reaching point B (the improved design). You can still make breaking changes but you need to be smart about making them. Rather than just replacing some bit of functionality with some completely new way (i.e. API) of doing things you can keep the old bits in place and add new stuff in addition to it, then you can flag the old bits as obsolete and then later delete them, after people have been given enough time to make a graceful transition to the new way of doing things.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      RESIZ AND CONVERT AN UPLOAD IMAG TO A PNG USE GD
+    </pattern>
+    <template>
+<![CDATA[<pre><code>&lt;?php                                              <br/>/*<br/>Resizes an image and converts it to PNG returning the PNG data as a string<br/>*/<br/>function imageToPng($srcFile, $maxSize = 100) {  <br/>    list($width_orig, $height_orig, $type) = getimagesize($srcFile);        <br/><br/>    // Get the aspect ratio<br/>    $ratio_orig = $width_orig / $height_orig;<br/><br/>    $width  = $maxSize; <br/>    $height = $maxSize;<br/><br/>    // resize to height (orig is portrait) <br/>    if ($ratio_orig &lt; 1) {<br/>        $width = $height * $ratio_orig;<br/>    } <br/>    // resize to width (orig is landscape)<br/>    else {<br/>        $height = $width / $ratio_orig;<br/>    }<br/><br/>    // Temporarily increase the memory limit to allow for larger images<br/>    ini_set('memory_limit', '32M'); <br/><br/>    switch ($type) <br/>    {<br/>        case IMAGETYPE_GIF: <br/>            $image = imagecreatefromgif($srcFile); <br/>            break;   <br/>        case IMAGETYPE_JPEG:  <br/>            $image = imagecreatefromjpeg($srcFile); <br/>            break;   <br/>        case IMAGETYPE_PNG:  <br/>            $image = imagecreatefrompng($srcFile);<br/>            break; <br/>        default:<br/>            throw new Exception('Unrecognized image type ' . $type);<br/>    }<br/><br/>    // create a new blank image<br/>    $newImage = imagecreatetruecolor($width, $height);<br/><br/>    // Copy the old image to the new image<br/>    imagecopyresampled($newImage, $image, 0, 0, 0, 0, $width, $height, $width_orig, $height_orig);<br/><br/>    // Output to a temp file<br/>    $destFile = tempnam();<br/>    imagepng($newImage, $destFile);  <br/><br/>    // Free memory                           <br/>    imagedestroy($newImage);<br/><br/>    if ( is_file($destFile) ) {<br/>        $f = fopen($destFile, 'rb');   <br/>        $data = fread($f);       <br/>        fclose($f);<br/><br/>        // Remove the tempfile<br/>        unlink($destFile);    <br/>        return $data;<br/>    }<br/><br/>    throw new Exception('Image conversion failed.');<br/>}<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      PHP HAVE BUILT IN DATA STRUCTUR
+    </pattern>
+    <template>
+<![CDATA[<p>The only native data structure in PHP is array. Fortunately, array are quite flexible and can be used as hash tables as well.</p><br/><br/><p><a href="http://www.php.net/array" rel="nofollow"><a href="http://www.php.net/array" rel="nofollow">http://www.php.net/array</a></a></p><br/><br/><p>However, there is SPL which is sort of a clone of C++ STL.</p><br/><br/><p><a href="http://www.php.net/manual/en/book.spl.php" rel="nofollow"><a href="http://www.php.net/manual/en/book.spl.php" rel="nofollow">http://www.php.net/manual/en/book.spl.php</a></a></p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      INCLUD VS OOP
+    </pattern>
+    <template>
+<![CDATA[<p>These are not really opposite choices. You will have to include the checking code anyway. I read your question as procedural programming vs. OO programming.</p><br/><br/><p>Writing a few lines of code, or a function, and including it in your page header was how things were done in PHP3 or PHP4. It's simple, it works (that's how we did it in <a href="http://www.oscommerce.com/" rel="nofollow">osCommerce</a>, for example, an eCommerce PHP application).</p><br/><br/><p>But it's not easy to maintain and modify, as many developers can confirm.</p><br/><br/><p>In PHP5 you'd write a user object which will carry its own data and methods for authentication. Your code will be clearer and easier to maintain as everything having to do with users and authentication will be concentrated in a single place.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      COMMENT MULTI LIN ( FREESPAC ) REGEX TO PREG MATCH
+    </pattern>
+    <template>
+<![CDATA[<p>You can use the extended syntax:</p><br/><br/><pre><code>preg_match("/<br/>    test<br/>/x", $foo, $bar);<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      DIFFER BETWEEN LOOP
+    </pattern>
+    <template>
+<![CDATA[<p>For loop and While loops are entry condition loops. They evaluate condition first, so the statement block associated with the loop won't run even once if the condition fails to meet </p><br/><br/><p>The statements inside this for loop block will run 10 times, the value of $i will be 0 to 9;</p><br/><br/><pre><code>for ($i = 0; $i &lt; 10; $i++)<br/>{<br/>        # code...<br/>}<br/></code></pre><br/><br/><p>Same thing done with while loop:</p><br/><br/><pre><code>$i = 0;<br/>while ($i &lt; 10)<br/>{<br/>    # code...<br/>    $i++<br/>}<br/></code></pre><br/><br/><p>Do-while loop is exit-condition loop. It's guaranteed to execute once, then it will evaluate condition before repeating the block</p><br/><br/><pre><code>do<br/>{<br/>        # code...<br/>}<br/>while ($flag == false);<br/></code></pre><br/><br/><p>foreach is used to access array elements from start to end. At the beginning of foreach loop, the internal pointer of the array is set to the first element of the array, in next step it is set to the 2nd element of the array and so on till the array ends. In the loop block The value of current array item is available as $value and the key of current item is available as $index.</p><br/><br/><pre><code>foreach ($array as $index =&gt; $value)<br/>{<br/>        # code...<br/>}<br/></code></pre><br/><br/><p>You could do the same thing with while loop, like this </p><br/><br/><pre><code>while (current($array))<br/>{<br/>    $index = key($array);  // to get key of the current element<br/>    $value = $array[$index]; // to get value of current element<br/><br/>    # code ...	<br/><br/>    next($array);	// advance the internal array pointer of $array<br/>}<br/></code></pre><br/><br/><p>And lastly: <a href="http://www.php.net/download-docs.php" rel="nofollow">The PHP Manual</a> is your friend :)</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      ON AJAX DEVELOP ENVIRON FOR PHP
+    </pattern>
+    <template>
+<![CDATA[<p>As T.O. says, try Aptana. There's a very good free version, and they really push the AJAX. They even have Jaxer, an "AJAX Server" that they're working on. If nothing else, the plugins are great, and, other than a few quirks, I really like working in it.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      SETUP MEMCACH ON CENTO TO WORK WITH APACH AND PHP
+    </pattern>
+    <template>
+<![CDATA[<p><a href="http://crazytoon.com/2008/01/20/memcached-how-do-you-install-memcached-centos-64-bit-linux-redhat-fedora/" rel="nofollow">This page</a> should help you get started. although it is about 64 bit, normal 32 bit installation would follow most of the same steps.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      INCLUD NEED CLASS IN PHP
+    </pattern>
+    <template>
+<![CDATA[<p>I my applications I usually have <code>setup.php</code> file that includes all core classes (i.e. framework and accompanying libraries). My custom classes are loaded using autoloader aided by directory layout map.</p><br/><br/><p>Each time new class is added I run command line builder script that scans whole directory tree in search for model classes then builds associative array with class names as keys and paths as values. Then, __autoload function looks up class name in that array and gets include path. Here's the code:</p><br/><br/><p><strong>autobuild.php</strong></p><br/><br/><pre><code>define('MAP', 'var/cache/autoload.map');<br/>error_reporting(E_ALL);<br/>require 'setup.php';<br/>print(buildAutoloaderMap() . " classes mapped\n");<br/><br/>function buildAutoloaderMap() {<br/>    $dirs = array('lib', 'view', 'model');<br/>    $cache = array();<br/>    $n = 0;<br/>    foreach ($dirs as $dir) {<br/>        foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir)) as $entry) {<br/>            $fn = $entry-&gt;getFilename();<br/>            if (!preg_match('/\.class\.php$/', $fn))<br/>                continue;<br/>            $c = str_replace('.class.php', '', $fn);<br/>            if (!class_exists($c)) {<br/>                $cache[$c] = ($pn = $entry-&gt;getPathname());<br/>                ++$n;<br/>            }<br/>        }<br/>    }<br/>    ksort($cache);<br/>    file_put_contents(MAP, serialize($cache));<br/>    return $n;<br/>}<br/></code></pre><br/><br/><p><strong>autoload.php</strong></p><br/><br/><pre><code>define('MAP', 'var/cache/autoload.map');<br/><br/>function __autoload($className) {<br/>    static $map;<br/>    $map or ($map = unserialize(file_get_contents(MAP)));<br/>    $fn = array_key_exists($className, $map) ? $map[$className] : null;<br/>    if ($fn and file_exists($fn)) {<br/>        include $fn;<br/>        unset($map[$className]);<br/>    }<br/>}<br/></code></pre><br/><br/><p>Note that file naming convention must be [class_name].class.php. Alter the directories classes will be looked in <code>autobuild.php</code>. You can also run autobuilder from autoload function when class not found, but that may get your program into infinite loop.</p><br/><br/><p>Serialized arrays are darn fast.</p><br/><br/><p>@JasonMichael: PHP 4 is dead. Get over it.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      VS 2D ARRAY
+    </pattern>
+    <template>
+<![CDATA[<p>The "class" that you've constructed above is what most people would use a <em>struct</em> for in other languages. I'm not sure what the performance implications are in PHP, though I suspect instantiating the objects is probably more costly here, if only by a little bit.</p><br/><br/><p>That being said, if the cost is relatively low, it IS a bit easier to manage the objects, in my opinion.</p><br/><br/><p>I'm only saying the following based on the title and your question, but:<br/>Bear in mind that classes provide the advantage of methods and access control, as well. So if you wanted to ensure that people weren't changing weights to negative numbers, you could make the <code>weight</code> field private and provide some accessor methods, like <code>getWeight()</code> and <code>setWeight()</code>. Inside <code>setWeight()</code>, you could do some value checking, like so:</p><br/><br/><pre><code>public function setWeight($weight)<br/>{<br/>    if($weight &gt;= 0)<br/>    {<br/>        $this-&gt;weight = $weight;<br/>    }<br/>    else<br/>    {<br/>        // Handle this scenario however you like<br/>    }<br/>}<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      IN A DEATH MARCH PROJECT
+    </pattern>
+    <template>
+<![CDATA[<blockquote><br/>  <p>The code quality is so poor I find much of the framework a mystery and the source code unreadable - Thus when something goes horribly wrong I have to rely on the other programmer (the frameworks creator) to fix it, slowing me down.</p><br/></blockquote><br/><br/><p>Take initiative in improving the quality, bit by bit. If he rejects your changes, get out and find a better project ASAP. If he learns to appreciate them, the project may have a chance left yet.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      IPTC IMAG DATA WITH PHP GD
+    </pattern>
+    <template>
+<![CDATA[<p>getimagesize has an optional second parameter "Imageinfo" which contains the info you need. </p><br/><br/><p>From the manual:</p><br/><br/><blockquote><br/>  <p>This optional parameter allows you to extract some extended information from the image file. Currently, this will return the different JPG APP markers as an associative array. Some programs use these APP markers to embed text information in images. A very common one is to embed » IPTC information in the APP13 marker. You can use the iptcparse() function to parse the binary APP13 marker into something readable.</p><br/></blockquote><br/><br/><p>so you could use it like this:</p><br/><br/><pre><code>&lt;?php<br/>$size = getimagesize('./phplogo-edited.jpg', $info);<br/>if(isset($info['APP13']))<br/>{<br/>    $iptc = iptcparse($info['APP13']);<br/>    var_dump($iptc);<br/>}<br/>?&gt;<br/></code></pre><br/><br/><p>Hope this helps...</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      PHP INCLUD PATH ON A PER SITE BASI
+    </pattern>
+    <template>
+<![CDATA[<p>If you're using apache as a webserver you can override (if you allow it) settings using .htaccess files. See <a href="http://us2.php.net/configuration.changes" rel="nofollow">the php manual</a> for details.</p><br/><br/><p>Basically you put a file called .htaccess in your website root, which contains some php ini values. Provided you configured apache to allow overrides, this site will use all values in your php config, + the values you specify in the .htaccess file.</p><br/><br/><p>"Can be used only with PHP_INI_ALL and PHP<code>_INI</code>_PERDIR type directives", as stated in the page I linked. If you click through to the full listing, you see that the include path is a PHP<code>_INI</code>_ALL directive.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      ACTIC FOR USE PHP IN A HIGH LOAD SITE
+    </pattern>
+    <template>
+<![CDATA[<p>No two sites are alike. You really need to get a tool like <a href="http://jakarta.apache.org/jmeter/" rel="nofollow">jmeter</a> and benchmark to see where your problem points will be. You can spend a lot of time guessing and improving, but you won't see real results until you measure and compare your changes. </p><br/><br/><p>For example, for many years, the MySQL query cache was the solution to all of our performance problems. If your site was slow, MySQL experts suggested turning the query cache on. It turns out that if you have a high write load, the cache is actually crippling. If you turned it on without testing, you'd never know.</p><br/><br/><p>And don't forget that you are never done scaling. A site that handles 10req/s will need changes to support 1000req/s. And if you're lucking enough to need to support 10,000req/s, your architecture will probably look completely different as well.</p><br/><br/><h1>Databases</h1><br/><br/><ul><br/><li>Don't use MySQLi -- <a href="http://ca.php.net/pdo" rel="nofollow">PDO</a> is the 'modern' OO database access layer. The most important feature to use is placeholders in your queries. It's smart enough to use server side prepares and other optimizations for you as well.</li><br/><li>You probably don't want to break your database up at this point. If you do find that one database isn't cutting, there are several techniques to scale up, depending on your app. Replicating to additional servers typically works well if you have more reads than writes. Sharding is a technique to split your data over many machines.</li><br/></ul><br/><br/><h1>Caching</h1><br/><br/><ul><br/><li>You probably don't want to cache in your database. The database is typically your bottleneck, so adding more IO's to it is typically a bad thing. There are several PHP caches out there that accomplish similar things like <a href="http://ca.php.net/apc" rel="nofollow">APC</a> and Zend. </li><br/><li>Measure your system with caching on and off. I bet your cache is heavier than serving the pages straight. </li><br/><li>If it takes a long time to build your comments and article data from the db, integrate <a href="http://www.danga.com/memcached/" rel="nofollow">memcache</a> into your system. You can cache the query results and store them in a memcached instance. It's important to remember that retrieving the data from memcache must be faster than assembling it from the database to see any benefit.</li><br/><li>If your articles aren't dynamic, or you have simple dynamic changes after it's generated, consider writing out html or php to the disk. You could have an index.php page that looks on disk for the article, if it's there, it streams it to the client. If it isn't, it generates the article, writes it to the disk and sends it to the client. Deleting files from the disk would cause pages to be re-written. If a comment is added to an article, delete the cached copy -- it would be regenerated.</li><br/></ul><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      IN PHP
+    </pattern>
+    <template>
+<![CDATA[<p>I prefer the <a href="http://www.php.net/gd" rel="nofollow">GD library</a> - check out <a href="http://www.php.net/manual/en/image.examples.php" rel="nofollow">the Examples</a>, and this example:</p><br/><br/><pre><code>&lt;?php<br/>header ("Content-type: image/png");<br/>$im = @imagecreatetruecolor(120, 20)<br/>      or die("Cannot Initialize new GD image stream");<br/>$text_color = imagecolorallocate($im, 233, 14, 91);<br/>imagestring($im, 1, 5, 5,  "A Simple Text String", $text_color);<br/>imagepng($im);<br/>imagedestroy($im);<br/>?&gt;<br/></code></pre><br/><br/><p>Outputs:</p><br/><br/><p><img src="http://uk2.php.net/manual/en/figures/image.imagecreatetruecolor.png" alt="imagecreatetrucolor example" /></p><br/><br/><p>See <a href="http://www.php.net/manual/en/function.imagecreatetruecolor.php" rel="nofollow">imagecreatetruecolor</a>.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      NAME ENTITI IN HTML STILL NECESSARI IN THE AGE OF UNICOD AWAR BROWSER
+    </pattern>
+    <template>
+<![CDATA[<p>Named entities in "real" XHTML (i.e. with <code>application/xhtml+xml</code>, rather than the more frequently-used <code>text/html</code> compatibility mode) are discouraged. Aside from the five defined in XML itself (<code>&amp;lt;</code>, <code>&amp;gt;</code>, <code>&amp;amp;</code>, <code>&amp;quot;</code>, <code>&amp;apos;</code>), they'd all have to be defined in the DTD of the particular DocType you're using. That means your browser has to explicitly support that DocType, which is far from a given. Numbered entities, on the other hand, obviously only require a lookup table to get the right Unicode character.</p><br/><br/><p>As for whether you need entities at all these days: you can pretty much expect any modern browser to support UTF-8. Therefore, as long as you can guarantee that the database, the markup and the web server all agree to serve that, ditch the entities.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      MERG PHP ARRAY
+    </pattern>
+    <template>
+<![CDATA[<p>This does what Erik suggested (id no. as array key) and merges vlaues in <code>$array2</code> to <code>$results</code>.</p><br/><br/><pre><code>$results = array();<br/><br/>foreach($array as $subarray)<br/>{<br/>    $results[$subarray['id']] = array('name' =&gt; $subarray['name']);<br/>}<br/><br/>foreach($array2 as $subarray)<br/>{<br/>    if(array_key_exists($subarray['id'], $results))<br/>    {<br/>        // Loop through $subarray would go here if you have extra <br/>        $results[$subarray['id']]['age'] = $subarray['age'];<br/>    }<br/>}<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      SESSION TIMEOUT IN SYMFONI 1.0
+    </pattern>
+    <template>
+<![CDATA[<p>I looked into it, and my coworker agrees that a heartbeat page call should work, you just have to make sure that the action invoked does reset the session timer (things like ajax field completion don't do this on their own).</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      DEBUG PHP COMMAND LINE SCRIPT WITH ZEND
+    </pattern>
+    <template>
+<![CDATA[<p>I was able to get <a href="http://thenazg.blogspot.com/2008/12/remote-cli-debugging-via-eclipse-pdt.html" rel="nofollow">remote CLI debugging working in Eclipse</a>, using xdebug, though I've not tried it with the zend debugger.  I would assume this should work the same with ZSfE, if that's the "Zend Studio" you're using.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      GET DATA FROM THE DATABAS TO SESSION
+    </pattern>
+    <template>
+<![CDATA[<p>I came up with this and it appears to work.</p><br/><br/><pre><code>while($row = mysql_fetch_assoc($result))<br/> {<br/>    $_SESSION = array_merge_recursive($_SESSION, $row);<br/> }<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      A COMPLEX ASSOCI ARRAY IN PHP
+    </pattern>
+    <template>
+<![CDATA[<p>I'm not sure I understand the problem. Do you know the <a href="http://php.net/foreach" rel="nofollow"><code>foreach</code></a> loop? Why not simply nest it?</p><br/><br/><pre><code>foreach ($array as $i =&gt; $values) {<br/>    print "$i {\n";<br/>    foreach ($values as $key =&gt; $value) {<br/>        print "    $key =&gt; $value\n";<br/>    }<br/>    print "}\n";<br/>}<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      PHP5 CLASS WHEN DOE A PRIVAT CONSTRUCTOR GET CALL
+    </pattern>
+    <template>
+<![CDATA[<p><code>__construct()</code> would only be called if you called it from within a static method for the class containing the private constructor. So for your Singleton, you might have a method like so:</p><br/><br/><pre><code>class DBConnection<br/>{<br/>   private static $Connection = null;<br/><br/>   public static function getConnection()<br/>   {<br/>      if(!isset(DBConnection::Connection))<br/>      {<br/>         DBConnection::Connection = new DBConnection();<br/>      }<br/>      return DBConnection::Connection;<br/>   }<br/><br/>   private function __construct()<br/>   {<br/><br/>   }<br/>}<br/><br/>$dbConnection = DBConnection::getConnection();<br/></code></pre><br/><br/><p>The reason you are able/would want to instantiate the class from within itself is so that you can check to make sure that only one instance exists at any given time. This is the whole point of a Singleton, after all. Using a Singleton for a database connection ensures that your application is not making a ton of DB connections at a time.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      I WHICH IS BETTER FOR CLOSE QUERI
+    </pattern>
+    <template>
+<![CDATA[<p>The <a href="http://us2.php.net/manual/en/mysqli-result.free.php" rel="nofollow">manual</a> seems to suggest that you should still be using <code>free()</code> to release the memory. I believe the reasoning is that <code>free()</code> is freeing the memory in <em>MySQL</em>, not in PHP. Since PHP can't garbage-collect for MySQL, you need to call <code>free()</code>.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      WEB SCRAPER IN PHP
+    </pattern>
+    <template>
+<![CDATA[<p>There is a <a href="http://rads.stackoverflow.com/amzn/click/1593271204" rel="nofollow">Book "Webbots, Spiders, and Screen Scrapers: A Guide to Developing Internet Agents with PHP/CURL"</a> on this topic - see a review <a href="http://www.phpclasses.org/reviews/id/1593271204.html" rel="nofollow">here</a> </p><br/><br/><p>PHP-Architect covered it in a well written article in the <a href="http://phparch.com/c/magazine/issue/63" rel="nofollow">December 2007 Issue</a> by Matthew Turland</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      M MANIPUL IN PHP
+    </pattern>
+    <template>
+<![CDATA[<p>PHP has <a href="http://php.net/tidy" rel="nofollow">a PECL extension that gives you access to the features of HTML Tidy</a>.  Tidy is a pretty powerful library that should be able to take code like that and close tags in an intelligent manner.</p><br/><br/><p>I use it to clean up malformed XML and HTML sent to me by a classified ad system prior to import.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      THE PHP GD2 EXTENS IN MAMP ON A MAC
+    </pattern>
+    <template>
+<![CDATA[<p>You shouldn't need to install the extension.  I have 1.7.2 installed and running right now and it has GD bundled (2.0.34 compatible).</p><br/><br/><p>From the MAMP start page, click on phpinfo and you should see a GD section.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      LIABL SM UNICOD GSM ENCOD IN PHP
+    </pattern>
+    <template>
+<![CDATA[<p>To deal with it conceptually before getting into mechanisms, and apologies if any of this is obvious, a string can be defined as a sequence of Unicode characters, Unicode being a database that gives an id number known as a code point to every character you might need to work with. GSM-338 contains a subset of the Unicode characters, so what you're doing is extracting a set of codepoints from your string, and checking to see if that set is contained in GSM-338.</p><br/><br/><pre><code>// second column of http://unicode.org/Public/MAPPINGS/ETSI/GSM0338.TXT<br/>$gsm338_codepoints = array(0x0040, 0x0000, ..., 0x00fc, 0x00e0)<br/>$can_use_gsm338 = true;<br/>foreach(codepoints($mystring) as $codepoint){<br/>    if(!in_array($codepoint, $gsm338_codepoints)){<br/>      $can_use_gsm338 = false;<br/>      break;<br/>    }<br/>}<br/></code></pre><br/><br/><p>That leaves the definition of the function codepoints($string), which isn't built in to PHP. PHP understands a string to be a sequence of bytes rather than a sequence of Unicode characters. The best way of bridging the gap is to get your strings into UTF8 as quickly as you can and keep them in UTF8 as long as you can - you'll have to use other encodings when dealing with external systems, but isolate the conversion to the interface to that system and deal only with utf8 internally. </p><br/><br/><p>The functions you need to convert between php strings in utf8 and sequences of codepoints can be found at <a href="http://hsivonen.iki.fi/php-utf8/" rel="nofollow">http://hsivonen.iki.fi/php-utf8/</a> , so that's your codepoints() function.</p><br/><br/><p>If you're taking data from an external source that gives you Unicode slash-escaped characters ("Let's test \u00f6\u00e4\u00fc..."), that string escape format should be converted to utf8. I don't know offhand of a function to do this, if one can't be found, it's a matter of string/regex processing + the use of the hsivonen.iki.fi functions, for example when you hit \u00f6, replace it with the utf8 representation of the codepoint 0xf6.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      TOSTR ( ) EQUIVAL
+    </pattern>
+    <template>
+<![CDATA[<p>You can use the <a href="http://us3.php.net/manual/en/language.types.type-juggling.php" rel="nofollow">casting operators</a>:</p><br/><br/><pre><code>$myText = (string)$myVar;<br/></code></pre><br/><br/><p>There are more details for string casting and conversion in the <a href="http://us3.php.net/manual/en/language.types.string.php#language.types.string.casting" rel="nofollow">Strings section</a> of the PHP manual, including special handling for booleans and nulls.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      PHP HAVE AN EQUIVAL TO THI TYPE OF PYTHON STRING SUBSTITUT
+    </pattern>
+    <template>
+<![CDATA[<pre><code>function subst($str, $dict){<br/>    return preg_replace(array_map(create_function('$a', 'return "/%\\($a\\)s/";'), array_keys($dict)), array_values($dict), $str);<br/> }<br/></code></pre><br/><br/><p>You call it like so:</p><br/><br/><pre><code>echo subst('The %(site)s site %(adj)s because it %(adj)s', array('site'=&gt;'Stackoverflow', 'adj'=&gt;'rocks'));<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      POST VALU WITH CURL
+    </pattern>
+    <template>
+<![CDATA[<p>Should work fine.</p><br/><br/><pre><code>$data = array('name' =&gt; 'Ross', 'php_master' =&gt; true);<br/><br/>// You can POST a file by prefixing with an @ (for &lt;input type="file"&gt; fields)<br/>$data['file'] = '@/home/user/world.jpg';<br/><br/>$handle = curl_init($url);<br/>curl_setopt($handle, CURLOPT_POST, true);<br/>curl_setopt($handle, CURLOPT_POSTFIELDS, $data);<br/>curl_exec($handle);<br/></code></pre><br/><br/><p>We have two options here, <code>CURLOPT_POST</code> which turns HTTP POST on, and <code>CURLOPT_POSTFIELDS</code> which contains an array of our post data to submit. This can be used to submit data to <code>POST</code> <code>&lt;form&gt;</code>s.</p><br/><br/><p>See:  </p><br/><br/><ul><br/><li><a href="http://www.php.net/manual/en/function.curl-init.php" rel="nofollow"><code>curl_init</code></a></li><br/><li><a href="http://www.php.net/manual/en/function.curl-setopt.php" rel="nofollow"><code>curl_setopt</code></a></li><br/></ul><br/><br/><hr><br/><br/><p>@pix0r<br><br/>Heh, need more coffee I think :) Thanks.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      PHP OPCOD CACHER SHOULD I USE TO IMPROV PERFORM
+    </pattern>
+    <template>
+<![CDATA[<p>I think the answer might depend on the type of web applications you are running. I had to make this decision myself two years ago and couldn't decide between Zend Optimizer and eAccelerator.</p><br/><br/><p>In order to make my decision, I used ab (apache bench) to test the server, and tested the three combinations (zend, eaccelerator, both running) and proved that eAccelerator on its own gave the greatest performance.</p><br/><br/><p>If you have the luxury of time, I would recommend doing similar tests yourself, and making the decision based on your results.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      FRAMEWORK FOR SIMPLIFI CRUD
+    </pattern>
+    <template>
+<![CDATA[<p>While not specifically for CRUD, <a href="http://codeigniter.com/" rel="nofollow">CodeIgniter</a> has a nice database interface thing. Of the PHP web-dev frameworks I tried, I found it to be the most PHP-like (the rest seemed to try and emulate Ruby on Rails as much as possible, and enforced their own coding style quite strongly)</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      OPCOD CACH IMPACT ON MEMORI USSAG
+    </pattern>
+    <template>
+<![CDATA[<p>Most of the memory overhead will come from the opcode cache size. Each opcode cacher has their own default(e.g. 30MB for APC) which you can change through the config file.</p><br/><br/><p>Other than the cache size, the actual memory overhead of the cacher itself is negligible.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      DIRECTORI SIZE ON REMOT HOST
+    </pattern>
+    <template>
+<![CDATA[<p>Strange, I came up on Google with <a href="http://www.google.com.au/search?hl=en&amp;q=php+directory+size&amp;btnG=Google+Search&amp;meta=" rel="nofollow">many relevant results</a> and <a href="http://www.go4expert.com/forums/showthread.php?t=290" rel="nofollow">this one</a> is probably the most complete.</p><br/><br/><blockquote><br/>  <p>The function "getDirectorySize" will<br/>  ignore link/shorcuts to<br/>  files/directory. The function<br/>  "sizeFormat" will suffix the size with<br/>  bytes,KB,MB or GB accordingly.</p><br/></blockquote><br/><br/><h2>Code</h2><br/><br/><pre><code>function getDirectorySize($path)<br/>{<br/>  $totalsize = 0;<br/>  $totalcount = 0;<br/>  $dircount = 0;<br/>  if ($handle = opendir ($path))<br/>  {<br/>    while (false !== ($file = readdir($handle)))<br/>    {<br/>      $nextpath = $path . '/' . $file;<br/>      if ($file != '.' &amp;&amp; $file != '..' &amp;&amp; !is_link ($nextpath))<br/>      {<br/>        if (is_dir ($nextpath))<br/>        {<br/>          $dircount++;<br/>          $result = getDirectorySize($nextpath);<br/>          $totalsize += $result['size'];<br/>          $totalcount += $result['count'];<br/>          $dircount += $result['dircount'];<br/>        }<br/>        elseif (is_file ($nextpath))<br/>        {<br/>          $totalsize += filesize ($nextpath);<br/>          $totalcount++;<br/>        }<br/>      }<br/>    }<br/>  }<br/>  closedir ($handle);<br/>  $total['size'] = $totalsize;<br/>  $total['count'] = $totalcount;<br/>  $total['dircount'] = $dircount;<br/>  return $total;<br/>}<br/><br/>function sizeFormat($size)<br/>{<br/>    if($size&lt;1024)<br/>    {<br/>        return $size." bytes";<br/>    }<br/>    else if($size&lt;(1024*1024))<br/>    {<br/>        $size=round($size/1024,1);<br/>        return $size." KB";<br/>    }<br/>    else if($size&lt;(1024*1024*1024))<br/>    {<br/>        $size=round($size/(1024*1024),1);<br/>        return $size." MB";<br/>    }<br/>    else<br/>    {<br/>        $size=round($size/(1024*1024*1024),1);<br/>        return $size." GB";<br/>    }<br/><br/>}<br/></code></pre><br/><br/><h2>Usage</h2><br/><br/><pre><code>$path="/httpd/html/pradeep/";<br/>$ar=getDirectorySize($path);<br/><br/>echo "&lt;h4&gt;Details for the path : $path&lt;/h4&gt;";<br/>echo "Total size : ".sizeFormat($ar['size'])."&lt;br&gt;";<br/>echo "No. of files : ".$ar['count']."&lt;br&gt;";<br/>echo "No. of directories : ".$ar['dircount']."&lt;br&gt;";<br/></code></pre><br/><br/><h2>Output</h2><br/><br/><pre><code>Details for the path : /httpd/html/pradeep/<br/>Total size : 2.9 MB<br/>No. of files : 196<br/>No. of directories : 20<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      SCALABL WEBHOST FOR PHP
+    </pattern>
+    <template>
+<![CDATA[<p>If you're going to be driving large quantities of traffic, you probably want to look towards <a href="http://en.wikipedia.org/wiki/Cloud_computing" rel="nofollow">The Cloud</a>, to services like <a href="http://www.gogrid.com/" rel="nofollow">GoGrid</a> and <a href="http://www.mosso.com/" rel="nofollow">Mosso</a>.  These will happily scale with you as you grow, and provide you with the necessities throughout your growth.  They're not the cheapest services on the face of the planet, but they will meet your criteria for growth (as designed).</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      JAVASCRIPT REGEX
+    </pattern>
+    <template>
+<![CDATA[<p>Hehe this was sort of asked moments ago and Jeff pointed out:<br /><br/><a href="http://www.regular-expressions.info/refflavors.html">http://www.regular-expressions.info/refflavors.html</a>.</p><br/><br/><p>There is a comparison of regular expression capabilities across tools and languages.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      GETCWD ( ) RETURN A DIFFER DIRECTORI THAN A LOCAL PWD
+    </pattern>
+    <template>
+<![CDATA[<p>Which file are you calling the getcwd() in and is that file is included into the one you are running (e.g. running index.php, including startup.php which contains gwtcwd()).</p><br/><br/><p>Is the file you are running in /dev-windows/ or /dev-windows-data/? It works on the file you are actually running.</p><br/><br/><p><hr /></p><br/><br/><p>Here's an example of my current project:</p><br/><br/><p><strong>index.php</strong></p><br/><br/><pre><code>&lt;?php<br/>    require_once('./includes/construct.php');<br/>    //snip<br/>?&gt;<br/></code></pre><br/><br/><p><strong>includes/construct.php</strong></p><br/><br/><pre><code>&lt;?php<br/>    //snip<br/>    (!defined('DIR')) ? define('DIR', getcwd()) : NULL;<br/><br/>    require_once(DIR . '/includes/functions.php');<br/>    //snip<br/>?&gt;<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      ERROR LOG
+    </pattern>
+    <template>
+<![CDATA[<p>Try <strong>log4php</strong>. I'm using <strong>log4net</strong> for my .NET project and it's just terrific. :)</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      PNG IMAG TRANSPAR BE PRESERV WHEN USE PHP S GDLIB IMAGECOPYRESAMPL
+    </pattern>
+    <template>
+<![CDATA[<pre><code>imagealphablending( $targetImage, false );<br/>imagesavealpha( $targetImage, true );<br/></code></pre><br/><br/><p>did it for me. Thanks ceejayoz.</p><br/><br/><p>note, the target image needs the alpha settings, not the source image. Could you edit to correct, please ceejayoz, then i'll accept your answer.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      LIMIT TAG PHOTO FROM FLICKR
+    </pattern>
+    <template>
+<![CDATA[<p>I would suggest moving the code that selects, randomizes, downloads and caches photos to separate service. It could be locally accessible REST application. Keep your core code clean and don't clutter it with remote operations and retention policy.</p><br/><br/><ol><br/><li>Build tags-to-images map and store it locally, in file or database. Randomizing array is easy in both cases.</li><br/><li>Point image src to local cache. Clean cache periodically, depending on your hosting capacity.</li><br/><li>Whitelist or blacklist photos to filter them in step 1.</li><br/></ol><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      PRETTI URL WORK IN PHP HOST IN II
+    </pattern>
+    <template>
+<![CDATA[<p>This is how I did it with WordPress on IIS 6.0</p><br/><br/><p><a href="http://www.coderjournal.com/2008/02/url-rewriter-reverse-proxy-iis-wordpress/" rel="nofollow">http://www.coderjournal.com/2008/02/url-rewriter-reverse-proxy-iis-wordpress/</a></p><br/><br/><p>However it all depends on what version of IIS you are using.  If you are lucky enough to use IIS 7.0 you don't really have to worry about pretty urls because everything is supported out of the box.  However if you are using IIS 6.0 you are going to have to use a rewriter and some rules to force the IISness out of IIS.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      NEWS AND PODCAST CM
+    </pattern>
+    <template>
+<![CDATA[<p>WordPress coupled with <a href="http://www.mightyseek.com/podpress/" rel="nofollow">PodPress</a> should do fine. When it comes to a CMS, I would start with something simple in concept (like a blogging engine) that can grow via plugins.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      TIP FOR PHP DEVELOP
+    </pattern>
+    <template>
+<![CDATA[<p>Yes, you're really best off learning C and then Objective-C.  There are some resources that will get you over the C and Objective-C language learning curve:</p><br/><br/><ul><br/><li>Uli Kusterer's online book <a href="http://www.zathras.de/angelweb/masters-of-the-void.htm" rel="nofollow">Masters of the Void</a></li><br/><li>Stephen Kochan's book <a href="http://rads.stackoverflow.com/amzn/click/0672325861" rel="nofollow">Programming in Objective-C</a></li><br/></ul><br/><br/><p>And there are some resources that will get you over the framework learning curve:</p><br/><br/><ul><br/><li>CocoaLab's online book <a href="http://www.cocoalab.com/" rel="nofollow">Become an Xcoder</a></li><br/><li>Aaron Hillegass' book <a href="http://rads.stackoverflow.com/amzn/click/0321503619" rel="nofollow">Cocoa Programming for Mac OS X</a></li><br/></ul><br/><br/><p>Despite what Jeff might say, learning C is important for professional software developers for just this reason.  It's sort of a baseline low-level <em>lingua franca</em> that other innovation happens atop.  The reason Jeff has been able to get away with not learning C is not because you don't need to know C, but because he learned Pascal which is in many ways isomorphic to C.  (It has all the same concepts, including pointers and manual memory management.)</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      MEDIAWIKI INTEGR
+    </pattern>
+    <template>
+<![CDATA[<p><a href="http://insites.ingenesis.net/2008/08/17/wordpress-bbpress-mediawiki/" rel="nofollow">This tutorial</a> should get you on the right track to integrating Mediawiki into your WordPress install.  It's certainly going to be a <em>lot</em> easier than hacking WordPress to have wiki features, especially with the sort of granular permissions you're describing.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      AN HTML TAG SPLIT ACROSS MULTIPL LINE
+    </pattern>
+    <template>
+<![CDATA[<p>Perhaps for future projects I'll use a parsing library, but that's kind of aside from the question at hand. This is my current solution. <code>rstrpos</code> is strpos, but from the reverse direction. Example use:</p><br/><br/><pre><code>for($i=0; $i&lt;count($lines); $i++)<br/>{<br/>    $line = handle_mulitline_tags(&amp;$i, $line, $lines);<br/>}<br/></code></pre><br/><br/><p>And here's that implementation:</p><br/><br/><pre><code>function rstrpos($string, $charToFind, $relativePos)<br/>{<br/>    $searchPos = $relativePos;<br/>    $searchChar = '';<br/><br/>    while (($searchChar != $charToFind)&amp;&amp;($searchPos&gt;-1))<br/>    {<br/>        $newPos = $searchPos-1;<br/>        $searchChar = substr($string,$newPos,strlen($charToFind));<br/>        $searchPos = $newPos;<br/>    }<br/><br/>    if (!empty($searchChar))<br/>    {<br/>        return $searchPos;<br/>        return TRUE;<br/>    }<br/>    else<br/>    {<br/>        return FALSE;<br/>    }<br/>}<br/><br/>function handle_multiline_tags(&amp;$i, $line, $lines)<br/>{<br/>    //if a tag is opened but not closed before a line break,<br/><br/>    $open = rstrpos($line, '&lt;', strlen($line));<br/>    $close = rstrpos($line, '&gt;', strlen($line));<br/>    if(($open &gt; $close)&amp;&amp;($open &gt; -1)&amp;&amp;($close &gt; -1))<br/>    {<br/>    	$i++;<br/>    	return trim($line).trim(handle_multiline_tags(&amp;$i, $lines[$i], $lines));<br/>    }<br/>    else<br/>    {<br/>    	return trim($line);<br/>    }<br/>}<br/></code></pre><br/><br/><p>This could probably be optimized in some way, but for my purposes, it's sufficient.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      WIDTH OF A PRINT STRING BY A WEBAPP
+    </pattern>
+    <template>
+<![CDATA[<p>Here's another take on it and you don't have to live without the ellipsis!</p><br/><br/><pre><code>&lt;html&gt;<br/>&lt;head&gt;<br/><br/>&lt;style&gt;<br/>div.sidebox {<br/>    width: 25%;<br/>}<br/><br/>div.sidebox div.qrytxt {<br/>    height: 1em;<br/>    line-height: 1em;<br/>    overflow: hidden;<br/>}<br/><br/>div.sidebox div.qrytxt span.ellipsis {<br/>    float: right;<br/>}<br/>&lt;/style&gt;<br/><br/><br/>&lt;/head&gt;<br/><br/>&lt;body&gt;<br/><br/>&lt;div class="sidebox"&gt;<br/>    &lt;div class="qrytxt"&gt;<br/>    	&lt;span class="ellipsis"&gt;&amp;hellip;&lt;/span&gt;<br/>    	Some long text which will arbitrarily be cut off at whatever word fits best but will have an ellipsis at the end.<br/>    &lt;/div&gt;<br/>    &lt;div class="qrytxt"&gt;<br/>    	&lt;span class="ellipsis"&gt;&amp;hellip;&lt;/span&gt;<br/>    	Some more long text which will arbitrarily be cut off at whatever word fits best but will have an ellipsis at the end.<br/>    &lt;/div&gt;<br/>    &lt;div class="qrytxt"&gt;<br/>    	&lt;span class="ellipsis"&gt;&amp;hellip;&lt;/span&gt;<br/>    	Short text. Fail!<br/>    &lt;/div&gt;<br/>&lt;/body&gt;<br/><br/>&lt;/html&gt;<br/></code></pre><br/><br/><p>There is one flaw with this, if the text is short enough to be fully displayed, the ellipses will still be displayed as well.</p><br/><br/><p>[EDIT: 6/26/2009]</p><br/><br/><p>At the suggestion of Power-Coder I have revised this a little. There are really only two changes, the addition of the doctype (see notes below) and the addition of the "display: inline-block" attribute on the qrytxt div.  Here is what it looks like now...</p><br/><br/><pre><code>&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd"&gt;<br/>&lt;html&gt;<br/>&lt;head&gt;<br/>    &lt;style&gt;<br/>        div.sidebox <br/>        {<br/>            width: 25%;<br/>        }<br/><br/>        div.sidebox div.qrytxt<br/>        {<br/>            height: 1em;<br/>            line-height: 1em;<br/>            overflow: hidden;<br/>            display: inline-block;<br/>        }<br/><br/>        div.sidebox div.qrytxt span.ellipsis<br/>        {<br/>            float: right;<br/>        }<br/>&lt;/style&gt;<br/>&lt;/head&gt;<br/><br/>&lt;body&gt;<br/>    &lt;div class="sidebox"&gt;<br/>        &lt;div class="qrytxt"&gt;<br/>            &lt;span class="ellipsis"&gt;&amp;hellip;&lt;/span&gt;<br/>            Some long text which will arbitrarily be cut off at whatever word fits best but will have an ellipsis at the end.<br/>        &lt;/div&gt;<br/><br/>        &lt;div class="qrytxt"&gt;<br/>            &lt;span class="ellipsis"&gt;&amp;hellip;&lt;/span&gt;<br/>            Some more long text which will arbitrarily be cut off at whatever word fits best but will have an ellipsis at the end.<br/>        &lt;/div&gt;<br/><br/>        &lt;div class="qrytxt"&gt;<br/>            &lt;span class="ellipsis"&gt;&amp;hellip;&lt;/span&gt;<br/>            Short text. FTW<br/>        &lt;/div&gt;<br/>    &lt;/div&gt;<br/>&lt;/body&gt;<br/>&lt;/html&gt;<br/></code></pre><br/><br/><p>Notes:</p><br/><br/><ul><br/><li><p>Viewed in IE 8.0, Opera 9, FF 3</p></li><br/><li><p>A doctype is required for IE to get the "display: inline-block" to work correctly.</p></li><br/><li><p>If the qrytxt div's overflow occurs on a long word, there is going to be a wide gap between the ellipsis and the last visible word.  You can see this by viewing the example and resizing your browser width in small increments. (this probably existed in the original example as well, I just may have not noticed it then)</p></li><br/></ul><br/><br/><p>So again, an imperfect CSS-only solution.  Javascript may be the only thing that can get the effect perfect.</p><br/><br/><p>[EDIT: 6/27/2009]</p><br/><br/><p>Here is another alternative which uses browser specific extensions.</p><br/><br/><pre><code>&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd"&gt;<br/><br/>&lt;html&gt;<br/>&lt;head&gt;<br/>    &lt;style&gt;<br/>    	div.sidebox <br/>    	{<br/>    		width: 26%;<br/>    	}<br/><br/>    	div.sidebox div.qrytxt<br/>    	{<br/>    		height: 1em;<br/>    		line-height: 1em;<br/>    		overflow: hidden;<br/>    		text-overflow:ellipsis;<br/>    		-o-text-overflow:ellipsis;<br/>    		-ms-text-overflow:ellipsis;<br/>    		-moz-binding:url(ellipsis-xbl.xml#ellipsis);<br/>    		white-space:nowrap;<br/>    	}<br/>    &lt;/style&gt;<br/>&lt;/head&gt;<br/><br/>&lt;body&gt;<br/>    &lt;div class="sidebox"&gt;<br/>    	&lt;div class="qrytxt"&gt;<br/>    		Some long text which will arbitrarily be cut off at whatever word fits best but will have an ellipsis at the end.<br/>    	&lt;/div&gt;<br/><br/>    	&lt;div class="qrytxt"&gt;<br/>    		Some more long text which will arbitrarily be cut off at whatever word fits best but will have an ellipsis at the end.<br/>    	&lt;/div&gt;<br/><br/>    	&lt;div class="qrytxt"&gt;<br/>    		Short text. FTW<br/>    	&lt;/div&gt;<br/>    &lt;/div&gt;<br/>&lt;/body&gt;<br/>&lt;/html&gt;<br/></code></pre><br/><br/><p>Note that in order for the above example to work, you must create the xml file referenced by the -moz-binding rule, <strong><em>ellipsis-xbl.xml</em></strong>. It's should contain the following xml:</p><br/><br/><pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;<br/>  &lt;bindings xmlns="http://www.mozilla.org/xbl" xmlns:xbl="http://www.mozilla.org/xbl" xmlns:xul="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"&gt;<br/>    &lt;binding id="ellipsis"&gt;<br/>      &lt;content&gt;<br/>        &lt;xul:window&gt;<br/>          &lt;xul:description crop="end" xbl:inherits="value=xbl:text"&gt;&lt;children/&gt;&lt;/xul:description&gt;<br/>        &lt;/xul:window&gt;<br/>      &lt;/content&gt;<br/>    &lt;/binding&gt;<br/>  &lt;/bindings&gt;<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      PHP IDE
+    </pattern>
+    <template>
+<![CDATA[<p><a href="http://shiftedit.net/" rel="nofollow">ShiftEdit</a> Web Based IDE</p><br/><br/><p>Syntax highlighting, Integrated (S)FTP, Tabs, Find/Replace, Revision history + it's free.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      SCRIPT WRITE TO NON WORLD WRIT FILE
+    </pattern>
+    <template>
+<![CDATA[<p>Unfortunately, in shared hosts that use <strong>mod_php, there is no way to restrict access</strong> to secure files to your web app and login user.</p><br/><br/><p>The solution is to <strong>run your web app as your login user</strong>. When you do that, UNIX file permissions can correctly lock everyone else out. There are several ways to implement that, including <a href="http://httpd.apache.org/docs/2.0/suexec.html" rel="nofollow">SuExec</a>, <a href="http://www.suphp.org/Home.html" rel="nofollow">suPHP</a>, or running PHP with FastCGI with <a href="http://fastcgi.coremail.cn/" rel="nofollow">mod_fcgid</a> or <a href="http://mproxyfcgi.sourceforge.net/" rel="nofollow">mod_proxy_fcgid</a>. FastCGI is my favorite way.</p><br/><br/><p>Another solution is to use a dedicated host or virtual private server.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      SCRAPE IN PHP
+    </pattern>
+    <template>
+<![CDATA[<p>I would recomend <a href="https://sourceforge.net/projects/simplehtmldom/" rel="nofollow">PHP Simple HTML DOM Parser</a> after you have scraped the HTML from the page. It supports invalid HTML, and provides a very easy way to handle HTML elements. </p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      TEST VS PHPUNIT
+    </pattern>
+    <template>
+<![CDATA[<p>This question is qute dated but as it is still getting traffic and answers I though I state my point here again even so I already did it on some other (newer) questions.</p><br/><br/><p>I'm <strong>really <em>really</em></strong> baffled that SimpleTest <strong>still</strong> is considered an alternative to phpunit. Maybe i'm just misinformed but as far as I've seen:</p><br/><br/><ul><br/><li>PHPUnit is the standard; most frameworks use it (like Zend Framework (1&amp;2), Cake, Agavi, even Symfony is dropping their own Framework in Symfony 2 for phpunit).</li><br/><li>PHPUnit is integrated in every PHP IDE (Eclipse, Netbeans, Zend Stuide, PHPStorm) and works nicely.</li><br/><li>Simpletest has an eclipse extension for PHP 5.1 (a.k.a. old) and nothing else.</li><br/><li>PHPUnit works fine with every continuous integration server since it outputs all standard log files for code coverage and test reports.</li><br/><li>Simpletest does not. While this is not a big problem to start with it will bite you big time once you stop "just testing" and start developing software (Yes that statement is  provocative :) Don't take it too seriously).</li><br/><li>PHPUnit is activly mainted, stable and works great for every codebase, every scenario and every way you want to write your tests.</li><br/><li>**SimpleTest is unmaintained, outdated and does not work well with PHP 5.3 which released over 2 year ago!.</li><br/><li>(Subjective) <a href="http://www.phpunit.de/manual/3.6/en/code-coverage-analysis.html">PHPUnit provides much nicer</a> code coverage reports <a href="http://www.simpletest.org/en/reporter_documentation.html">than Simpletest</a></li><br/><li>With PHPUnit you also get these reports inside your IDE (<a href="http://netbeans.org/kb/docs/php/phpunit.html">Netbeans</a>, Eclipse, ...)</li><br/></ul><br/><br/><p>I've yet to see any argument in favor of Simpletest.  It's not even simpler to install since PHPUnit is available via pear:</p><br/><br/><pre><code>pear channel-discover pear.phpunit.de<br/>pear install phpunit/PHPUnit<br/></code></pre><br/><br/><p>and the "first test" looks pretty much the same.</p><br/><br/><p>For everything you want to test PHPUnit will have a solution and you will be able to find help pretty much anywhere (SO, #phpunit irc channel on freenode, pretty much every php developer ;) )</p><br/><br/><p>Please correct me if i've stated something wrong or forgot something :)</p><br/><br/><h1>Overview of PHP Testing tools</h1><br/><br/><p>Video: <a href="http://conference.phpnw.org.uk/phpnw11/schedule/sebastian-bergmann/">http://conference.phpnw.org.uk/phpnw11/schedule/sebastian-bergmann/</a></p><br/><br/><p>Slides: <a href="http://www.slideshare.net/sebastian_bergmann/the-php-testers-toolbox-osi-days-2011">http://www.slideshare.net/sebastian_bergmann/the-php-testers-toolbox-osi-days-2011</a></p><br/><br/><p>It mentions stuff like <a href="https://github.com/mageekguy/atoum">Atoum</a> which calls its self: "A simple, modern and intuitive unit testing framework for PHP!"</p><br/><br/><hr><br/><br/><h3>Full disclosure</h3><br/><br/><p>I've originally written this answer Jan. 2011 where I had no affiliation with any PHP Testing project. Since then I because a contributor to PHPUnit.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      GENER A FRIENDLI URL IN SYMFONI PHP
+    </pattern>
+    <template>
+<![CDATA[<p>If your goal is to have user-friendly URLs throughout your application, use the following approach:</p><br/><br/><p>1) Create a routing rule for your module/action in the application's routing.yml file.  The following example is a routing rule for an action that shows the most recent questions in an application, defaulting to page 1 (using a pager):</p><br/><br/><pre><code>recent_questions:<br/>   url:    questions/recent/:page<br/>   param:  { module: questions, action: recent, page: 1 }<br/></code></pre><br/><br/><p>2) Once the routing rule is set, use the <code>url_for()</code> helper in your template to format outgoing URLs.</p><br/><br/><pre><code>&lt;a href="&lt;?php echo url_for('questions/recent?page=1') ?&gt;"&gt;Recent Questions&lt;/a&gt;<br/></code></pre><br/><br/><p>In this example, the following URL will be constructed: <code>http://myapp/questions/recent/1.html</code>.</p><br/><br/><p>3) Incoming URLs (requests) will be analyzed by the routing system, and if a pattern match is found in the routing rule configuration, the named wildcards (ie. the <code>:/page</code> portion of the URL) will become request parameters.</p><br/><br/><p>You can also use the <code>link_to()</code> helper to output a URL without using the HTML <code>&lt;a&gt;</code> tag.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      ZEND FRAMEWORK AND SET A ZEND FORM EL FORM FIELD TO BE REQUIR HOW DO I CHANG THE VALID USE TO ENSUR THAT THE ELEMENT IS NOT BLANK
+    </pattern>
+    <template>
+<![CDATA[<p>I did it this way (ZF 1.5):</p><br/><br/><pre><code>$name = new Zend_Form_Element_Text('name');<br/>$name-&gt;setLabel('Full Name: ')<br/>     -&gt;setRequired(true)<br/>     -&gt;addFilter('StripTags')<br/>     -&gt;addFilter('StringTrim')<br/>     -&gt;addValidator($MyNotEmpty);<br/></code></pre><br/><br/><p>so, the addValidator() is the interesting part. The Message is set in an "Errormessage File" (to bundle all custom messages in one file):</p><br/><br/><pre><code>$MyNotEmpty = new Zend_Validate_NotEmpty();<br/>$MyNotEmpty-&gt;setMessage($trans-&gt;translate('err.IS_EMPTY'),Zend_Validate_NotEmpty::IS_EMPTY);<br/></code></pre><br/><br/><p>hope this helps...</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      OPTION ARGUMENT IN PHP
+    </pattern>
+    <template>
+<![CDATA[<pre><code>function dosomething($var1, $var2, $var3='somevalue'){<br/>..<br/>}<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      STATEMENT CONDIT OPTIMIS
+    </pattern>
+    <template>
+<![CDATA[<p>For C, C++, C#, Java and other .NET languages boolean expressions are optimised so that as soon as enough is known nothing else is evaluated.</p><br/><br/><p>An old trick for doing obfuscated code was to use this to create if statements, such as:</p><br/><br/><pre><code>a || b();<br/></code></pre><br/><br/><p>if "a" is true, "b()" would never be evaluated, so we can rewrite it into:</p><br/><br/><pre><code>if(!a)<br/>    b();<br/></code></pre><br/><br/><p>and similarly:</p><br/><br/><pre><code>a &amp;&amp; b();<br/></code></pre><br/><br/><p>would become</p><br/><br/><pre><code>if(a)<br/>    b();<br/></code></pre><br/><br/><p><strong>Please note</strong> that this is only valid for the || and &amp;&amp; operator. The two operators | and &amp; is bitwise or, and and, respectively, and are therefore not "optimised".</p><br/><br/><p>EDIT:<br/>As mentioned by others, trying to optimise code using short circuit logic is very rarely well spent time.</p><br/><br/><p>First go for clarity, both because it is easier to read and understand. Also, if you try to be too clever a simple reordering of the terms could lead to wildly different behaviour without any apparent reason.</p><br/><br/><p>Second, go for optimisation, but only after timing and profiling. Way too many developer  do premature optimisation without profiling. Most of the time it's completely useless.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      COMPLEX FILENAM INTO HTML LINK
+    </pattern>
+    <template>
+<![CDATA[<p>You can use <a href="http://php.net/manual/en/function.rawurlencode.php" rel="nofollow">rawurlencode()</a> to convert a string according to the RFC 1738 spec.<br/>This function replaces all non-alphanumeric characters by their associated code.</p><br/><br/><p>The difference with <a href="http://php.net/manual/en/function.urlencode.php" rel="nofollow">urlencode()</a> is that spaces are encoded as plus signs.</p><br/><br/><p>You'll probably want to use the last one.</p><br/><br/><p>This technique is called Percent or URL encoding. See <a href="http://en.wikipedia.org/wiki/Url_encoding" rel="nofollow">Wikipedia</a> for more details.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      DIFFFER BETWEEN THE AND OR OPER
+    </pattern>
+    <template>
+<![CDATA[<p>Just like the &amp; and &amp;&amp; operator, the double Operator is a "short-circuit" operator.</p><br/><br/><p>For example:</p><br/><br/><pre><code>if(condition1 || condition2 || condition3)<br/></code></pre><br/><br/><p>If condition1 is true, condition 2 and 3 will NOT be checked.</p><br/><br/><pre><code>if(condition1 | condition2 | condition3)<br/></code></pre><br/><br/><p>This will check conditions 2 and 3, even if 1 is already true. As your conditions can be quite expensive functions, you can get a good performance boost by using them.</p><br/><br/><p>There is one big caveat, NullReferences or similar problems. For example:</p><br/><br/><pre><code>if(class != null &amp;&amp; class.someVar &lt; 20)<br/></code></pre><br/><br/><p>If class is null, the if-statement will stop after "class != null" is false. If you only use &amp;, it will try to check class.someVar and you get a nice NullReferenceException. With the Or-Operator that may not be that much of a trap as it's unlikely that you trigger something bad, but it's something to keep in mind.</p><br/><br/><p>No one ever uses the single &amp; or | operators though, unless you have a design where each condition is a function that HAS the be executed. Sounds like a design smell, but sometimes (rarely) it's a clean way to do stuff. The &amp; operator does "run these 3 functions, and if one of them returns false, execute the else block", while the | does "only run the else block if none return false" - can be useful, but as said, often it's a design smell.</p><br/><br/><p>There is a Second use of the | and &amp; operator though: <a href="http://www.c-sharpcorner.com/UploadFile/chandrahundigam/BitWiserOpsInCS11082005050940AM/BitWiserOpsInCS.aspx" rel="nofollow">Bitwise Operations</a>.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      POLL
+    </pattern>
+    <template>
+<![CDATA[<p>You might also want to look into <a href="http://en.wikipedia.org/wiki/Comet_(programming)" rel="nofollow">Comet</a>.</p><br/><br/><p>It's used by GTalk, Meebo, and many <a href="http://ajaxian.com/archives/comet-a-new-approach-to-ajax-applications" rel="nofollow">other chat applications</a>. A few years ago when I was experimenting with it, there weren't very many libraries or details about server architecture to implement it, but it looks like there is a lot more stuff out now.</p><br/><br/><p>Have a look at the <a href="http://cometdproject.dojotoolkit.org/" rel="nofollow">cometd</a> project for more technical information.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      SEEK CODE HIGHLIGHT RECOMMEND FOR WORDPRESS
+    </pattern>
+    <template>
+<![CDATA[<p>I use <a href="http://wordpress.org/extend/plugins/wp-syntax/" rel="nofollow">WP-Syntax</a> and it's worked very well for me. It's supported every language I've thrown at it so far, and the colors can be customized for a particular theme (though the defaults look just fine too)</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      BASE64 ENCOD IMAG
+    </pattern>
+    <template>
+<![CDATA[<p>As far as I remember there is an xml element for the image data. You can use this <a href="http://www.motobit.com/util/base64-decoder-encoder.asp" rel="nofollow">website</a> to encode a file (use the upload field). Then just copy and paste the data to the XML element.</p><br/><br/><p>You could also use PHP to do this like so:</p><br/><br/><pre><code>&lt;?php<br/>    // Use appropriate function for your filetype<br/>    // - file_get_contents + imagecreatefromstring if needed<br/>    $im = imagecreatefromgif('filename.gif');<br/><br/>    $imdata = base64_encode($im);<br/>    echo($imdata);<br/><br/>    imagedestroy($im);<br/>?&gt;<br/></code></pre><br/><br/><p>Use <a href="http://developer.mozilla.org/en/Creating_OpenSearch_plugins_for_Firefox" rel="nofollow">Mozilla's guide</a> for help on creating OpenSearch plugins. For example, the icon element is used like this:</p><br/><br/><pre><code>&lt;Image width="16" height="16"&gt;data:image/x-icon;base64,imageData&lt;/Image&gt;<br/></code></pre><br/><br/><p>Where <code>imageData</code> is your base64 data.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      IN A PHP WEBAPP
+    </pattern>
+    <template>
+<![CDATA[<p>You will almost certainly want to use a database for flexible, record based access and to take advantage of the database's ability to handle concurrent data access. If you need to track information that may need to be undone, having it in a structured format is a benefit, as is having the ability to update a row indicating when and by whom a given transaction has been undone. </p><br/><br/><p>You likely only want to write to a file if very high performance is an issue, or if you have very unstructured or large amounts of data per record that might be unweidly to store in a database. Note that Unless your application has a very large number of transactions database speed is unlikely to be an issue. Also note that if you are working with a file you'll need to handle concurrent access (read / write / locking) very carefully which is likely not something you want to have to deal with.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      MAIL USE GMAIL
+    </pattern>
+    <template>
+<![CDATA[<p>Gmail's SMTP-server requires a very specific configuration.</p><br/><br/><p>From <a href="http://mail.google.com/support/bin/answer.py?answer=13287" rel="nofollow">Gmail help</a>:</p><br/><br/><pre><code>Outgoing Mail (SMTP) Server (requires TLS)<br/> - smtp.gmail.com<br/> - Use Authentication: Yes<br/> - Use STARTTLS: Yes (some clients call this SSL)<br/> - Port: 465 or 587<br/>Account Name:   your full email address (including @gmail.com)<br/>Email Address:  your email address (username@gmail.com)<br/>Password:     your Gmail password<br/></code></pre><br/><br/><p>You can probably set these settings up in <a href="http://pear.php.net/package/Mail" rel="nofollow">Pear::Mail</a> or <a href="http://phpmailer.codeworxtech.com/" rel="nofollow">PHPMailer</a>. Check out their documentation for more details.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      EXPAND MY EMAIL REGEX
+    </pattern>
+    <template>
+<![CDATA[<p>Validating email addresses is one of the good examples of where <a href="http://ex-parrot.com/~pdw/Mail-RFC822-Address.html" rel="nofollow">using regular expressions might not be a smart idea</a>.</p><br/><br/><p>However a simple permissive approach that lets some "invalid" addresses through is often reasonable - you'll have to cope with email delivery failures anyway, so accepting the odd bogus address hardly matters.</p><br/><br/><p><a href="http://www.regular-expressions.info/email.html" rel="nofollow">"How to Find or Validate an Email Address" on regular-expressions.info</a> gives a nice overview of different trade-offs between complexity and correctness and suggests several patterns that might work for your needs, like:</p><br/><br/><pre><code>^[0-9A-Za-z._%+-]+@[0-9A-Za-z.-]+\.[A-Za-z]{2,6}$<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      BEST PRACTIC
+    </pattern>
+    <template>
+<![CDATA[<p>You don't need a "system" to do templating.<br/>You can do it on your own by keeping presentation &amp; logic separate.<br/>This way the designer can screw up the display, but not the logic behind it.</p><br/><br/><p>Here's a simple example:</p><br/><br/><pre><code>&lt;?php <br/>$people = array('derek','joel','jeff');<br/>$people[0] = 'martin'; // all your logic goes here<br/>include 'templates/people.php';<br/>?&gt;<br/></code></pre><br/><br/><p>Now here's the people.php file (which you give your designer):</p><br/><br/><pre><code>&lt;html&gt; <br/>&lt;body&gt;<br/>&lt;?php foreach($people as $name):?&gt;<br/>   &lt;b&gt;Person:&lt;/b&gt; &lt;?=$name?&gt; &lt;br /&gt;<br/>&lt;?php endforeach;?&gt; <br/>&lt;/body&gt;<br/>&lt;/html&gt;<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      ERROR HANDL IS N T WORK HOW I WANT IT TO WORK
+    </pattern>
+    <template>
+<![CDATA[<p><code>set_error_handler</code> is designed to handle errors with codes of: <code>E_USER_ERROR | E_USER_WARNING | E_USER_NOTICE</code>. This is because <code>set_error_handler</code> is meant to be a method of reporting errors thrown by the <em>user</em> error function <code>trigger_error</code>.</p><br/><br/><p>However, I did find this comment in the manual that may help you:</p><br/><br/><blockquote><br/>  <p>"The following error types cannot be handled with a user defined function: <code>E_ERROR</code>, <code>E_PARSE</code>, <code>E_CORE_ERROR</code>, <code>E_CORE_WARNING</code>, <code>E_COMPILE_ERROR</code>, <code>E_COMPILE_WARNING</code>, and most of <code>E_STRICT</code> raised in the file where <code>set_error_handler()</code> is called."</p><br/>  <br/>  <p>This is not exactly true.  <code>set_error_handler()</code> can't handle them, but <code>ob_start()</code> can handle at least <code>E_ERROR</code>.</p><br/><br/><pre><code>&lt;?php<br/><br/>function error_handler($output)<br/>{<br/>    $error = error_get_last();<br/>    $output = "";<br/>    foreach ($error as $info =&gt; $string)<br/>        $output .= "{$info}: {$string}\n";<br/>    return $output;<br/>}<br/><br/>ob_start('error_handler');<br/><br/>will_this_undefined_function_raise_an_error();<br/><br/>?&gt;<br/></code></pre><br/></blockquote><br/><br/><p>Really though these errors should be silently reported in a file, for example. Hopefully you won't have many <code>E_PARSE</code> errors in your project! :-)</p><br/><br/><p>As for general error reporting, stick with Exceptions (I find it helpful to make them tie in with my MVC system). You can build a pretty versatile Exception to provide options via buttons and add plenty of description to let the user know what's wrong.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      USE PHING
+    </pattern>
+    <template>
+<![CDATA[<p>From Federico Cargnelutti's <a href="http://phpimpact.wordpress.com/2007/06/30/phing-php-project-build-system-based-on-apache-ant/" rel="nofollow">blog post</a>:</p><br/><br/><blockquote><br/>  <p>Features include file transformations (e.g. token<br/>  replacement, XSLT transformation,<br/>  Smarty template transformations), file<br/>  system operations, interactive build<br/>  support, SQL execution, CVS<br/>  operations, tools for creating PEAR<br/>  packages, and much more.</p><br/></blockquote><br/><br/><p>Of course you could write custom scripts for all of the above. However, using a specialized build tool like Phing gives you a number of benefits. You'll be using a proven framework so instead of having to worry about setting up "infrastructure" you can focus on the code you need to write. Using Phing will also make it easier for when new members join your team, they'll be able to understand what is going on if they've used Phing (or Ant, which is what Phing is based on) before.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      KEEP WHITESPAC FORMAT USE PHP HTML
+    </pattern>
+    <template>
+<![CDATA[<p>use the &lt;pre&gt; tag (pre formatted), that will use a mono spaced font (for your art) and keep all the white space</p><br/><br/><pre><code>&lt;pre&gt;<br/>text goes here and here <br/>             and here and here            Some out here<br/>     ▄             ▄█▄ █▄       ▄<br/> ▄█▀█▓ ▄▓▀▀█▀ ▀▀▀█▓▀▀ ▀▀    ▄█▀█▓▀▀▀▀▀▓▄▀██▀▀<br/>██  ██ ▀██▄▄ ▄█  ▀ ░▒ ░▒   ██  ██ ▄█▄ █▀ ██<br/>█▓▄▀██  ▄ ▀█▌▓█    ▒▓ ▒▓   █▓▄▀██ ▓█ ▀▄  █▓<br/>█▒  █▓ ██▄▓▀ ▀█▄▄█▄▓█ ▓█   █▒  █▓ ▒█  ▓█▄ ▒<br/>    ▀▒           ▀  ▀ █▀       ▀▒  ▀  █▀  ░<br/><br/>&lt;/pre&gt;<br/></code></pre><br/><br/><p>You might have to convert any &lt;'s to &amp;lt; 's</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      SET UP USE HTTPONLI COOKI IN PHP
+    </pattern>
+    <template>
+<![CDATA[<p>When setting cookies manually, use the following parameter syntax to the <a href="http://uk.php.net/manual/en/function.header.php" rel="nofollow">header()</a> function:</p><br/><br/><pre><code>header( "Set-Cookie: name=value; httpOnly" );<br/></code></pre><br/><br/><p>However, if you have PHP <strong>5.2.0</strong> or greater, then you can use the <a href="http://uk.php.net/setcookie" rel="nofollow">setcookie()</a> and <a href="http://uk.php.net/manual/en/function.setrawcookie.php" rel="nofollow">setrawcookie()</a> functions. Simply set the 7th parameter to true, as per the syntax</p><br/><br/><pre><code>setcookie(    $name, $value, $expire, $path, $domain, $secure, $httponly )<br/>setrawcookie( $name, $value, $expire, $path, $domain, $secure, $httponly )<br/></code></pre><br/><br/><p>(function syntax simplified for brevity). Enter NULL for parameters you wish to remain as default.</p><br/><br/><p>Please note that versions of PHP before 5.2.0 do have the setcookie functions, but the httpOnly parameter was not yet introduced.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      MYSQL QUERI
+    </pattern>
+    <template>
+<![CDATA[<p>This is a great overview of how to cache queries in MySQL:</p><br/><br/><ul><br/><li><a href="http://www.petefreitag.com/item/390.cfm" rel="nofollow">The MySQL Query Cache</a></li><br/></ul><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      MEDIAWIKI COOKI INTEGR
+    </pattern>
+    <template>
+<![CDATA[<p>They both support <a href="http://openid.net/" rel="nofollow">OpenId</a> now.</p><br/><br/><ul><br/><li><a href="http://www.mediawiki.org/wiki/Extension%3aOpenID" rel="nofollow">MediaWiki's extension</a></li><br/><li><a href="http://wordpress.org/extend/plugins/openid/" rel="nofollow">WordPress's plugin</a></li><br/></ul><br/><br/><p>There are probably other options for using OpenId, but I think that is the best solution available.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      RITHMET WITH ARBITRARILI LARG INTEG IN PHP
+    </pattern>
+    <template>
+<![CDATA[<p>The <a href="http://us2.php.net/gmp" rel="nofollow">PHP GMP extension</a> will be better for this. As an added bonus, you can use it to do your decimal-to-binary conversion, like so:</p><br/><br/><pre><code>gmp_strval(gmp_init($n, 10), 2);<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      USE VIEW OR NOT TO USE VIEW
+    </pattern>
+    <template>
+<![CDATA[<p>HTML time-savers are useful, but they're only useful when they're intuitive and easy-to-understand. Having to instantiate a <code>new Draw</code> just doesn't sound very natural. Furthermore, <code>wideHeaderBox</code> and <code>left</code> will only have significance to someone who intimately knows the system. And what if there <em>is</em> a redesign, like your co-worker muses? What if the <code>wideHeaderBox</code> becomes very narrow? Will you change the markup (and styles, presumable) generated by the PHP method but leave a very inaccurate method name to call the code?</p><br/><br/><p>If you guys just <em>have</em> to use HTML generation, you should use it interspersed in view files, and you should use it where it's really necessary/useful, such as something like this:</p><br/><br/><pre><code>HTML::link("Wikipedia", "http://en.wikipedia.org");<br/>HTML::bulleted_list(array(<br/>    HTML::list_item("Dogs"),<br/>    HTML::list_item("Cats"),<br/>    HTML::list_item("Armadillos")<br/>));<br/></code></pre><br/><br/><p>In the above example, the method names actually make sense to people who aren't familiar with your system. They'll also make more sense to you guys when you go back into a seldom-visited file and wonder what the heck you were doing.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      REGEX PATTERN FOR DATETIM ( 2008 09 01 12 35 45 )
+    </pattern>
+    <template>
+<![CDATA[<p>@Espo: I just have to say that regex is incredible. I'd hate to have to write the code that did something useful with the matches, such as if you wanted to actually find out what date and time the user typed.</p><br/><br/><p>It seems like Tom's solution would be more tenable, as it is about a zillion times simpler and with the addition of some parentheses you can easily get at the values the user typed:</p><br/><br/><pre><code>(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})<br/></code></pre><br/><br/><p>If you're using perl, then you can get the values out with something like this:</p><br/><br/><pre><code>$year = $1;<br/>$month = $2;<br/>$day = $3;<br/>$hour = $4;<br/>$minute = $5;<br/>$second = $6;<br/></code></pre><br/><br/><p>Other languages will have a similar capability. Note that you will need to make some minor mods to the regex if you want to accept values such as single-digit months.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      MANAG SQL QUERI
+    </pattern>
+    <template>
+<![CDATA[<p>The best course of action for you will depend on how you are approaching your data access. There are three approaches you can take:</p><br/><br/><ul><br/><li>Use stored procedures</li><br/><li>Keep the queries in the code (but put all your queries into functions and fix everything to use PDO for parameters, as mentioned earlier)</li><br/><li>Use an ORM tool</li><br/></ul><br/><br/><p>If you want to pass your own raw SQL to the database engine then stored procedures would be the way to go if all you want to do is get the raw SQL out of your PHP code but keep it relatively unchanged. The stored procedures vs raw SQL debate is a bit of a holy war, but K. Scott Allen makes an excellent point - albeit a throwaway one - in an article about <a href="http://odetocode.com/blogs/scott/archive/2008/02/02/11737.aspx" rel="nofollow">versioning databases</a>: </p><br/><br/><blockquote><br/>  <p>Secondly, stored procedures have fallen out of favor in my eyes. I came from the WinDNA school of indoctrination that said stored procedures should be used all the time. Today, I see stored procedures as an API layer for the database. This is good if you need an API layer at the database level, but I see lots of applications incurring the overhead of creating and maintaining an extra API layer they don't need. In those applications stored procedures are more of a burden than a benefit.</p><br/></blockquote><br/><br/><p>I tend to lean towards not using stored procedures. I've worked on projects where the DB has an API exposed through stored procedures, but stored procedures can impose some limitations of their own, and those projects have <em>all</em>, to varying degrees, used dynamically generated raw SQL in code to access the DB. </p><br/><br/><p>Having an API layer on the DB gives better delineation of responsibilities between the DB team and the Dev team at the expense of some of the flexibility you'd have if the query was kept in the code, however PHP projects are less likely to have sizable enough teams to benefit from this delineation.</p><br/><br/><p>Conceptually, you should probably have your database versioned. Practically speaking, however, you're far more likely to have just your code versioned than you are to have your database versioned. You are likely to be changing your queries when you are making changes to your code, but if you are changing the queries in stored procedures stored against the database then you probably won't be checking those in when you check the code in and you lose many of the benefits of versioning for a significant area of your application.</p><br/><br/><p>Regardless of whether or not you elect not to use stored procedures though, you should at the very least ensure that each database operation is stored in an independent function rather than being embedded into each of your page's scripts - essentially an API layer for your DB which is maintained and versioned with your code. If you're using stored procedures, this will effectively mean you have two API layers for your DB, one with the code and one with the DB, which you may feel unnecessarily complicates things if your project does not have separate teams. I certainly do.</p><br/><br/><p>If the issue is one of code neatness, there are ways to make code with SQL jammed in it more presentable, and the UserManager class shown below is a good way to start - the class only contains queries which relate to the 'user' table, each query has its own method in the class and the queries are indented into the prepare statements and formatted as you would format them in a stored procedure.</p><br/><br/><pre><code>// UserManager.php:<br/><br/>class UserManager<br/>{<br/>    function getUsers()<br/>    {<br/>        $pdo = new PDO(...);<br/>        $stmt = $pdo-&gt;prepare('<br/>            SELECT       u.userId as id,<br/>                         u.userName,<br/>                         g.groupId,<br/>                         g.groupName<br/>            FROM         user u<br/>            INNER JOIN   group g<br/>            ON           u.groupId = g.groupId<br/>            ORDER BY     u.userName, g.groupName<br/>        ');<br/>        // iterate over result and prepare return value<br/>    }<br/><br/>    function getUser($id) {<br/>        // db code here<br/>    }<br/>}<br/><br/>// index.php:<br/>require_once("UserManager.php");<br/>$um = new UserManager;<br/>$users = $um-&gt;getUsers();<br/>foreach ($users as $user) echo $user['name'];<br/></code></pre><br/><br/><p>However, if your queries are quite similar but you have huge numbers of permutations in your query conditions like complicated paging, sorting, filtering, etc, an Object/Relational mapper tool is probably the way to go, although the process of overhauling your existing code to make use of the tool could be quite complicated.</p><br/><br/><p>If you decide to investigate ORM tools, you should look at <a href="http://propel.phpdb.org/" rel="nofollow">Propel</a>, the ActiveRecord component of <a href="http://yiiframework.com" rel="nofollow">Yii</a>, or the king-daddy PHP ORM, <a href="http://www.doctrine-project.org/" rel="nofollow">Doctrine</a>. Each of these gives you the ability to programmatically build queries to your database with all manner of complicated logic. Doctrine is the most fully featured, allowing you to template your database with things like the <a href="http://www.developersdex.com/gurus/articles/112.asp" rel="nofollow">Nested Set tree pattern</a> out of the box.</p><br/><br/><p>In terms of performance, stored procedures are the fastest, but generally not by much over raw sql. ORM tools can have a significant performance impact in a number of ways - inefficient or redundant querying, huge file IO while loading the ORM libraries on each request, dynamic SQL generation on each query... all of these things can have an impact, but the use of an ORM tool can drastically increase the power available to you with a much smaller amount of code than creating your own DB layer with manual queries.</p><br/><br/><p><a href="http://stackoverflow.com/questions/37791/how-do-you-manage-sql-queries#38053">Gary Richardson</a> is absolutely right though, if you're going to continue to use SQL in your code you should always be using PDO's prepared statements to handle the parameters regardless of whether you're using a query or a stored procedure. The sanitisation of input is performed for you by PDO.</p><br/><br/><pre><code>// optional<br/>$attrs = array(PDO::ATTR_PERSISTENT =&gt; true);<br/><br/>// create the PDO object<br/>$pdo = new PDO("mysql:host=localhost;dbname=test", "user", "pass", $attrs);<br/><br/>// also optional, but it makes PDO raise exceptions instead of <br/>// PHP errors which are far more useful for debugging<br/>$pdo-&gt;setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);<br/><br/>$stmt = $pdo-&gt;prepare('INSERT INTO venue(venueName, regionId) VALUES(:venueName, :regionId)');<br/>$stmt-&gt;bindValue(":venueName", "test");<br/>$stmt-&gt;bindValue(":regionId", 1);<br/><br/>$stmt-&gt;execute();<br/><br/>$lastInsertId = $pdo-&gt;lastInsertId();<br/>var_dump($lastInsertId);<br/></code></pre><br/><br/><p>Caveat: assuming that the ID is 1, the above script will output 'string(1) "1"'. PDO->lastInsertId() returns the ID as a string regardless of whether the actual column is an integer or not. This will probably never be a problem for you as PHP performs casting of strings to integers automatically.</p><br/><br/><p>The following will output 'bool(true)':</p><br/><br/><pre><code>// regular equality test<br/>var_dump($lastInsertId == 1); <br/></code></pre><br/><br/><p>but if you have code that is expecting the value to be an integer, like <a href="http://php.net/manual/en/function.is-int.php" rel="nofollow">is_int</a> or PHP's <a href="http://au.php.net/manual/en/language.operators.comparison.php" rel="nofollow">"is really, truly, 100% equal to"</a> operator:</p><br/><br/><pre><code>var_dump(is_int($lastInsertId));<br/>var_dump($lastInsertId === 1);<br/></code></pre><br/><br/><p>you could run into some issues.</p><br/><br/><p><strong>Edit:</strong> Some good discussion on stored procedures <a href="http://stackoverflow.com/questions/83419/stored-procedures-a-no-go-in-the-phpmysql-world#84294">here</a></p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      VARIABL ARE N T USABL WHEN SITE IS REDIRECT
+    </pattern>
+    <template>
+<![CDATA[<p>Sessions are tied to the server <strong>AND</strong> the domain. Using frameset across domain will cause all kind of breakage because that's just not how it was designed to do. </p><br/><br/><p>Try using apache mod rewrite to create a "passthrough redirection", the "<strong>proxy</strong>" flag ([P]) in the rule is the magic flag that you need</p><br/><br/><p>Documentation at  <a href="http://httpd.apache.org/docs/1.3/mod/mod_rewrite.html" rel="nofollow">http://httpd.apache.org/docs/1.3/mod/mod_rewrite.html</a></p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      KEEP A PHP SCRIPT RUN AS A DAEMON
+    </pattern>
+    <template>
+<![CDATA[<p>If you can't use the (proper) init structure to do this (you're on shared hosting, etc.), use cron to run a script (it can be written in whatever language you like) every few minutes that checks to see if they're running, and restarts them if necessary.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      PHP MAIL ( ) FUNCTION WORK IF I DO N T OWN THE MX RECORD
+    </pattern>
+    <template>
+<![CDATA[<p>Hey guys thanks for the answers, it is really appreciated.</p><br/><br/><p>After ignoring the issue for a few months it has come up again, I did however find the answer to my problems.</p><br/><br/><p>Firstly, as you answers suggested, PHP and the mail() function were working as expected. The mail was getting sent.</p><br/><br/><p>The problem lies when the email is sent, it simply presumes that because its being sent from mydomain.com to *@mydomain.com email that the email itself is hosted on the same server, so it gets sent there instead and ignores the MX record. </p><br/><br/><p>OK it's a bit more complicated than that, but that is the general jist.</p><br/><br/><p>Edit:<br/>Found a better version of the topic <a href="http://stackoverflow.com/questions/322659/sendmail-and-mx-records-when-mail-server-is-not-on-web-host">http://stackoverflow.com/questions/322659/sendmail-and-mx-records-when-mail-server-is-not-on-web-host</a>.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      GRAB THE CONTENT OF HTML TAG
+    </pattern>
+    <template>
+<![CDATA[<p>Well, sysrqb will let you match anything in the first paragraph assuming there's no other html in the paragraph. You might want something more like this</p><br/><br/><pre><code>&lt;p&gt;.*?&lt;/p&gt;<br/></code></pre><br/><br/><p>Placing the ? after your * makes it non-greedy, meaning it will only match as little text as necessary before matching the &lt;/p&gt;</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      DESIGN PATTERN IS PEAR DB DATAOBJECT IMPLEMENT
+    </pattern>
+    <template>
+<![CDATA[<p>Follow <a href="http://pear.php.net/manual/en/package.database.db-dataobject.intro-purpose.php" rel="nofollow">this link</a> to read what DB_DO is. In a nutshell, it doesn't implement a specific pattern, it just aims to provide a common interface. The idea is to not rebuild the same basic code in each project.</p><br/><br/><p>As for an ORM, I'd recommend <a href="http://phpdoctrine.org/" rel="nofollow">Doctrine</a>. It implements ActiveRecord.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      AVOID CODE INJECT IN PHP
+    </pattern>
+    <template>
+<![CDATA[<p>Use a whitelist and make sure the page is in the whitelist:</p><br/><br/><pre><code>  $whitelist = array('home', 'page');<br/><br/>  if (in_array($_GET['page'], $whitelist)) {<br/>        include($_GET['page'].'.php');<br/>  } else {<br/>        include('home.php');<br/>  }<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      MAIL ( ) NOT WORK WINDOW 2003 II SMTP
+    </pattern>
+    <template>
+<![CDATA[<p>Try removing the IP restrictions for Relaying in the SMTP server, and opening it up to all relays. If it works when this is set, then you know that the problem has to do with the original restrictions. In this case, it may be a DNS issue, or perhaps you had the wrong IP address listed.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      LOAD ZEND LOADER.PHP. TRI TO WORK OUT WHI
+    </pattern>
+    <template>
+<![CDATA[<p>for a start I think your include path should maybe have a trailing slash. Here is an example of mine :</p><br/><br/><pre><code>    set_include_path('../library/ZendFramework-1.5.2/library/:../application/classes/:../application/classes/excpetions/:../application/forms/');<br/></code></pre><br/><br/><p>You bootstrap file will be included by another file (probably an index.php file). This means that if your include path is relative (as mine is) instead of absolute, then the path at which Loader.php is looked for changes if the file including bootstrap.php changes.</p><br/><br/><p>For example, I have two index.php files in my Zend app, one for the front end, and one for the admin area. These index files each need there own bootstrap.php with different relative paths in because they are included by different index files, which means they <strong>have to be relative to the original requested index file, not the bootstrap file they are defined within</strong>.</p><br/><br/><p>This could explain why your problem is intermittent, there could be another file including the bootstrap somewhere that is only used occasionally. I'd search through all the sites files for 'bootstrap.php' and see all the places which are including / requiring this file.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      A LIVE MYSQL DB INTO A LOCAL TEST DB ON DEMAND WITHOUT SSH
+    </pattern>
+    <template>
+<![CDATA[<p>Since you can access your database remotely, you can use mysqldump from your windows machine to fetch the remote database. From commandline:</p><br/><br/><pre><code>cd "into mysql directory"<br/>mysqldump -u USERNAME -p -h YOUR_HOST_IP DATABASE_TO_MIRROR &gt;c:\backup\database.sql<br/></code></pre><br/><br/><p>The program will ask you for the database password and then generate a file c:\backup\database.sql that you can run on your windows machine to insert the data.</p><br/><br/><p>With a small database that should be fairly fast.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      MULTIPL UPDAT IN A SINGL SQL QUERI
+    </pattern>
+    <template>
+<![CDATA[<p>This would achieve the same thing, but probably won't yield much of a speed increase, but looks nicer.</p><br/><br/><pre><code>mysql_query("UPDATE foo SET flag=true WHERE id IN (".implode(', ',$list).")");<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      ICLI BUILD HTPASSWD
+    </pattern>
+    <template>
+<![CDATA[<p>.httpasswd files are just text files with a specific format depending on the hash function specified. If you are using MD5 they look like this:</p><br/><br/><pre><code>foo:$apr1$y1cXxW5l$3vapv2yyCXaYz8zGoXj241<br/></code></pre><br/><br/><p>That's the login, a colon, ,$apr1$, the salt and 1000 times md5 encoded as base64. If you select SHA1 they look like this:</p><br/><br/><pre><code>foo:{SHA}BW6v589SIg3i3zaEW47RcMZ+I+M=<br/></code></pre><br/><br/><p>That's the login, a colon, the string {SHA1} and the SHA1 hash encoded with base64.</p><br/><br/><p>If your language has an implementation of either MD5 or SHA1 and base64 you can just create the file like this:</p><br/><br/><pre><code>&lt;?php<br/><br/>$login = 'foo';<br/>$pass = 'pass';<br/>$hash = base64_encode(sha1($pass, true));<br/><br/>$contents = $login . ':{SHA1}' . $hash;<br/><br/>file_set_contents('.htpasswd', $contents);<br/><br/>?&gt;<br/></code></pre><br/><br/><p>Here's more information on the format:</p><br/><br/><p><a href="http://httpd.apache.org/docs/2.2/misc/password_encryptions.html" rel="nofollow">http://httpd.apache.org/docs/2.2/misc/password_encryptions.html</a></p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      JSON WITH PHP
+    </pattern>
+    <template>
+<![CDATA[<p>Use the library. If you try to generate it manually, I predict with 99% certainty that the resulting text will be invalid in some way. Especially with more esoteric features like Unicode strings or exponential notation.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      AJAX PHP CONTACT FORM WITH VALID
+    </pattern>
+    <template>
+<![CDATA[<p><a href="http://www.dustindiaz.com/ajax-contact-form/" rel="nofollow">This one</a> is a few years old, but should work fine.</p><br/><br/><p>Personally, I'd recommend taking a look at the jQuery <a href="http://plugins.jquery.com/project/form" rel="nofollow">Form Plug-in</a>. It's not plug and play, but it's well tested and easy to build on top of.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      PEOPL USE PHP FOR DESKTOP APPLIC
+    </pattern>
+    <template>
+<![CDATA[<p>Every so often I wonder the same thing and start looking around for tools to do the job.  Soon after I realize that the tools are not very mature.  So then I start to wonder why no one has written any tools - or at least why the tools that do exist have not matured. </p><br/><br/><p>The only thing I can think is that PHP started life as procedural language whereas Python and Ruby tend toward being Object-Oriented or are fully object oriented (depending on who you ask).  Personally I think Object-Oriented languages are a better fit for GUI programming.  I think that as PHP moves into OOP realm in PHP 5 and especially PHP 6 you're going to see better tools for integrating with desktop environments.</p><br/><br/><p>That's just a guess, though.</p><br/><br/><p>By the way, whenever I look for tools I come across this one:<br/><a href="http://winbinder.org/" rel="nofollow">WinBinder</a></p><br/><br/><p>Haven't tried it, though.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      AUTOMAT START A DOWNLOAD IN PHP
+    </pattern>
+    <template>
+<![CDATA[<p>Send the following headers before outputting the file:</p><br/><br/><pre><code>header("Content-Disposition: attachment; filename=\"" . basename($File) . "\"");<br/>header("Content-Type: application/force-download");<br/>header("Content-Length: " . filesize($File));<br/>header("Connection: close");<br/></code></pre><br/><br/><p>@grom: Interesting about the 'application/octet-stream' MIME type. I wasn't aware of that, have always just used 'application/force-download' :)</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      EXECUT PHP THAT IS STORE IN A MYSQL DATABAS
+    </pattern>
+    <template>
+<![CDATA[<p>You can use the <a href="http://nl.php.net/manual/en/function.eval.php" rel="nofollow">eval</a> command for this. I would recommend against this though, because there's a lot of pitfalls using this approach. Debugging is hard(er), it implies some security risks (bad content in the DB gets executed, uh oh).</p><br/><br/><p>See (blogpost by a random person) <a href="http://www.blog.highub.com/php-core/php-eval-is-evil/" rel="nofollow">Eval is Evil</a> for instance. Google for Eval is Evil, and you'll find a lot of examples why you should find another solution.</p><br/><br/><p><hr /></p><br/><br/><p>Addition: Another good article with some references to exploits is <a href="http://www.sitepoint.com/blogs/2005/02/27/eval-is-dead-long-live-eval/" rel="nofollow">this blogpost</a>. Refers to past vBulletin and phpMyAdmin exploits which were caused by improper Eval usage.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      A BOOK TITL FROM AN ISBN NUMBER
+    </pattern>
+    <template>
+<![CDATA[<p>This is the LibraryThing founder. We have nothing to offer here, so I hope my comments will not seem self-serving.</p><br/><br/><p>First, the comment about Amazon, ASINs and ISBN numbers is wrong in a number of ways. In almost every circumstance where a book has an ISBN, the ASIN and the ISBN are the same. ISBNs are not now 13 digits. Rather, ISBNs can be either 10 or 13. Ten-digit ISBNs can be expressed as 13-digit ones starting with 978, which means every ISBN currently in existance has both a 10- and a 13-digit form. There are all sorts of libraries available for converting between ISBN10 and ISBN13. Basically, you add 978 to the front and recalculate the checksum digit at the end.</p><br/><br/><p>ISBN13 was invented because publishers were running out of ISBNs. In the near future, when 979-based ISBN13s start being used, they will not have an ISBN10 equivalent. To my knowledge, there are no published books with 979-based ISBNs, but they are coming soon. Anyway, the long and short of it is that Amazon uses the ISBN10 form for all 978 ISBN10s. In any case, whether or not Amazon uses ten or thirteen-digit ASINs, you can search Amazon by either just fine.</p><br/><br/><p>Personally, I wouldn't put ISBN DB at the top of your list. ISBN DB mines from a number of sources, but it's not as comprehensive as Amazon or Google. Rather, I'd look into Amazon-including the various international Amazons-and then the new Google Book Data API and, after that, the OpenLibrary API. For non-English books there are other options, like Ozone for Russian books. </p><br/><br/><p>If you care about the highest-quality data, or if you have any books published before about 1970, you will want to look into data from libraries, available by Z39.50 protocol and usually in MARC format, or, with a few libraries in Dublin Core, using the SRU/SRW protocol. MARC format is, to a modern programmer, pretty strange stuff. But, one you get it, it's also better data, and includes useful fields like the LCCN, DDC, LCC and LCSH.</p><br/><br/><p>LibraryThing runs off a homemade Python library that queries some 680 libraries and converts the many flavors of MARC into Amazon-compatible XML, with extras. We are currently reluctant to release the code, but may be releasing a service soon.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      INCLUD FUNCTION OUTPUT UNKNOWN CHAR
+    </pattern>
+    <template>
+<![CDATA[<p>What you are seeing is a UTF-8 Byte Order Mark:</p><br/><br/><blockquote><br/>  <p>The UTF-8 representation of the BOM is the byte sequence EF BB BF, which appears as the ISO-8859-1 characters ï»¿ in most text editors and web browsers not prepared to handle UTF-8. </p><br/>  <br/>  <p><a href="http://en.wikipedia.org/wiki/Byte_Order_Mark" rel="nofollow">Byte Order Mark on Wikipedia</a></p><br/></blockquote><br/><br/><p>PHP does not understand that these characters should be "hidden" and sends these to the browser as if they were normal characters. To get rid of them you will need to open the file using a "proper" text editor that will allow you to save the file as UTF-8 without the leading BOM.</p><br/><br/><p><a href="http://juicystudio.com/article/utf-byte-order-mark.php" rel="nofollow">You can read more about this problem here</a></p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      INCLUD PATH IN PHP INTERMITT FAILS. WHI
+    </pattern>
+    <template>
+<![CDATA[<p>It turned out the issue was related to a PHP bug in 5.2.5</p><br/><br/><p>Setting an "admin_flag" for include_path caused the include path to be empty in some requests, and Plesk sets an admin_flag in the default config for something or other. An update of PHP solved the issue.</p><br/><br/><p><a href="http://bugs.php.net/bug.php?id=43677" rel="nofollow">http://bugs.php.net/bug.php?id=43677</a></p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      LIBRARI BEST PRACTIC
+    </pattern>
+    <template>
+<![CDATA[<p>Zend, PEAR and ez all have their coding standards.</p><br/><br/><ul><br/><li><a href="http://pear.php.net/manual/en/standards.php" rel="nofollow">PEAR Coding Standard</a></li><br/><li><a href="http://framework.zend.com/manual/en/coding-standard.html" rel="nofollow">Zend Coding Standard</a></li><br/><li><a href="http://ez.no/de/ezcomponents/contributing/coding_standards" rel="nofollow">ez Components Coding Standard</a></li><br/></ul><br/><br/><p>I'd favour PEAR, but the others are not too bad either. Bottom line, use one of them - don't reinvent the wheel.</p><br/><br/><p>What I do is this:</p><br/><br/><pre><code>//PEAR CS:<br/>class Whatever_Whenver {}<br/>//library/Whatever/Whenever.php<br/><br/>class Whatever_Whenever_Exception {}<br/>//library/Whatever/Whenever/Exception.php<br/></code></pre><br/><br/><p>On top of the obvious structural naming convetions, there is a tool called phpcs (<a href="http://pear.php.net/package/PHP_CodeSniffer" rel="nofollow">PHP_CodeSniffer</a>) to check on idents, tabs vs. spaces, naming conventions, documentation and all that.</p><br/><br/><p>Now on many projects we don't stop just there and use what is called continuous integration which involves an automatic test environment to keep track of coding style, unit tests (<a href="http://phpunit.de" rel="nofollow">PHPUnit</a>, xdebug etc. for coverage, etc.) and all that.</p><br/><br/><p>For more info on CI you can check out <a href="http://www.phpundercontrol.org/about.html" rel="nofollow">phpUnderControl</a> and <a href="http://code.google.com/p/xinc/" rel="nofollow">xinc</a>.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      AND REFER
+    </pattern>
+    <template>
+<![CDATA[<p>If you modify your code on two lines as follows:</p><br/><br/><pre><code>$area = array();<br/><br/>$section = array();<br/></code></pre><br/><br/><p>to this:</p><br/><br/><pre><code>unset($area);<br/>$area = array();<br/><br/>unset($section);<br/>$section = array();<br/></code></pre><br/><br/><p>it will work as expected.</p><br/><br/><p>In the first version, <code>$area</code> and <code>$section</code> are acting as "pointers" to the value inside the <code>$root</code> array.  If you reset the values first, those variables can then be used to create brand new arrays instead of overwriting the previous arrays.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      TYPE
+    </pattern>
+    <template>
+<![CDATA[<p>No. PHP does what is called automatic type conversion.</p><br/><br/><p>In your example</p><br/><br/><pre><code>$int = (int)123;<br/></code></pre><br/><br/><p>the "(int)" just assures that at that exact moment 123 will be handled as an int.</p><br/><br/><p>I think your best bet would be to use a class to provide some sort of type safety.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      OF WRITE A GIT PRE COMMIT HOOK TO CHECK ANI PHP FILE IN A COMMIT FOR PARS ERROR
+    </pattern>
+    <template>
+<![CDATA[<p>If the commit is a partial commit (not all the changes in the working tree are committed), then this make give incorrect results since it tests the working copy and not the staged copy.</p><br/><br/><p>One way to do this could be:</p><br/><br/><pre><code>git diff --cached --name-only --diff-filter=ACMR | xargs git checkout-index --prefix=$TMPDIR/ --<br/>find $TMPDIR -name '*.php' -print | xargs -n 1 php -l<br/></code></pre><br/><br/><p>Which would make a copy of the staged images into a scratch space and then run the test command on them there. If any of the files include other files in the build then you may have to recreate the whole staged image in the test tree and then test the changed files there (See: <a href="http://stackoverflow.com/questions/2412450/git-pre-commit-hook-changed-added-files/3068990#3068990">Git pre-commit hook : changed/added files</a>).</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      IS THERE AN EASI WAY TO GET THE FIRST AND LAST DATE OF A MONTH
+    </pattern>
+    <template>
+<![CDATA[<pre><code>$first = date('Y-m-d', mktime(0, 0, 0, $month, 1, $year));<br/>$last = date('Y-m-t', mktime(0, 0, 0, $month, 1, $year));<br/></code></pre><br/><br/><p>See <a href="http://ie2.php.net/date" rel="nofollow">date()</a> in PHP documentation.</p><br/>]]>    </template>
+  </category>
+</aiml>

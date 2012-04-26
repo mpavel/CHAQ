@@ -1,0 +1,572 @@
+<?xml version="1.0" ?>
+<aiml version="1.0">
+  <meta content="SimpleAIMLGenerator" name="author"/>
+  <meta content="en" name="language"/>
+  <category>
+    <pattern>
+      DATA IN MYSQL
+    </pattern>
+    <template>
+<![CDATA[<p>The answer above is correct but I think there is a lot of confusing additional detail there.  The basic answer is "in a BLOB column".  BLOB is short for Binary Large OBject and that column type is specifically for handling binary data.</p><br/><br/><p>See <a href="http://dev.mysql.com/doc/refman/5.0/en/blob.html" rel="nofollow">the relevant manual page</a>.</p>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      HROW AN ERROR IN MYSQL TRIGGER
+    </pattern>
+    <template>
+<![CDATA[<p>Here is one hack that might work. Isn't clean, but it looks like it might work:</p><br/><br/><p><a href="http://www.brokenbuild.com/blog/2006/08/15/mysql-triggers-how-do-you-abort-an-insert-update-or-delete-with-a-trigger/" rel="nofollow">http://www.brokenbuild.com/blog/2006/08/15/mysql-triggers-how-do-you-abort-an-insert-update-or-delete-with-a-trigger/</a></p><br/><br/><p>Essentially you just try to update a column that doesn't exist.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      EXPORT DATA FROM SQL SERVER 2005 TO MYSQL
+    </pattern>
+    <template>
+<![CDATA[<p>I've heard a few people using <a href="http://www.kofler.cc/mysql/mssql2mysql.html">MSSQL2MySQL</a> with success, but I can't vouch for it myself.</p>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      IMPLEMENT OF MYSQL REPLAC INTO
+    </pattern>
+    <template>
+<![CDATA[<p>This is something that annoys me about MSSQL (<a href="http://bizvprog.blogspot.com/2008/04/annoying-fundamental-flaw-with-sql.html">rant on my blog</a>). I wish MSSQL supported <code>upsert</code>. </p><br/><br/><p>@Dillie-O's code is a good way in older SQL versions (+1 vote), but it still is basically two IO operations (the <code>exists</code> and then the <code>update</code> or <code>insert</code>)</p><br/><br/><p>There's a slightly better way on <a href="http://stackoverflow.com/questions/13540/insert-update-stored-proc-on-sql-server">this post</a>, basically:</p><br/><br/><pre><code>--try an update<br/>update tablename <br/>set field1 = 'new value',<br/>    field2 = 'different value',<br/>    ...<br/>where idfield = 7<br/><br/>--insert if failed<br/>if @@rowcount = 0 and @@error = 0<br/>    insert into tablename <br/>           ( idfield, field1, field2, ... )<br/>    values ( 7, 'value one', 'another value', ... )<br/></code></pre><br/><br/><p>This reduces it to one IO operations if it's an update, or two if an insert. </p><br/><br/><p>MS Sql2008 introduces <code>merge</code> from the SQL:2003 standard:</p><br/><br/><pre><code>merge into tablename <br/>where idfield = 7<br/>when matched then<br/>    update<br/>    set field1 = 'new value',<br/>        field2 = 'different value',<br/>        ...<br/>when not matched then<br/>    insert ( idfield, field1, field2, ... )<br/>    values ( 7, 'value one', 'another value', ... )<br/></code></pre><br/><br/><p>Now it's really just one IO operation, but awful code :-(</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      MYSQL
+    </pattern>
+    <template>
+<![CDATA[<p>MySQLdb is what I have used before.</p><br/><br/><p>If you host is using Python version 2.5 or higher, support for sqlite3 databases is built in (sqlite allows you to have a relational database that is simply a file in your filesystem).  But buyer beware, sqlite is not suited for production, so it may depend what you are trying to do with it.</p><br/><br/><p>Another option may be to call your host and complain, or change hosts.  Honestly these days, any self respecting web host that supports python and mysql ought to have MySQLdb pre installed.</p>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      BIG CAN A MYSQL DATABAS GET BEFOR PERFORM START TO DEGRAD
+    </pattern>
+    <template>
+<![CDATA[<p>The physical database size doesn't matter.  The number of records don't matter.</p><br/><br/><p>In my experience the biggest problem that you are going to run in to is not size, but the number of queries you can handle at a time.  Most likely you are going to have to move to a master/slave configuration so that the read queries can run against the slaves and the write queries run against the master.  However if you are not ready for this yet, you can always tweak your indexes for the queries you are running to speed up the response times.  Also there is a lot of tweaking you can do to the network stack and kernal in Linux that will help.</p><br/><br/><p>I have had mine get up to 10G, with only a moderate number of connections and it handled the requests just fine.</p><br/><br/><p>I would focus first on your indexes, than have a server admin look at your OS, and if all that doesn't help it might be time for a master/slave configuration.</p>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      MECHAN FOR TRACK DB SCHEMA CHANG
+    </pattern>
+    <template>
+<![CDATA[<p>In the Rails world, there's the concept of migrations, scripts in which changes to the database are made in Ruby rather than a database-specific flavour of SQL. Your Ruby migration code ends up being converted into the DDL specific to your current database; this makes switching database platforms very easy. </p><br/><br/><p>For every change you make to the database, you write a new migration. Migrations typically have two methods: an "up" method in which the changes are applied and a "down" method in which the changes are undone. A single command brings the database up to date, and can also be used to bring the database to a specific version of the schema. In Rails, migrations are kept in their own directory in the project directory and get checked into version control just like any other project code.</p><br/><br/><p><a href="http://www.oracle.com/technology/pub/articles/kern-rails-migrations.html" rel="nofollow" title="Oracle guide to Ruby on Rails migrations">This Oracle guide to Rails migrations</a> covers migrations quite well.</p><br/><br/><p>Developers using other languages have looked at migrations and have implemented their own language-specific versions. I know of <strong><a href="http://code.google.com/p/ruckusing/" rel="nofollow" title="Ruckusing">Ruckusing</a></strong>, a PHP migrations system that is modelled after Rails' migrations; it might be what you're looking for.</p>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      GENER DATABAS DIAGRAM MYSQL
+    </pattern>
+    <template>
+<![CDATA[<p>Try MySQL Workbench, formally DBDesigner 4:</p><br/><br/><p><a href="http://dev.mysql.com/workbench/" rel="nofollow">http://dev.mysql.com/workbench/</a></p><br/><br/><p>This has a "Reverse Engineer Database" mode as far as I remember,</p>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      NEED TO ESCAP WHEN SEND A ( MY ) SQL QUERI
+    </pattern>
+    <template>
+<![CDATA[<p>For maximum security, performance, and correctness use prepared statements.<br/>Here's how to do this with lots of examples in different languages, including PHP:</p><br/><br/><p><a href="http://stackoverflow.com/questions/1973/what-is-the-best-way-to-avoid-sql-injection-attacks" rel="nofollow">http://stackoverflow.com/questions/1973/what-is-the-best-way-to-avoid-sql-injection-attacks</a></p>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      APACH ERROR IN PHP MYSQL QUERI
+    </pattern>
+    <template>
+<![CDATA[<blockquote><br/>  <p>And if it matters at all, apache@localhost is not the name of the user account that I use to get into the database. I don't have any user accounts with the name apache in them at all for that matter.</p><br/></blockquote><br/><br/><p>If it is saying 'apache@localhost' the username is not getting passed correctly to the MySQL connection. 'apache' is normally the user that runs the httpd process (at least on Redhat-based systems) and if no username is passed during the connection MySQL uses whomever is calling for the connection.</p><br/><br/><p>If you do the connection right in your script, not in a called file, do you get the same error?</p>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      UPDAT IN MYSQL
+    </pattern>
+    <template>
+<![CDATA[<p>Yes, that's possible - you can use INSERT ... ON DUPLICATE KEY UPDATE.</p><br/><br/><p>Using your example:</p><br/><br/><pre><code>INSERT INTO table (id,Col1,Col2) VALUES (1,1,1),(2,2,3),(3,9,3),(4,10,12)<br>ON DUPLICATE KEY UPDATE Col1=VALUES(Col1),Col2=VALUES(Col2);<br></code></pre>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      NEW RUBI ON RAIL APPLIC USE MYSQL INSTEAD OF SQLITE
+    </pattern>
+    <template>
+<![CDATA[<p>If you already have a rails project, change the adapter in the <code>config/database.yml</code> file to <code>mysql</code> and make sure you specify a valid username and password, and optionally, a socket:</p><br/><br/><pre><code>development:<br>  adapter: mysql<br>  database: db_name_dev<br>  username: koploper<br>  password:<br>  host: localhost<br>  socket: /tmp/mysql.sock<br></code></pre>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      VS MYSQL
+    </pattern>
+    <template>
+<![CDATA[<p>SQLite is great for testing and prototyping, or for embedding in applications.  MySQL is worthy of (large scale) production environments.</p><br/><br/><p>This site has guidance on <a href="http://www.sqlite.org/whentouse.html" rel="nofollow">when to use SQLite</a></p><br/><br/><p>Here is my personal summary: </p><br/><br/><p>SQLite:</p><br/><br/><ul><br/><li>easier to setup</li><br/><li>great for temporary (testing databases)</li><br/><li>great for rapid development</li><br/><li>great for embedding in an application</li><br/><li>not fit for production (in large scale)</li><br/><li>doesn't have user management</li><br/><li>doesn't have many performance features</li><br/><li>doesn't scale well.</li><br/></ul><br/><br/><p>MySQL:</p><br/><br/><ul><br/><li>far more difficult/complex to set up</li><br/><li>better options for performance tuning</li><br/><li>fit for a production database</li><br/><li>can scale well if tuned properly</li><br/><li>can manage users, permissions, etc.</li><br/></ul><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      DISTRIBUT OF TABL IN TIME
+    </pattern>
+    <template>
+<![CDATA[<p>Michal Sznajder almost had it, but you can't use column aliases in a WHERE clause in SQL.  So you have to wrap it as a derived table.  I tried this and it returns 20 rows:</p><br/><br/><pre><code>SELECT * FROM (<br/>    SELECT @rownum:=@rownum+1 AS rownum, e.*<br/>    FROM (SELECT @rownum := 0) r, entries e) AS e2<br/>WHERE uid = ? AND rownum % 150 = 0;<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      COMPLET MYSQL DATABAS REPLIC IDEA WHAT DO PEOPL DO
+    </pattern>
+    <template>
+<![CDATA[<p>Maybe this could be inspiration: <a href="http://www.howtoforge.com/loadbalanced_mysql_cluster_debian">http://www.howtoforge.com/loadbalanced_mysql_cluster_debian</a></p>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      CONCATEN ENTIR RESULT SET IN MYSQL
+    </pattern>
+    <template>
+<![CDATA[<p>Maybe you should try including a fourth column, stating the table it came from, and then order and group by it:</p><br/><br/><pre><code>SELECT A,B,C, "query 1" as origin FROM table WHERE field LIKE 'query%'<br>UNION<br>SELECT A,B,C, "query 2" as origin FROM table WHERE field LIKE '%query'<br>UNION<br>SELECT A,B,C, "query 3" as origin FROM table WHERE field LIKE '%query%'<br>GROUP BY origin, B ORDER BY origin, B ASC LIMIT 5<br></code></pre>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      RETRIEV MY MYSQL USERNAM AND PASSWORD
+    </pattern>
+    <template>
+<![CDATA[<blockquote><br/>  <p>Stop the MySQL process.</p><br/>  <br/>  <p>Start the MySQL process with the --skip-grant-tables option.</p><br/>  <br/>  <p>Start the MySQL console client with the -u root option.</p><br/></blockquote><br/><br/><p>List all the users;</p><br/><br/><pre><code>SELECT * FROM mysql.user;<br></code></pre><br/><br/><p>Reset password;</p><br/><br/><pre><code>UPDATE mysql.user SET Password=PASSWORD('[password]') WHERE User='[username]';<br></code></pre><br/><br/><hr><br/><br/><p>But <strong>DO NOT FORGET</strong> to</p><br/><br/><blockquote><br/>  <p>Stop the MySQL process  </p><br/>  <br/>  <p>Start the MySQL Process normally (i.e. without the --skip-grant-tables option)</p><br/></blockquote><br/><br/><p>when you are finished.  Otherwise, your database's security could be compromised.</p>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      BIGGER THAN A CHAR BUT SMALLER THAN A BLOB
+    </pattern>
+    <template>
+<![CDATA[<p>I would suggest using a varchar(500). Even though varchar isn't a fixed length, the database should reserve the correct amount of space. You shouldn't notice any performance difference using varchar(500) over 2xchar(255).</p><br/><br/><p>Your also probably going to cause extra overheads by joining to chars together.</p>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      USE MS ACCESS AS A FRONT END TO A MYSQL DATABAS BACK END
+    </pattern>
+    <template>
+<![CDATA[<p>I had an application that worked likewise: an MS Access frontend to a MySQL backend. It was such a huge pain that I ended up writing a Win32 frontend instead. From the top of my head, I encountered the following problems:</p><br/><br/><ul><br/><li>Development of the ODBC link seems to have ceased long ago. There are various different versions floating around --- very confusing. The ODBC link doesn't support Unicode/UTF8, and I remember there were other issues with it as well (though some could be overcome by careful configuration).</li><br/><li>You probably want to manually tweak your db schema to make it compatible with MS Access. I see you already found out about the needed surrogate keys (i.e., int primary keys) :-)</li><br/><li>You should keep in mind that you may need to use pass-through queries to do more sophisticated SQL manipulations of the MySQL database.</li><br/><li>Be careful with using lots of VBA, as that tends to corrupt your frontend file. Regularly compressing the database (using main menu, Tools | Database utilities | Compress and restore, or something like that --- I'm using the Dutch version) and making <em>lots</em> of backups is necessary.</li><br/><li>Access tends to cause lots of network traffic. Like, really huge lots. I haven't been able to find a solution for that. Using a network monitor is recommended if you want to keep an eye on that!</li><br/><li>Access insists on storing booleans as 0/-1. IMHO, 0/+1 makes more sense, and I believe it is the default way of doing things in MySQL as well. Not a huge problem, but if your checkboxes don't work, you should definitely check this.</li><br/></ul><br/><br/><p>One possible alternative would be to put the backend (with the data) on a shared drive. I remember this is well-documented, also in the help. You may want to have a look at <a href="http://allenbrowne.com/ser-01.html" rel="nofollow" title="PyXML">some general advice on splitting into a frontend and a backend</a> and <a href="http://allenbrowne.com/ser-13.html" rel="nofollow">code that automatically reconnects to the backend on startup</a>; I can also send you some more sample code, or post it here.</p><br/><br/><p>Otherwise, you might also want to consider MS SQL. I don't have experience with that, but I presume it works together with MS Access much more nicely!</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      1 TO A FIELD
+    </pattern>
+    <template>
+<![CDATA[<p>I get downmodded for this?</p><br/><br/><pre><code>$sql = "UPDATE skills SET level = level+1 WHERE id = $id";<br>$result = $db-&gt;sql_query($sql);<br>$db-&gt;sql_freeresult($result);<br></code></pre>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      FOREIGN KEY
+    </pattern>
+    <template>
+<![CDATA[<p>You defined the primary key twice. Try:</p><br/><br/><pre><code>CREATE TABLE SHIPPING_GRID(  <br/>    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT 'Unique ID for each row',  <br/>    shipping_vendor_no INT(6) NOT NULL COMMENT 'Foreign key to VENDOR.no for the shipping vendor (vendors_type must be 3)',  <br/>    start_vendor_no INT(6) NOT NULL COMMENT 'Foreign key to VENDOR.no for the vendor being shipped from',  <br/>    end_vendor_no INT(6) NOT NULL COMMENT 'Foreign key to the VENDOR.no for the vendor being shipped to',  <br/>    shipment_duration INT(1) DEFAULT 1 COMMENT 'Duration in whole days shipment will take',  <br/>    price FLOAT(5,5) NOT NULL COMMENT 'Price in US dollars per shipment lbs (down to 5 decimal places)',  <br/>    is_flat_rate TINYINT(1) DEFAULT 0 COMMENT '1 if is flat rate regardless of weight, 0 if price is by lbs',  <br/>    INDEX (shipping_vendor_no),  <br/>    INDEX (start_vendor_no),  <br/>    INDEX (end_vendor_no),  <br/>    FOREIGN KEY (shipping_vendor_no) REFERENCES VENDOR (no),  <br/>    FOREIGN KEY (start_vendor_no) REFERENCES VENDOR (no),  <br/>    FOREIGN KEY (end_vendor_no) REFERENCES VENDOR (no)  <br/>) TYPE = INNODB;<br/></code></pre><br/><br/><p>The VENDOR primary key must be INT(6), and both tables must be of type InnoDB.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      MANAG DATABAS IN DEVELOP TEST AND PRODUCT
+    </pattern>
+    <template>
+<![CDATA[<p>There are a couple of good options.  I wouldn't use the "restore a backup" strategy.</p><br/><br/><ol><br/><li><p>Script all your schema changes, and have your CI server run those scripts on the database.  Have a version table to keep track of the current database version, and only execute the scripts if they are for a newer version.</p></li><br/><li><p>Use a migration solution.  These solutions vary by language, but for .NET I use Migrator.NET.  This allows you to version your database and move up and down between versions.  Your schema is specified in C# code.</p></li><br/></ol><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      QUOT AND COMMA FROM A STRING IN MYSQL
+    </pattern>
+    <template>
+<![CDATA[<p>Here is a good case for regular expressions.  You can run a find and replace on the data either before you import (easier) or later on if the SQL import accepted those characters (not nearly as easy).  But in either case, you have any number of methods to do a find and replace, be it editors, scripting languages, GUI programs, etc.  Remember that you're going to want to find and replace <em>all</em> of the bad characters.</p><br/><br/><p>A typical regular expression to find the comma and quotes (assuming just double quotes) is: <em>(Blacklist)</em></p><br/><br/><pre><code>/[,"]/<br/></code></pre><br/><br/><p>Or, if you find something might change in the future, this regular expression, matches anything except a number or decimal point. <em>(Whitelist)</em></p><br/><br/><pre><code>/[^0-9\.]/<br/></code></pre><br/><br/><p>What has been discussed by the people above is that we don't know all of the data in your CSV file.  It sounds like you want to remove the commas and quotes from all of the numbers in the CSV file.  But because we don't know what else is in the CSV file we want to make sure that we don't corrupt other data.  Just blindly doing a find/replace could affect other portions of the file.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      REPLIC FOR FALLBACK SCENARIO
+    </pattern>
+    <template>
+<![CDATA[<p>Binary log is definitely the way to go. However, you should be aware that with MySQL you can't just flip back and forth between servers like that.</p><br/><br/><p>One server will be the master and the other will be the slave. You write/read to the master, but can only read from the slave server. If you ever write to the slave, they'll be out of sync and there's no easy way to get them to sync up again (basically, you have to swap them so the master is the new slave, but this is a tedious manual process).</p><br/><br/><p>If you need true hot-swappable backup databases you might have to go to a system other than MySQL. If all you want is a read-only live backup that you can use instantly in the worst-case scenario (master is permanently destroyed), Binary Log will suit you just fine.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      PYLON ERROR MYSQL SERVER HA GONE AWAY
+    </pattern>
+    <template>
+<![CDATA[<p>I think I fixed it. It's turns out I had a simple config error. My ini file read:</p><br/><br/><pre><code>sqlalchemy.default.url = [connection string here]<br/>sqlalchemy.pool_recycle = 1800<br/></code></pre><br/><br/><p>The problem is that my <code>environment.py</code> file declared that the engine would only map keys with the prefix: <code>sqlalchemy.default</code> so <code>pool_recycle</code> was ignored.</p><br/><br/><p>The solution is to simply change the second line in the ini to:</p><br/><br/><pre><code>sqlalchemy.default.pool_recycle = 1800<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      REPLIC IF I DO N T SPECIFI ANI DATABAS WILL LOG BIN LOG EVERYTH
+    </pattern>
+    <template>
+<![CDATA[<p>That looks correct: <a href="http://dev.mysql.com/doc/refman/5.0/en/binary-log.html#option_mysqld_binlog-ignore-db" title="Cocoa Programming for Mac OSX"><a href="http://dev.mysql.com/doc/refman/5.0/en/binary-log.html#option_mysqld_binlog-ignore-db">http://dev.mysql.com/doc/refman/5.0/en/binary-log.html#option_mysqld_binlog-ignore-db</a></a>.</p><br/><br/><p>According to that reference:</p><br/><br/><blockquote><br/>  <p>There are some --binlog-ignore-db<br/>  rules. Does the default database match<br/>  any of the --binlog-ignore-db rules?</p><br/>  <br/>  <ul><br/>  <li>Yes: Do not write the statement, and exit.</li><br/>  <li>No: Write the query and exit.</li><br/>  </ul><br/></blockquote><br/><br/><p>Since you only have ignore commands, all queries will be written to the log as long as the default (active) database doesn't match one of the ignored databases.  </p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      ADMINISTR BACKUP COMPAT MODE WHAT EXACTLI IS THI DO
+    </pattern>
+    <template>
+<![CDATA[<p>Compatibility mode - the mode that helps you create exports compabible with different versions of MYSQL or other databases.</p><br/><br/><p>You see, some versions of MySQL had different commands that were used in various versions.  So what compatibility mode allows you to do is take a database and export the SQL to be compatible with another version of MySQL.  Thus, you may want to upgrade your MySQL 3 server to 4 - this compatibility mode allows for the export your database or individual tables to create a SQL file that can import into a MySQL 4 version server (should work in 5 also).</p><br/><br/><p>I use webmin, also, and run MySQL 5.  I use compatibility mode for MySQL 4.... I steer clear of any of the other ones, because I'm not running those other databases.</p><br/><br/><p>As far as the MySQL commands that were different between MySQL 3.x and 4.x, I believe there were  changes in regards to how CURRENT_TIMESTAMP is translated from MySQL 3 to 4, and also MySQL 3 doesn't support charsets, according to this forum post here: <a href="http://www.phpbuilder.com/board/showthread.php?t=10330692" rel="nofollow">http://www.phpbuilder.com/board/showthread.php?t=10330692</a></p><br/><br/><p>Hope this helps clear up your question.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      SAMPL MYSQL DATABAS I CAN DOWNLOAD
+    </pattern>
+    <template>
+<![CDATA[<p>There are some example databases at <a href="http://dev.mysql.com/doc/" rel="nofollow">http://dev.mysql.com/doc/</a></p><br/><br/><p>Or more specifically on <a href="http://dev.mysql.com/doc/index-other.html" rel="nofollow">http://dev.mysql.com/doc/index-other.html</a></p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      LIST DATATYP IN MYSQL STORE PROCEDUR OR A WAY TO EMUL THEM
+    </pattern>
+    <template>
+<![CDATA[<p><a href="http://forums.mysql.com/read.php?98,50521,50521#msg-50521" rel="nofollow" title="http://www.scribd.com/doc/2547864/msnetformattingstrings">This</a> article has some good discussion on the problem of parsing an array to a stored procedure since stored procedures only allow valid table column data-types as parameters.</p><br/><br/><p>There are some neat things you can do with the <a href="http://dev.mysql.com/tech-resources/articles/csv-storage-engine.html" rel="nofollow" title="DNR TV">csv</a> table type in mysql - that is if you are loading a flat file into the db.</p><br/><br/><p>You could create a temporary table in the stored procedure, iterate over the csv list and insert it to the temp table, then create a cursor which selects the values from that table. This <a href="http://forums.mysql.com/read.php?98,50521,184245#msg-184245" rel="nofollow">answer</a> in the above mentioned thread shows a way of doing this.</p><br/><br/><p>Generally I would split the array before I come to the database and then perform the query individually on each item.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      COLUMN EXCEPT ONE IN MYSQL
+    </pattern>
+    <template>
+<![CDATA[<p>Actually there is a way, you need to have permissions of course for doing this ...</p><br/><br/><pre><code>SET @sql = CONCAT('SELECT ', (SELECT REPLACE(GROUP_CONCAT(COLUMN_NAME), '&lt;columns_to_delete&gt;,', '') FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '&lt;table&gt;' AND TABLE_SCHEMA = '&lt;database&gt;'), ' FROM &lt;table&gt;');<br/><br/>PREPARE stmt1 FROM @sql;<br/>EXECUTE stmt1;<br/></code></pre><br/><br/><p>Replacing <code>&lt;table&gt;, &lt;database&gt; and &lt;columns_to_delete&gt;</code></p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      MYSQL CLIENT APPLIC FOR WINDOW
+    </pattern>
+    <template>
+<![CDATA[<p>I'd recommend you take a look at <a href="http://webyog.com/en/" rel="nofollow">SQLYog</a>. The <a href="http://code.google.com/p/sqlyog/" rel="nofollow">free version</a> is already rather good, but the paid version also has visual schema editing and comparison features. <strike>The UI has some tiny, but annoying shortcomings, but</strike> (the latest versions have solved those shortcomings completely -- Onno 20090331) overall I've been very pleased with it.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      BIDIRECT OUTER JOIN
+    </pattern>
+    <template>
+<![CDATA[<p>It's called a full outer join and it's not supported natively in MySQL, judging from its <a href="http://dev.mysql.com/doc/refman/4.1/en/join.html" rel="nofollow">docs</a>. You can work around this limitation using UNION as described in the comments to the page I linked to.</p><br/><br/><p>[edit] Since others posted snippets, here you go. You can see explanation on the linked page.</p><br/><br/><pre><code>SELECT *<br/>FROM A LEFT JOIN B ON A.id = B.id<br/>UNION ALL<br/>SELECT *<br/>FROM A RIGHT JOIN B ON A.id = B.id<br/>WHERE A.id IS NULL<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      MYSQL AND MS SQL
+    </pattern>
+    <template>
+<![CDATA[<p>One thing you have to watch out for is the fairly severe differences in the way MSSQL and MySQL implement the SQL syntax.</p><br/><br/><p>Here's a nice <a href="http://troels.arvin.dk/db/rdbms/" rel="nofollow">Comparison of Different SQL Implementations</a>.</p><br/><br/><p>For example, take a look at the top-n section. In MySQL:</p><br/><br/><pre><code>SELECT age<br/>FROM person<br/>ORDER BY age ASC<br/>LIMIT 1 OFFSET 2<br/></code></pre><br/><br/><p>in MSSQL (T-SQL):</p><br/><br/><pre><code>SELECT TOP 3 WITH TIES *<br/>FROM person<br/>ORDER BY age ASC<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      KIND OF NON TEXT INTERFAC TO MYSQL
+    </pattern>
+    <template>
+<![CDATA[<p>You're probably out of luck, to be honest. Looking at the MySQL C API (<a href="http://dev.mysql.com/doc/refman/5.0/en/mysql-fetch-row.html" rel="nofollow">http://dev.mysql.com/doc/refman/5.0/en/mysql-fetch-row.html</a>, <a href="http://dev.mysql.com/doc/refman/5.0/en/c-api-datatypes.html" rel="nofollow">http://dev.mysql.com/doc/refman/5.0/en/c-api-datatypes.html</a>, look at MYSQL_ROW) there doesn't seem to be a mechanism for returning data in its actual type... the joys of using structs I guess. </p><br/><br/><p>You could always implement a wrapper which checks against the MYSQL_ROW's type attribute (<a href="http://dev.mysql.com/doc/refman/5.0/en/c-api-datatypes.html" rel="nofollow">http://dev.mysql.com/doc/refman/5.0/en/c-api-datatypes.html</a>) and returns a C union, but that's probably poor advice; don't do that.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      PHP AND MYSQL WORK ON II 7.0
+    </pattern>
+    <template>
+<![CDATA[<p>Have you taken a look at this:</p><br/><br/><p><a href="http://learn.iis.net/page.aspx/246/using-fastcgi-to-host-php-applications-on-iis7/" rel="nofollow" title="excanvas"><a href="http://learn.iis.net/page.aspx/246/using-fastcgi-to-host-php-applications-on-iis7/" rel="nofollow">http://learn.iis.net/page.aspx/246/using-fastcgi-to-host-php-applications-on-iis7/</a></a></p><br/><br/><p>MySQL should be pretty straight forward.</p><br/><br/><p>Let us know what problems you're encountering...</p><br/><br/><p>HTH</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      WAY TO DENORM A MYSQL DATABAS
+    </pattern>
+    <template>
+<![CDATA[<p>I know more about mssql that mysql, but I don't think the number of joins or number of rows you are talking about should cause you too many problems with the correct indexes in place.  Have you analyzed the query plan to see if you are missing any?</p><br/><br/><p><a href="http://dev.mysql.com/doc/refman/5.0/en/explain.html" rel="nofollow"><a href="http://dev.mysql.com/doc/refman/5.0/en/explain.html" rel="nofollow">http://dev.mysql.com/doc/refman/5.0/en/explain.html</a></a></p><br/><br/><p>That being said, once you are satisifed with your indexes and have exhausted all other avenues, de-normalization might be the right answer.  If you just have one or two queries that are problems, a manual approach is probably appropriate, whereas some sort of data warehousing tool might be better for creating a platform to develop data cubes.</p><br/><br/><p>Here's a site I found that touches on the subject:</p><br/><br/><p><a href="http://www.meansandends.com/mysql-data-warehouse/?link_body%2Fbody=%7Bincl%3AAggregation%7D" rel="nofollow"><a href="http://www.meansandends.com/mysql-data-warehouse/?link_body%2Fbody=%7Bincl%3AAggregation%7D" rel="nofollow">http://www.meansandends.com/mysql-data-warehouse/?link_body%2Fbody=%7Bincl%3AAggregation%7D</a></a></p><br/><br/><p>Here's a simple technique that you can use to keep denormalizing queries simple, if you're just doing a few at a time (and I'm not replacing your OLTP tables, just creating a new one for reporting purposes).  Let's say you have this query in your application:</p><br/><br/><pre><code>select a.name, b.address from tbla a <br/>join tblb b on b.fk_a_id = a.id where a.id=1<br/></code></pre><br/><br/><p>You could create a denormalized table and populate with almost the same query:</p><br/><br/><pre><code>create table tbl_ab (a_id, a_name, b_address); <br/>-- (types elided)<br/></code></pre><br/><br/><p>Notice the underscores match the table aliases you use</p><br/><br/><pre><code>insert tbl_ab select a.id, a.name, b.address from tbla a<br/>join tblb b on b.fk_a_id = a.id <br/>-- no where clause because you want everything<br/></code></pre><br/><br/><p>Then to fix your app to use the new denormalized table, switch the dots for underscores.  </p><br/><br/><pre><code>select a_name as name, b_address as address <br/>from tbl_ab where a_id = 1;<br/></code></pre><br/><br/><p>For huge queries this can save a lot of time and makes it clear where the data came from, and you can re-use the queries you already have.</p><br/><br/><p>Remember, I'm only advocating this as the last resort.  I bet there's a few indexes that would help you.  And when you de-normalize, don't forget to account for the extra space on your disks, and figure out when you will run the query to populate the new tables.  This should probably be at night, or whenever activity is low.  And the data in that table, of course, will never exactly be up to date.</p><br/><br/><p>[Yet another edit]  Don't forget that the new tables you create need to be indexed too!  The good part is that you can index to your heart's content and not worry about update lock contention, since aside from your bulk insert the table will only see selects.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      DATABAS QUERI STATIST ON WORDPRESS SITE
+    </pattern>
+    <template>
+<![CDATA[<p>Try adding this to the bottom of the footer in your template:</p><br/><br/><pre><code>&lt;?php echo $wpdb-&gt;num_queries; ?&gt; &lt;?php _e('queries'); ?&gt;. &lt;?php timer_stop(1); ?&gt; &lt;?php _e('seconds'); ?&gt;<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      + TOMCAT DIE DATABAS CONNECT
+    </pattern>
+    <template>
+<![CDATA[<p><a href="http://tomcat.apache.org/tomcat-5.5-doc/jndi-datasource-examples-howto.html" rel="nofollow">Tomcat Documentation</a></p><br/><br/><p>DBCP uses the Jakarta-Commons Database Connection Pool. It relies on number of Jakarta-Commons components:</p><br/><br/><pre><code>* Jakarta-Commons DBCP<br/>* Jakarta-Commons Collections<br/>* Jakarta-Commons Pool<br/></code></pre><br/><br/><p>This attribute may help you out.</p><br/><br/><pre><code>removeAbandonedTimeout="60"<br/></code></pre><br/><br/><p>I'm using the same connection pooling stuff and I'm setting these properties to prevent the same thing it's just not configured through tomcat.<br/>But if the first thing doesn't work try these.</p><br/><br/><pre><code>testWhileIdle=true<br/>timeBetweenEvictionRunsMillis=300000<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      ..... WHERE .... OR
+    </pattern>
+    <template>
+<![CDATA[<p>Sure thing, the simplest way is this:</p><br/><br/><pre><code>select foo from bar where baz in (1,2,3)<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      PHP SERVER AND MYSQL SERVER IN DIFFER TIME ZONE
+    </pattern>
+    <template>
+<![CDATA[<p>As of PHP 5.1.0 you can use <a href="http://www.php.net/manual/en/function.date-default-timezone-set.php" rel="nofollow"><em>date_default_timezone_set()</em></a> function to set the default timezone used by all date/time functions in a script. </p><br/><br/><p>For MySql (quoted from <a href="http://dev.mysql.com/doc/refman/4.1/en/time-zone-support.html" rel="nofollow">MySQL Server Time Zone Support</a> page)</p><br/><br/><blockquote><br/>  <p>Before MySQL 4.1.3, the server operates only in the system time zone set at startup. Beginning with MySQL 4.1.3, the server maintains several time zone settings, some of which can be modified at runtime. </p><br/></blockquote><br/><br/><p>Of interest to you is per-connection setting of the time zones, which you would use at the beginning of your scripts</p><br/><br/><pre><code>SET timezone = 'Europe/London';<br/></code></pre><br/><br/><p>As for detecting the client timezone setting, you could use a bit of JavaScript to get and save that information to a cookie, and use it on subsequent page reads, to calculate the proper timezone.</p><br/><br/><pre><code>//Returns the offset (time difference) between Greenwich Mean Time (GMT) <br/>//and local time of Date object, in minutes.<br/>var offset = new Date().getTimezoneOffset(); <br/>document.cookie = 'timezoneOffset=' + escape(offset);<br/></code></pre><br/><br/><p>Or you could offer users the chioce to set their time zones themselves.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      EASI WAY TO MIGRAT SQLITE3 TO MYSQL
+    </pattern>
+    <template>
+<![CDATA[<p>Here is a list of converters:</p><br/><br/><ul><br/><li><a href="http://www.sqlite.org/cvstrac/wiki?p=ConverterTools" rel="nofollow">http://www.sqlite.org/cvstrac/wiki?p=ConverterTools</a></li><br/></ul><br/><br/><p><hr/><br/>An alternative method that would work nicely but is rarely mentioned is: use a ORM class that abstracts the specific database differences away for you.  e.g. you get these in PHP (<a href="http://www.redbeanphp.com" rel="nofollow">RedBean</a>), Python (Django's ORM layer, <a href="https://storm.canonical.com/" rel="nofollow">Storm</a>, <a href="http://www.sqlalchemy.org" rel="nofollow">SqlAlchemy</a>), Ruby on Rails (<a href="http://ar.rubyonrails.org/" rel="nofollow"> ActiveRecord</a>), Cocoa (<a href="http://developer.apple.com/technologies/mac/data-management.html" rel="nofollow">CoreData</a>)</p><br/><br/><p>i.e. you could do this:</p><br/><br/><ol><br/><li>Load data from source database using the ORM class.</li><br/><li>Store data in memory or serialize to disk.</li><br/><li>Store data into destination database using the ORM class.</li><br/></ol><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      SCRIPT TO POPUL MYSQL TABL
+    </pattern>
+    <template>
+<![CDATA[<p>What you are after would be a data generator.</p><br/><br/><p>There is one available <a href="http://www.generatedata.com/" rel="nofollow">here</a> which i had bookmarked but i haven't got around to trying it yet.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      PROFIL EQUIVAL FOR MYSQL
+    </pattern>
+    <template>
+<![CDATA[<p>Something cool that is in version 5.0.37 of the community server is <a href="http://dev.mysql.com/tech-resources/articles/using-new-query-profiler.html" rel="nofollow">MySQL's new profiler</a>.  </p><br/><br/><p>This may give you what info you are looking for.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      MAINTAIN A RECURS INVARI IN A MYSQL DATABAS
+    </pattern>
+    <template>
+<![CDATA[<p>The problem you are having is clear, recursion in SQL. You need to get the parent of the parent... of the leaf and updates it's total (either subtracting the old and adding the new, or recomputing). You need some form of identifier to see the structure of the tree, and grab all of a nodes children and a list of the parents/path to a leaf to update. </p><br/><br/><p>This method adds constant space (2 columns to your table --but you only need one table, else you can do a join later). I played around with a structure awhile ago that used a hierarchical format using 'left' and 'right' columns (obviously not those names), calculated by a pre-order traversal and a post-order traversal, respectively --don't worry these don't need to be recalculated every time. </p><br/><br/><p>I'll let you take a look at a page <a href="http://dev.mysql.com/tech-resources/articles/hierarchical-data.html" rel="nofollow">using this method in mysql</a> instead of continuing this discussion in case you don't like this method as an answer. But if you like it, post/edit and I'll take some time and clarify.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      HAVE A PHP STRING IN THE FORMAT YYYY DD MM AND A TIMESTAMP IN MYSQL IS THERE A GOOD WAY TO CONVERT BETWEEN THEM
+    </pattern>
+    <template>
+<![CDATA[<p>Converting from timestamp to format:</p><br/><br/><pre><code>date('Y-m-d', $timestamp);<br/></code></pre><br/><br/><p>Converting from formatted to timestamp:</p><br/><br/><pre><code>mktime(0, 0, 0, $month, $day, $year, $is_dst);<br/></code></pre><br/><br/><p>See <a href="http://www.php.net/manual/en/function.date.php" rel="nofollow">date</a> and <a href="http://www.php.net/manual/en/function.mktime.php" rel="nofollow">mktime</a> for further documentation.</p><br/><br/><p>When it comes to storing it's up to you whether to use the MySQL DATE format for stroing as a formatted date; as an integer for storing as a UNIX timestamp; or you can use MySQL's TIMESTAMP format which converts a numeric timestamp into a readable format. <a href="http://dev.mysql.com/doc/refman/5.0/en/datetime.html" rel="nofollow">Check the MySQL Doc</a> for TIMESTAMP info.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      SYNC ORACL TABL WITH MYSQL TABL
+    </pattern>
+    <template>
+<![CDATA[<p>I don't think there is really anything that is going to do this. If you could setup a local Oracle database, then most likely you could as oracle has various means of keeping two databases "in sync", provided they are both Oracle.</p><br/><br/><p>If you must use mysql, then likely you are going to just have to write something to sync the data, this is of course always going to run in the same problems you currently have with the access "database".</p><br/><br/><p>You could setup something with HSODBC and triggers, but</p><br/><br/><ol><br/><li>I've found HSODBC to be very memory hungry</li><br/><li>This is only going to add more load to your DB, which you say is already heavily loaded during the day.</li><br/></ol><br/><br/><p>If the main thing you are doing is wanting a local Test copy of your oracle database, you would be best to setup syncing with a local version of oracle, as far as I can tell from the licenses, oracle is free for development copies ( I have seen some posts to the contrary, but if you find that is the case, you could always use something like Oracle XE)</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      YOU KNOW IT S TIME TO REWRIT AN APPLIC
+    </pattern>
+    <template>
+<![CDATA[<p>There's a secret 3rd option to the rewrite / don't rewrite decision: rewrite it a bit at a time continuously. This is the genius of refactoring, you don't have to make a monolithic decision to blow the whole works to smithereens and start from scratch, you can approach things piecemeal and work towards a better design as an ongoing goal. Don't rebuild the house from the ground up, instead paint the living room, then remodel the kitchen, then rewire the den, then redo the window, then landscape the yard, then fix the roof, etc. Eventually you end up in a <a href="http://en.wikipedia.org/wiki/Ship_of_Theseus#George_Washington.27s_axe" rel="nofollow">Grandfather's Axe</a> situation, allowing you to change more over time than you probably ever feasibly could in one huge chunk.</p><br/><br/><p>You can do this at many different levels, making little improvements with most every checkin (using extract method, rename variable/method, etc.) to make chunks of code more readable and more maintainable. Or making big improvements using dedicated budgets, still working incrementally from point A to point B but having the firm goal of reaching point B (the improved design). You can still make breaking changes but you need to be smart about making them. Rather than just replacing some bit of functionality with some completely new way (i.e. API) of doing things you can keep the old bits in place and add new stuff in addition to it, then you can flag the old bits as obsolete and then later delete them, after people have been given enough time to make a graceful transition to the new way of doing things.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      COMMUN WITH A MYSQL SERVER
+    </pattern>
+    <template>
+<![CDATA[<p><a href="http://tangentsoft.net/mysql++/" rel="nofollow">MySQL++</a></p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      GET DATA FROM THE DATABAS TO SESSION
+    </pattern>
+    <template>
+<![CDATA[<p>I came up with this and it appears to work.</p><br/><br/><pre><code>while($row = mysql_fetch_assoc($result))<br/> {<br/>    $_SESSION = array_merge_recursive($_SESSION, $row);<br/> }<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      I WHICH IS BETTER FOR CLOSE QUERI
+    </pattern>
+    <template>
+<![CDATA[<p>The <a href="http://us2.php.net/manual/en/mysqli-result.free.php" rel="nofollow">manual</a> seems to suggest that you should still be using <code>free()</code> to release the memory. I believe the reasoning is that <code>free()</code> is freeing the memory in <em>MySQL</em>, not in PHP. Since PHP can't garbage-collect for MySQL, you need to call <code>free()</code>.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      PROJECT MYSQL OR SQL 2005 EXPRESS
+    </pattern>
+    <template>
+<![CDATA[<p>The answer to the question on any project in regards to what platform/technologies to use is: What does everyone know best?</p><br/><br/><p><strong>1.</strong> Yes express <a href="http://www.microsoft.com/express/2005/sql/download/" rel="nofollow">can still be downloaded</a>.</p><br/><br/><p><strong>2.</strong> Will it fit your requirements? That depends on your requirements, of course. I have deployed MSSQL2005 Express on several enterprise level projects which I knew had a fixed database size that would never be exceeded (Express has a limit of each database not in excess of 4gb). Also keep in mind there are other hardware constraints such as a 1 cpu limit.</p><br/><br/><p>Another thing to consider is if you need the Enterprise level tools that come with a paid edition of SQL Server. If you are moving a lot of flat data around you are stuck writing your own Bulk Copy Procs, which rule the house, but its an extra step, no doubt.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      VS POSTGRESQL FOR WEB APPLIC
+    </pattern>
+    <template>
+<![CDATA[<p>Better?</p><br/><br/><p>MySQL is much more commonly provided by web hosts.</p><br/><br/><p>PostgreSQL is a much more mature product.</p><br/><br/><p>There's <a href="http://www.databasejournal.com/features/mysql/article.php/3288951" rel="nofollow">this discussion addressing your "better" question</a> </p><br/><br/><p>Apparently, according to <a href="http://www.teknico.net/devel/myvspg/index.en.html" rel="nofollow">this web page</a>, MySQL is fast when concurrent access levels are low, and when there are many more reads than writes. On the other hand, it exhibits low scalability with increasing loads and write/read ratios. PostgreSQL is relatively slow at low concurrency levels, but scales well with increasing load levels, while providing enough isolation between concurrent accesses to avoid slowdowns at high write/read ratios.  It goes on to link to a number of performance comparisons, because these things are very... sensitive to conditions.</p><br/><br/><p>So if your decision factor is, "<strong>which is faster?</strong>"  Then the answer is "it depends.  <strong>If it really matters, test your application against both.</strong>"  And if you really, really care, you get in two DBAs (one who specializes in each database) and get them to tune the crap out of the databases, and then choose.  It's astonishing how expensive <em>good</em> DBAs are; and <em>they are worth every cent</em>.  </p><br/><br/><p>When it matters.  </p><br/><br/><p>Which it probably doesn't, so just pick whichever database you like the sound of and go with it; better performance can be bought with more RAM and CPU, and more appropriate database design, and clever stored procedure tricks and so on - and all of that is cheaper and easier for random-website-X than agonizing over which to pick, MySQL or PostgreSQL, and specialist tuning from expensive DBAs.</p><br/><br/><p><hr><br/>Joel also said in that podcast that comment would come back to bite him because people would be saying that MySQL was a piece of crap - Joel couldn't get a <code>count</code> of rows back.  The plural of anecdote is not data.  <a href="https://stackoverflow.fogbugz.com/default.asp?W6080" rel="nofollow">He said</a>:</p><br/><br/><blockquote><br/>  <p>MySQL is the only database I've ever programmed against in my career that has had data integrity problems, where you do queries and you get nonsense answers back, that are incorrect.  </p><br/></blockquote><br/><br/><p>and he also said:</p><br/><br/><blockquote><br/>  <p>It's just an anecdote.  And that's one of the things that frustrates me, actually, about blogging or just the Internet in general. [...] There's just a weird tendency to make anecdotes into truths and I actually as a blogger I'm starting to feel a little bit guilty about this</p><br/></blockquote><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      RAKE TASK FOR BACK UP THE DATA IN YOUR DATABAS
+    </pattern>
+    <template>
+<![CDATA[<p>The below script is a simplified version taken from <a href="http://github.com/engineyard/eycap/tree/master" rel="nofollow">eycap</a>, specifically from <a href="http://github.com/engineyard/eycap/tree/master/lib/eycap/recipes/database.rb" rel="nofollow">this file</a>.</p><br/><br/><pre><code>set :dbuser "user"<br/>set :dbhost "host"<br/>set :database "db"<br/><br/>namespace :db do<br/>  desc "Get the database password from user"<br/>  task :get_password do<br/>    set(:dbpass) do<br/>      Capistrano::CLI.ui.ask "Enter mysql password: "<br/>    end<br/>  end<br/><br/>  task :backup_name, :only =&gt; { :primary =&gt; true } do<br/>    now = Time.now<br/>    run "mkdir -p #{shared_path}/db_backups"<br/>    backup_time = [now.year,now.month,now.day,now.hour,now.min,now.sec].join('-')<br/>    set :backup_file, "#{shared_path}/db_backups/#{database}-snapshot-#{backup_time}.sql"<br/>  end<br/><br/>  desc "Dump database to backup file"<br/>  task :dump, :roles =&gt; :db, :only =&gt; {:primary =&gt; true} do<br/>    backup_name<br/>    run "mysqldump --add-drop-table -u #{dbuser} -h #{dbhost} -p#{dbpass} #{database} | bzip2 -c &gt; #{backup_file}.bz2"<br/>  end<br/>end<br/></code></pre><br/><br/><p>Edit: Yeah, I guess I missed the point that you were looking for a rake task and not a capistrano task, but I don't have a rake one on hand, sorry.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      MS SQL SUPPORT IN MEMORI TABL
+    </pattern>
+    <template>
+<![CDATA[<p>@Keith</p><br/><br/><p>This is a common misconception: Table variables are NOT necessarily stored in memory. In fact SQL Server decides whether to keep the variable in memory or to spill it to TempDB. There is no reliable way (at least in SQL Server 2005) to ensure that table data is kept in memory. For more detailed info look <a href="http://blogs.msdn.com/sqlserverstorageengine/archive/2008/03/30/sql-server-table-variable-vs-local-temporary-table.aspx" rel="nofollow">here</a></p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      BY WITH AN ORDER BY
+    </pattern>
+    <template>
+<![CDATA[<p>MySQL prior to version 5 did not allow aggregate functions in ORDER BY clauses.</p><br/><br/><p>You can get around this limit with the deprecated syntax:</p><br/><br/><pre><code>SELECT COUNT(id), `Tag` from `images-tags`<br/>GROUP BY `Tag`<br/>ORDER BY 1 DESC<br/>LIMIT 20<br/></code></pre><br/><br/><p>1, since it's the first column you want to group on.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      USE AND OPER ON TAG AND CATEGORI TABL IN WORDPRESS
+    </pattern>
+    <template>
+<![CDATA[<p>I misunderstood you.  I thought you wanted Nuclear or Deals.  The below should give you only Nuclear and Deals.</p><br/><br/><p><hr /></p><br/><br/><p>select p.*<br/>from wp_posts p, wp_terms t, wp_term_taxonomy tt, wp_term_relationship tr,<br/>wp_terms t2, wp_term_taxonomy tt2, wp_term_relationship tr2<br/>wp_terms t2, wp_term_taxonomy tt2, wp_term_relationship tr2</p><br/><br/><p>where p.id = tr.object_id and t.term_id = tt.term_id and tr.term_taxonomy_id = tt.term_taxonomy_id</p><br/><br/><p>and p.id = tr2.object_id and t2.term_id = tt2.term_id and tr2.term_taxonomy_id = tt2.term_taxonomy_id</p><br/><br/><p>and p.id = tr3.object_id and t3.term_id = tt3.term_id and tr3.term_taxonomy_id = tt3.term_taxonomy_id</p><br/><br/><p>and (tt.taxonomy = 'category' and tt.term_id = t.term_id and t.name = 'Category1')<br/>and (tt2.taxonomy = 'post_tag' and tt2.term_id = t2.term_id and t2.name = 'Nuclear')<br/>and (tt3.taxonomy = 'post_tag' and tt3.term_id = t3.term_id and t3.name = 'Deals')</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      GOOD RESOURC FOR TAKE THE STEP UP FROM ENTRI LEVEL MYSQL
+    </pattern>
+    <template>
+<![CDATA[<p>Well, what you suffer is lack of experience (with no offense). Personally, I jumped into it and have been learning ever since (that is since 1998). There are a lot of things you just know over time, but with each project there are new obstacles to master.</p><br/><br/><p>One of the things that help a lot is looking at queries when you use phpMyAdmin. You can figure out a lot from there. After a while you get around to the client since it's faster than all the clicking, but there is nothing wrong with frontends to begin with. Also, I'd seriously recommend learning what the different indexes do and what each is used for, then develop a habit of running EXPLAIN on your statements (often) and go from there.</p><br/><br/><p>I know it sounds super cheesy and elitist, but <a href="http://dev.mysql.com/" rel="nofollow">the MySQL manual</a> is a really great resource. Chances are you will work with technologies/languages where the documentation really blows and you will look back and know what I mean.</p><br/><br/><p>Reasons as of why the manual is awesome are, they explain everything and they also do it really well. On top of that, the manual also has comments on each page which provide a couple pointers where the manual left off to early (doesn't happen often, IMHO).</p><br/><br/><p>In the beginning my other favorite resources to learn used to be <a href="http://www.devshed.com/" rel="nofollow">Devshed</a> and <a href="http://www.sitepoint.com/" rel="nofollow">Sitepoint</a>, but I haven't been there in a long while. Read the tutorials (even e.g. when you are not building what they are building, just look at the code). Last I remember, they also offered pretty active forums/communities with a lot of knowledgable people.</p><br/><br/><p>And then, there's always opensource. Use the force, read source. If you are using an app and they do something and you want to figure out how they did, read the source and learn from it.</p><br/><br/><p>As for books, all the cookbooks are pretty good. In general I recommend all the books with an animal on the cover (O'Reilly). They have never let me down.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      AROUND UNSUPPORT UNSIGN INTEG FIELD TYPE IN MS SQL
+    </pattern>
+    <template>
+<![CDATA[<p>When is the problem likely to become a real issue?</p><br/><br/><p>Given current growth rates, how soon do you expect signed integer overflow to happen in the MS SQL version?</p><br/><br/><p>Be pessimistic.</p><br/><br/><p>How long do you expect the application to live?</p><br/><br/><p>Do you still think the factor of 2 difference is something you should worry about?</p><br/><br/><p>(I have no idea what the answers are, but I think we should be sure that we really have a problem before searching any harder for a solution)</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      BINARI LOG REPLIC CAN IT BE SET TO IGNOR ERROR
+    </pattern>
+    <template>
+<![CDATA[<p>Yes, with --slave-skip-errors=xxx in my.cnf, where xxx is 'all' or a comma sep list of error codes.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      RESULT TO A FILE
+    </pattern>
+    <template>
+<![CDATA[<pre><code>SELECT a,b,a+b <br/>  FROM test_table<br/>  INTO OUTFILE '/tmp/result.txt'<br/>  FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"'<br/>  LINES TERMINATED BY '\n'<br/></code></pre><br/><br/><p>(the docs show INTO OUTFILE up in the SELECT .. portion which may work as well, but I've never tried it that way)<br/><a href="http://dev.mysql.com/doc/refman/5.0/en/select.html" rel="nofollow">http://dev.mysql.com/doc/refman/5.0/en/select.html</a></p><br/><br/><p>INTO OUTFILE creates a file on the server; if you are on a client and want it there, do:</p><br/><br/><pre><code>mysql -u you -p -e "SELECT ..." &gt;  file_name<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      VISUAL STUDIO SERVER EXPLOR SUPPORT CUSTOM DATABAS PROVID
+    </pattern>
+    <template>
+<![CDATA[<p>Here is instructions on how to connect to your MySQL database from Visual Studio:</p><br/><br/><blockquote><br/>  <p>To make the connection in server<br/>  explorer you need to do the following:</p><br/>  <br/>  <ul><br/>  <li><p>first of all you need to install the MyODBC connector 3.51 (or latest) on<br/>  the development machine (NB. you can<br/>  find this at<br/>  <a href="http://www.mysql.com/products/connector/odbc/" rel="nofollow">http://www.mysql.com/products/connector/odbc/</a><br/>  )</p></li><br/>  <li><p>Create a datasource in Control Panel/Administrative Tools with a<br/>  connection to your database. This data<br/>  source is going to be used purely for<br/>  Server Manager and you dont need to<br/>  worry about creating the same data<br/>  source on your clients PC when you<br/>  have made your VS.NET application<br/>  (Unless you want to) - I dont want to<br/>  cover this in this answer, too long.<br/>  For the purpose of this explanation I<br/>  will pretend that you created a MyODBC<br/>  data source called 'AADSN' to database<br/>  'noddy' on mysqlserver 'SERVER01' and<br/>  have a root password of 'fred'. The<br/>  server can be either the Computer Name<br/>  (found in Control<br/>  Panel/System/Computer Name), or<br/>  alternatively it can be the IP<br/>  Address. NB. Make sure that you test<br/>  this connection before continuing with<br/>  this explanation.</p></li><br/>  <li><p>open your VS.NET project</p></li><br/>  <li><p>go to server explorer</p></li><br/>  <li><p>right-click on 'Data Connections'</p></li><br/>  <li><p>select 'Add Connection'</p></li><br/>  <li><p>In DataLink Properties, go to the provider tab and select "Microsoft OLE<br/>  DB Provider For ODBC drivers"</p></li><br/>  <li><p>Click Next</p></li><br/>  <li><p>If you previously created an ODBC data source then you could just select<br/>  that. The disadvantage of this is that<br/>  when you install your project<br/>  application on the client machine, the<br/>  same data source needs to be there. I<br/>  prefer to use a connection string.<br/>  This should look something like:</p></li><br/>  </ul><br/>  <br/>  <p>DSN=AADSN;DESC=MySQL ODBC 3.51 Driver<br/>  DSN;DATABASE=noddy;SERVER=SERVER01;UID=root;PASSWORD=fred;PORT=3306;SOCKET=;OPTION=11;STMT=;</p><br/>  <br/>  <p>If you omit the password from the<br/>  connection string then you must make<br/>  sure that the datasource you created<br/>  (AADSN) contains a password. I am not<br/>  going to describe what these mean, you<br/>  can look in the documentation for<br/>  myodbc for that, just ensure that you<br/>  get a "Connection Succeeded" message<br/>  when you test the datasource.</p><br/></blockquote><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      MEDIAWIKI INTEGR
+    </pattern>
+    <template>
+<![CDATA[<p><a href="http://insites.ingenesis.net/2008/08/17/wordpress-bbpress-mediawiki/" rel="nofollow">This tutorial</a> should get you on the right track to integrating Mediawiki into your WordPress install.  It's certainly going to be a <em>lot</em> easier than hacking WordPress to have wiki features, especially with the sort of granular permissions you're describing.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      LIMIT A QUERI TO ONE RECORD IMPROV PERFORM
+    </pattern>
+    <template>
+<![CDATA[<p>If the column has </p><br/><br/><p><strong>a unique index: no,</strong> it's no faster</p><br/><br/><p><strong>a non-unique index: maybe,</strong> because it will prevent sending any additional rows beyond the first matched, if any exist</p><br/><br/><p><strong>no index: sometimes</strong></p><br/><br/><ul><br/><li>if 1 or more rows match the query, <strong>yes</strong>, because the full table scan will be halted after the first row is matched.</li><br/><li>if no rows match the query, <strong>no</strong>, because it will need to complete a full table scan</li><br/></ul><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      BUILD AN APPLIC USE A SQL SERVER DATABAS FILE ( MDF ) BE A TERRIBL IDEA
+    </pattern>
+    <template>
+<![CDATA[<p>I've long since completed the project which prompted this question, but recently I've had another project come along with very minor data requirements, so I spent some more time experimenting with this.</p><br/><br/><p>I had assumed that Sql Server Express required licensing fees to deploy, but this is not in fact the case. According to Microsoft's website, you are free to use it with certain restrictions:</p><br/><br/><ul><br/><li>Maximum database size: 4 GB</li><br/><li>Maximum memory used: 1 GB</li><br/><li>Maximum CPUs used: 1 (complete procs, not cores)</li><br/></ul><br/><br/><p>Sql Server Compact is a bad idea for web applications because it requires a hack to make it work, and it isn't built for the concurrent access you'd need for the web. But if your application can fit within the modest limitations of Sql Server Express, it works pretty well. And since it speaks regular T-SQL like its larger siblings, you can use Linq to SQL with it.</p><br/><br/><p>I hear that <a href="http://twitter.com/migueldeicaza/status/2368465000" rel="nofollow">Linq to Sql support is now in the Mono trunk</a> for the 2.6 release, so L2S' tight-coupling to Sql Server will likely be a moot point in the near future. I will either end up porting my code to use Mono's superior Linq to Sql implementation on the db of my choice, or go <a href="http://subsonicproject.com/" rel="nofollow">another route entirely</a> (SubSonic has improved by leaps and bounds since I last tried it). But for the time being, Sql Server Express is a valid choice for very small database-driven apps.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      SOFTWAR ANI SUGGEST TO OVERSE MY MYSQL REPLIC SERVER
+    </pattern>
+    <template>
+<![CDATA[<p>To monitor the servers we use the free <a href="http://www.maatkit.org/tools.html" rel="nofollow">tools from Maatkit</a> ... simple, yet efficient.</p><br/><br/><p>The binary replication is available in 5.1, so I guess you've got some balls. We still use 5.0 and it works OK, but of course we had our share of issues with it.</p><br/><br/><p>We use a Master-Master replication with a MySql Proxy as a load-balancer in front, and to prevent it from having errors:</p><br/><br/><ul><br/><li>we removed all unique indexes</li><br/><li>for the few cases where we really needed unique constraints we made sure we used REPLACE instead of INSERT (MySql Proxy can be used to guard for proper usage ... it can even rewrite your queries)</li><br/><li>scheduled scripts doing intensive reports are always accessing the same server (not the load-balancer) ... so that dangerous operations are replicated safely</li><br/></ul><br/><br/><p>Yeah, I know it sounds simple and stupid, but it solved 95% of all the problems we had.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      MYSQL QUERI
+    </pattern>
+    <template>
+<![CDATA[<p>This is a great overview of how to cache queries in MySQL:</p><br/><br/><ul><br/><li><a href="http://www.petefreitag.com/item/390.cfm" rel="nofollow">The MySQL Query Cache</a></li><br/></ul><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      COLUMN VALU IN MYSQL
+    </pattern>
+    <template>
+<![CDATA[<p>I just had to deal with the same and I'll summarize my findings.</p><br/><br/><ol><br/><li><p>The <code>UPDATE table SET X=Y, Y=X</code> approach obviously doesn't work, as it'll just set both values to Y.</p></li><br/><li><p>Here's a method that uses a temporary variable. Thanks to Antony from the comments of <a href="http://beerpla.net/2009/02/17/swapping-column-values-in-mysql/" rel="nofollow">http://beerpla.net/2009/02/17/swapping-column-values-in-mysql/</a> for the "IS NOT NULL" tweak. Without it, the query works unpredictably. See the table schema at the end of the post. This method doesn't swap the values if one of them is NULL. Use method #3 that doesn't have this limitation.</p><br/><br/><p><code>UPDATE swap_test SET x=y, y=@temp WHERE (@temp:=x) IS NOT NULL;</code></p></li><br/><li><p>This method was offered by Dipin in, yet again, the comments of <a href="http://beerpla.net/2009/02/17/swapping-column-values-in-mysql/" rel="nofollow">http://beerpla.net/2009/02/17/swapping-column-values-in-mysql/</a>. I think it's the most elegant and clean solution. It works with both NULL and non-NULL values.</p><br/><br/><p><code>UPDATE swap_test SET x=(@temp:=x), x = y, y = @temp;</code></p></li><br/><li><p>Another approach I came up with that seems to work:</p><br/><br/><p><code>UPDATE swap_test s1, swap_test s2 SET s1.x=s1.y, s1.y=s2.x WHERE s1.id=s2.id;</code></p></li><br/></ol><br/><br/><p>Essentially, the 1st table is the one getting updated and the 2nd one is used to pull the old data from.<br/><br/>Note that this approach requires a primary key to be present.</p><br/><br/><p>This is my test schema:</p><br/><br/><pre><code>CREATE TABLE `swap_test` (<br/>  `id` int(11) NOT NULL AUTO_INCREMENT,<br/>  `x` varchar(255) DEFAULT NULL,<br/>  `y` varchar(255) DEFAULT NULL,<br/>  PRIMARY KEY (`id`)<br/>) ENGINE=InnoDB;<br/><br/>INSERT INTO `swap_test` VALUES ('1', 'a', '10');<br/>INSERT INTO `swap_test` VALUES ('2', NULL, '20');<br/>INSERT INTO `swap_test` VALUES ('3', 'c', NULL);<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      SEVER FIELD INTO ONE WITH SQL
+    </pattern>
+    <template>
+<![CDATA[<blockquote><br/>  <p>Sergio del Amo:</p><br/>  <br/>  <blockquote><br/>    <p>However, I am not getting the pages without tags. I guess i need to write my query with left outer joins.</p><br/>  </blockquote><br/></blockquote><br/><br/><pre><code>SELECT pagetag.id, page.name, group_concat(tag.name) FROM <br/>(page LEFT JOIN pagetag on page.id = pagetag.pageid) <br/>LEFT JOIN tag on pagetag.tagid = tag.id<br/>group by page.id;<br/></code></pre><br/><br/><p>Not a very pretty query, but should give you what you want - pagetag.id and group_concat(tag.name) will be null for page 4 in the example you've posted above, but the page shall appear in the results.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      MANAG SQL QUERI
+    </pattern>
+    <template>
+<![CDATA[<p>The best course of action for you will depend on how you are approaching your data access. There are three approaches you can take:</p><br/><br/><ul><br/><li>Use stored procedures</li><br/><li>Keep the queries in the code (but put all your queries into functions and fix everything to use PDO for parameters, as mentioned earlier)</li><br/><li>Use an ORM tool</li><br/></ul><br/><br/><p>If you want to pass your own raw SQL to the database engine then stored procedures would be the way to go if all you want to do is get the raw SQL out of your PHP code but keep it relatively unchanged. The stored procedures vs raw SQL debate is a bit of a holy war, but K. Scott Allen makes an excellent point - albeit a throwaway one - in an article about <a href="http://odetocode.com/blogs/scott/archive/2008/02/02/11737.aspx" rel="nofollow">versioning databases</a>: </p><br/><br/><blockquote><br/>  <p>Secondly, stored procedures have fallen out of favor in my eyes. I came from the WinDNA school of indoctrination that said stored procedures should be used all the time. Today, I see stored procedures as an API layer for the database. This is good if you need an API layer at the database level, but I see lots of applications incurring the overhead of creating and maintaining an extra API layer they don't need. In those applications stored procedures are more of a burden than a benefit.</p><br/></blockquote><br/><br/><p>I tend to lean towards not using stored procedures. I've worked on projects where the DB has an API exposed through stored procedures, but stored procedures can impose some limitations of their own, and those projects have <em>all</em>, to varying degrees, used dynamically generated raw SQL in code to access the DB. </p><br/><br/><p>Having an API layer on the DB gives better delineation of responsibilities between the DB team and the Dev team at the expense of some of the flexibility you'd have if the query was kept in the code, however PHP projects are less likely to have sizable enough teams to benefit from this delineation.</p><br/><br/><p>Conceptually, you should probably have your database versioned. Practically speaking, however, you're far more likely to have just your code versioned than you are to have your database versioned. You are likely to be changing your queries when you are making changes to your code, but if you are changing the queries in stored procedures stored against the database then you probably won't be checking those in when you check the code in and you lose many of the benefits of versioning for a significant area of your application.</p><br/><br/><p>Regardless of whether or not you elect not to use stored procedures though, you should at the very least ensure that each database operation is stored in an independent function rather than being embedded into each of your page's scripts - essentially an API layer for your DB which is maintained and versioned with your code. If you're using stored procedures, this will effectively mean you have two API layers for your DB, one with the code and one with the DB, which you may feel unnecessarily complicates things if your project does not have separate teams. I certainly do.</p><br/><br/><p>If the issue is one of code neatness, there are ways to make code with SQL jammed in it more presentable, and the UserManager class shown below is a good way to start - the class only contains queries which relate to the 'user' table, each query has its own method in the class and the queries are indented into the prepare statements and formatted as you would format them in a stored procedure.</p><br/><br/><pre><code>// UserManager.php:<br/><br/>class UserManager<br/>{<br/>    function getUsers()<br/>    {<br/>        $pdo = new PDO(...);<br/>        $stmt = $pdo-&gt;prepare('<br/>            SELECT       u.userId as id,<br/>                         u.userName,<br/>                         g.groupId,<br/>                         g.groupName<br/>            FROM         user u<br/>            INNER JOIN   group g<br/>            ON           u.groupId = g.groupId<br/>            ORDER BY     u.userName, g.groupName<br/>        ');<br/>        // iterate over result and prepare return value<br/>    }<br/><br/>    function getUser($id) {<br/>        // db code here<br/>    }<br/>}<br/><br/>// index.php:<br/>require_once("UserManager.php");<br/>$um = new UserManager;<br/>$users = $um-&gt;getUsers();<br/>foreach ($users as $user) echo $user['name'];<br/></code></pre><br/><br/><p>However, if your queries are quite similar but you have huge numbers of permutations in your query conditions like complicated paging, sorting, filtering, etc, an Object/Relational mapper tool is probably the way to go, although the process of overhauling your existing code to make use of the tool could be quite complicated.</p><br/><br/><p>If you decide to investigate ORM tools, you should look at <a href="http://propel.phpdb.org/" rel="nofollow">Propel</a>, the ActiveRecord component of <a href="http://yiiframework.com" rel="nofollow">Yii</a>, or the king-daddy PHP ORM, <a href="http://www.doctrine-project.org/" rel="nofollow">Doctrine</a>. Each of these gives you the ability to programmatically build queries to your database with all manner of complicated logic. Doctrine is the most fully featured, allowing you to template your database with things like the <a href="http://www.developersdex.com/gurus/articles/112.asp" rel="nofollow">Nested Set tree pattern</a> out of the box.</p><br/><br/><p>In terms of performance, stored procedures are the fastest, but generally not by much over raw sql. ORM tools can have a significant performance impact in a number of ways - inefficient or redundant querying, huge file IO while loading the ORM libraries on each request, dynamic SQL generation on each query... all of these things can have an impact, but the use of an ORM tool can drastically increase the power available to you with a much smaller amount of code than creating your own DB layer with manual queries.</p><br/><br/><p><a href="http://stackoverflow.com/questions/37791/how-do-you-manage-sql-queries#38053">Gary Richardson</a> is absolutely right though, if you're going to continue to use SQL in your code you should always be using PDO's prepared statements to handle the parameters regardless of whether you're using a query or a stored procedure. The sanitisation of input is performed for you by PDO.</p><br/><br/><pre><code>// optional<br/>$attrs = array(PDO::ATTR_PERSISTENT =&gt; true);<br/><br/>// create the PDO object<br/>$pdo = new PDO("mysql:host=localhost;dbname=test", "user", "pass", $attrs);<br/><br/>// also optional, but it makes PDO raise exceptions instead of <br/>// PHP errors which are far more useful for debugging<br/>$pdo-&gt;setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);<br/><br/>$stmt = $pdo-&gt;prepare('INSERT INTO venue(venueName, regionId) VALUES(:venueName, :regionId)');<br/>$stmt-&gt;bindValue(":venueName", "test");<br/>$stmt-&gt;bindValue(":regionId", 1);<br/><br/>$stmt-&gt;execute();<br/><br/>$lastInsertId = $pdo-&gt;lastInsertId();<br/>var_dump($lastInsertId);<br/></code></pre><br/><br/><p>Caveat: assuming that the ID is 1, the above script will output 'string(1) "1"'. PDO->lastInsertId() returns the ID as a string regardless of whether the actual column is an integer or not. This will probably never be a problem for you as PHP performs casting of strings to integers automatically.</p><br/><br/><p>The following will output 'bool(true)':</p><br/><br/><pre><code>// regular equality test<br/>var_dump($lastInsertId == 1); <br/></code></pre><br/><br/><p>but if you have code that is expecting the value to be an integer, like <a href="http://php.net/manual/en/function.is-int.php" rel="nofollow">is_int</a> or PHP's <a href="http://au.php.net/manual/en/language.operators.comparison.php" rel="nofollow">"is really, truly, 100% equal to"</a> operator:</p><br/><br/><pre><code>var_dump(is_int($lastInsertId));<br/>var_dump($lastInsertId === 1);<br/></code></pre><br/><br/><p>you could run into some issues.</p><br/><br/><p><strong>Edit:</strong> Some good discussion on stored procedures <a href="http://stackoverflow.com/questions/83419/stored-procedures-a-no-go-in-the-phpmysql-world#84294">here</a></p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      X WORD FROM A TEXT FIELD IN MYSQL
+    </pattern>
+    <template>
+<![CDATA[<p>You can do it all in the query using SUBSTRING_INDEX</p><br/><br/><pre><code>CONCAT_WS(<br/>' ',<br/>-- 20 words before<br/>TRIM(<br/>    SUBSTRING_INDEX(<br/>        SUBSTRING(field, 1, INSTR(field, 'word') - 1 ),<br/>        ' ',<br/>        -20<br/>    )<br/>),<br/>-- your word<br/>'word',<br/>-- 20 words after<br/>TRIM(<br/>    SUBSTRING_INDEX(<br/>        SUBSTRING(field, INSTR(field, 'word') + LENGTH('word') ),<br/>        ' ',<br/>        20<br/>    )<br/>)<br/></code></pre><br/><br/><p>)</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      MYSQL CONNECTOR FOR C + + OR C
+    </pattern>
+    <template>
+<![CDATA[<p><a href="http://jan.kneschke.de/2008/9/9/async-mysql-queries-with-c-api" rel="nofollow">http://jan.kneschke.de/2008/9/9/async-mysql-queries-with-c-api</a><br/><a href="http://forums.mysql.com/read.php?45,183339,183339" rel="nofollow">http://forums.mysql.com/read.php?45,183339,183339</a><br/>enjoy</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      FIELD IN MYSQL SELECT
+    </pattern>
+    <template>
+<![CDATA[<pre><code>SELECT Field1, Field2, 'Value' Field3 FROM Table<br/></code></pre><br/><br/><p>or for clarity</p><br/><br/><pre><code>SELECT Field1, Field2, 'Value' AS Field3 FROM Table<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      A LIVE MYSQL DB INTO A LOCAL TEST DB ON DEMAND WITHOUT SSH
+    </pattern>
+    <template>
+<![CDATA[<p>Since you can access your database remotely, you can use mysqldump from your windows machine to fetch the remote database. From commandline:</p><br/><br/><pre><code>cd "into mysql directory"<br/>mysqldump -u USERNAME -p -h YOUR_HOST_IP DATABASE_TO_MIRROR &gt;c:\backup\database.sql<br/></code></pre><br/><br/><p>The program will ask you for the database password and then generate a file c:\backup\database.sql that you can run on your windows machine to insert the data.</p><br/><br/><p>With a small database that should be fairly fast.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      PHONE NUMBER IN MYSQL
+    </pattern>
+    <template>
+<![CDATA[<p>This looks like a problem from the start.  Any kind of searching you do will require a table scan and we all know that's bad.</p><br/><br/><p>How about adding a column with a hash of the current phone numbers after stripping out all formatting characters.  Then you can at least index the hash values and avoid a full blown table scan.</p><br/><br/><p>Or is the amount of data small and not expected to grow much?<br/>Then maybe just sucking all the numbers into the client and running a search there.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      MYSQL IDE
+    </pattern>
+    <template>
+<![CDATA[<p>If your running on windows you should check out Toad for MySQL<br/><a href="http://www.quest.com/toad-for-mysql/" rel="nofollow">http://www.quest.com/toad-for-mysql/</a></p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      EXECUT PHP THAT IS STORE IN A MYSQL DATABAS
+    </pattern>
+    <template>
+<![CDATA[<p>You can use the <a href="http://nl.php.net/manual/en/function.eval.php" rel="nofollow">eval</a> command for this. I would recommend against this though, because there's a lot of pitfalls using this approach. Debugging is hard(er), it implies some security risks (bad content in the DB gets executed, uh oh).</p><br/><br/><p>See (blogpost by a random person) <a href="http://www.blog.highub.com/php-core/php-eval-is-evil/" rel="nofollow">Eval is Evil</a> for instance. Google for Eval is Evil, and you'll find a lot of examples why you should find another solution.</p><br/><br/><p><hr /></p><br/><br/><p>Addition: Another good article with some references to exploits is <a href="http://www.sitepoint.com/blogs/2005/02/27/eval-is-dead-long-live-eval/" rel="nofollow">this blogpost</a>. Refers to past vBulletin and phpMyAdmin exploits which were caused by improper Eval usage.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      OLE OBJECT FROM ACCESS TO MYSQL
+    </pattern>
+    <template>
+<![CDATA[<p>Ok so in the interests of airing my dirty code in public here what i came up with.<br /><br/>Note :  this is a hack designed to be used once and then thrown away.</p><br/><br/><p>This Method takes in a datarowview containing 1 row of data from the access table.  The Images are wrapped in OLE serialization,  im not entirely familiar with how this works but its how Microsoft apps allow any object to be embedded into something else. (eg images into Excel Cells).  I needed to remove the serialization junk around the image so i loaded the entire field as a Byte array and searched through it for 3 concurrent entries (FF D8 FF) which represent the beginning of the image data within the field.</p><br/><br/><pre><code>    Private Function GetImageFromRow(ByRef row As DataRowView, ByVal columnName As String) As Bitmap<br/>    Dim oImage As Bitmap = New Bitmap("c:\default.jpg")<br/>    Try<br/>        If Not IsDBNull(row(columnName)) Then<br/>            If row(columnName) IsNot Nothing Then<br/>                Dim mStream As New System.IO.MemoryStream(CType(row(columnName), Byte()))<br/>                If mStream.Length &gt; 0 Then<br/><br/>                    Dim b(Convert.ToInt32(mStream.Length - 1)) As Byte<br/>                    mStream.Read(b, 0, Convert.ToInt32(mStream.Length - 1))<br/><br/>                    Dim position As Integer = 0<br/><br/>                    For index As Integer = 0 To b.Length - 3<br/>                        If b(index) = &amp;HFF And b(index + 1) = &amp;HD8 And b(index + 2) = &amp;HFF Then<br/>                            position = index<br/>                            Exit For<br/>                        End If<br/>                    Next<br/><br/>                    If position &gt; 0 Then<br/>                        Dim jpgStream As New System.IO.MemoryStream(b, position, b.Length - position)<br/>                        oImage = New Bitmap(jpgStream)<br/>                    End If<br/>                End If<br/>            End If<br/>        End If<br/>    Catch ex As Exception<br/>        Throw New ApplicationException(ex.Message, ex)<br/>    End Try<br/>    Return oImage<br/>End Function<br/></code></pre><br/><br/><p>Then its a matter of pulling out this data into a bitmap.  So for each row in the access table i extract the bitmap and then update the corresponding MySQL entry.<br /><br/>It worked fine but im guessing i could have removed the serialisation stuff in a better way, perhaps theres an API to do it.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      LINQ WITH A MYSQL DATABAS ON MONO
+    </pattern>
+    <template>
+<![CDATA[<p>The only (free) linq provider for MySql is <a href="http://code2code.net/DB%5FLinq/" rel="nofollow">DbLinq</a>, and I believe it is a long way from production-ready.</p><br/><br/><p>There is also <a href="http://www.devart.com/mysqlnet/" rel="nofollow">MyDirect.Net</a> which is commercial, but I have heard mixed reviews of it's capability.</p><br/><br/><p>I've read that MySql will be implementing the Linq to Entities API for the 5.3 version of the .net connector, but I don't know if there's even a timeline for that. In fact, MySql has been totally silent about Entity Framework support for months.</p><br/><br/><p><hr /></p><br/><br/><p>Addendum: The latest release of the MySql Connector/Net 6.0 has support for the EF according to the release notes. I have no idea how stable/useful this is, so I'd love to hear from anybody who have tried it.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      RDM FOR C LANGUAG NEWBI
+    </pattern>
+    <template>
+<![CDATA[<p>You can use SQLite, MySQL, PostgreSQL, or any other DBMS with a C language binding.</p><br/><br/><ul><br/><li><a href="http://www.sqlite.org/quickstart.html" rel="nofollow">SQLite In 5 Minutes Or Less</a></li><br/><li><a href="http://dev.mysql.com/doc/refman/5.1/en/c.html" rel="nofollow">MySQL C API</a></li><br/><li><a href="http://www.postgresql.org/docs/8.1/static/libpq.html" rel="nofollow">PostgreSQL C API</a></li><br/></ul><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      SEE THE PROGRESS OF AN ALTER TABL STATEMENT IN MYSQL
+    </pattern>
+    <template>
+<![CDATA[<p>This is a pretty common request apparently - requested as far back as 2005 on <a href="http://bugs.mysql.com" rel="nofollow">bugs.mysql.com</a>. <br/>It exists in Oracle already, and is listed as useful, but <a href="http://bugs.mysql.com/bug.php?id=3926" rel="nofollow">"it is not a simple thing to do, so don't expect it to be<br/>implemented soon."</a>. Although that was 2005 :)</p><br/><br/><p>That said, the chap who asked the original question later released a <a href="http://jcole.us/blog/archives/2007/02/08/progress-in-mysql-process-list/" rel="nofollow">patch</a> for MySQL 5.0, backported to 4.1, which might help you out.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      UPDATE SELECT FROM A TABL IN ONE QUERI
+    </pattern>
+    <template>
+<![CDATA[<p>If you do not want/need to use a transaction, you could create a stored procedure that first updates the view count and then selects the values and return them to the user.</p><br/>]]>    </template>
+  </category>
+</aiml>

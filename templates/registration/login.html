@@ -8,6 +8,6 @@
     <form action="{% url login %}?next=/" method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <input type="submit" value="login" />
+        <input type="submit" value="Login" />
     </form>
 {% endblock %}

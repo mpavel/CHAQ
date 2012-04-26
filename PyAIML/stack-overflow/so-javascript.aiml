@@ -1,0 +1,1286 @@
+<?xml version="1.0" ?>
+<aiml version="1.0">
+  <meta content="SimpleAIMLGenerator" name="author"/>
+  <meta content="en" name="language"/>
+  <category>
+    <pattern>
+      FONT IN JAVASCRIPT
+    </pattern>
+    <template>
+<![CDATA[<p>I've seen it done in a kind of iffy, but pretty reliable way.  Basically, an element is set to use a specific font and a string is set to that element.  If the font set for the element does not exist, it takes the font of the parent element.  So, what they do is measure the width of the rendered string.  If it matches what they expected for the desired font as opposed to the derived font, it's present.</p><br/><br/><p>Here's where it came from:<br/><a href="http://ajaxian.com/archives/javascriptcss-font-detector" rel="nofollow">Javascript/CSS Font Detector (ajaxian.com; 12 Mar 2007)</a></p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      USTOM CLIENT SID VALID
+    </pattern>
+    <template>
+<![CDATA[<p>Try changing the argument names to "sender" and "args".  And, after you have it working, switch the call over to ScriptManager.RegisterClientScriptBlock, regardless of AJAX use.</p>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      PL QUOT HOW DO I DELIMIT A DATABOUND JAVASCRIPT STRING PARAMET IN ASP.NET
+    </pattern>
+    <template>
+<![CDATA[<p>I had recently similar problem and the only way to solve it was to use plain old HTML codes for single (<code>&amp;#39;</code>) and double quotes (<code>&amp;#34;</code>).  </p><br/><br/><p>Source code was total mess of course but it worked.</p><br/><br/><p>Try</p><br/><br/><pre><code>&lt;a id="aShowHide" onclick='ToggleDisplay(&amp;#34;&lt;%# DataBinder.Eval(Container.DataItem, "JobCode") %&gt;&amp;#34;);'&gt;Show/Hide&lt;/a&gt;<br/></code></pre><br/><br/><p>or</p><br/><br/><pre><code>&lt;a id="aShowHide" onclick='ToggleDisplay(&amp;#39;&lt;%# DataBinder.Eval(Container.DataItem, "JobCode") %&gt;&amp;#39;);'&gt;Show/Hide&lt;/a&gt;<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      THE BROWSER SEE CSS AND JAVASCRIPT CHANG
+    </pattern>
+    <template>
+<![CDATA[<p>I found that if you append the last modified timestamp of the file onto the end of the URL the browser will request the files when it is modified. For example in PHP:</p><br/><br/><pre><code>function urlmtime($url) {<br>   $parsed_url = parse_url($url);<br>   $path = $parsed_url['path'];<br>   if ($path[0] == "/") {<br>       $filename = $_SERVER['DOCUMENT_ROOT'] . "/" . $path;<br>   } else {<br>       $filename = $path;<br>   }<br>   if (!file_exists($filename)) {<br>       // If not a file then use the current time<br>       $lastModified = date('YmdHis');<br>   } else {<br>       $lastModified = date('YmdHis', filemtime($filename));<br>   }<br>   if (strpos($url, '?') === false) {<br>       $url .= '?ts=' . $lastModified;<br>   } else {<br>       $url .= '&amp;ts=' . $lastModified;<br>   }<br>   return $url;<br>}<br><br>function include_css($css_url, $media='all') {<br>   // According to Yahoo, using link allows for progressive <br>   // rendering in IE where as @import url($css_url) does not<br>   echo '&lt;link rel="stylesheet" type="text/css" media="' .<br>      $media . '" href="' .<br>      urlmtime($css_url) . '"&gt;'."\n";<br>}<br><br>function include_javascript($javascript_url) {<br>   echo '&lt;script type="text/javascript" src="' .<br>     urlmtime($javascript_url) .<br>     '"&gt;&lt;/script&gt;'."\n";<br>}<br></code></pre>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      COLOR IN JAVASCRIPT
+    </pattern>
+    <template>
+<![CDATA[<p>In general, CSS properties are converted to JavaScript by making them camelCase without any dashes. So "background-color" becomes "backgroundColor".</p><br/><br/><pre><code>function setColor(element, color)<br>{<br>    element.style.backgroundColor = color;<br>}<br></code></pre>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      TAB KEY IN TEXT BOX
+    </pattern>
+    <template>
+<![CDATA[<p>Even if you capture the keydown/keyup event, those are the only events that the tab key fires, you still need some way to prevent the default action, moving to the next item in the tab order, from occurring.</p><br/><br/><p>In Firefox you can call the "preventDefault()" method on the event object passed to your event handler. In IE, you have to return false from the event handle. The JQuery library provides a preventDefault method on it's event object that works in IE and FF.</p><br/><br/><pre><code>&lt;body&gt;<br/>&lt;input type="text" id="myInput"&gt;<br/>&lt;script type="text/javascript"&gt;<br/>    var myInput = document.getElementById("myInput");<br/>    if(myInput.addEventListener ) {<br/>        myInput.addEventListener('keydown',this.keyHandler,false);<br/>    } else if(myInput.attachEvent ) {<br/>        myInput.attachEvent('onkeydown',this.keyHandler); /* damn IE hack */<br/>    }<br/><br/>    function keyHandler(e) {<br/>        var TABKEY = 9;<br/>        if(e.keyCode == TABKEY) {<br/>            this.value += "    ";<br/>            if(e.preventDefault) {<br/>                e.preventDefault();<br/>            }<br/>            return false;<br/>        }<br/>    }<br/>&lt;/script&gt;<br/>&lt;/body&gt;<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      MAC ADDRESS IN JAVASCRIPT
+    </pattern>
+    <template>
+<![CDATA[<p>I concur with all the previous answers that it would be a privacy/security vulnerability if you would be able to do this directly from Javascript. There are two things I can think of:</p><br/><br/><ul><br/><li>Using Java (with a signed applet)</li><br/><li>Using signed Javascript, which in FF (and Mozilla in general) gets higher privileges than normal JS (but it is fairly complicated to set up)</li><br/></ul><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      TROUBLESHOOT TOOL IN IE
+    </pattern>
+    <template>
+<![CDATA[<p>You might find <a href="http://getfirebug.com/lite.html" rel="nofollow">Firebug Lite</a> useful for that.  </p><br/><br/><p>Its bookmarklet should be especially useful when debugging on a user's machine.</p>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      SP.NET FUNCTION FROM JAVASCRIPT
+    </pattern>
+    <template>
+<![CDATA[<p>Well, if you don't want to do it using AJAX or any other way and just want a normal ASP.NET postback to happen, here is how you do it (without using any other libraries):</p><br/><br/><p><em>It is a little tricky though... :)</em></p><br/><br/><p>i. In your code file (assuming you are using C# and .NET 2.0 or later) add the following Interface to your Page Class to make it look like</p><br/><br/><pre><code>public partial class Default : System.Web.UI.Page, IPostBackEventHandler{}<br/></code></pre><br/><br/><p>ii. This should add (using Tab-Tab) this function to your code file:</p><br/><br/><pre><code>public void RaisePostBackEvent(string eventArgument) { }<br/></code></pre><br/><br/><p>iii. In your onclick event in Javascript write the following code:</p><br/><br/><pre><code>var pageId = '&lt;%=  Page.ClientID %&gt;';<br/>__doPostBack(pageId, argumentString);<br/></code></pre><br/><br/><p>This will call the 'RaisePostBackEvent' method in your code file with the 'eventArgument' as the 'argumentString' you passed from the Javascript. Now, you can call any other event you like.</p><br/><br/><p>P.S: That is 'underscore-underscore-doPostBack' ... And, there should be no space in that sequence... Somehow the WMD does not allow me to write to underscores followed by a character!</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      TURN A STRING OF HTML INTO A DOM OBJECT IN A FIREFOX EXTENS
+    </pattern>
+    <template>
+<![CDATA[<P>Ajaxian actually had a <A href="http://ajaxian.com/archives/introducing-html-into-an-iframe-and-getting-it-back" rel="nofollow">post on inserting / retrieving html from an iframe</A> today. You can probably use the js snippet they have posted there.</P><br/><P>As for handling closing of a browser / tab, you can attach to the onbeforeunload (<A href="http://msdn.microsoft.com/en-us/library/ms536907(VS.85).aspx" rel="nofollow">http://msdn.microsoft.com/en-us/library/ms536907(VS.85).aspx</A>) event and do whatever you need to do.</P>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      DEBUG TOOL FOR JAVASCRIPT XULRUNN DEVELOP
+    </pattern>
+    <template>
+<![CDATA[<p>Yeah, there's no decent debugger for XUL+JS development currently. But in my several-year experience I could do well without it. Here's how:</p><br/><br/><ul><br/><li>Use logging. Either implement your own logging utilities, or a common one (e.g. <a href="https://wiki.mozilla.org/Labs/JS_Modules#Logging" rel="nofollow">https://wiki.mozilla.org/Labs/JS_Modules#Logging</a> although I haven't used that one yet; see also <a href="http://developer.mozilla.org/en/docs/Using_JavaScript_code_modules" rel="nofollow">http://developer.mozilla.org/en/docs/Using_JavaScript_code_modules</a>)</li><br/><li>When writing your code, use the JS Shell and the Live XUL Editor (from the <a href="https://addons.mozilla.org/en-US/firefox/addon/7434" rel="nofollow">Extension developer's extension</a>) along with the DOM inspector for prototyping.</li><br/><li><a href="http://developer.mozilla.org/en/docs/Setting_up_extension_development_environment" rel="nofollow">Set up a profile for development</a>, then debug by tweaking the source code (adding logging and alert()s :) and reloading the affected window.</li><br/><li>When possible, write unit tests using the <a href="http://developer.mozilla.org/en/docs/Mozilla_automated_testing" rel="nofollow">available frameworks</a> (they're not widely used with code outside the Mozilla tree currently)</li><br/></ul><br/><br/><p>Hopefully Komodo (Mozilla-based editor/IDE, went open-source last year) will grow tools for debugging Mozilla code eventually.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      AUTH IN A FIREFOX 3 BOOKMARKLET
+    </pattern>
+    <template>
+<![CDATA[<p>Can you sniff the traffic to find what's actually being sent?  Is it sending any auth data at all and it's incorrect or being presented in a form the server doesn't like, or is it never being sent by firefox at all?</p>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      KEYBOARD EVENT PRIMER ( OR RATHER HELP ME WITH MY CUSTOM DROPDOWN )
+    </pattern>
+    <template>
+<![CDATA[<p>What you need to do is attach event listeners to the <code>div</code> with <code>id="results"</code>. You can do this by adding <code>onkeyup</code>, <code>onkeydown</code>, etc. attributes to the <code>div</code> when you create it or you can attach these using JavaScript.</p><br/><br/><p>My recommendation would be that you use an AJAX library like <a href="http://developer.yahoo.com/yui/" rel="nofollow">YUI</a>, <a href="http://jquery.com/" rel="nofollow">jQuery</a>, <a href="http://www.prototypejs.org/" rel="nofollow">Prototype</a>, etc. for two reasons:</p><br/><br/><ol><br/><li>It sounds like you are trying to create an <a href="http://developer.yahoo.com/ypatterns/pattern.php?pattern=autocomplete" rel="nofollow">Auto Complete</a> control which is something most AJAX libaries should provide. If you can use an existing component you'll save yourself a lot of time.</li><br/><li>Even if you don't want to use the control provided by a library, all libraries provide event libraries that help to hide the differences between the event APIs provided by different browsers.</li><br/></ol><br/><br/><p><a href="http://www.dustindiaz.com/yahoo-event-utility/" rel="nofollow">Forget addEvent, use Yahoo!'s Event Utility</a> provides a good summary of what an event library should provide for you. I'm pretty sure that the event libraries provided by jQuery, Prototype, et. al. provide similar features. </p><br/><br/><p>If that article goes over your head have a look at <a href="http://developer.yahoo.com/yui/event/index.html" rel="nofollow">this documentation</a> first and then re-read the original article (I found the article made much more sense after I'd used the event library).</p><br/><br/><p>A couple of other things:</p><br/><br/><ul><br/><li>Using JavaScript gives you much more control than writing <code>onkeyup</code> etc. attributes into your HTML. Unless you want to do something <em>really simple</em> I would use JavaScript.</li><br/><li>If you write your own code to handle keyboard events a <a href="http://www.cambiaresearch.com/c4/702b8cd1-e5b0-42e6-83ac-25f0306e3e25/Javascript-Char-Codes-Key-Codes.aspx" rel="nofollow">good key code reference</a> is really handy.</li><br/></ul><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      LIST INTO COLUMN
+    </pattern>
+    <template>
+<![CDATA[<p>So I dug up this article from A List Apart <a href="http://www.alistapart.com/articles/multicolumnlists" rel="nofollow">CSS Swag: Multi-Column Lists</a>.  I ended up using the first solution, it's not the best but the others require either using complex HTML that can't be generated dynamically, or creating a lot of custom classes, which could be done but would require loads of in-line styling and possibly a huge page.</p><br/><br/><p>Other solutions are still welcome though.</p>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      A CSS SWITCHER IN ASP.NET
+    </pattern>
+    <template>
+<![CDATA[<P>In Asp.net 3.5, you should be able to set up the Link tag in the header as a server tag. Then in the codebehind you can set the href property for the link element, based on a cookie value, querystring, date, etc.</P><br/><P>In your aspx file:</P><PRE><CODE>&lt;head&gt;<br/>  &lt;link id="linkStyles" rel="stylesheet" type="text/css" runat="server" /&gt;<br/>&lt;/head&gt;<br/></CODE></PRE><br/><P>And in the Code behind:</P><PRE><CODE>protected void Page_Load(object sender, EventArgs e) {<br/>  string stylesheetAddress = // logic to determine stylesheet<br/>  linkStyles.Href = stylesheetAddress;<br/>}<br/></CODE></PRE>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      POST AND THEN REDIRECT TO AN EXTERN URL FROM ASP.NET
+    </pattern>
+    <template>
+<![CDATA[<p>Here's I solved this problem today.  I started from <a href="http://www.c-sharpcorner.com/UploadFile/desaijm/ASP.NetPostURL11282005005516AM/ASP.NetPostURL.aspx" rel="nofollow">this article</a> on C# Corner, but found the example - while technically sound - a little incomplete.  Everything he said was right, but I needed to hit a few external sites to piece this together to work exactly as I wanted.</p><br/><br/><p>It didn't help that the user was not technically submitting a form at all; they were clicking a link to go to our support center, but to log them in an http post had to be made to the support center's site.</p><br/><br/><p>This solution involves using HttpContext.Current.Response.Write() to write the data for the form, then using a bit of Javascript on the </p><br/><br/><pre><code>&lt;body onload=""&gt; <br></code></pre><br/><br/><p>method to submit the form to the proper URL.</p><br/><br/><p>When the user clicks on the Support Center link, the following method is called to write the response and redirect the user:</p><br/><br/><pre><code>public static void PassthroughAuthentication()<br>{<br><br>    System.Web.HttpContext.Current.Response.Write("&lt;body <br>    onload=document.forms[0].submit();window.location=\"Home.aspx\";&gt;");<br><br>    System.Web.HttpContext.Current.Response.Write("&lt;form name=\"Form\" <br>    target=_blank method=post <br>    action=\"https://external-url.com/security.asp\"&gt;");<br><br>    System.Web.HttpContext.Current.Response.Write(string.Format("&lt;input <br>       type=hidden name=\"cFName\" value=\"{0}\"&gt;", "Username"));<br><br>    System.Web.HttpContext.Current.Response.Write("&lt;/form&gt;");<br>    System.Web.HttpContext.Current.Response.Write("&lt;/body&gt;");<br>}<br></code></pre><br/><br/><p>The key to this method is in that onload bit of Javascript, which , when the body of the page loads, submits the form and then redirects the user back to my own Home page.  The reason for that bit of hoodoo is that I'm launching the external site in a new window, but don't want the user to resubmit the hidden form if they refresh the page.  Plus that hidden form pushed the page down a few pixels which got on my nerves.</p><br/><br/><p>I'd be very interested in any cleaner ideas anyone has on this one.</p><br/><br/><p>Eric Sipple</p>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      LENGTH OF JAVASCRIPT ASSOCI ARRAY
+    </pattern>
+    <template>
+<![CDATA[<p>The most robust answer (i.e. that captures the intent of what you're trying to do while causing the fewest bugs) would be:</p><br/><br/><pre><code>Object.size = function(obj) {<br/>    var size = 0, key;<br/>    for (key in obj) {<br/>        if (obj.hasOwnProperty(key)) size++;<br/>    }<br/>    return size;<br/>};<br/><br/>// Get the size of an object<br/>var size = Object.size(myArray);<br/></code></pre><br/><br/><p>There's a sort of convention in JavaScript that you don't add things to Object.prototype, because it can break enumerations in various libraries. Adding methods to Object is usually safe, though.</p>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      JAVASCRIPT TO RUN WHEN MODALPOPUPEXTEND IS SHOWN
+    </pattern>
+    <template>
+<![CDATA[<p>hmmm... I'm <em>pretty sure</em> that there's a shown event for the MPE... this is off the top of my head, but I think you can add an event handler to the shown event on page_load</p><br/><br/><pre><code>function pageLoad()<br>{<br>    var popup = $find('ModalPopupClientID');<br>    popup.add_shown(SetFocus);<br>}<br><br>function SetFocus()<br>{<br>    $get('TriggerClientId').focus();<br>}<br></code></pre><br/><br/><p>i'm not sure tho if this will help you with calling it from the server side tho</p>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      TEXT FROM A DROP DOWN BOX
+    </pattern>
+    <template>
+<![CDATA[<p>Based on your example HTML code, here's one way to get the displayed text of the currently selected option:</p><br/><br/><pre><code>var skillsSelect = document.getElementById("newSkill");<br/>var selectedText = skillsSelect.options[skillsSelect.selectedIndex].text;<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      IN CLOSUR STYLE
+    </pattern>
+    <template>
+<![CDATA[<p>Both cases will execute the function, the only real difference is what the return value of the expression may be, and what the value of "this" will be inside the function.</p><br/><br/><p>Basically behaviour of</p><br/><br/><pre><code>new expression<br></code></pre><br/><br/><p>Is effectively equivalent to</p><br/><br/><pre><code>var tempObject = {};<br>var result = expression.call(tempObject);<br>if (result is not an object)<br>    result = tempObject;<br></code></pre><br/><br/><p>Although of course tempObject and result are transient values you can never see (they're implementation details in the interpreter), and there is no JS mechanism to do the "is not an object" check.</p><br/><br/><p>Broadly speaking the "new function() { .. }" method will be slower due to the need to create the this object for the constructor.</p><br/><br/><p>That said this should be not be a real difference as object allocation is not slow, and you shouldn't be using such code in hot code (due to the cost of creating the function object and associated closure).</p><br/><br/><p>Edit: one thing i realised that i missed from this is that the <code>tempObject</code> will get <code>expression</code>s prototype, eg. (before the <code>expression.call</code>) <code>tempObject.__proto__ = expression.prototype</code></p>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      GRAPH JAVASCRIPT LIBRARI
+    </pattern>
+    <template>
+<![CDATA[<p><a href="http://code.google.com/p/flot/" rel="nofollow">Flot</a> can create some really nice looking charts. It's a JavaScript library rather than a service like Google Charts. It does require jQuery though.</p>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      JAVASCRIPT ENABL DISABL RADIO BUTTON
+    </pattern>
+    <template>
+<![CDATA[<p>To get FF to mimic IE's behavior when using the keyboard, you can use the keyup event on the select box. In your example (I am not a fan of attaching event handlers this way, but that's another topic), it would be like this:</p><br/><br/><pre><code>&lt;select name="user" id="selUser" onchange="javascript:SetLocationOptions()" onkeyup="javascript:SetLocationOptions()"&gt;<br></code></pre>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      TYLE DO YOU USE FOR CREAT AN CLASS IN JAVASCRIPT
+    </pattern>
+    <template>
+<![CDATA[<p>Assigning functions to the prototype is better (for public methods) because all instances of the class will share the same copy of the method. If you assign the function inside the constructor as in the second example, every time you create a new instance, the constructor creates a new copy of the length function and assigns it to just that one instance.</p><br/><br/><p>However this latter technique is useful if you <em>want</em> each copy to have it's own copy, the main use of that being to do private/privileges methods which have access to private variables declared inside the constructor and inherited via the closure mechanism.</p><br/><br/><p>Douglas Crockford has a good <a href="http://javascript.crockford.com/private.html" rel="nofollow">summary</a>.</p>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      THAT LIST AVAIL JAVASCRIPT EVENT
+    </pattern>
+    <template>
+<![CDATA[<p>W3Schools seems to have a good Javascript events reference: <a href="http://www.w3schools.com/jsref/dom_obj_event.asp" rel="nofollow">http://www.w3schools.com/jsref/dom_obj_event.asp</a></p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      JAVASCRIPT PATTERN DO YOU USE MOST
+    </pattern>
+    <template>
+<![CDATA[<p>I like the singleton module pattern too, but I have a slight twist on how I use it:</p><br/><br/><pre><code>var namespace = namespace || (function() {<br>   var privateVariable = {};<br>   var publicVariable = {};<br><br>   function privateMethod() {<br>   }<br><br>   function publicMethod() {<br>   }<br><br>   return {<br>      publicVariable: publicVariable,<br>      publicMethod: publicMethod<br>   };<br>})();<br></code></pre><br/><br/><p>This way, it almost looks like a class in other languages, and I'm just exposing what I want to expose at the bottom return statement.</p>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      AND PHP LOGIN SCRIPT WITH HIDDEN BUTTON
+    </pattern>
+    <template>
+<![CDATA[<p>Regarding security, <strong>you cannot trust what comes from the client</strong>:</p><br/><br/><ul><br/><li>The visitor can see all your code (HTML and Javascript, not PHP) and try stuff</li><br/><li>The visitor may not even use a browser; it's trivially easy to send a request with a script</li><br/></ul><br/><br/><p>This means hiding the buttons is good User Interface design (because you can't use them if you are not logged in). But it's not a security feature. The security feature is checking, on the server, that the visitor is logged in before each action that requires it.</p><br/><br/><p>If you don't intend to show the buttons, it's not useful to send the HTML and images to the browser and then hide them with Javascript. I would check with PHP.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      GRAPH VISUAL CODE IN JAVASCRIPT
+    </pattern>
+    <template>
+<![CDATA[<p><a href="http://caitlingannon.com/2007/09/21/jsvis-javascript-visualization-software/" rel="nofollow" title="Araxis Merge">JsVIS</a> is pretty nice, but a little slow with larger graphs.  If yours is small it should work well.  My favorite is <a href="http://prefuse.org/" rel="nofollow">prefuse</a> which apparently now has a Flex front-end now called <a href="http://flare.prefuse.org/" rel="nofollow">flare</a> which could be controlled with JavaScript.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      JAVASCRIPT IN INTERNET EXPLOR AND SAFARI
+    </pattern>
+    <template>
+<![CDATA[<p>For Safari you need to enable the "Develop" menu via Preferences (in Safari 3.1; see <a href="http://developer.apple.com/internet/safari/faq.html#anchor14" rel="nofollow" title="Drosera">the entry in Apple's Safari development FAQ</a>) or via</p><br/><br/><pre><code>$ defaults write com.apple.Safari IncludeDebugMenu 1<br/></code></pre><br/><br/><p>at the terminal in Mac OS X. Then from the Develop menu choose Show Web Inspector and click on the Console link. Your script can write to the console using window.console.log.</p><br/><br/><p>For Internet Explorer, Visual Studio is really the best script debugger but the Microsoft Script Debugger is okay if you don't have Visual Studio. <a href="http://blogs.msdn.com/ie/archive/2004/10/26/247912.aspx" rel="nofollow" title="Scripting Debugging in Internet Explorer">This post on the IE team blog</a> walks you through installing it and connecting to Internet Explorer.</p><br/><br/><p>Internet Explorer 8 <a href="http://www.west-wind.com/weblog/posts/271352.aspx" rel="nofollow">looks</a> like it will have a very fancy script debugger, so if you're feeling really adventurous you could install the Internet Explorer 8 beta and give that a whirl.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      S TEXTAREA USE PROTOTYP
+    </pattern>
+    <template>
+<![CDATA[<p>Facebook does it, when you write on people's walls, but only resizes vertically. </p><br/><br/><p>Horizontal resize strikes me as being a terrible mess, due to word-wrap, long lines, and so on, but vertical resize would be pretty safe and nice</p><br/><br/><p>Facebook is inhabited by every idiot on the planet, and none of the facebook-using-idiots I know have ever mentioned anything about it or been remotely confused.</p><br/><br/><p>I'd use this as anecdotal evidence to say 'go ahead, implement it'</p><br/><br/><p>Some javascript to do it, using prototype.js (cos that's what I know)</p><br/><br/><pre><code>&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"<br/>  "http://www.w3.org/TR/html4/loose.dtd"&gt;<br/>&lt;html&gt;<br/>&lt;head&gt;<br/>  &lt;script src="http://www.google.com/jsapi"&gt;&lt;/script&gt;<br/>  &lt;script language="javascript"&gt;<br/>  google.load('prototype', '1.6.0.2');<br/>  &lt;/script&gt;<br/>&lt;/head&gt;<br/>&lt;body&gt;<br/>  &lt;textarea id="text-area" rows="1" cols="50"&gt;&lt;/textarea&gt;<br/><br/>  &lt;script type="text/javascript" language="javascript"&gt;<br/>  resizeIt = function() {<br/>    var str = $('text-area').value;<br/>    var cols = $('text-area').cols;<br/><br/>    var linecount = 0;<br/>    $A(str.split("\n")).each( function(l) {<br/>      linecount += Math.ceil( l.length / cols ); // take into account long lines<br/>    } )<br/>    $('text-area').rows = linecount + 1;<br/>  };<br/><br/>  Event.observe('text-area', 'keydown', resizeIt ); // you could attach to keyUp or whatever if keydown doesn't work<br/>  resizeIt(); //initial on load<br/>  &lt;/script&gt;<br/>&lt;/body&gt;<br/>&lt;/html&gt;<br/></code></pre><br/><br/><p>PS: Obviously this javascript is very naive, and you probably don't want to use it on textboxes with novels in them, but you get the general idea</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      KIND OF TASK MANAG FOR JAVASCRIPT IN FIREFOX 3
+    </pattern>
+    <template>
+<![CDATA[<p>It's probably the <a href="http://shaver.off.net/diary/2008/05/25/fsyncers-and-curveballs/" rel="nofollow">awesome firefox3 fsync "bug"</a>, which is a giant pile of fail.</p><br/><br/><p>In summary</p><br/><br/><ul><br/><li>Firefox3 saves its bookmarks and history in an SQLite database</li><br/><li>Every time you load a page it writes to this database several times</li><br/><li>SQLite cares deeply that you don't lose your bookmarks, so each time it writes, instructs the kernel to flush it's database file to disk and ensure that it's fully written</li><br/><li>Many variants of linux, when told to flush like that, flush EVERY FILE. This may take up to a minute or more if you have background tasks doing any kind of disk intensive stuff.</li><br/><li>The kernel makes firefox wait while this flush happens, which locks up the UI.</li><br/></ul><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      JAVASCRIPT TO CREAT A CLIENT SIDE EMAIL
+    </pattern>
+    <template>
+<![CDATA[<p>What we used in a projet is a popup window that opens a mailto: link, it is the only way we found to compose a mail within the default mail client that works with all mail clients (at least all our clients used).</p><br/><br/><pre><code>var addresses = "";//between the speech mark goes the receptient. Seperate addresses with a ;<br/>var body = ""//write the message text between the speech marks or put a variable in the place of the speech marks<br/>var subject = ""//between the speech marks goes the subject of the message<br/>var href = "mailto:" + addresses + "?"<br/>         + "subject=" + subject + "&amp;"<br/>         + "body=" + body;<br/>var wndMail;<br/>wndMail = window.open(href, "_blank", "scrollbars=yes,resizable=yes,width=10,height=10");<br/>if(wndMail)<br/>{<br/>    wndMail.close();    <br/>}<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      VISIBL OF ASP.NET LABEL WITH JAVASCRIPT
+    </pattern>
+    <template>
+<![CDATA[<p>If you need to manipulate it on the client side, you can't use the Visible property on the server side.  Instead, set its CSS display style to "none".  For example:</p><br/><br/><pre><code>&lt;asp:Label runat="server" id="Label1" style="display: none;" /&gt;<br/></code></pre><br/><br/><p>Then, you could make it visible on the client side with:</p><br/><br/><pre><code>document.getElementById('Label1').style.display = 'inherit';<br/></code></pre><br/><br/><p>You could make it hidden again with:</p><br/><br/><pre><code>document.getElementById('Label1').style.display = 'none';<br/></code></pre><br/><br/><p>Keep in mind that there may be issues with the ClientID being more complex than "Label1" in practice.  You'll need to use the ClientID with getElementById, not the server side ID, if they differ.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      DEBUG JAVASCRIPT IN VISUAL STUDIO 2005
+    </pattern>
+    <template>
+<![CDATA[<p>I prefer using <a href="http://getfirebug.com/" rel="nofollow">FireBug</a> for projects I can't use 2008 on.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      YUI DRAG DROP PROXI DRAG
+    </pattern>
+    <template>
+<![CDATA[<p>You have to override the drop-functions, check for </p><br/><br/><p>DD::dragOverEvent( )</p><br/><br/><p>DD:endDragEvent( )</p><br/><br/><p>functions on this reference:</p><br/><br/><p><a href="http://developer.yahoo.com/yui/docs/YAHOO.util.DD.html" rel="nofollow">http://developer.yahoo.com/yui/docs/YAHOO.util.DD.html</a></p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      BOOKMARK THAT IS ONLI JAVASCRIPT NOT A URL
+    </pattern>
+    <template>
+<![CDATA[<p>What you want is a <a href="http://en.wikipedia.org/wiki/Bookmarklet" rel="nofollow">bookmarklet</a> they are easy to create and should work in most major browsers.</p><br/><br/><p>Edit: Stack overflow seems not to allow creating bookmarklets in the context of the site, basically you can create a new bookmark and type the following in the location field</p><br/><br/><pre>javascript:window.location='http://www.google.com/search?q='+Date()</pre><br/><br/><p>to get a bookmarklet that searches google for the current date.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      ELEMENT WITH ARRAY.MAP IN JAVASCRIPT
+    </pattern>
+    <template>
+<![CDATA[<p>You should use the <code>filter</code> method rather than map unless you want to mutate the items in the array, in addition to filtering.</p><br/><br/><p>eg.</p><br/><br/><pre><code>var filteredItems = items.filter(function(item)<br/>{<br/>    return ...some condition...;<br/>});<br/></code></pre><br/><br/><p>[Edit: Of course you could always do <code>sourceArray.filter(...).map(...)</code> to both filter and mutate]</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      JAVASCRIPT AFTER CONTROL S SELECT VALU HA BEEN SET
+    </pattern>
+    <template>
+<![CDATA[<pre><code>&lt;%@ Page Language="C#" %&gt;<br/><br/>&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"&gt;<br/><br/>&lt;script runat="server"&gt;<br/>    protected void indexChanged(object sender, EventArgs e)<br/>    {<br/>        Label1.Text = " I did something! ";<br/>    }<br/>&lt;/script&gt;<br/><br/>&lt;html xmlns="http://www.w3.org/1999/xhtml"&gt;<br/>&lt;head runat="server"&gt;<br/>    &lt;title&gt;Test Page&lt;/title&gt;<br/>&lt;/head&gt;<br/>&lt;body&gt;<br/>    &lt;script type="text/javascript"&gt;<br/>        function firstChanged() {<br/>            if(document.getElementById("firstSelect").selectedIndex != 0)<br/>                document.getElementById("secondSelect").disabled = false;<br/>            else<br/>                document.getElementById("secondSelect").disabled = true;<br/>        }<br/>    &lt;/script&gt;<br/>    &lt;form id="form1" runat="server"&gt;<br/>    &lt;div&gt;<br/>        &lt;select id="firstSelect" onchange="firstChanged()"&gt;<br/>            &lt;option value="0"&gt;&lt;/option&gt;<br/>            &lt;option value="1"&gt;One&lt;/option&gt;<br/>            &lt;option value="2"&gt;Two&lt;/option&gt;<br/>            &lt;option value="3"&gt;Three&lt;/option&gt;<br/>        &lt;/select&gt;<br/>        &lt;select id="secondSelect" disabled="disabled"&gt;<br/>            &lt;option value="1"&gt;One&lt;/option&gt;<br/>            &lt;option value="2"&gt;Two&lt;/option&gt;<br/>            &lt;option value="3"&gt;Three&lt;/option&gt;<br/>        &lt;/select&gt;<br/>        &lt;asp:DropDownList ID="DropDownList1" AutoPostBack="true" OnSelectedIndexChanged="indexChanged" runat="server"&gt;<br/>            &lt;asp:ListItem Text="One" Value="1"&gt;&lt;/asp:ListItem&gt;<br/>            &lt;asp:ListItem Text="Two" Value="2"&gt;&lt;/asp:ListItem&gt;    <br/>        &lt;/asp:DropDownList&gt;<br/>        &lt;asp:Label ID="Label1" runat="server"&gt;&lt;/asp:Label&gt;<br/>    &lt;/div&gt;<br/>    &lt;/form&gt;<br/>    &lt;script type="text/javascript"&gt;<br/>        window.onload = function() {firstChanged();}<br/>    &lt;/script&gt;<br/>&lt;/body&gt;<br/>&lt;/html&gt;<br/></code></pre><br/><br/><p>Edit: Replaced the whole code. This should work even in your user control.<br/>I believe that Register.ClientScriptBlock is not working because the code you write in that block is executed <em>before</em> window.onload is called. And, I assume (I am not sure of this point) that the DOM objects do not have their values set at that time. And, this is why you are getting selectedIndex as always 0.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      N ADDIT WINDOW.ONLOAD EVENT IN JAVASCRIPT
+    </pattern>
+    <template>
+<![CDATA[<p>Most of the "solutions" suggested are Microsoft-specific, or require bloated libraries. Here's one good way. This works with W3C-compliant browsers and with Microsoft IE.</p><br/><br/><pre><code>if (window.addEventListener) // W3C standard<br/>{<br/>  window.addEventListener('load', myFunction, false); // NB **not** 'onload'<br/>} <br/>else if (window.attachEvent) // Microsoft<br/>{<br/>  window.attachEvent('onload', myFunction);<br/>}<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      MOOTOOL DRAG AND DROP PROBLEM
+    </pattern>
+    <template>
+<![CDATA[<p>Ok, it looks like there are a couple of issues here. As far as I can tell, there is no such thing as a "droppable" in mootools. This means your events like 'enter', 'leave' and 'drop' won't work. (These are events on the drag object)</p><br/><br/><p>If you change those names to events that elements in mootools have (as in, DOM events) your code works perfectly. For instance, if you change 'enter' and 'leave'  to  'mouseover' and 'mouseout', your events fire with no problem. (Opera 9.51 on Windows Vista)</p><br/><br/><p>This appears to be the revelant line in the documentation for this, which stats to use DOM events.</p><br/><br/><p><a href="http://docs.mootools.net/Element/Element.Event#Element%3aaddEvents" rel="nofollow">http://docs.mootools.net/Element/Element.Event#Element:addEvents</a></p><br/><br/><p>Also, on that page, is a link to the events that regular elements can have</p><br/><br/><p><a href="http://www.w3schools.com/html/html_eventattributes.asp" rel="nofollow">http://www.w3schools.com/html/html_eventattributes.asp</a></p><br/><br/><p>However, <a href="http://mootools-users.660466.n2.nabble.com/Drag-and-drop-problem-I-m-having-td686391.html" rel="nofollow">the advice "TG in SD" gave you in the nabble forums</a> is probably best. If you can, don't bother using these events. Put whatever it is you need to do in the draggable object, and save yourself all this hassle.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      IN JAVASCRIPT A START POINT
+    </pattern>
+    <template>
+<![CDATA[<p>Avoid flash, its a horrible requirement, uncrawlable by Google, unsopported by a bunch of browsers and systems (eg iPhone) and most importantly: it forces you to reinvent web standards (e.g. scroll bars and whatnot), Javascript on the other hand is easier to maintain and code for in the noscript case.</p><br/><br/><p>try <a href="http://script.aculo.us/" rel="nofollow" title="I/O management and disk scheduling">scriptaculous</a> for your animations;</p><br/><br/><ul><br/><li><a href="http://woork.blogspot.com/2008/01/toggle-effect-using-scriptaculous.html" rel="nofollow" title="Inside Windows Vista Kernel">here's a quickie 3-line tutorial so<br/>you can see it working</a></li><br/><li><a href="http://www.tutorialspoint.com/script.aculo.us/index.htm" rel="nofollow" title="Kernel Comparison: Linux (2.6.22) versus Windows (Vista)">here's a more complete tutorial</a></li><br/><li><a href="http://github.com/madrobby/scriptaculous/wikis" rel="nofollow">here's the scriptaculous wiki</a></li><br/></ul><br/><br/><p>note that there are a gazillion JS animation libraries, some really good <a href="http://jquery.com/" rel="nofollow">jQuery</a> comes to mind. Usually they're just a script tag and an onclick event to setup.</p><br/><br/><p>Good luck!</p><br/><br/><p>/mp</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      .DISPLAY NOT WORK IN FIREFOX OPERA SAFARI IE7 OK
+    </pattern>
+    <template>
+<![CDATA[<p>Since setting the properties with javascript never seemed to work, but setting using Firebug's inspect did, I started to suspect that the javascript ID selector was broken - maybe there were multiple items in the DOM with the same ID?  The source didn't show that there were, but looping through all divs using javascript I found that that was the case. Here's the function I ended up using to show the popup:</p><br/><br/><pre><code>function openPopup(popupID)<br/>{<br/>  var divs = getObjectsByTagAndClass('div','popupDiv');<br/>  if (divs != undefined &amp;&amp; divs != null)<br/>  {<br/>    for (var i = 0; i &lt; divs.length; i++)<br/>    {<br/>      if (divs[i].id == popupID)<br/>        divs[i].style.display = 'block';    	<br/>    }<br/>  }<br/>}<br/></code></pre><br/><br/><p>(utility function getObjectsByTagAndClass not listed)</p><br/><br/><p>Ideally I'll find out why the same item is being inserted multiple times, but I don't have control over the rendering platform, just its inputs.</p><br/><br/><p>So when debugging issues like this, <strong>remember to check for duplicate IDs in the DOM, which can break getElementById</strong>.</p><br/><br/><p>To everyone who answered, thanks for your help!</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      SELECT TEXT IN A BROWSER CROSS PLATFORM
+    </pattern>
+    <template>
+<![CDATA[<p>Have a look at <a href="http://jquery.com" rel="nofollow">jQuery</a> and the <a href="http://plugins.jquery.com/project/wrapSelection" rel="nofollow">wrapSelection plugin</a>.  It may be what you are looking for.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      RESOURC TO LEARN JAVASCRIPT
+    </pattern>
+    <template>
+<![CDATA[<p>Beyond question, the best resources are the videos from Douglas Crockford of Yahoo: </p><br/><br/><p><a href="http://yuiblog.com/crockford/" rel="nofollow">http://yuiblog.com/crockford/</a></p><br/><br/><p>Also, his book - <a href="http://rads.stackoverflow.com/amzn/click/0596517742" rel="nofollow">JavaScript: The Good Parts</a></p><br/><br/><p>The more you know, the more you will get from these. These are not beginner introductions though even beginners will learn something.</p><br/><br/><p>Crockford is inspirational and extraordinarily rewarding to watch and listen to.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      PRE TAG INSID A CODE TAG WITH JQUERI
+    </pattern>
+    <template>
+<![CDATA[<p>That's the difference between <a href="http://www.w3.org/TR/html4/struct/global.html#h-7.5.3" rel="nofollow">block and inline</a> elements. <a href="http://www.w3.org/TR/html4/sgml/dtd.html#block" rel="nofollow"><code>pre</code> is a block level element</a>. It's not legal to put it inside a <code>code</code> tag, which <a href="http://www.w3.org/TR/html4/struct/text.html#h-9.2.1" rel="nofollow">can only contain inline content</a>.</p><br/><br/><p>Because browsers have to support whatever godawful tag soup they might find on the real web, Firefox tries to do what you mean. IE happens to handle it differently, which is fine by the spec; behavior in that case is unspecified, because it should never happen.</p><br/><br/><ul><br/><li>Could you instead <em>replace</em> the <code>code</code> element with the <code>pre</code>? (Because of the block/inline issue, technically that should only work if the elements are inside <a href="http://www.w3.org/TR/html4/sgml/dtd.html#flow" rel="nofollow">an element with "flow" content</a>, but the browsers might do what you want anyway.)</li><br/><li>Why is it a <code>code</code> element in the first place, if you want <code>pre</code>'s behavior?</li><br/><li>You could also give the <code>code</code> element <code>pre</code>'s whitespace preserving power with the CSS <a href="http://www.blooberry.com/indexdot/css/properties/text/whitespace.htm" rel="nofollow"><code>white-space: pre</code></a>, but apparently <a href="http://www.quirksmode.org/css/whitespace.html" rel="nofollow">IE 6 only honors that in Strict Mode</a>.</li><br/></ul><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      CONCIS WAY TO DO NAMESPAC IN JAVASCRIPT
+    </pattern>
+    <template>
+<![CDATA[<p>Javascript doesn't have stand-alone namespaces. It has functions, which can provide scope for resolving names, and objects, which can contribute to the named data accessible in a given scope. </p><br/><br/><p>Here's your example, corrected:</p><br/><br/><pre><code>var namespaces = { com: { example: { /* example.com's data */ } } }<br/></code></pre><br/><br/><p>This is a variable <code>namespaces</code> being assigned an object literal. The object contains one property: <code>com</code>, an object with one property: <code>example</code>, an object which presumably would contain something interesting.</p><br/><br/><p>So, you can type something like <strong>namespaces.com.example.<em>somePropertyOrFunctionOnExample</em></strong> and it'll all work. Of course, it's also ridiculous. You don't have a hierarchical namespace, you have an object containing an object containing an object with the stuff you actually care about.</p><br/><br/><pre><code>var com_example_data = { /* example.com's data */ };<br/></code></pre><br/><br/><p>That works just as well, without the pointless hierarchy. </p><br/><br/><p><strong>Now</strong>, if you actually <em>want</em> to build a hierarchy, you can try something like this:</p><br/><br/><pre><code>com_example = com_example || {};<br/>com_example.flags = com_example.flags || { active: false, restricted: true};<br/><br/>com_example.ops = com_example.ops || (function()<br/>    {<br/>       var launchCodes = "38925491753824"; // hidden / private<br/>       return<br/>       {<br/>         activate: function() { /* ... */ },<br/>         destroyTheWorld: function() { /* ... */ }<br/>       };<br/>    })();<br/></code></pre><br/><br/><p>...which is, IMHO, reasonably concise.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      OVERFLOW DIV WITH JAVASCRIPT
+    </pattern>
+    <template>
+<![CDATA[<p><code>scrollHeight</code> should be the total height of content. <code>scrollTop</code> specifies the pixel offset into that content to be displayed at the top of the element's client area.</p><br/><br/><p>So you really want (still using jQuery):</p><br/><br/><pre><code>$("#thediv").each( function() <br/>{<br/>   // certain browsers have a bug such that scrollHeight is too small<br/>   // when content does not fill the client area of the element<br/>   var scrollHeight = Math.max(this.scrollHeight, this.clientHeight);<br/>   this.scrollTop = scrollHeight - this.clientHeight;<br/>});<br/></code></pre><br/><br/><p>...which will set the scroll offset to the last <code>clientHeight</code> worth of content.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      A CHILD NODE IN HTML USE JAVASCRIPT
+    </pattern>
+    <template>
+<![CDATA[<p>To answer the original question - there are various ways to do this, but the following would be the simplest.</p><br/><br/><p>If you already have a handle to the child node that you want to remove, i.e. you have a JavaScript variable that holds a reference to it:</p><br/><br/><pre><code>myChildNode.parentNode.removeChild(myChildNode);<br/></code></pre><br/><br/><p>Obviously, if you are not using one of the numerous libraries that already do this, you would want to create a function to abstract this out:</p><br/><br/><pre><code>function removeElement(node) {<br/>    node.parentNode.removeChild(node);<br/>}<br/></code></pre><br/><br/><p><hr /></p><br/><br/><p>EDIT: As has been mentioned by others: if you have any event handlers wired up to the node you are removing, you will want to make sure you disconnect those before the last reference to the node being removed goes out of scope, lest poor implementations of the JavaScript interpreter leak memory.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      JAVASCRIPT TO RENDER HTML FOR SERVER SID CACH
+    </pattern>
+    <template>
+<![CDATA[<p>Wikipedia's <a href="http://en.wikipedia.org/wiki/Server-side_JavaScript" rel="nofollow">"Server-side JavaScript"</a> article lists numerous implementations, many of which are based on Mozilla's <strong>Rhino</strong> JavaScript-to-Java converter, or its cousin <strong>SpiderMonkey</strong> (the same engine as found in Firefox and other Gecko-based browsers). In particular, something simple like <a href="http://www.modjs.org/" rel="nofollow"><strong>mod_js</strong></a> for Apache may suit your needs.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      STANDALON APPLIC IN JAVASCRIPT
+    </pattern>
+    <template>
+<![CDATA[<p>I've written several application in JS including a spreadsheet.</p><br/><br/><p>Upside:</p><br/><br/><ul><br/><li>great language</li><br/><li>short code-run-review cycle</li><br/><li>DOM manipulation is great for UI design</li><br/><li>clients on every computer (and phone)</li><br/></ul><br/><br/><p>Downside:</p><br/><br/><ul><br/><li>differences between browsers (especially IE)</li><br/><li>code base scalability (with no intrinsic support for namespaces and classes)</li><br/><li>no good debuggers (especially, again, for IE)</li><br/><li>performance (even though great progress has been made with FireFox and Safari)</li><br/><li>You need to write some server code as well.</li><br/></ul><br/><br/><p>Bottom line: Go for it. I did.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      THE GETUTC METHOD ON THE DATE OBJECT DO
+    </pattern>
+    <template>
+<![CDATA[<p>A date represents a specific point in time.  This point in time will be called differently in different places.  As I write this, it's 00:27 on Tuesday in Germany, 23:27 on Monday in the UK and 18:27 on Monday in New York.</p><br/><br/><p>To take an example method: getDay returns the day of the week in the local timezone.  Right now, for a user in Germany, it would return 2.  For a user in the UK or US, it would return 1.  In an hour's time, it will return 2 for the user in the UK (because it will then be 00:27 on Tuesday there).</p><br/><br/><p>The ..UTC.. methods deal with the representation of the time in UTC (also known as GMT).  In winter, this is the same timezone as the UK, in summer it's an hour behind the time in the UK.</p><br/><br/><p>It's summer as I write this.  getUTCDay will return 1 (Monday), getUTCHours will return 22, getUTCMinutes will return 27.  So it's 22:27 on Monday in the UTC timezone.  Whereas the plain get... functions will return different values depending on where the user is, the getUTC.. functions will return those same values no matter where the user is.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      MANAG AND DEPLOY LARG JAVASCRIPT APP
+    </pattern>
+    <template>
+<![CDATA[<p>The approach that I've found works for me is having seperate JS files for each class (just as you would in Java, C# and others). Alternatively you can group your JS into application functional areas if that's easier for you to navigate.</p><br/><br/><p>If you put all your JS files into one directory, you can have your server-side environment (PHP for instance) loop through each file in that directory and output a <code>&lt;script src='/path/to/js/$file.js' type='text/javascript'&gt;</code> in some header file that is included by all your UI pages. You'll find this auto-loading especially handy if you're regularly creating and removing JS files.</p><br/><br/><p>When deploying to production, you should have a script that combines them all into one JS file and "minifies" it to keep the size down.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      YWAY TO DISABL THE CLIENT SID VALID FOR DOJO DATE TEXT BOX
+    </pattern>
+    <template>
+<![CDATA[<p>Try overriding the validate method in your markup.</p><br/><br/><p>This will work (just tested):</p><br/><br/><pre><code>&lt;input type="text" name="startDate" dojoType="dijit.form.DateTextBox" <br/>  constraints="{datePattern:'MM/dd/yyyy'}"  <br/>  value='&lt;c:out value="${sessionScope.adminMessageForm.startDate}"/&gt;'<br/>  validate='return true;'<br/>/&gt;<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      SPECIF FIREFOX EXTENS PROGRAM FOR FORM POST
+    </pattern>
+    <template>
+<![CDATA[<p>Actually I think <a href="https://addons.mozilla.org/en-US/firefox/addon/2691" rel="nofollow">Poster</a> is what you're looking for.</p><br/><br/><p><a href="https://addons.mozilla.org/img/uploads/previews/full/19/19951.png" rel="nofollow">A Screen shot of an older Poster version</a></p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      APP DASHBOARD TYPE GUI INTERFAC
+    </pattern>
+    <template>
+<![CDATA[<p>I have been looking at this kind of functionality myself recently and have decided on using jQuery with the help of <a href="http://ui.jquery.com/" rel="nofollow">jQuery UI</a>. I came across a large amount of information that also suggested <a href="http://developer.yahoo.com/yui/" rel="nofollow">Yahoo UI</a> (YUI), I had already started learning <a href="http://jQuery.com" rel="nofollow">jQuery</a> due to the AJAX support that it offers, so I stuck with it.</p><br/><br/><p><a href="http://ui.jquery.com/" rel="nofollow">jQuery UI Site</a><br/><br/><a href="http://docs.jquery.com/UI" rel="nofollow">jQuery UI Documentation</a><br/><br/><a href="http://ui.jquery.com/repository/real-world/layout/" rel="nofollow">Example of a drag and drop screen layout with jQuery UI</a><br/><br/><a href="http://www.learningjquery.com/2008/07/introduction-to-jquery-ui#" rel="nofollow">Introduction to jQuery UI</a></p><br/><br/><p>If you decide to use the YUI javascript library, here is a link to a vast amount of videos to help get you started.</p><br/><br/><p><a href="http://developer.yahoo.com/yui/theater/" rel="nofollow"><a href="http://developer.yahoo.com/yui/theater/" rel="nofollow">http://developer.yahoo.com/yui/theater/</a></a></p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      ALPHABET NAVIG
+    </pattern>
+    <template>
+<![CDATA[<p>So, there were plenty of good suggestions, but none did exactly what I wanted. Fortunately I was able to use them to figure out what I really wanted to do. The only thing the following doesn't do is print the last few unused letters (if there are any). That's why I have that cfif statement checking for 'W' as that's the last letter I use, otherwise it should check for Z.</p><br/><br/><pre><code>&lt;cfquery datasource="#application.dsn#" name="qTitles"&gt;<br/>SELECT title, url, substr(titles,1,1) as indexLetter<br/>FROM list<br/>ORDER BY indexLetter,title<br/>&lt;/cfquery&gt;<br/><br/>&lt;cfset linkLetter = "#asc('A')#"&gt;<br/>&lt;cfoutput query="titles" group="indexletter"&gt;<br/>    &lt;cfif chr(linkLetter) eq #qTitles.indexletter#&gt;<br/>        &lt;a href="###ucase(qTitles.indexletter)#"&gt;#ucase(qTitles.indexletter)#&lt;/a&gt;<br/>        &lt;cfif asc('W') neq linkLetter&gt;|&lt;/cfif&gt;<br/>        &lt;cfset linkLetter = ++LinkLetter&gt;<br/>    &lt;cfelse&gt;<br/>        &lt;cfscript&gt;<br/>        while(chr(linkLetter) != qTitles.indexletter)<br/>                {<br/>                        WriteOutput(" " &amp; chr(linkLetter) &amp; " ");<br/>                        IF(linkLetter != asc('W')){WriteOutput("|");};<br/>                        ++LinkLetter;<br/>                }<br/>        &lt;/cfscript&gt;<br/><br/>        &lt;a href="###ucase(qTitles.indexletter)#"&gt;#ucase(qTitles.indexletter)#&lt;/a&gt;<br/>        &lt;cfif asc('W') neq linkLetter&gt;|&lt;/cfif&gt;<br/>        &lt;cfset linkLetter = ++LinkLetter&gt;<br/>    &lt;/cfif&gt;<br/>&lt;/cfoutput&gt;<br/><br/>&lt;ul&gt;<br/>&lt;cfset currentLetter = ""&gt;<br/>&lt;cfoutput query="qTitles" group="title"&gt;<br/>&lt;cfif currentLetter neq #qTitles.indexletter#&gt;<br/>    &lt;li&gt;&lt;a name="#ucase(qTitles.indexletter)#"&gt;#ucase(qTitles.indexletter)#&lt;/a&gt;&lt;/li&gt;<br/>&lt;/cfif&gt;<br/>&lt;cfset currentLetter = #qTitles.indexletter#&gt;<br/>&lt;li&gt;&lt;a href="#url#"&gt;#title#&lt;/a&gt;&lt;/li&gt;<br/>&lt;/cfoutput&gt;<br/>&lt;/ul&gt;<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      BETWEEN JAVASCRIPT AND THE SERVER
+    </pattern>
+    <template>
+<![CDATA[<p>Best practice on this dictates that if you are not planning to use the stored data for anything other than recreating the form then the best method is to send it back in some sort of native format (As mentioned above) With this then you can just load the data back in and requires the least processing of any method.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      PROBLEM WITH CLASS GLATLNGBOUND
+    </pattern>
+    <template>
+<![CDATA[<p>The google maps sample is using this code...</p><br/><br/><pre><code>var bounds = map.getBounds();<br/>var southWest = bounds.getSouthWest();<br/>var northEast = bounds.getNorthEast();<br/>var lngSpan = northEast.lng() - southWest.lng();<br/>var latSpan = northEast.lat() - southWest.lat();<br/></code></pre><br/><br/><p>...which is putting the SouthWest/NorthEast bounds into a variable before attempting to get the individual lng/lat coordinates. Maybe there is something with the "nested" evaluations causing problems. Have tried the granular approach to see if you get the data you need?</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      CODE A DESKTOP APPLICATION LIK MENU BAR IN JAVASCRIPT
+    </pattern>
+    <template>
+<![CDATA[<p><a href="http://extjs.com/deploy/dev/examples/menu/menus.html" rel="nofollow">ExtJS</a> and <a href="http://developer.yahoo.com/yui/menu/" rel="nofollow">YUI</a> have the best menu widgets in my opinion. Both are easy to setup and use and are skinnable. ExtJS will integrate with JQuery.</p><br/><br/><p>The second idea is to use CSS to create your menus if you don't want to use a 3rd party library.A list apart has a <a href="http://www.alistapart.com/articles/horizdropdowns" rel="nofollow">great primer on creating CSS menus</a>.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      JAVASCRIPT FORM VALID LIBRARI
+    </pattern>
+    <template>
+<![CDATA[<p>I've used <a href="http://tetlaw.id.au/view/javascript/really-easy-field-validation" rel="nofollow">this library</a> for a couple of personal projects. It's pretty good, though I have had to make my own modifications to it a couple of times - nothing major, though, and it's easy enough to do so.</p><br/><br/><p>I'm sure you already do this, but also validate all of your information on the server-side, as well. Client-side-only validation is rarely, if ever, a good idea. </p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      WAY OF CHECK FOR MOZ BORDER RADIU SUPPORT
+    </pattern>
+    <template>
+<![CDATA[<p>How about this?</p><br/><br/><pre><code>var mozborderAvailable = false;<br/>try {<br/>  if (typeof(document.body.style.MozBorderRadius) !== "undefined") {<br/>    mozborderAvailable = true;<br/>  }<br/>} catch(err) {}<br/></code></pre><br/><br/><p>I tested it in Firefox 3 (true) and false in: Safari, IE7, and Opera.</p><br/><br/><p>(Edit: better undefined test)</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      NUMBER IN JAVASCRIPT ISNUMER ( )
+    </pattern>
+    <template>
+<![CDATA[<p><a href="http://stackoverflow.com/questions/18082/validate-numbers-in-javascript-isnumeric/174921#174921">@Joel's answer</a> is pretty close, but it will fail in the following cases:</p><br/><br/><pre><code>// Whitespace strings:<br/>IsNumeric(' ') == true;<br/>IsNumeric('\t\t') == true;<br/>IsNumeric('\n\r') == true;<br/><br/>// Number literals:<br/>IsNumeric(-1) == false;<br/>IsNumeric(0) == false;<br/>IsNumeric(1.1) == false;<br/>IsNumeric(8e5) == false;<br/></code></pre><br/><br/><p>Some time ago I had to implement an <code>IsNumeric</code> function, to find out if a variable contained a numeric value, <strong>regardless its type</strong>, it could be a <code>String</code> containing a numeric value (I had to consider also exponential notation, etc.), a <code>Number</code> object, virtually anything could be passed to that function, I couldn't make any type assumption,  taking care of type coercion (eg. <code>+true == 1;</code> but <code>true</code> shouldn't be considered as <code>"numeric"</code>).</p><br/><br/><p>I think is worth sharing this set of <a href="http://dl.getdropbox.com/u/35146/js/tests/isNumber.html" rel="nofollow"><strong>+30 unit tests</strong></a> made to numerous function implementations, and also share the one that passes all my tests:</p><br/><br/><pre><code>function isNumber(n) {<br/>  return !isNaN(parseFloat(n)) &amp;&amp; isFinite(n);<br/>}<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      DID I DO WRONG HERE JAVASCRIPT REGEX
+    </pattern>
+    <template>
+<![CDATA[<p>Your regex</p><br/><br/><pre><code>/^([a-zA-Z0-9_])+/<br/></code></pre><br/><br/><p>looks for </p><br/><br/><ol><br/><li>Start of string(check), followed by</li><br/><li>1 or more letters, numbers, or underscore (check)</li><br/></ol><br/><br/><p>and then whatever comes after it doesn't matter. This regex will match anything at all so long as it begins with a letter, number, or underscore</p><br/><br/><p>If you put a <code>$</code> at the end, then it will work - <code>$</code> matches 'end of string', so the only way it can match is if there are <em>only</em> numbers, letters, and underscores between the start and end of the string.</p><br/><br/><pre><code>/^([a-zA-Z0-9_])+$/<br/></code></pre><br/><br/><p>Secondly, I'd suggest using <code>document.getElementById('display-name').value</code> instead of <code>document.forms</code> as it won't break if you rearrange the HTML, and is more 'the commonly accepted standard of what to do'</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      KEY OF A HASH
+    </pattern>
+    <template>
+<![CDATA[<pre><code>Object.prototype.keys = function ()<br/>{<br/>  var keys = [];<br/>  for(var i in this) if (this.hasOwnProperty(i))<br/>  {<br/>    keys.push(i);<br/>  }<br/>  return keys;<br/>}<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      BEAUTIFI
+    </pattern>
+    <template>
+<![CDATA[<p>First, pick your favorite Javascript based Pretty Print/Beautifier.  I prefer the one at <a href="http://jsbeautifier.org/" rel="nofollow">http://jsbeautifier.org/</a>, because it's what I found first.</p><br/><br/><p>Second, download and install The Mozilla group's Java based Javascript engine, <a href="http://www.mozilla.org/rhino/" rel="nofollow">Rhino</a>.  "Install" is a little bit misleading;  Download the zip file, extract everything, place js.jar in your Java classpath (or Library/Java/Extensions on OS X).  You can then run scripts with an invocation similar to this </p><br/><br/><pre><code>java org.mozilla.javascript.tools.shell.Main name-of-script.js<br/></code></pre><br/><br/><p>Use the Pretty Print/Beautifier from step 1 to write a small shell script that will read in your javascript file and run it through the Pretty Print/Beautifier from step one.  For example</p><br/><br/><pre><code>//new code<br/>print(js_beautify(readFile(arguments[0])));<br/><br/>//original code    <br/>function js_beautify(js_source_text, indent_size, etc...<br/></code></pre><br/><br/><p>Rhino gives javascript a few extra useful functions that don't necesarily make sense in a browser context, but do in a console context. The function print does what you'd expect, and prints out a string.  The function readFile accepts a file path string as an argument and returns the contents of that file.   </p><br/><br/><p>You'd invoke the above something like </p><br/><br/><pre><code>java org.mozilla.javascript.tools.shell.Main beautify.js file-to-pp.js<br/></code></pre><br/><br/><p>You can mix and match Java and Javascript in your Rhino run scripts, so if you know a little Java it shouldn't be too hard to get this running with text-streams as well.    </p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      LOAD ORDER
+    </pattern>
+    <template>
+<![CDATA[<blockquote><br/>  <p><strong>Is there a way to make sure both scripts load before I use them in my application.js?</strong></p><br/></blockquote><br/><br/><p>JavaScript files should load sequentially <em>and block</em> so unless the scripts you are depending on are doing something unusual all you should need to do is load application.js after the other files.</p><br/><br/><p><a href="http://yuiblog.com/blog/2008/07/22/non-blocking-scripts/" rel="nofollow">Non-blocking JavaScript Downloads</a> has some information about how scripts load (and discusses some techniques to subvert the blocking).</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      FIX CSS J DROP DOWN PROBLEM IN IE7 WHEN PAGE INCLUD GOOGL MAP
+    </pattern>
+    <template>
+<![CDATA[<p>I don't know if this will fix your problem but you may want to try <a href="http://www.cssplay.co.uk/menus/pro_drop8.html" rel="nofollow">this solution at ccsplay.co.uk</a> which fixes the problem of menus appearing underneath drop-down lists. I don't know if it will work for sure, but it's worth a shot.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      REASON NOT TO USE JSONP FOR AJA X REQUEST
+    </pattern>
+    <template>
+<![CDATA[<p>Downside? It's fairly limited - you trigger a "GET" request and get back some script that's executed. You don't get error handling if your server throws an error, so you need to wrap all errors in JSON as well. You can't really cancel or retry the request. You're at the mercy of the various browser author opinions of "correct" behavior for dynamically-generated <code>&lt;script&gt;</code> tags. Debugging is somewhat more difficult. </p><br/><br/><p>That said, i've used it on occasion, and haven't suffered. YMMV.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      TO ASK YES NO QUESTION IN JAVASCRIPT
+    </pattern>
+    <template>
+<![CDATA[<p>Javascript offers 3 modal boxes.  Prompt, confirm and alert.  None of those satisfy your request.  </p><br/><br/><p>There are a plethora of js modal popup solutions.  Here's an example.</p><br/><br/><ul><br/><li><a href="http://www.wildbit.com/labs/modalbox/" rel="nofollow">ModalBox</a></li><br/></ul><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      AN IMAG GET COORDIN
+    </pattern>
+    <template>
+<![CDATA[<p>This thread answers exactly the same <a href="http://bytes.com/forum/thread507079.html" rel="nofollow">question</a></p><br/><br/><p>With more info <a href="http://www.quirksmode.org/js/events_properties.html#position" rel="nofollow">here</a></p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      KEEP AN ORDER LIST OF WINDOW ( FROM MOST REC CREAT TO OLDEST )
+    </pattern>
+    <template>
+<![CDATA[<p>A stack if you want to just close the window on top.<br/>A queue if you also need to open windows at the end.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      JAVASCRIPT FROM FLEX IS THI JAVASCRIPT FUNCTION DANGER
+    </pattern>
+    <template>
+<![CDATA[<p>There's no need for the JavaScript function, the first argument to <code>ExternalInterface</code> can be any JavaScript code, it doesn't have to be a function name (the documentation says so, but it is wrong).</p><br/><br/><p>Try this:</p><br/><br/><pre><code>ExternalInterface.call("alert('hello')");<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      DYNAM LOAD A JAVASCRIPT FILE ( THINK C S # INCLUD )
+    </pattern>
+    <template>
+<![CDATA[<p>You may write dynamic script tags (using <a href="http://www.prototypejs.org/" rel="nofollow">Prototype</a>):</p><br/><br/><pre><code>new Element("script", {src: "myBigCodeLibrary.js", type: "text/javascript"});<br/></code></pre><br/><br/><p>The problem here is that we do not know <em>when</em> the external script file is fully loaded.</p><br/><br/><p>We often want our dependant code on the very next line and like to write something like: </p><br/><br/><pre><code>if (iNeedSomeMore){<br/>  Script.load("myBigCodeLibrary.js");  // includes code for myFancyMethod();<br/>  myFancyMethod();                     // cool, no need for callbacks!<br/>}<br/></code></pre><br/><br/><p>There is a smart way to inject script dependencies without the need of callbacks. You simply have to pull the script via a <em>synchronous AJAX request</em> and eval the script on global level. </p><br/><br/><p>If you use Prototype the Script.load method looks like this:</p><br/><br/><pre><code>var Script = {<br/>  _loadedScripts: [],<br/>  include: function(script){<br/>    // include script only once<br/>    if (this._loadedScripts.include(script)){<br/>      return false;<br/>    }<br/>    // request file synchronous<br/>    var code = new Ajax.Request(script, {<br/>      asynchronous: false, method: "GET",<br/>      evalJS: false, evalJSON: false<br/>    }).transport.responseText;<br/>    // eval code on global level<br/>    if (Prototype.Browser.IE) {<br/>      window.execScript(code);<br/>    } else if (Prototype.Browser.WebKit){<br/>      $$("head").first().insert(Object.extend(<br/>        new Element("script", {type: "text/javascript"}), {text: code}<br/>      ));<br/>    } else {<br/>      window.eval(code);<br/>    }<br/>    // remember included script<br/>    this._loadedScripts.push(script);<br/>  }<br/>};<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      OB AIR HANDL JSON OBJECT FROM SERVER
+    </pattern>
+    <template>
+<![CDATA[<p>You can find a <a href="http://www.JSON.org/js.html" rel="nofollow">JSON parser written in JavaScript here</a> (<a href="http://www.JSON.org/json2.js" rel="nofollow">source code here</a>). You can also use the as3corelib JSON parser from JavaScript, there's <a href="http://help.adobe.com/en_US/AIR/1.1/devappshtml/WS5b3ccc516d4fbf351e63e3d118666ade46-7ed9.html" rel="nofollow">a description of how to access ActionScript libraries from JavaScript here</a>.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      HTTPREQUEST RETURN VALU
+    </pattern>
+    <template>
+<![CDATA[<p>If you're looking for a quick solution that should work with most available frameworks, I'd go for JSON. It's easy to start with and works.</p><br/><br/><p>If you're trying to build a larger application that you're going to extend (in terms of size or maybe your own API for 3rd party extensions) I'd go for XML. You could write a proxy to provide the information in JSON or HTML too, but having XML as the main source is definitly worth the time and effort while building the app.</p><br/><br/><p>Like <a href="http://stackoverflow.com/users/1450/john-topley" rel="nofollow">@John Topley</a> said: it depends.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      INLIN SEARCH FUNCTION TO WEB PAGE
+    </pattern>
+    <template>
+<![CDATA[<p><a href="http://vision-media.ca/resources/jquery/jquery-inline-search-plugin" rel="nofollow">jQuery inline search plugin</a></p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      SOME WAY TO SHOW HTML CONTENT INSID FLASH
+    </pattern>
+    <template>
+<![CDATA[<p><a href="http://www.wdvl.com/Reviews/Graphics/Flash5/external.html" rel="nofollow">Here is a decent article</a> on how to accomplish that.</p><br/><br/><p><a href="http://stackoverflow.com/questions/22909/is-there-some-way-to-show-html-content-inside-flash#24396" rel="nofollow">@Flubba</a>: I didn't say "<em>great</em>" article, I said "<em>decent</em>" - there is a big difference. Besides, no one else had answered and it had been around a while. I figured a "decent" answer was better than none. I am no Flash expert, so...</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      PROVID NAMESPAC IN JAVASCRIPT WITH INSTANC OBJECT
+    </pattern>
+    <template>
+<![CDATA[<p>Simple:</p><br/><br/><pre><code>if(!MyNamespace) MyNamespace = {};<br/><br/>MyNamespace.foo = function() {<br/>   this.length = 0;<br/>};<br/>MyNamespace.foo.prototype.getLength = function() {<br/>   return this.length;<br/>};<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      PURPOS ( IF ANI ) OF JAVASCRIPT IN EVENT HANDLER TAG
+    </pattern>
+    <template>
+<![CDATA[<p>Probably nothing in your example. My understanding is that "javascript:" is for anchor tags (in place of an actual href). You'd use it so that your script can execute when the user clicks the link, but without initiating a navigation back to the page (which a blank href coupled with an onclick will do).</p><br/><br/><p>For example:</p><br/><br/><pre><code>&lt;a href="javascript:someFunction();"&gt;Blah&lt;/a&gt;<br/></code></pre><br/><br/><p>Rather than:</p><br/><br/><pre><code>&lt;a href="" onclick="someFunction();"&gt;Blah&lt;/a&gt;<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      YUI COMPRESSOR GUI APP EXIST
+    </pattern>
+    <template>
+<![CDATA[<p>I don't believe a GUI exists for YUI Compressor...probably because in most projects YUI Compressor is run by an automatic build process, and its command line parameters are of the "figure 'em out once, forget about 'em" nature.</p><br/><br/><p>In terms of combining files, this too would be easy to do with the current YUI Compressor and a command line (as I'm sure you already know), but the projects that I've worked on have opted for combining JS files at runtime before sending down to the client.  This allows for greater flexibility of picking and choosing appropriate JS packages for a specific users' current needs (and thus minimizing the amount of JS being sent to the client while trying, of course, to balance these packages in an appropriate browser caching scheme).  Steve Souders' "<a href="http://stevesouders.com/hpws/" rel="nofollow">High Performance Web Sites</a>" has great discussion on this topic.</p><br/><br/><p>That being said, a GUI for YUI Compressor certainly sounds like something worth doing, if for no other reason than helping expose all of YUI Compressor's power to those users who are only aware of the most basic command line parameters.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      EXAMPL OF DESIGN PATTERN IMPLEMENT USE JAVASCRIPT
+    </pattern>
+    <template>
+<![CDATA[<p>I just wanted to add my favorite JavaScript pattern that I learned from Pro JavaScript Design Patterns which Jonathan Rauch already recommended.</p><br/><br/><p>It is the namespace singleton pattern.  Basically, you create namespaces via singletons which allow you to hide methods and variables from external use.  The hidden/exposed methods are actually hidden because they are defined within the closure.</p><br/><br/><pre><code>var com = window.com || {};<br/>com.mynamespace = com.mynamespace || {};<br/>com.mynamespace.newpackage = (function() {<br/>    var myPrivateVariable = "hidden";<br/>    var myPublicVariable = "exposed";<br/><br/>    function myPrivateMethod() {<br/>        return "also hidden";<br/>    }<br/><br/>    function myPublicMethod() {<br/>        return "also exposed";<br/>    }<br/><br/>    return {<br/>        myPublicMethod: myPublicMethod,<br/>        myPublicVariable: myPublicVariable<br/>    };<br/>})();<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      JAVASCRIPT EDITOR
+    </pattern>
+    <template>
+<![CDATA[<p>Disclaimer, I work at Aptana. I would point out there are some nice features for JS that you might not get so easily elsewhere. One is plugin-level integration of JS libraries that provide CodeAssist, samples, snippets and easy inclusion of the libraries files into your project; we provide the plugins for many of the more commonly used libraries, including YUI, jQuery, Prototype, dojo and EXT JS.</p><br/><br/><p>Second, we have a server-side JavaScript engine called Jaxer that not only lets you run any of your JS code on the server but adds file, database and networking functionality so that you don't have to use a scripting language but can write the entire app in JS.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      HTML STRING WITH JQUERI
+    </pattern>
+    <template>
+<![CDATA[<p>Since you're using jQuery, you can just set the element's <code>text</code> property:</p><br/><br/><pre><code>// before:<br/>// &lt;div class="someClass"&gt;text&lt;/div&gt;<br/>var someHtmlString = "&lt;script&gt;alert('hi!');&lt;/script&gt;";<br/>$("div.someClass").text(someHtmlString);<br/>// after: <br/>// &lt;div class="someClass"&gt;&amp;lt;script&amp;gt;alert('hi!');&amp;lt;/script&amp;gt;&lt;/div&gt;<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      SOME WAY TO INTRODUC A DELAY IN JAVASCRIPT
+    </pattern>
+    <template>
+<![CDATA[<p>There is the </p><br/><br/><pre><code>setTimeout( expression, timeout );<br/></code></pre><br/><br/><p>function which can be passed the time after which the expression will be executed.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      TIP ON AN IMAG
+    </pattern>
+    <template>
+<![CDATA[<p>Yes, you can do this without Javascript. Use an HTML image map, with title attributes, like this:</p><br/><br/><pre><code>&lt;img usemap="#logo" src="http://stackoverflow.com/Content/Img/stackoverflow-logo-250.png"&gt;<br/>&lt;map name="logo"&gt;<br/>&lt;area shape="rect" href="" coords="52,42,121,65" title="Stack"&gt;<br/>&lt;area shape="rect" href="" coords="122,42,245,65" title="Overflow"&gt;<br/>&lt;/map&gt;<br/></code></pre><br/><br/><p>The Stack Overflow logo refers to the <a href="http://www.w3.org/TR/html4/struct/objects.html#edef-MAP" rel="nofollow">image map</a>, which defines a rectangle for each of the two words using an <em>area</em> tag. Each area tag's <em>title</em> element specifies the text that browsers generally show as a tooltip. The <em>shape</em> attribute can also specify a circle or polygon. </p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      CALENDAR POP UP FOR POPUL A WEB FORM
+    </pattern>
+    <template>
+<![CDATA[<p>JQuery's <a href="http://docs.jquery.com/UI/Datepicker" rel="nofollow">datepicker</a> is an extremely flexible tool. With the ability to attach handlers prior to opening or after date selection, <a href="http://marcgrabanski.com/article/jquery-ui-datepicker-themes" rel="nofollow">themes</a>, range selection and a variety of other incredibly useful options, I've found that it meets all my needs.</p><br/><br/><p>The fact that I sit next to one of its maintainers here at work is also fairly useful... </p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      SCHEDULER CALENDAR JS WIDGET LIBRARI
+    </pattern>
+    <template>
+<![CDATA[<p>It would be easy to use google calendar to setup/store your events and then display those events on your site.</p><br/><br/><p><a href="http://ajax.phpmagazine.net/2006/04/howto_integrate_google_calenda.html" rel="nofollow">Here</a> is a good example of pulling data from a public google calender.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      SERV KEYWORD IN JAVASCRIPT
+    </pattern>
+    <template>
+<![CDATA[<p>We should be linking to the actual sources of info, rather than just the top google hit.</p><br/><br/><p><a href="http://developer.mozilla.org/En/Core_JavaScript_1.5_Reference/Reserved_Words" rel="nofollow">http://developer.mozilla.org/En/Core_JavaScript_1.5_Reference/Reserved_Words</a></p><br/><br/><p>JSscript 8.0:<br/><a href="http://msdn.microsoft.com/en-us/library/ttyab5c8.aspx" rel="nofollow">http://msdn.microsoft.com/en-us/library/ttyab5c8.aspx</a></p><br/><br/><p>I'll look for ECMAScript links later.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      SELECTOR ENGIN
+    </pattern>
+    <template>
+<![CDATA[<p>A selector engine is used to query a page's DOM for particular elements, based on some sort of query (usually CSS syntax or similar).  </p><br/><br/><p>For example, this jQuery:</p><br/><br/><pre><code>$('div')<br/></code></pre><br/><br/><p>Would search for and return all of the &lt;div&gt; elements on the page.  It uses jQuery's selector engine to do that.</p><br/><br/><p>Optimizing the selector engine is a big deal because almost every operation you perform with these frameworks is based on some sort of DOM query.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      X CONTROL JAVASCRIPT
+    </pattern>
+    <template>
+<![CDATA[<p><em>Please</em> just use an existing ActiveX control. Like Flash or Silverlight. Flash has built-in webcam support and is controllable via JavaScript. Silverlight doesn't have built-in camera support, but it's JavaScript integration is fantastic.</p><br/><br/><p>If you must write your own then fret not, it is trivial to get it to interact with JavaScript. You just have to expose the <a href="http://msdn.microsoft.com/en-us/library/ms221608.aspx" rel="nofollow"><code>IDispatch</code></a> interface.</p><br/><br/><p>For events, you need to learn about <a href="http://msdn.microsoft.com/en-us/library/98b11x9k(VS.80).aspx" rel="nofollow">Connection Points</a>.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      PL SQL LIBRARI FOR AUTO GENER JSON DO YOU RECOMMEND
+    </pattern>
+    <template>
+<![CDATA[<p>Check out PL/JSON.  You can see it at <a href="http://oracleoss.com/" rel="nofollow">http://oracleoss.com/</a></p><br/><br/><p>It's at version 0.5 right now.  It can generate JSON but not read it.  I'm writing the parser and it will be added before v1.0.</p><br/><br/><p>LewisC<br/><a href="http://database-geek.com" rel="nofollow">http://database-geek.com</a></p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      JAVASCRIPT EDITOR ON WINDOW
+    </pattern>
+    <template>
+<![CDATA[<p>In case you're a .Net programmer: VS 2008 has pretty great JS support including <a href="http://weblogs.asp.net/scottgu/archive/2007/06/21/vs-2008-javascript-intellisense.aspx">intellisense</a> on dynamically added methods/properties and comfortable <a href="http://weblogs.asp.net/scottgu/archive/2007/07/19/vs-2008-javascript-debugging.aspx">debugging</a>.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      ARRAY OF OBJECT IN JAVASCRIPT
+    </pattern>
+    <template>
+<![CDATA[<p>EDIT: You cannot overload operators in current, common browser-based implementations of JavaScript interpreters.</p><br/><br/><p>To answer the original question, one way you could do this, and mind you, this is a bit of a hack, simply <a href="http://www.json.org/json2.js" rel="nofollow">serialize the two arrays to JSON</a> and then compare the two JSON strings. That would simply tell you if the arrays are different, obviously you could do this to <em>each</em> of the objects within the arrays as well to see which ones were different.</p><br/><br/><p>Another option is to use a library which has some nice facilities for comparing objects - I use and recommend <a href="http://www.mochikit.com/" rel="nofollow"><strong>MochiKit</strong></a>.</p><br/><br/><p><hr /></p><br/><br/><p><strong>EDIT:</strong> <a href="http://stackoverflow.com/questions/27030/comparing-arrays-of-objects-in-javascript#27932" rel="nofollow">The answer kamens gave</a> deserves consideration as well, since a single function to compare two given objects would be much smaller than any library to do what I suggest (although my suggestion would certainly work well enough).</p><br/><br/><p>Here is a naïve implemenation that may do just enough for you - be aware that there are potential problems with this implementation:</p><br/><br/><pre><code>function objectsAreSame(x, y) {<br/>   var objectsAreSame = true;<br/>   for(var propertyName in x) {<br/>      if(x[propertyName] !== y[propertyName]) {<br/>         objectsAreSame = false;<br/>         break;<br/>      }<br/>   }<br/>   return objectsAreSame;<br/>}<br/></code></pre><br/><br/><p>The assumption is that both objects have the same exact list of properties.</p><br/><br/><p>Oh, and it is probably obvious that, for better or worse, I belong to the only-one-return-point camp. :)</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      DECLAR A VARIABL BEFOR THE CONDIT RESULT
+    </pattern>
+    <template>
+<![CDATA[<p>It depends on the context of this code. If it's running on page load, then it would be better to put this code in an if block.</p><br/><br/><p>But, if this is part of a validation function, and the field switches between enabled and disabled throughout the life of the page, then this code sort of makes sense.</p><br/><br/><p>It's important to remember that setting disabled to false also alters page state.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      KEY VALU PAIR TOGETH IN HTML SELECT WITH JQUERI
+    </pattern>
+    <template>
+<![CDATA[<p>Like lucas said the value attribute is what you need. Using your code it would look something like this ( I added an id attribute to the select to make it fit ):</p><br/><br/><pre><code>$select = $('&lt;select id="mySelect"&gt;&lt;/select&gt;');<br/>$select.append('&lt;option value="1"&gt;Jason&lt;/option&gt;') //Key = 1<br/>   .append('&lt;option value="32"&gt;John&lt;/option&gt;') //Key = 32<br/>   .append('&lt;option value="423"&gt;Paul&lt;/option&gt;') //Key = 423<br/></code></pre><br/><br/><p>jQuery lets you get the value using the val() method. Using it on the select tag you get the current selected option's value.</p><br/><br/><pre><code>$( '#mySelect' ).val(); //Gets the value for the current selected option<br/><br/>$( '#mySelect &gt; option' ).each( function( index, option ) {<br/>    option.val(); //The value for each individual option<br/>} );<br/></code></pre><br/><br/><p>Just in case, the .each method loops throught every element the query matched.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      LEARN JQUERI IS IT WORTH IT
+    </pattern>
+    <template>
+<![CDATA[<p>Rick Strahl and Matt Berseth's blogs both tipped me into jQuery and man am I glad they did. jQuery completely changes a) your client programming perspective, b) the grief it causes it you, and c) how much fun it can be! </p><br/><br/><p><a href="http://www.west-wind.com/weblog/" rel="nofollow">http://www.west-wind.com/weblog/</a></p><br/><br/><p><a href="http://mattberseth.com/" rel="nofollow">http://mattberseth.com/</a></p><br/><br/><p>I used the book jQuery in Action <br/><a href="http://rads.stackoverflow.com/amzn/click/1933988355" rel="nofollow">http://www.amazon.com/jQuery-Action-Bear-Bibeault/dp/1933988355/ref=sr_1_1?ie=UTF8&amp;s=books&amp;qid=1219716122&amp;sr=1-1</a> (I bought it used at Amazon for about $22). It has been a big help into bootstrapping me into jQuery. The documentation at jquery.com are also very helpful.</p><br/><br/><p>A place where jQuery falls a little flat is with its UI components. Those don't seem to be quite ready for primetime just yet. </p><br/><br/><p>It could be that <a href="http://en.wikipedia.org/wiki/Prototype%5FJavaScript%5FFramework" rel="nofollow">Prototype</a> or <a href="http://en.wikipedia.org/wiki/MooTools" rel="nofollow">MooTools</a> or <a href="http://en.wikipedia.org/wiki/Ext%5F%28JavaScript%5Flibrary%29" rel="nofollow">ExtJS</a> are as good as jQuery. But for me, jQuery seems to have a little more momentum behind it right now and that counts for something for me. </p><br/><br/><p>Check jQuery out. It is very cool! </p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      JAVASCRIPT CALLBACK WITHOUT FULL POSTBACK
+    </pattern>
+    <template>
+<![CDATA[<p>If you don't want to create a blank page, you could call a IHttpHandler (ashx) file:</p><br/><br/><pre><code>public class RSSHandler : IHttpHandler<br/>    {<br/>    	public void ProcessRequest (HttpContext context)<br/>    	{   <br/>    		context.Response.ContentType = "text/xml";<br/><br/>    		string sXml = BuildXMLString(); //not showing this function, <br/>    		//but it creates the XML string<br/>    		context.Response.Write( sXml );<br/>    	}<br/><br/>    	public bool IsReusable<br/>    	{<br/>    		get { return true; }<br/>    	}<br/><br/>    }<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      AN UNDEFIN OBJECT PROPERTI IN JAVASCRIPT
+    </pattern>
+    <template>
+<![CDATA[<p>Use:</p><br/><br/><pre><code>if (typeof something === "undefined") <br/>   alert("something is undefined");<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      JAVASCRIPT COMPRESSOR
+    </pattern>
+    <template>
+<![CDATA[<p>Google released <a href="http://code.google.com/p/closure-compiler/" rel="nofollow"><strong>Closure Compiler</strong></a> which seems to be generating the smallest files so far as seen <a href="http://blog.feedly.com/2009/11/06/google-closure-vs-yui-min/" rel="nofollow">here</a> and <a href="http://news.ycombinator.com/item?id=924426" rel="nofollow">here</a></p><br/><br/><p>Previous to that the various options <a href="http://www.julienlecomte.net/blog/2007/08/13/" rel="nofollow"> were as follow </a></p><br/><br/><p>Basically <a href="http://dean.edwards.name/packer/" rel="nofollow">Packer</a> does a better job at initial compression , but if you are going to gzip the files before sending on the wire (which you should be doing) <a href="http://www.julienlecomte.net/yuicompressor/" rel="nofollow">YUI Compressor</a> gets the smallest final size.</p><br/><br/><p>The tests were done on jQuery code btw.</p><br/><br/><ul><br/><li>Original jQuery library 62,885 bytes , 19,758 bytes after gzip</li><br/><li>jQuery minified with JSMin 36,391 bytes , 11,541 bytes after gzip</li><br/><li>jQuery minified with Packer 21,557 bytes , 11,119 bytes after gzip</li><br/><li>jQuery minified with the YUI Compressor 31,822 bytes  , 10,818 bytes after gzip</li><br/></ul><br/><br/><p>@<a href="http://stackoverflow.com/users/2434/daniel-james">daniel james</a> mentions in the comment <a href="http://compressorrater.thruhere.net/" rel="nofollow">compressorrater</a> which shows Packer  leading the chart in best compression, so I guess ymmv </p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      BROWSER QUIRK ARRAY.LENGTH
+    </pattern>
+    <template>
+<![CDATA[<p>It seems to me that the Firefox behavior is correct.  What is the value of the 6th value in IE (sorry I don't have it handy to test).  Since there is no actual value provided, I imagine it's filling it with something like 'null' which certainly doesn't seem to be what you intended to have happen when you created the array.</p><br/><br/><p>At the end of the day though, it doesn't really matter which is "correct" since the reality is that either you are targeting only one browser, in which case you can ignore what the others do, or you are targeting multiple browsers in which case your code needs to work on all of them.  In this case the obvious solution is to never include the dangling comma in an array initializer.</p><br/><br/><p>If you have problems avoiding it (e.g. for some reason you have developed a (bad, imho) habit of including it) and other problems like this, then something like <a href="http://www.jslint.com/" rel="nofollow">JSLint</a> might help.  </p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      EMOD BREAK ASP.NET POSTBACK
+    </pattern>
+    <template>
+<![CDATA[<p>Both of you were on the right track.  What I realized is that SimpleModal appends the dialog to the body, which is outside ASP.Net's <code>&lt;form&gt;</code>, which breaks the functionality, since it can't find the elements.</p><br/><br/><p>To fix it, I just modified the SimpleModal source to append eveything to <code>'form'</code> instead of <code>'body'</code>.  When I create the dialog, I also use the <code>persist: true</code> option, to make sure the buttons stay through opening and closing.</p><br/><br/><p>Thanks everyone for the suggestions!</p><br/><br/><p><em>UPDATE:</em> Version 1.3 adds an <code>appendTo</code> option in the configuration for specifying which element the modal dialog should be appended to. <a href="http://www.ericmmartin.com/projects/simplemodal/#options" rel="nofollow">Here are the docs</a>.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      AN OBFUSC ENOUGH TO SECUR MY JAVASCRIPT CODE
+    </pattern>
+    <template>
+<![CDATA[<p>I'm going to tell you a secret. Once you understand it, you'll feel a lot better about the fact that Javascript obfuscation is only really useful for saving bandwidth when sending scripts over the wire.</p><br/><br/><p>Your source-code is not worth stealing.</p><br/><br/><p>I know this comes as a shock to the ego, but I can say this confidently without ever having seen a line of code you've written because outside the very few realms of development where serious magic happens, it's true of all source-code.</p><br/><br/><p>Say, tomorrow, someone dumped a pile of DVDs on your doorstep containing the source code for Windows Vista. What would you be able to do with it? Sure, you could compile it and give away copies, but that's just one step more effort than copying the retail version. You could painstakingly find and remove the license-checking code, but that's something some bright kid has already done to the binaries. Replace the logo and graphics, pretend you wrote it yourself and market it as "Vicrosoft Mista"? You'll get caught.</p><br/><br/><p>You could spend an enormous amount of time reading the code, trying to understand it and truly "stealing the intellectual property" that Microsoft invested in developing the product. But you'd be disappointed. You'd find the code was a long series of mundane decisions, made one after the other. Some would be smarter than you could think of. Some would leave you shaking your head wondering what kind of monkeys they're hiring over there. Most would just make you shrug and say "yeah, that's how you do that."</p><br/><br/><p>In the process you'll learn a lot about writing operating systems, but that's not going to hurt Microsoft.</p><br/><br/><p>Replace "Vista" with "Leopard" and the above paragraphs don't change one bit. It's not Microsoft, it's <em>software</em>. Half the people on this site could probably develop a Stack Overflow clone, with or without looking at the source of this site. They just haven't. The source-code of Firefox and WebKit are out there for anyone to read. Now go write your own browser from scratch. See you in a few years.</p><br/><br/><p>Software development is an investment of time. It's utter hubris to imagine that what you're doing is so special that nobody could clone it without looking at your source, or even that it would make their job that much easier without an actionable (and easily detectable) amount of cut and paste. </p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      MAINTAIN CORRECT JAVASCRIPT EVENT AFTER USE CLONENOD ( TRUE )
+    </pattern>
+    <template>
+<![CDATA[<p>Don't put handler on each link (this really should be a button, BTW). Use <a href="http://www.quirksmode.org/js/events_order.html" rel="nofollow">event bubbling</a> to handle <em>all</em> buttons with one handler:</p><br/><br/><pre><code>formObject.onclick = function(e)<br/>{<br/>    e=e||event; // IE sucks<br/>    var target = e.target||e.srcElement; // and sucks again<br/><br/>    // target is the element that has been clicked<br/>    if (target &amp;&amp; target.className=='remove') <br/>    {<br/>        target.parentNode.parentNode.removeChild(target.parentNode);<br/>        return false; // stop event from bubbling elsewhere<br/>    }<br/>}<br/></code></pre><br/><br/><p>+</p><br/><br/><pre><code>&lt;div&gt;<br/>  &lt;input...&gt;<br/>  &lt;button type=button class=remove&gt;Remove without JS handler!&lt;/button&gt;<br/>&lt;/div&gt;<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      SUPPRESS NTLM DIALOG BOX AFTER UNAUTHOR REQUEST
+    </pattern>
+    <template>
+<![CDATA[<p><a href="http://stackoverflow.com/users/2199/mark-brackett">Mark</a>'s comment is correct; The NTLM auth prompt is triggered by a 401 response code and the presence of NTLM as the first mechanism offered in the WWW-Authenticate header (Ref: <a href="http://curl.haxx.se/rfc/ntlm.html" rel="nofollow">The NTLM Authentication Protocol</a>).</p><br/><br/><p>I'm not sure if I understand the question description correctly, but I think you are trying to wrap the NTLM authentication for SharePoint, which means you don't have control over the server-side authentication protocol, correct? If you're not able to manipulate the server side to avoid sending a 401 response on failed credentials, then you will not be able to avoid this problem, because it's part of the (client-side) spec:</p><br/><br/><h3><a href="http://www.w3.org/TR/2006/WD-XMLHttpRequest-20060619/" rel="nofollow">The XMLHttpRequest Object</a></h3><br/><br/><blockquote><br/>  <p>If the UA supports HTTP Authentication [RFC2617] it SHOULD consider requests<br/>  originating from this object to be part of the protection space that includes the<br/>  accessed URIs and send Authorization  headers and handle 401 Unauthorised requests<br/>  appropriately. if authentication fails, UAs should prompt the users for credentials.</p><br/></blockquote><br/><br/><p>So the spec actually calls for the browser to prompt the user accordingly if any 401 response is received in an XMLHttpRequest, just as if the user had accessed the URL directly. As far as I can tell the only way to really avoid this would be for you to have control over the server side and cause 401 Unauthorized responses to be avoided, as Mark mentioned. </p><br/><br/><p>One last thought is that you may be able to get around this using a proxy, such a separate server side script on another webserver. That script then takes a user and pass parameter and checks the authentication, so that the user's browser isn't what's making the original HTTP request and therefore isn't receiving the 401 response that's causing the prompt. If you do it this way you can find out from your "proxy" script if it failed, and if so then prompt the user again until it succeeds. On a successful authentication event, you can simply fetch the HTTP request as you are now, since everything works if the credentials are correctly specified.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      COORDIN OF THE CARET IN TEXT BOX
+    </pattern>
+    <template>
+<![CDATA[<p>After I read this question I decided to make my first jQuery plugin as the question was interesting, it's still buggy but I plan on having it working fully in a short time.</p><br/><br/><p>It should return the absolute distance from the top and left side of the screen</p><br/><br/><p><a href="http://plugins.jquery.com/project/caretPosition" rel="nofollow">caretPosition</a></p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      SUBMIT A FORM WHEN THE RETURN KEY IS PRESS
+    </pattern>
+    <template>
+<![CDATA[<p>IMO, this is the cleanest answer: </p><br/><br/><pre><code>&lt;html&gt;<br/>&lt;head&gt;&lt;title&gt;title&lt;/title&gt;&lt;/head&gt;<br/>&lt;body&gt;<br/>  &lt;form action="" method="get"&gt;<br/>  Name: &lt;input type="text" name="name"/&gt;&lt;br/&gt;<br/>  Pwd: &lt;input type="password" name="password"/&gt;&lt;br/&gt;<br/>  &lt;div class="yourCustomDiv"/&gt;<br/>  &lt;input type="submit" style="display:none"/&gt;<br/>&lt;/form&gt;<br/>&lt;/body&gt;<br/>&lt;/html&gt;<br/></code></pre><br/><br/><p>Better yet, if you are using javascript to submit the form using the custom div, you should also use javascript to create it, and to set the display:none style on the button. This way users with javascript disabled will still see the submit button and can click on it.</p><br/><br/><hr><br/><br/><p>It has been noted that display:none will cause IE to ignore the input.  I created a <a href="http://jsfiddle.net/Suyw6/1/" rel="nofollow">new JSFiddle example</a> that starts as a standard form, and uses progressive enhancement to hide the submit and create the new div.  I did use the CSS styling from <a href="http://stackoverflow.com/questions/29943/how-to-submit-a-form-when-the-return-key-is-pressed/6602788#6602788">StriplingWarrior</a>.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      AN HTML ENTITI WITH JQUERI
+    </pattern>
+    <template>
+<![CDATA[<p>When the HTML is parsed, what JQuery sees in the DOM is a <code>UPWARDS DOUBLE ARROW</code> ("⇑"), not the entity reference. Thus, in your Javascript code you should test for <code>"⇑"</code> or <code>"\u21d1"</code>. Also, you need to change what you're switching to:</p><br/><br/><pre><code>function expandCollapse(id) {<br/>    var arrow = $("#"+id+" span").html();<br/>    if(arrow == "\u21d1") {     <br/>        $("#"+id+" span").html("\u21d3");                           <br/>    } else {            <br/>        $("#"+id+" span").html("\u21d1");                           <br/>    }<br/>}<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      FIRE AN EVENT WHEN A IFRAM HA FINISH LOAD IN JQUERI
+    </pattern>
+    <template>
+<![CDATA[<p>I'm pretty certain that it cannot be done.</p><br/><br/><p>Pretty much anything else than PDF works, even Flash. (Tested on Safari, Firefox 3, IE 7)</p><br/><br/><p>Too bad.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      AND THREAD
+    </pattern>
+    <template>
+<![CDATA[<p>The words you want to google for are <a href="http://www.google.com/search?q=JavaScript%2Bworker%2Bthreads" rel="nofollow">JavaScript Worker Threads</a></p><br/><br/><p>Apart from from <a href="http://gears.google.com/" rel="nofollow">Gears</a> there's nothing available right now, but there's plenty of talk about how to implement this so I guess watch this question as the answer will no doubt change in future.</p><br/><br/><p>Here's the relevant documentation for Gears: <a href="http://code.google.com/apis/gears/api%5Fworkerpool.html" rel="nofollow">WorkerPool API</a></p><br/><br/><p>WHATWG has a Draft Recommendation for worker threads: <a href="http://www.whatwg.org/specs/web-workers/current-work/" rel="nofollow">Web Workers</a></p><br/><br/><p>And there's also Mozilla's <a href="https://wiki.mozilla.org/DOMWorkerThreads" rel="nofollow">DOM Worker Threads</a></p><br/><br/><p><hr /></p><br/><br/><p><strong>Update:</strong> June 2009, current state of browser support for JavaScript threads</p><br/><br/><p><strong>Firefox 3.5</strong> has web workers. Some demos of web workers, if you want to see them in action: </p><br/><br/><ul><br/><li><a href="http://blog.mozbox.org/post/2009/04/10/Web-Workers-in-action" rel="nofollow">Simulated Annealing</a> ("Try it" link)</li><br/><li><a href="https://developer.mozilla.org/web-tech/2008/12/04/web-workers-part-2/" rel="nofollow">Space Invaders</a> (link at end of post)</li><br/><li><a href="http://www.yafla.com/dforbes/Web%5FWorkers%5Fand%5FYou%5F%5FA%5FFaster%5FMore%5FPowerful%5FJavaScript%5FWorld" rel="nofollow">MoonBat JavaScript Benchmark</a> (first link)</li><br/></ul><br/><br/><p>The Gears plugin can also be installed in Firefox.</p><br/><br/><p><strong>Safari 4</strong>, and the <strong>WebKit nightlies</strong> have worker threads: </p><br/><br/><ul><br/><li><a href="http://blog.owensperformance.com/2009/02/safari-4-worker-threads-javascript-domination/" rel="nofollow">JavaScript Ray Tracer</a> </li><br/></ul><br/><br/><p><strong>Chrome</strong> has Gears baked in, so it can do threads, although it requires a confirmation prompt from the user (and it uses a different API to web workers, although it will work in any browser with the Gears plugin installed): </p><br/><br/><ul><br/><li><a href="http://code.google.com/apis/gears/samples/hello%5Fworld%5Fworkerpool/hello%5Fworld%5Fworkerpool.html" rel="nofollow">Google Gears WorkerPool Demo</a> (not a good example as it runs too fast to test in Chrome and Firefox, although IE runs it slow enough to see it blocking interaction)</li><br/></ul><br/><br/><p><strong>IE8</strong> can only do threads with the Gears plugin installed </p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      JAVASCRIPT REGEX
+    </pattern>
+    <template>
+<![CDATA[<p>Hehe this was sort of asked moments ago and Jeff pointed out:<br /><br/><a href="http://www.regular-expressions.info/refflavors.html">http://www.regular-expressions.info/refflavors.html</a>.</p><br/><br/><p>There is a comparison of regular expression capabilities across tools and languages.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      HTML OPPOSIT TO NOSCRIPT
+    </pattern>
+    <template>
+<![CDATA[<p>You could have an invisible div that gets shown via JavaScript when the page loads.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      JAVASCRIPT ERROR MEAN PERMISS DENI TO CALL METHOD TO LOCATION.TOSTR
+    </pattern>
+    <template>
+<![CDATA[<p>Are you using javascript to communicate between frames/iframes which point to different domains? This is not permitted by the JS "same origin/domain" security policy. Ie, if you have</p><br/><br/><p><code>&lt;iframe name="foo" src="foo.com/script.js"&gt;</code><br/>  <code>&lt;iframe name="bar" src="bar.com/script.js"&gt;</code></p><br/><br/><p>And the script on bar.com tries to access <code>window["foo"].Location.toString</code>, you will get this (or similar) exceptions. Please also note that the same origin policy can also kick in if you have content from different subdomains. <a href="http://www.mozilla.org/projects/security/components/same-origin.html" rel="nofollow">Here</a> you can find a short and to the point explanation of it with examples.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      DRAGGABL AND RESIZ JAVASCRIPT POPUP WINDOW
+    </pattern>
+    <template>
+<![CDATA[<p>JQuery is more focused on a lot of nice utility functions, and makes DOM manipulation a whole lot easier. Basically, I consider it to be Javascript as it should have been. It's a supremely helpful addition to the Javascript language itself.</p><br/><br/><p>ExtJS is a suite of GUI components with specific APIs... Use it if you want to easily create components that look like that, otherwise, go with a more flexible framework.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      GOOGL WEB TOOLKIT FOR MY NEW WEBAPP
+    </pattern>
+    <template>
+<![CDATA[<p>RoR is actually one of the things the GWT is made to work well with, as long as you're using REST properly.  It's in the Google Web Toolkit Applications book, and you can see a demo from the book using this kind of idea <a href="http://www.gwtapps.com/?page_id=33" rel="nofollow">here</a>.  That's not to say that you won't have any problems, but I think the support is definitely out there for it.</p><br/><br/><p>There's a neat project for making RoR/GWT easy that you can find <a href="http://code.google.com/p/gwt-on-rails/" rel="nofollow">here</a> (MIT license).  I haven't had a chance to try it out yet, but it looks like a good amount of thought has been put into it.  One catch is that it looks like it hasn't been fully tested with 2.1 Rails yet, just 2.0, so you may run into a few (probably minor and fixable) errors.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      EXIST FUNCTION FOR JQUERI
+    </pattern>
+    <template>
+<![CDATA[<p>Yes!</p><br/><br/><pre><code>jQuery.fn.exists = function(){return this.length&gt;0;}<br/><br/>if ($(selector).exists()) {<br/>    // Do something<br/>}<br/></code></pre><br/><br/><p>There you go!</p><br/><br/><p>This is in response to: <a href="http://herdingcode.com/?p=36">Herding Code podcast with Jeff Atwood</a></p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      LANG VB OR LANG BAS OPTION FOR PRETTIFY.J FROM GOOGL
+    </pattern>
+    <template>
+<![CDATA[<p>/EDIT: I've rewritten the whole posting.</p><br/><br/><p>Below is a pretty complete solution to the VB highlighting problem. If SO has got nothing better, <em>please</em> use it. VB syntax highlighting is definitely wanted.</p><br/><br/><p>I've also added a code example with some complex code literals that gets highlighted correctly. However, I haven't even tried to get XLinq right. Might still work, though. The <a href="http://msdn.microsoft.com/en-us/library/ksh7h19t.aspx" rel="nofollow">keywords list</a> is taken from the MSDN. Contextual keywords are not included. Did you know the <code>GetXmlNamespace</code> operator?</p><br/><br/><p>The algorithm knows literal type characters. It should also be able to handle identifier type characters but I haven't tested these. Note that the code works on <strong>HTML</strong>. As a consequence, &amp;, &lt; and &gt; are required to be read as named (!) entities, not single characters.</p><br/><br/><p>Sorry for the long regex.</p><br/><br/><pre><code>var highlightVB = function(code) {<br/>    var regex = /("(?:""|[^"])+"c?)|('.*$)|#.+?#|(&amp;amp;[HO])?\d+(\.\d*)?(e[+-]?\d+)?U?([SILDFR%@!#]|&amp;amp;)?|\.\d+[FR!#]?|\s+|\w+|&amp;amp;|&amp;lt;|&amp;gt;|([-+*/\\^$@!#%&amp;&lt;&gt;()\[\]{}.,:=]+)/gi;<br/><br/>    var lines = code.split("\n");<br/>    for (var i = 0; i &lt; lines.length; i++) {<br/>        var line = lines[i];<br/><br/>        var tokens;<br/>        var result = "";<br/><br/>        while (tokens = regex.exec(line)) {<br/>            var tok = getToken(tokens);<br/>            switch (tok.charAt(0)) {<br/>                case '"':<br/>                    if (tok.charAt(tok.length - 1) == "c")<br/>                        result += span("char", tok);<br/>                    else<br/>                        result += span("string", tok);<br/>                    break;<br/>                case "'":<br/>                    result += span("comment", tok);<br/>                    break;<br/>                case '#':<br/>                    result += span("date", tok);<br/>                    break;<br/>                default:<br/>                    var c1 = tok.charAt(0);<br/><br/>                    if (isDigit(c1) ||<br/>                        tok.length &gt; 1 &amp;&amp; c1 == '.' &amp;&amp; isDigit(tok.charAt(1)) ||<br/>                        tok.length &gt; 5 &amp;&amp; (tok.indexOf("&amp;amp;") == 0 &amp;&amp;<br/>                        tok.charAt(5) == 'H' || tok.charAt(5) == 'O')<br/>                    )<br/>                        result += span("number", tok);<br/>                    else if (isKeyword(tok))<br/>                        result += span("keyword", tok);<br/>                    else<br/>                        result += tok;<br/>                    break;<br/>            }<br/>        }<br/><br/>        lines[i] = result;<br/>    }<br/><br/>    return lines.join("\n");<br/>}<br/><br/>var keywords = [<br/>    "addhandler", "addressof", "alias", "and", "andalso", "as", "boolean", "byref",<br/>    "byte", "byval", "call", "case", "catch", "cbool", "cbyte", "cchar", "cdate",<br/>    "cdec", "cdbl", "char", "cint", "class", "clng", "cobj", "const", "continue",<br/>    "csbyte", "cshort", "csng", "cstr", "ctype", "cuint", "culng", "cushort", "date",<br/>    "decimal", "declare", "default", "delegate", "dim", "directcast", "do", "double",<br/>    "each", "else", "elseif", "end", "endif", "enum", "erase", "error", "event",<br/>    "exit", "false", "finally", "for", "friend", "function", "get", "gettype",<br/>    "getxmlnamespace", "global", "gosub", "goto", "handles", "if", "if",<br/>    "implements", "imports", "in", "inherits", "integer", "interface", "is", "isnot",<br/>    "let", "lib", "like", "long", "loop", "me", "mod", "module", "mustinherit",<br/>    "mustoverride", "mybase", "myclass", "namespace", "narrowing", "new", "next",<br/>    "not", "nothing", "notinheritable", "notoverridable", "object", "of", "on",<br/>    "operator", "option", "optional", "or", "orelse", "overloads", "overridable",<br/>    "overrides", "paramarray", "partial", "private", "property", "protected",<br/>    "public", "raiseevent", "readonly", "redim", "rem", "removehandler", "resume",<br/>    "return", "sbyte", "select", "set", "shadows", "shared", "short", "single",<br/>    "static", "step", "stop", "string", "structure", "sub", "synclock", "then",<br/>    "throw", "to", "true", "try", "trycast", "typeof", "variant", "wend", "uinteger",<br/>    "ulong", "ushort", "using", "when", "while", "widening", "with", "withevents",<br/>    "writeonly", "xor", "#const", "#else", "#elseif", "#end", "#if"<br/>]<br/><br/>var isKeyword = function(token) {<br/>    return keywords.indexOf(token.toLowerCase()) != -1;<br/>}<br/><br/>var isDigit = function(c) {<br/>    return c &gt;= '0' &amp;&amp; c &lt;= '9';<br/>}<br/><br/>var getToken = function(tokens) {<br/>    for (var i = 0; i &lt; tokens.length; i++)<br/>        if (tokens[i] != undefined)<br/>            return tokens[i];<br/>    return null;<br/>}<br/><br/>var span = function(class, text) {<br/>    return "&lt;span class=\"" + class + "\"&gt;" + text + "&lt;/span&gt;";<br/>}<br/></code></pre><br/><br/><p>Code for testing:</p><br/><br/><pre><code>Protected Sub Page_Load(ByVal sender As Object, ByVal e As EventArgs) Handles Me.Load<br/>    'set page title'<br/>    Page.Title = "Something"<br/>    Dim r As String = "Say ""Hello"""<br/>    Dim i As Integer = 1234<br/>    Dim d As Double = 1.23<br/>    Dim s As Single = .123F<br/>    Dim l As Long = 123L<br/>    Dim ul As ULong = 123UL<br/>    Dim c As Char = "x"c<br/>    Dim h As Integer = &amp;amp;H0<br/>    Dim t As Date = #5/31/1993 1:15:30 PM#<br/>    Dim f As Single = 1.32e-5F<br/>End Sub<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      RETURN A VARIABL FROM A .GETJSON FUNCTION
+    </pattern>
+    <template>
+<![CDATA[<p>Yeah, my previous answer does not work because I didn't pay any attention to your code. :)</p><br/><br/><p>The problem is that the anonymous function is a callback function - i.e. getJSON is an async operation that will return at some indeterminate point in time, so even if the scope of the variable were outside of that anonymous function (i.e. a closure), it would not have the value you would think it should:</p><br/><br/><pre><code>var studentId = null;<br/>j.getJSON(url, data, function(result)<br/>{<br/>    studentId = result.Something;<br/>});<br/><br/>// studentId is still null right here, because this line <br/>// executes before the line that sets its value to result.Something<br/></code></pre><br/><br/><p>Any code that you want to execute with the value of studentId set by the getJSON call needs to happen either <strong>within</strong> that callback function or <strong>after</strong> the callback executes.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      LAYER ORDER IN VIRTUAL EARTH
+    </pattern>
+    <template>
+<![CDATA[<p>I think the easiest way is to iterate through the shapes in your VEShapeLayer and use the <a href="http://msdn.microsoft.com/en-us/library/bb877869.aspx" rel="nofollow">VEShape.SetZIndex method</a>.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      PLOT A LONG PATH WITH VIRTUAL EARTH
+    </pattern>
+    <template>
+<![CDATA[<p>According to <a href="http://www.lightmaker-manchester.com/blog/post.aspx?id=f081ca81-88a1-4958-9e15-b935d52e99cd" rel="nofollow">this</a> you need to call VEMap.GetDirections every 25 points until you reach the end of the route and then plot a custom shape of the complete route.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      HAVE A DIFF ALGORITHM FOR RENDER HTML
+    </pattern>
+    <template>
+<![CDATA[<p>There's another nice trick you can use to significantly improve the look of a rendered HTML diff.  Although this doesn't fully solve the initial problem, it will make a significant difference in the appearance of your rendered HTML diffs.</p><br/><br/><p>Side-by-side rendered HTML will make it very difficult for your diff to line up vertically.  Vertical alignment is crucial for comparing side-by-side diffs.  In order to improve the vertical alignment of a side-by-side diff, you can insert invisible HTML elements in each version of the diff at "checkpoints" where the diff should be vertically aligned.  Then you can use a bit of client-side javascript to add vertical spacing around checkpoint until the sides line up vertically.</p><br/><br/><p>Explained in a little more detail:</p><br/><br/><p>If you want to use this technique, run your diff algorithm and insert a bunch of visibility:hidden s or tiny s wherever your side-by-side versions should match up, according to the diff.  Then run javascript that finds each checkpoint (and its side-by-side neighbor) and adds vertical spacing to the checkpoint that is higher-up (shallower) on the page.  Now your rendered HTML diff will be vertically aligned up to that checkpoint, and you can continue repairing vertical alignment down the rest of your side-by-side page.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      SIMPLEST WAY TO DECREM A DATE IN JAVASCRIPT BY 1 DAY
+    </pattern>
+    <template>
+<![CDATA[<pre><code>var d = new Date();<br/>d.setDate(d.getDate()-1);<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      FIRE AN UPDATEPANEL AFTER THE PAGE LOAD IS COMPLET
+    </pattern>
+    <template>
+<![CDATA[<p>Use a timer control that will be fired after a certain number of milliseconds (for page to load). In the timer tick event refresh the update panel.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      CLIENT TO REFRESH JAVASCRIPT FILE
+    </pattern>
+    <template>
+<![CDATA[<p>As far as I know a common solution is to add a ?&lt;version&gt; to the script src link.</p><br/><br/><p>For instance:</p><br/><br/><pre><code>&lt;script type="text/javascript" src="myfile.js?1500"&gt;&lt;/script&gt;<br/></code></pre><br/><br/><p><hr></p><br/><br/><blockquote><br/>  <p>I assume at this point that there isn't a better way than find-replace to increment these "version numbers" in all of the script tags?</p><br/></blockquote><br/><br/><p>You might have a version control system do that for you? Most version control systems have a way to automatically inject the revision number on check-in for instance.</p><br/><br/><p>It would look something like this:</p><br/><br/><pre><code>&lt;script type="text/javascript" src="myfile.js?$$REVISION$$"&gt;&lt;/script&gt;<br/></code></pre><br/><br/><p><hr></p><br/><br/><p>Of course, there are always better solutions like <a href="http://blog.greenfelt.net/2009/09/01/caching-javascript-safely/" rel="nofollow">this one</a>.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      ARCHITECTUR APPROACH TO JAVASCRIPT CLIENT CODE
+    </pattern>
+    <template>
+<![CDATA[<p>..but Javascript has many facets that <strong>are</strong> OO.</p><br/><br/><p>Consider this:</p><br/><br/><pre><code>var Vehicle = jQuery.Class.create({ <br/>   init: function(name) { this.name = name; } <br/>});<br/><br/>var Car = Vehicle.extend({ <br/>   fillGas: function(){ <br/>      this.gas = 100; <br/>   } <br/>});<br/></code></pre><br/><br/><p>I've used this technique to create page-level javascript classes that have their own state, this helps keep it contained (and I often identify areas that I can reuse and put into other classes).</p><br/><br/><p>This is also especially useful when you have components/server controls that have their own script to execute, but when you might have multiple instances on the same page.  This keeps the state separate.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      THE EXACT LAT LNG COORDIN OF A BIRDSEY SCENE IN VIRTUAL EARTH
+    </pattern>
+    <template>
+<![CDATA[<p>Here's the code for getting the Center Lat/Long point of the map. This method works in both Road/Aerial and Birdseye/Oblique map styles.</p><br/><br/><pre><code>function GetCenterLatLong()<br/>        {<br/>            //Check if in Birdseye or Oblique Map Style<br/>            if (map.GetMapStyle() == VEMapStyle.Birdseye || map.GetMapStyle() == VEMapStyle.BirdseyeHybrid)<br/>            {<br/>                //IN Birdseye or Oblique Map Style<br/><br/><br/>                //Get the BirdseyeScene being displayed<br/>                var birdseyeScene = map.GetBirdseyeScene();<br/><br/><br/>                //Get approximate center coordinate of the map<br/>                var x = birdseyeScene.GetWidth() / 2;<br/>                var y = birdseyeScene.GetHeight() / 2;<br/><br/>                // Get the Lat/Long <br/>                var center = birdseyeScene.PixelToLatLong(new VEPixel(x,y), map.GetZoomLevel());<br/><br/>                // Convert the BirdseyeScene LatLong to a normal LatLong we can use<br/>                return (new _xy1).Decode(center);<br/>            }<br/>            else<br/>            {<br/>                // NOT in Birdseye or Oblique Map Style<br/>                return map.GetCenter();<br/>            }<br/>        }<br/></code></pre><br/><br/><p>This code was copied from here:<br/><a href="http://pietschsoft.com/post/2008/06/Virtual-Earth-Get-Center-LatLong-When-In-Birdseye-or-Oblique-Map-Style.aspx" rel="nofollow">http://pietschsoft.com/post/2008/06/Virtual-Earth-Get-Center-LatLong-When-In-Birdseye-or-Oblique-Map-Style.aspx</a></p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      BREAKPOINT IN AN EXTERN JS SCRIPT IN FIREBUG
+    </pattern>
+    <template>
+<![CDATA[<p>To view and access external JavaScript files (*.js) from within Firebug:</p><br/><br/><ol><br/><li>Click on the 'Script' tab.</li><br/><li>Click on the 'all' drop down in the<br/>upper left hand corner above the<br/>script code content window.</li><br/><li>Select 'Show Static Scripts'.</li><br/><li>Click on the dropdown button just to<br/>the right of what now says 'static'<br/>(By default, it should show the name<br/>of your current web page). You<br/>should now see a list of files<br/>associated with the current web page<br/>including any external JS files.</li><br/><li>Select the JavaScript file you are<br/>interested in and it's code will<br/>display in the content window. From<br/>there, you should be able to set<br/>breakpoints as normal.</li><br/></ol><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      UNIT TEST
+    </pattern>
+    <template>
+<![CDATA[<p>In the last couple of days I've also been looking for javascript unit-testing frameworks, but I still haven't decided on one. </p><br/><br/><ul><br/><li><p>This one, <a href="http://docs.jquery.com/QUnit">QUnit</a>, looks interesting.  QUnit is the unit testrunner for the jQuery project</p></li><br/><li><p>Also, <a href="http://ejohn.org/blog/fireunit/">FireUnit</a>, a FireBug extension, was recently launched.  FireUnit provides a simple JavaScript API for doing simple test logging and viewing within a new tab of Firebug.</p></li><br/></ul><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      RESIZ A SWF DURE RUNTIM TO HAVE THE BROWSER CREAT HTML SCROLLBAR
+    </pattern>
+    <template>
+<![CDATA[<p>I've never done it that way around but I think <a href="http://swffit.millermedeiros.com/" rel="nofollow">swffit</a> might be able to pull it off.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      HEIGHT OF A DIV DYNAM
+    </pattern>
+    <template>
+<![CDATA[<p>Try this simple, specific function:</p><br/><br/><pre><code>function resizeElementHeight(element) {<br/>  var height = 0;<br/>  var body = window.document.body;<br/>  if (window.innerHeight) {<br/>      height = window.innerHeight;<br/>  } else if (body.parentElement.clientHeight) {<br/>      height = body.parentElement.clientHeight;<br/>  } else if (body &amp;&amp; body.clientHeight) {<br/>      height = body.clientHeight;<br/>  }<br/>  element.style.height = ((height - element.offsetTop) + "px");<br/>}<br/></code></pre><br/><br/><p>It does not depend on the current distance from the top of the body being specified (in case your 300px changes).</p><br/><br/><p><hr /></p><br/><br/><p>EDIT: By the way, you would want to call this on that div every time the user changed the browser's size, so you would need to wire up the event handler for that, of course.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      SITE SUPPRESS PAST TEXT
+    </pattern>
+    <template>
+<![CDATA[<p>Probably using the <a href="http://www.quirksmode.org/dom/events/cutcopypaste.html" rel="nofollow">onpaste</a> event.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      BETWEEN WEBSIT ( USE JAVASCRIPT OR )
+    </pattern>
+    <template>
+<![CDATA[<p>My best suggestion would be to create a webservice on each site that the other could call with the information that needs to get passed. If security is necessary, it's easy to add an SSL-like authentication scheme (or actual SSL even, if you like) to this system to ensure that only the two servers are able to talk to their respective web services.</p><br/><br/><p>This would let you avoid the hackiness that's inherent in any scheme that involves one site opening windows on the other.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      ONRES FROM ASP.NET CONTENT PAGE
+    </pattern>
+    <template>
+<![CDATA[<p>Place the following in your content page:</p><br/><br/><pre><code>&lt;script type="text/javascript"&gt;<br/><br/>// here is a cross-browser compatible way of connecting <br/>// handlers to events, in case you don't have one<br/>function attachEventHandler(element, eventToHandle, eventHandler) {<br/>    if(element.attachEvent) {<br/>       element.attachEvent(eventToHandle, eventHandler);<br/>    } else if(element.addEventListener) {<br/>       element.addEventListener(eventToHandle.replace("on", ""), eventHandler, false);<br/>    } else {<br/>    element[eventToHandle] = eventHandler;<br/>  }<br/>}<br/><br/>attachEventHandler(window, "onresize", function() {<br/>    // the code you want to run when the browser is resized<br/>});<br/><br/>&lt;/script&gt;<br/></code></pre><br/><br/><p><hr /></p><br/><br/><p>That code should give you the basic idea of what you need to do. Hopefully you are using a library that already has code to help you write up event handlers and such.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      SVG
+    </pattern>
+    <template>
+<![CDATA[<p>Unfortunately, I don't have an answer, but I do have three pointers to projects that you could look at.</p><br/><br/><p>The first is the <a href="http://Research.Sun.Com/projects/lively/" rel="nofollow" title="Lively Kernel">Lively Kernel</a> by Dan Ingalls (yes, <em>the</em> Dan Ingalls) at Sun Labs. It is an implementation of a Smalltalk Virtual World in JavaScript on top of SVG. More precisely, it is an implementation of the Morphic GUI framework from Squeak Smalltalk in JavaScript using SVG and a port of (parts of) Squeak Smalltalk in JavaScript.</p><br/><br/><p>Or, if you're not a Smalltalker and the above doesn't make sense to you: it's an Operating System, written in JavaScript with the JavaScript interpreter as the CPU, SVG as the graphics card and the browser as the computer.</p><br/><br/><p>This is about as extreme as it gets, when it comes to JavaScript and SVG. And it only <em>fully</em> works in Safari 3 and partly in Firefox 3, although there is an experimental port to Internet Explorer as well.</p><br/><br/><p>The second project is John Resig's <a href="http://EJohn.Org/blog/processingjs/" rel="nofollow" title="Processing.js">Processing.js</a> port of the Processing visualization language to JavaScript. It uses the <code>&lt;canvas&gt;</code> element instead of SVG precisely because of the problems that you mentioned. This one however, only works in Firefox 3.</p><br/><br/><p>The third one is <a href="http://UselessPickles.Com/triangles/demo.html" rel="nofollow" title="Triangles in JavaScript">Real-Time 3D in JavaScript</a> by Useless Pickles. It uses <em>only</em> JavaScript, DOM and CSS and <em>no</em> SVG or <code>&lt;canvas&gt;</code> or Flash or whatever. <em>And</em> it is portable to almost any browser, including Internet Explorer 7 and up. Doing 2D should be even easier than this.</p><br/><br/><p>Between those three projects you should be able to find some inspiration and also to find some people who tried to push the envelope with JavaScript and SVG or JavaScript and Graphics and can tell you what works and what doesn't.</p><br/><br/><p>Conclusion: doing cross-browser SVG or cross-browser <code>&lt;canvas&gt;</code> is nigh impossible, but with a little bit of craziness, cross-browser graphics <em>without</em> SVG or <code>&lt;canvas&gt;</code> is possible.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      CALL JAVASCRIPT S ONSUBMIT EVENT PROGRAMAT ON A FORM
+    </pattern>
+    <template>
+<![CDATA[<p>If you didn't actually want to submit the form, but just invoke whatever code happened to be in the onsubmit, you could possibly do this: (untested)</p><br/><br/><pre><code>var code = document.getElementById('formId').getAttribute('onsubmit');<br/>eval(code);<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      WIDTH OF A PRINT STRING BY A WEBAPP
+    </pattern>
+    <template>
+<![CDATA[<p>Here's another take on it and you don't have to live without the ellipsis!</p><br/><br/><pre><code>&lt;html&gt;<br/>&lt;head&gt;<br/><br/>&lt;style&gt;<br/>div.sidebox {<br/>    width: 25%;<br/>}<br/><br/>div.sidebox div.qrytxt {<br/>    height: 1em;<br/>    line-height: 1em;<br/>    overflow: hidden;<br/>}<br/><br/>div.sidebox div.qrytxt span.ellipsis {<br/>    float: right;<br/>}<br/>&lt;/style&gt;<br/><br/><br/>&lt;/head&gt;<br/><br/>&lt;body&gt;<br/><br/>&lt;div class="sidebox"&gt;<br/>    &lt;div class="qrytxt"&gt;<br/>    	&lt;span class="ellipsis"&gt;&amp;hellip;&lt;/span&gt;<br/>    	Some long text which will arbitrarily be cut off at whatever word fits best but will have an ellipsis at the end.<br/>    &lt;/div&gt;<br/>    &lt;div class="qrytxt"&gt;<br/>    	&lt;span class="ellipsis"&gt;&amp;hellip;&lt;/span&gt;<br/>    	Some more long text which will arbitrarily be cut off at whatever word fits best but will have an ellipsis at the end.<br/>    &lt;/div&gt;<br/>    &lt;div class="qrytxt"&gt;<br/>    	&lt;span class="ellipsis"&gt;&amp;hellip;&lt;/span&gt;<br/>    	Short text. Fail!<br/>    &lt;/div&gt;<br/>&lt;/body&gt;<br/><br/>&lt;/html&gt;<br/></code></pre><br/><br/><p>There is one flaw with this, if the text is short enough to be fully displayed, the ellipses will still be displayed as well.</p><br/><br/><p>[EDIT: 6/26/2009]</p><br/><br/><p>At the suggestion of Power-Coder I have revised this a little. There are really only two changes, the addition of the doctype (see notes below) and the addition of the "display: inline-block" attribute on the qrytxt div.  Here is what it looks like now...</p><br/><br/><pre><code>&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd"&gt;<br/>&lt;html&gt;<br/>&lt;head&gt;<br/>    &lt;style&gt;<br/>        div.sidebox <br/>        {<br/>            width: 25%;<br/>        }<br/><br/>        div.sidebox div.qrytxt<br/>        {<br/>            height: 1em;<br/>            line-height: 1em;<br/>            overflow: hidden;<br/>            display: inline-block;<br/>        }<br/><br/>        div.sidebox div.qrytxt span.ellipsis<br/>        {<br/>            float: right;<br/>        }<br/>&lt;/style&gt;<br/>&lt;/head&gt;<br/><br/>&lt;body&gt;<br/>    &lt;div class="sidebox"&gt;<br/>        &lt;div class="qrytxt"&gt;<br/>            &lt;span class="ellipsis"&gt;&amp;hellip;&lt;/span&gt;<br/>            Some long text which will arbitrarily be cut off at whatever word fits best but will have an ellipsis at the end.<br/>        &lt;/div&gt;<br/><br/>        &lt;div class="qrytxt"&gt;<br/>            &lt;span class="ellipsis"&gt;&amp;hellip;&lt;/span&gt;<br/>            Some more long text which will arbitrarily be cut off at whatever word fits best but will have an ellipsis at the end.<br/>        &lt;/div&gt;<br/><br/>        &lt;div class="qrytxt"&gt;<br/>            &lt;span class="ellipsis"&gt;&amp;hellip;&lt;/span&gt;<br/>            Short text. FTW<br/>        &lt;/div&gt;<br/>    &lt;/div&gt;<br/>&lt;/body&gt;<br/>&lt;/html&gt;<br/></code></pre><br/><br/><p>Notes:</p><br/><br/><ul><br/><li><p>Viewed in IE 8.0, Opera 9, FF 3</p></li><br/><li><p>A doctype is required for IE to get the "display: inline-block" to work correctly.</p></li><br/><li><p>If the qrytxt div's overflow occurs on a long word, there is going to be a wide gap between the ellipsis and the last visible word.  You can see this by viewing the example and resizing your browser width in small increments. (this probably existed in the original example as well, I just may have not noticed it then)</p></li><br/></ul><br/><br/><p>So again, an imperfect CSS-only solution.  Javascript may be the only thing that can get the effect perfect.</p><br/><br/><p>[EDIT: 6/27/2009]</p><br/><br/><p>Here is another alternative which uses browser specific extensions.</p><br/><br/><pre><code>&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd"&gt;<br/><br/>&lt;html&gt;<br/>&lt;head&gt;<br/>    &lt;style&gt;<br/>    	div.sidebox <br/>    	{<br/>    		width: 26%;<br/>    	}<br/><br/>    	div.sidebox div.qrytxt<br/>    	{<br/>    		height: 1em;<br/>    		line-height: 1em;<br/>    		overflow: hidden;<br/>    		text-overflow:ellipsis;<br/>    		-o-text-overflow:ellipsis;<br/>    		-ms-text-overflow:ellipsis;<br/>    		-moz-binding:url(ellipsis-xbl.xml#ellipsis);<br/>    		white-space:nowrap;<br/>    	}<br/>    &lt;/style&gt;<br/>&lt;/head&gt;<br/><br/>&lt;body&gt;<br/>    &lt;div class="sidebox"&gt;<br/>    	&lt;div class="qrytxt"&gt;<br/>    		Some long text which will arbitrarily be cut off at whatever word fits best but will have an ellipsis at the end.<br/>    	&lt;/div&gt;<br/><br/>    	&lt;div class="qrytxt"&gt;<br/>    		Some more long text which will arbitrarily be cut off at whatever word fits best but will have an ellipsis at the end.<br/>    	&lt;/div&gt;<br/><br/>    	&lt;div class="qrytxt"&gt;<br/>    		Short text. FTW<br/>    	&lt;/div&gt;<br/>    &lt;/div&gt;<br/>&lt;/body&gt;<br/>&lt;/html&gt;<br/></code></pre><br/><br/><p>Note that in order for the above example to work, you must create the xml file referenced by the -moz-binding rule, <strong><em>ellipsis-xbl.xml</em></strong>. It's should contain the following xml:</p><br/><br/><pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;<br/>  &lt;bindings xmlns="http://www.mozilla.org/xbl" xmlns:xbl="http://www.mozilla.org/xbl" xmlns:xul="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"&gt;<br/>    &lt;binding id="ellipsis"&gt;<br/>      &lt;content&gt;<br/>        &lt;xul:window&gt;<br/>          &lt;xul:description crop="end" xbl:inherits="value=xbl:text"&gt;&lt;children/&gt;&lt;/xul:description&gt;<br/>        &lt;/xul:window&gt;<br/>      &lt;/content&gt;<br/>    &lt;/binding&gt;<br/>  &lt;/bindings&gt;<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      USERINPUT IS A VALID URI IN XUL
+    </pattern>
+    <template>
+<![CDATA[<p>The <a href="http://developer.mozilla.org/index.php?title=En/NsIIOService&amp;highlight=newURI#newURI.28.29" rel="nofollow">nsIIOService.newURI(...)</a> method is what you're looking for. It throws <strong>NS_ERROR_MALFORMED_URI</strong> if the URI string is invalid.</p><br/><br/><p>Example:</p><br/><br/><pre><code>try {<br/>  var ioServ = Components.classes["@mozilla.org/network/io-service;1"]<br/>                         .getService(Components.interfaces.nsIIOService);<br/>  var uriObj = ioServ.newURI(uriString, uriCharset, baseURI);<br/>} catch (e) {<br/><br/>  // catch the error here<br/><br/>}<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      ADD EVENT IN JAVASCRIPT
+    </pattern>
+    <template>
+<![CDATA[<p>In my experience, there are two major points to this:</p><br/><br/><p>1) The most important thing is to be consistent. I don't think either of the two methods is necessarily easier to read, as long as you stick to it. I only get confused when both methods are used in a project (or even worse on the same page) because then I have to start searching for the calls and don't immediately know where to look.</p><br/><br/><p>2) The second kind, i.e. Event.observe() has advantages when the same or a very similar action is taken on multiple events because this becomes obvious when all those calls are in the same place. Also, as Konrad pointed out, in some cases this can be handled with a single call.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      IN YOUR JAVASCRIPT DEVELOP TOOLBOX
+    </pattern>
+    <template>
+<![CDATA[<p>I use both Firefox and IE for Web Development and a few add-ons in each:</p><br/><br/><p><strong>Firefox:</strong></p><br/><br/><ul><br/><li><a href="https://addons.mozilla.org/en-US/firefox/addon/1843" rel="nofollow">Firebug</a></li><br/><li><a href="https://addons.mozilla.org/en-US/firefox/addon/60" rel="nofollow">Web Developer Toolbar</a></li><br/></ul><br/><br/><p><strong>Internet Explorer:</strong></p><br/><br/><ul><br/><li><a href="http://www.microsoft.com/downloads/details.aspx?FamilyId=E59C3964-672D-4511-BB3E-2D5E1DB91038&amp;displaylang=en" rel="nofollow">IE Developer Toolbar</a></li><br/><li><a href="http://www.fiddlertool.com/" rel="nofollow">Fiddler</a></li><br/><li>Visual Studio for JS Debugging</li><br/></ul><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      MORE IS NEED FOR AJAX THAN THI FUNCTION
+    </pattern>
+    <template>
+<![CDATA[<p>I strongly recommend you not roll your own Ajax code. Instead, use a framework such as Prototype, Dojo, or any of the others. They've taken care of handling all the ReadyStates you're not handling (2 means it's been sent, 3 means it's in process, etc.), and they should escape the reponse you're getting so you don't insert potentially insecure javascript or something into your page.</p><br/><br/><p>Another thing a more robust framework will give you is the ability to do more than just use innerHTML to replace items in the DOM. Your function here can only be used to replace one element with the response from the ajax call. There's a lot more you can do with Ajax.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      SWAP DIV ON MOUSEOV ( JQUERI )
+    </pattern>
+    <template>
+<![CDATA[<pre><code>$(document).ready(function() {<br/>    switches = $('#switches &gt; li');<br/>    slides = $('#slides &gt; div');<br/>    switches.each(function(idx) {<br/>            $(this).data('slide', slides.eq(idx));<br/>        }).hover(<br/>        function() {<br/>            switches.removeClass('active');<br/>            slides.removeClass('active');             <br/>            $(this).addClass('active');  <br/>            $(this).data('slide').addClass('active');<br/>        });<br/>    });<br/></code></pre><br/><br/><p>Rather than displaying all slides when JS is off (which would likely break the page layout) I would place inside the switch LIs real A links to server-side code which returns the page with the "active" class pre-set on the proper switch/slide.</p><br/><br/><p>And here's the HTML:</p><br/><br/><pre><code>&lt;html&gt;<br/>&lt;head&gt;<br/><br/>&lt;title&gt;test&lt;/title&gt;<br/><br/>&lt;script type="text/javascript" src="jquery.js"&gt;&lt;/script&gt;<br/>&lt;script type="text/javascript" src="switch.js"&gt;&lt;/script&gt;<br/><br/>&lt;style type="text/css"&gt;<br/><br/>#switches .active {<br/>  font-weight: bold;<br/>}<br/><br/>#slides div {<br/>  display: none;<br/>}<br/><br/>#slides div.active {<br/>  display: block;<br/>}<br/><br/>&lt;/style&gt;<br/>&lt;/head&gt;<br/>&lt;body&gt;<br/><br/>&lt;ul id="switches"&gt;<br/>  &lt;li class="active"&gt;First slide&lt;/li&gt;<br/>  &lt;li&gt;Second slide&lt;/li&gt;<br/>  &lt;li&gt;Third slide&lt;/li&gt;<br/>  &lt;li&gt;Fourth slide&lt;/li&gt;<br/>&lt;/ul&gt;<br/>&lt;div id="slides"&gt;<br/>  &lt;div class="active"&gt;Well well.&lt;/div&gt;<br/>  &lt;div&gt;Oh no!&lt;/div&gt;<br/>  &lt;div&gt;You again?&lt;/div&gt;<br/>  &lt;div&gt;I'm gone!&lt;/div&gt;<br/>&lt;/div&gt;<br/><br/>&lt;/body&gt;<br/>&lt;/html&gt;<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      N IFRAM TAKE VERTIC SPACE
+    </pattern>
+    <template>
+<![CDATA[<p>This should set the IFRAME height to its content's height:</p><br/><br/><pre><code>&lt;script type="text/javascript"&gt;<br/>the_height = document.getElementById('the_iframe').contentWindow.document.body.scrollHeight;<br/>document.getElementById('the_iframe').height = the_height;<br/>&lt;/script&gt;<br/></code></pre><br/><br/><p>You may want to add <code>scrolling="no"</code> to your IFRAME to turn off the scrollbars.</p><br/><br/><p><em>edit:</em> Oops, forgot to declare <code>the_height</code>.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      WITH JQUERI FORM BIND CODE IN AN APPLIC
+    </pattern>
+    <template>
+<![CDATA[<p>Not 100% sure example what you are asking, but personally, and I use MochiKit, I create JavaScript "classes" (or widgets, if you prefer) for every significant client-side UI structure. These know, of course, how to populate themselves with data.</p><br/><br/><p>I don't know what more there is to say - writing UI code for the browser in JavaScript is no different than writing UI code for other types of apps, as far as I am concerned. Build classes and instantiate them as needed, populate them with data, have them throw events, etc. etc.</p><br/><br/><p>Am I up in the night on this? :)</p><br/><br/><p><hr /></p><br/><br/><p>EDIT: In other words, yes - do what you are doing, for the most part. I see too many novice JavaScript hackers write a bunch of poorly-cohesive functions that don't appear to be a part of anything specific other than they are all in a single file. Hope that makes sense. </p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      JQUERI DATEPICK
+    </pattern>
+    <template>
+<![CDATA[<p>I'd recommend just using a common class name as well.  However, if you're against this for some reason, you could also write a function to create date pickers for all text boxes in your template div (to be called after each duplication).  Something like:</p><br/><br/><pre><code>        function makeDatePickers()<br/>        {<br/>            $("#template input[type=text]").datepicker();<br/>        }<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      TRANSFORM A WEBSERVIC CALL THAT IS USE BEHAVIOUR
+    </pattern>
+    <template>
+<![CDATA[<p>You should be able to generate a proxy class using wsdl.exe. Then just use the web service as you normally would.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      ISON OF JAVASCRIPT LIBRARI
+    </pattern>
+    <template>
+<![CDATA[<p>To answer B:</p><br/><br/><p><a href="http://en.wikipedia.org/wiki/Comparison_of_JavaScript_frameworks" rel="nofollow"><strong>Comparison of JavaScript frameworks</strong></a></p><br/><br/><p><hr /></p><br/><br/><p><strong>EDIT:</strong> Although everyone and their mom is apparently riding the <a href="http://jquery.com/" rel="nofollow"><strong>jQuery</strong></a> bandwagon (I use <a href="http://www.mochikit.com" rel="nofollow"><strong>MochiKit</strong></a>), there are many libraries which provide the same functionality - the problem set which most libraries solve (async client-server communication, DOM manipulation, etc.) is the same, and there are few that don't have what you will need to get the job done. </p><br/><br/><p>The important thing to determine for yourself is whether or not a library will fit your particular style and sensibilities. Wide-spread ignorance about how <a href="http://www.ecma-international.org/publications/standards/Ecma-262.htm" rel="nofollow"><strong>JavaScript</strong></a>, the language, actually works, coupled with the negative press resulting thereby, coupled with the now-immense popularity of jQuery leads most people down that road. Thankfully, it isn't a bad road to be on as there are a lot of travellers to keep you company when the abstractions leak and you need help. You probably can't go wrong choosing jQuery.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      A TWO COLUMN PAGE HOW CAN I GROW THE LEFT DIV TO THE SAME HEIGHT OF THE RIGHT DIV USE CSS OR JAVASCRIPT
+    </pattern>
+    <template>
+<![CDATA[<p>Use jQuery for this problem; just call this function in your ready function:</p><br/><br/><pre><code>function setHeight(){<br/>  var height = $(document).height(); //optionally, subtract some from the height<br/>  $("#leftDiv").css("height", height + "px");<br/>}<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      NAME OF A WINDOW IN ROR
+    </pattern>
+    <template>
+<![CDATA[<p>You have to use JavaScript for this:</p><br/><br/><pre><code>&lt;script type="text/javascript"&gt;<br/>  window.name = "MyWindow";<br/>&lt;/script&gt;<br/></code></pre><br/><br/><p>Of course you could easily package this up into a Rails helper method. For example, in <code>app/helpers/application_helper.rb</code> add a new method:</p><br/><br/><pre><code>def window_name(name)<br/>  content_for(:window_name) do<br/>    "&lt;script type=\"text/javascript\"&gt;window.name = \"#{name}\";&lt;/script&gt;"<br/>  end<br/>end<br/></code></pre><br/><br/><p>Next, in your layout file, add this line somewhere within the HTML <code>&lt;head&gt;</code> element:</p><br/><br/><pre><code>&lt;%= yield :window_name %&gt;<br/></code></pre><br/><br/><p>Finally, in your view templates, simply add a line like this (can be anywhere you want) to output the correct JavaScript:</p><br/><br/><pre><code>&lt;% window_name 'MyWindow' %&gt;<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      THE NTH INSTANC OF A REGEX MATCH IN JAVASCRIPT
+    </pattern>
+    <template>
+<![CDATA[<p>here's something that works:</p><br/><br/><pre><code>"23||45||45||56||67".replace(/^((?:[0-9]+\|\|){n})([0-9]+)\|\|/,"$1$2&amp;&amp;")<br/></code></pre><br/><br/><p>where n is the one less than the nth pipe, (of course you don't need that first subexpression if n = 0)</p><br/><br/><p>And if you'd like a function to do this:</p><br/><br/><pre><code>function pipe_replace(str,n) {<br/>   var RE = new RegExp("^((?:[0-9]+\\|\\|){" + (n-1) + "})([0-9]+)\|\|");<br/>   return str.replace(RE,"$1$2&amp;&amp;");<br/>}<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      LEGEND IN GOOGL MAP MASHUP
+    </pattern>
+    <template>
+<![CDATA[<p>You can add your own Custom Control and use it as a legend.</p><br/><br/><p>This code will add a box 150w x 100h (Gray Border/ with White Background) and the words "Hello World" inside of it. You swap out the text for any HTML you would like in the legend. This will stay Anchored to the Top Right (G_ANCHOR_TOP_RIGHT) 10px down and 50px over of the map.</p><br/><br/><pre><code>function MyPane() {}<br/>MyPane.prototype = new GControl;<br/>MyPane.prototype.initialize = function(map) {<br/>  var me = this;<br/>  me.panel = document.createElement("div");<br/>  me.panel.style.width = "150px";<br/>  me.panel.style.height = "100px";<br/>  me.panel.style.border = "1px solid gray";<br/>  me.panel.style.background = "white";<br/>  me.panel.innerHTML = "Hello World!";<br/>  map.getContainer().appendChild(me.panel);<br/>  return me.panel;<br/>};<br/><br/>MyPane.prototype.getDefaultPosition = function() {<br/>  return new GControlPosition(<br/>      G_ANCHOR_TOP_RIGHT, new GSize(10, 50));<br/>      //Should be _ and not &amp;#95;<br/>};<br/><br/>MyPane.prototype.getPanel = function() {<br/>  return me.panel;<br/>}<br/>map.addControl(new MyPane());<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      VS. IE INNERHTML HANDL
+    </pattern>
+    <template>
+<![CDATA[<p>I agree with Pat. At this point in the game, writing your own code to deal with cross-browser compatibility given the available Javascript frameworks doesn't make a lot of sense. There's a framework for nearly any taste (some really quite tiny) and they've focused on really abstracting out all of the differences between the browsers. They're doing WAY more testing of it than you're likely to.</p><br/><br/><p>Something like jQuery or Yahoo's YUI (think how many people hit the Yahoo Javascript in a day and the variety of browsers) is just way more road-tested than any snippet you or I come up with.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      BROWSER WINDOW BLINK IN TASK BAR
+    </pattern>
+    <template>
+<![CDATA[<p>this won't make the taskbar button flash in changing colours, but the title will blink on and off until they move the mouse. This should work cross platform, and even if they just have it in a different tab.</p><br/><br/><pre><code>function newExcitingAlerts() {<br/>    var oldTitle = document.title;<br/>    var msg = "New!";<br/>    var timeoutId = setInterval(function() {<br/>        document.title = document.title == msg ? ' ' : msg;<br/>    }, 1000);<br/>    window.onmousemove = function() {<br/>        clearInterval(timeoutId);<br/>        document.title = oldTitle;<br/>        window.onmousemove = null;<br/>    };<br/>}<br/></code></pre><br/><br/><hr><br/><br/><p><em>Update</em>: You may want to look at using <a href="http://www.html5rocks.com/tutorials/notifications/quick/" rel="nofollow">HTML5 notifications</a>. Currently, AFAIK only Chrome supports this, but the other good browsers should follow suit soon enough.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      HANDL IN DOJO
+    </pattern>
+    <template>
+<![CDATA[<p>I assume that you followed the <a href="http://dojotoolkit.org/2008/02/12/dijit-tree-and-dojo-data-dojo-1-1" rel="nofollow">dijit.Tree and dojo.data in Dojo 1.1</a> tutorial which directed you to pass the data to the tree control using a data store. That had me banging my head of a brick wall for a while. </p><br/><br/><p>Its not really a great approach and the alternative is not really well documented. You need to create a use model instead. I have included an example below of a tree model that I created for displaying the structure of an LDAP directory.</p><br/><br/><p>You will find the default implementation of the model in your dojo distribution at ./dijit/_tree/model.js. The comments should help you understand the functions supported by the model.</p><br/><br/><p>The IDirectoryService class the code below are stubs for server-side Java POJOs generated by <a href="http://directwebremoting.org" rel="nofollow">Direct Web Remoting</a> (DWR). I highly recommend DWR if you going to be doing a lot of client-server interaction.</p><br/><br/><pre><br/>dojo.declare("LDAPDirectoryTreeModel", [ dijit.tree.model ], {<br/>    getRoot : function(onItem) {<br/>    	IDirectoryService.getRoots( function(roots) {<br/>    		onItem(roots[0])<br/>    	});<br/>    },<br/><br/>    mayHaveChildren : function(item) {<br/>    	return true;<br/>    },<br/><br/>    getChildren : function(parentItem, onComplete) {<br/>    	IDirectoryService.getChildrenImpl(parentItem, onComplete);<br/>    },<br/><br/>    getIdentity : function(item) {<br/>    	return item.dn;<br/>    },<br/><br/>    getLabel : function(item) {<br/>    	return item.rdn;<br/>    }<br/>});<br/></pre><br/><br/><p>And here is an extract from the my JSP page where I created the model and used it to populate the tree control.</p><br/><br/><pre><br/>&lt;div<br/>  dojoType="LDAPDirectoryTreeModel"<br/>  jsid="treeModel"<br/>  id="treeModel"&gt;<br/>&lt;/div&gt;<br/>&lt;div<br/>  jsid="tree"<br/>  id="tree"<br/>  dojoType="dijit.Tree" model="treeModel"<br/>  labelAttr="name"<br/>  label="${directory.host}:${directory.port}"&gt;<br/>&lt;/div&gt;<br/></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      PLAIN URL WITH LINK
+    </pattern>
+    <template>
+<![CDATA[<p>Add a "g" to the end of the regular expression to enable global matching.</p><br/><br/><pre><code>/ig;<br/></code></pre><br/><br/><p>For example:</p><br/><br/><pre><code>function replaceURLWithHTMLLinks(text) {<br/>    var exp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&amp;@#\/%?=~_|!:,.;]*[-A-Z0-9+&amp;@#\/%=~_|])/ig;<br/>    return text.replace(exp,"&lt;a href='$1'&gt;$1&lt;/a&gt;"); <br/>}<br/></code></pre><br/><br/><p><strong>Update:</strong> I've only fixed the problem in the question where the regular expression was only replacing the first match. The regular expression above probably misses a lot of edge cases. See the Jeff Atwood's blog post <em><a href="http://www.codinghorror.com/blog/2008/10/the-problem-with-urls.html" rel="nofollow">The Problem With URLs</a></em> for a better method of finding URLs in text.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      FLASH CS3 ACTIONSCRIPT SEND EVENT TO JAVASCRIPT
+    </pattern>
+    <template>
+<![CDATA[<p>You need to use the "allowScriptAccess" flash variable in the HTML. You probably want to use "sameDomain" as the type. Note that if you go cross-domain, you also need to host a special file on the server called 'crossdomain.xml' which enables such scripting (the flash player will check for this. More info at <a href="http://kb.adobe.com/selfservice/viewContent.do?externalId=tn_14213&amp;sliceId=2" rel="nofollow">http://kb.adobe.com/selfservice/viewContent.do?externalId=tn_14213&amp;sliceId=2</a></p><br/><br/><p>The call is the easy part. :-) In the Flash code, you'll use the ExternalInterface to do the call, as documented here:</p><br/><br/><p><a href="http://livedocs.adobe.com/flash/9.0/main/wwhelp/wwhimpl/common/html/wwhelp.htm?context=LiveDocs_Parts&amp;file=00001655.html" rel="nofollow">http://livedocs.adobe.com/flash/9.0/main/wwhelp/wwhimpl/common/html/wwhelp.htm?context=LiveDocs_Parts&amp;file=00001655.html</a></p><br/><br/><p>Short version: you say </p><br/><br/><blockquote><br/>  <p>ExternalInterface.call("javascriptFunction", "argument")</p><br/></blockquote><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      STOP .NET EAT ID
+    </pattern>
+    <template>
+<![CDATA[<p>The short answer is no, with webforms the id can always be rewritten depending on the nesting of the element.  You can get access to the id through the ClientID property, so you could set the ids into variables in a script at the end of the page/control then put them into jQuery.  </p><br/><br/><p>something like this:</p><br/><br/><pre><code>&lt;asp:button id="ImAButton" runat="server"&gt;Click Me&lt;/asp:button&gt;<br/><br/>&lt;script type="text/javascript"&gt;<br/>var buttonId = "&lt;%=ImAButton.ClientId%&gt;";<br/>$("#"+buttonId).bind('click', function() { alert('hi); });<br/>&lt;/script&gt;<br/></code></pre><br/><br/><p>It's a hack I know, but it will work.<br/>(I should note for the un-initiated, I'm using the Prototype $ get by id method there)</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      BEST PRACTIC
+    </pattern>
+    <template>
+<![CDATA[<p>Seconding <a href="http://oreilly.com/catalog/9780596517748/" rel="nofollow">Javascript: The Good Parts</a> and Resig's book <a href="http://jsninja.com/" rel="nofollow">Secrets of the Javascript Ninja</a>.</p><br/><br/><p>Here are some tips for Javascript:</p><br/><br/><ul><br/><li>Don't pollute the global namespace (put all functions into objects/closures)<br/><ul><br/><li>Take a look at <a href="http://developer.yahoo.com/yui/" rel="nofollow">YUI</a>, it's a huge codebase with only 2 global objects: YAHOO and YAHOO_config</li><br/></ul></li><br/><li>Use the Module pattern for singletons (<a href="http://yuiblog.com/blog/2007/06/12/module-pattern/" rel="nofollow">http://yuiblog.com/blog/2007/06/12/module-pattern/</a>)</li><br/><li>Make your JS as reusable as possible (jQuery plugins, YUI modules, basic JS objects.) Don't write tons of global functions.</li><br/><li>Don't forget to var your variables</li><br/><li>Use JSlint : <a href="http://www.jslint.com/" rel="nofollow">http://www.jslint.com/</a></li><br/><li>If you need to save state, it's probably best to use objects instead of the DOM.</li><br/></ul><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      JAVASCRIPT SUPPORT MULTITHREAD
+    </pattern>
+    <template>
+<![CDATA[<p>Javascript does not support multithreading because the javascript interpreter in the browser is a single thread (AFAIK). Even Google Chrome will not let a single web page's Javacript run concurrently because this would cause massive concurrency issues in existing web pages. All Chrome does is separate multiple components (different tabs, plugins, etcetera) into separate processes, but I can't imagine a single page having more than one Javacript thread.</p><br/><br/><p>You can however use, as was suggested, use setTimeout to allow some sort of scheduling and 'fake' concurrency. This causes the browser to regain control of the rendering thread, and start the Javascript code supplied to setTimeout after the given number of milliseconds. This is very useful if you want to allow the viewport (what you see) to refresh while performing operations on it. Just looping through e.g. coordinates and updating an element accordingly will just let you see the start and end positions, and nothing in between.</p><br/><br/><p>We use an abstraction library in Javascript that allows us to create processes and threads which are all managed by the same Javascript interpreter. This allows us to run actions in the following manner:</p><br/><br/><ul><br/><li>Process A, Thread 1</li><br/><li>Process A, Thread 2</li><br/><li>Process B, Thread 1</li><br/><li>Process A, Thread 3</li><br/><li>Process A, Thread 4</li><br/><li>Process B, Thread 2</li><br/><li>Pause Process A</li><br/><li>Process B, Thread 3</li><br/><li>Process B, Thread 4</li><br/><li>Process B, Thread 5</li><br/><li>Start Process A</li><br/><li>Process A, Thread 5</li><br/></ul><br/><br/><p>This allows some form of scheduling and fakes parallelism, starting and stopping of threads, etcetera, but it will not be true multithreading. I don't think it will ever be implemented in the language itself, since true multithreading is only useful if the browser can run a single page multithreaded (or even more than one core), and the difficulties there are way larger than the extra possibilities.</p><br/><br/><p>For the future of Javascript, check this out: <a href="http://developer.mozilla.org/presentations/xtech2006/javascript/" rel="nofollow">http://developer.mozilla.org/presentations/xtech2006/javascript/</a></p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      LOCAL ( )
+    </pattern>
+    <template>
+<![CDATA[<ul><br/><li><p>locals() - No. </p></li><br/><li><p>globals() - Yes.</p></li><br/></ul><br/><br/><p><code>window</code> is a reference to the global scope, like <code>globals()</code> in python.</p><br/><br/><pre><code>globals()["foo"]<br/></code></pre><br/><br/><p>is the same as:</p><br/><br/><pre><code>window["foo"]<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      IMPLIC OF MULTI THREAD JAVASCRIPT
+    </pattern>
+    <template>
+<![CDATA[<p>No, multiple threads would not add extra security problems in a perfect implementation. Threaded javascript would add complexity to the javascript interpreter which makes it more likely to have an exploitable bug. But threads alone are not going to add any security issues.  </p><br/><br/><p>Threads are not present in javascript because "Threads Suck" - read more from the language designer (<a href="http://weblogs.mozillazine.org/roadmap/archives/2007/02/threads_suck.html" rel="nofollow">http://weblogs.mozillazine.org/roadmap/archives/2007/02/threads_suck.html</a>)</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      SAME ADOB AIR APP RUN MORE THAN ONC
+    </pattern>
+    <template>
+<![CDATA[<p>It seems that this is not possible. From the <a href="http://livedocs.adobe.com/flex/3/html/help.html?content=app_launch_1.html" rel="nofollow">documentation</a>:</p><br/><br/><blockquote><br/>  <p>Only one instance of an AIR application is started. When an already running application is invoked again, AIR dispatches a new invoke event to the running instance.</p><br/></blockquote><br/><br/><p>It also gives a possible workaround:</p><br/><br/><blockquote><br/>  <p>It is the responsibility of an AIR to respond to an invoke event and take the appropriate action (such as opening a new document window).</p><br/></blockquote><br/><br/><p>There is <a href="http://bugs.adobe.com/jira/browse/SDK-12915" rel="nofollow">already a bug</a> related to this on the bugtracker, but it is marked closed with no explicit resolution given...</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      CAN NOT JQUERI MY PAGE UNDER INTERNET EXPLOR
+    </pattern>
+    <template>
+<![CDATA[<p>Try upgrading to jQuery 1.2.6, you should be on the latest release of jQuery if you are having problems first ensure you are on the latest and greatest.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      AJAX PHP CONTACT FORM WITH VALID
+    </pattern>
+    <template>
+<![CDATA[<p><a href="http://www.dustindiaz.com/ajax-contact-form/" rel="nofollow">This one</a> is a few years old, but should work fine.</p><br/><br/><p>Personally, I'd recommend taking a look at the jQuery <a href="http://plugins.jquery.com/project/form" rel="nofollow">Form Plug-in</a>. It's not plug and play, but it's well tested and easy to build on top of.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      PAGE IS POSTBACK WITHIN RESERV FUNCTION PAGELOAD ON ASP.NET AJAX
+    </pattern>
+    <template>
+<![CDATA[<p>One way you could do that is to wire up an Application.Load handler in Application.Init, then have that handler unbind itself after running:</p><br/><br/><pre><code>Sys.Application.add_init(AppInit);<br/><br/>function AppInit() {<br/>  Sys.Application.add_load(RunOnce);<br/>}<br/><br/>function RunOnce() {<br/>  // This will only happen once per GET request to the page.<br/><br/>  Sys.Application.remove_load(RunOnce);<br/>}<br/></code></pre><br/><br/><p>That will execute after Application.Init.  It should be the last thing before pageLoad is called.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      WINDOW.ONLOAD OR SCRIPT BLOCK
+    </pattern>
+    <template>
+<![CDATA[<p>Definitely use <code>onload</code>. Keep your scripts separate from your page, or you'll go mad trying to disentangle them later.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      GOOGL CHROME S V8 ENGIN REALLI THAT GOOD
+    </pattern>
+    <template>
+<![CDATA[<p>I have compared Mozilla Firefox 3.0.1 and Google Chrome 0.2.149.27 on <a href="http://www2.webkit.org/perf/sunspider-0.9/sunspider.html" rel="nofollow">SunSpider JavaScript Benchmark</a> with the following results:</p><br/><br/><ul><br/><li>Firefox - total: 2900.0ms +/- 1.8%</li><br/><li>Chrome - total: <strong>1549.2ms +/- 1.7%</strong></li><br/></ul><br/><br/><p>and on <a href="http://code.google.com/apis/v8/benchmarks.html" rel="nofollow">V8 Benchmark Suite</a> with the following results (higher score is better):</p><br/><br/><ul><br/><li>Firefox - score: 212</li><br/><li>Chrome - score: <strong>1842</strong></li><br/></ul><br/><br/><p>and on <a href="http://celtickane.com/webdesign/jsspeedarchive.php" rel="nofollow">Web Browser Javascript Benchmark</a> with the following results:</p><br/><br/><ul><br/><li>Firefox - total duration: 362 ms</li><br/><li>Chrome - total duration: <strong>349 ms</strong></li><br/></ul><br/><br/><p><em>Machine:</em> Windows XP SP2, Intel Core2 DUO T7500 @ 2.2 Ghz, 2 GB RAM</p><br/><br/><p>All blog posts and articles that I've read so far also claim that V8 is clearly the fastest JavaScript engine out there. See for example - <a href="http://waynepan.com/2008/09/02/v8-tracemonkey-squirrelfish-ie8-benchmarks/" rel="nofollow">V8, TraceMonkey, SquirrelFish, IE8 BenchMarks</a></p><br/><br/><blockquote><br/>  <p>"... Needless to say, Chrome's V8 blows away all the current builds of the next-generation of JavaScript VMs. Just to be clear, WebKit and FireFox engines haven't even hit beta, but it looks like the performance bar has just been set to an astronomical height by the V8 Team."</p><br/></blockquote><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      BIT OF JS OR JQUERI FOR HORIZONT SCROLL NEWS TICKER
+    </pattern>
+    <template>
+<![CDATA[<p>Smooth Div Scroll can also be used as a news ticker/stock ticker. It can pause on mouse over or mouse down and it can loop endlessly if you want it to.</p><br/><br/><p>Here's the example with a running ticker:<br/><a href="http://www.maaki.com/" rel="nofollow">http://www.maaki.com/</a></p><br/><br/><p>Regards,<br/>Thomas</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      SPIN WAIT HOURGLASS TYP THING
+    </pattern>
+    <template>
+<![CDATA[<p>Google "Ajax activity indicator" to find lots of images and image generators (the "spinning" image itself is an animated GIF). </p><br/><br/><p>Here is one link to get you started:<br/><a href="http://www.ajaxload.info/" rel="nofollow">http://www.ajaxload.info/</a></p><br/><br/><p>With the image in hand, use JQuery to toggle the visibility of the image (or perhaps its parent DIV tag). See this link for some more info:</p><br/><br/><p><a href="http://skfox.com/2008/04/28/jquery-example-ajax-activity-indicator/" rel="nofollow">http://skfox.com/2008/04/28/jquery-example-ajax-activity-indicator/</a></p><br/><br/><p>rp</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      INTERACT SHELL WITH COMPLET
+    </pattern>
+    <template>
+<![CDATA[<p>Rhino Shell since 1.7R2 has support for completion as well. You can find more information <a href="http://blog.norrisboyd.com/2009/03/rhino-17-r2-released.html" rel="nofollow">here</a>.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      JAVASCRIPT STUB FROM WSDL
+    </pattern>
+    <template>
+<![CDATA[<p>I had to do this myself in the past and I found this <a href="http://www.codeproject.com/KB/ajax/JavaScriptSOAPClient.aspx" rel="nofollow">CodeProject article</a>.  I changed it up some, but it gave me a good foundation to implement everything I needed.  One of the main features it already has is generating the SOAP client based off the WSDL.  It also has built in caching of the WSDL for multiple calls.</p><br/><br/><p>This article also has a custom implementation of XmlHttpRequest for Ajax calls.  This is the part that I didn't use.  During that time, I think I was using <a href="http://www.prototypejs.org/" rel="nofollow">Prototype</a> javascript library and modified the code in this article to use it's Ajax functions instead.  I just felt more comfortable using Prototype for the ajax calls, because it was widely used and had been tested on all the browsers.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      TABLESORT PLUGIN
+    </pattern>
+    <template>
+<![CDATA[<p>This is a common layout problem in IE.  If you are using CSS to style the columns width, also add the column widths to the td tags.  Set the first column to a percentage that will try to suck up most of the space, like 50% or something.  The first column width will take everything that it can and the other columns will abide by their static width.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      IDE
+    </pattern>
+    <template>
+<![CDATA[<p>At JetBrains we've just developed lightweight <a href="http://www.jetbrains.com/webstorm/" rel="nofollow">web IDE WebStorm</a> that includes very smart JavaScript Editor with DOM-based autocompletion and HTML5 API support.</p><br/><br/><p>Javascript Editor in fact is the same as in IntelliJ IDEA but the IDE itself is much easier and much cheaper too ;) Only features you need when you work with plain HTML/JS/CSS.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      LIGHTWINDOW IE7 LINE 444 OBJECT DOE NOT SUPPORT THI PROPERTI OR METHOD
+    </pattern>
+    <template>
+<![CDATA[<p>I fixed this by changing line 444 to:</p><br/><br/><p>var gallery = this._getGalleryInfo(link.rel)</p><br/><br/><p>Then changing the subsequent comparison statement to: </p><br/><br/><pre><code>if(gallery.length &gt; 0)<br/>{<br/>	// Rest of code here...<br/></code></pre><br/><br/><p>...which seems to have sorted it in IE6+ and kept it working in Firefox etc.</p><br/><br/><p>I didn't change line 1157 at all, but I haven't read the code to see what i actually does so I can't comment on its relevance? </p><br/><br/><p>I suspect the ? used in the example rel attribute (Evoution?[man]) may be causing the problem with IE but without spending some time testing a few things, I can't be sure?</p><br/><br/><p>HTH.  </p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      DIFFER BETWEEN TWO DATE IN JAVASCRIPT
+    </pattern>
+    <template>
+<![CDATA[<p>In JavaScript, dates can be transformed to the number of milliseconds since the epoc by calling the <code>getTime()</code> method or just using the date in a numeric expression.</p><br/><br/><p>So to get the difference, just subtract the two dates.</p><br/><br/><p>To create a new date based on the difference, just pass the number of milliseconds in the constructor.</p><br/><br/><pre><code>var oldBegin = ...<br/>var oldEnd = ...<br/>var newBegin = ...<br/><br/>var newEnd = new Date(newBegin + oldEnd - oldBegin);<br/></code></pre><br/><br/><p>This should just work</p><br/><br/><p>EDIT: Fixed bug pointed by @<a href="#42086" rel="nofollow">bdukes</a></p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      SEMICOLON NEED AFTER AN OBJECT LITER ASSIGN IN JAVASCRIPT
+    </pattern>
+    <template>
+<![CDATA[<p>Not technically, JavaScript has semicolons as optional. </p><br/><br/><p>But, as a general rule, use them at the end of any statement. Why? Because if you ever want to compress the script, it will save you from countless hours of frustration.</p><br/><br/><p><hr /></p><br/><br/><p><strong><a href="http://stackoverflow.com/questions/42247/are-semicolons-needed-after-an-object-literal-assignment-in-javascript#42259" rel="nofollow">@Kamiel</a></strong>: Incorrect - semicolons are optional, and his JavaScript <em>is</em> valid. However, that doesn't mean it is a Good Thing.</p><br/><br/><p><strong><a href="http://stackoverflow.com/questions/42247/are-semicolons-needed-after-an-object-literal-assignment-in-javascript#42256" rel="nofollow">@Geoff</a></strong>: The question posted is "Are semicolons needed after an object literal assignment in JavaScript?" - your "answer" doesn't really answer the question. That may be why you were voted down. It isn't that JSLint isn't useful (depending on your opinion of Crockford's assessment of the language's strengths and weaknesses), but it didn't really answer the question.</p><br/><br/><p><strong><a href="http://stackoverflow.com/questions/42247/are-semicolons-needed-after-an-object-literal-assignment-in-javascript#42317" rel="nofollow">@TonyLa</a></strong>: I don't think I was being arrogant, but thanks for the observation; I think I am being helpful. As for your "correction," semicolons in JavaScript that humans create <em>are</em>, for all intents and purposes, optional. Automatic semicolon insertion is performed by the interpreter, so the poster of the original question <em>can</em> leave them out if he so chooses. You said "<em>Semicolons are not optional with statements like break/continue/throw</em>" - wrong again. They are optional - what is really happening is that line terminators affect the automatic semicolon insertion; it is a subtle difference. Regardless, I didn't think a full discussion of the standard is what the original poster was after, so I didn't feel it necessary to go into all of the details in my answer.</p><br/><br/><p><strong><a href="http://stackoverflow.com/questions/42247/are-semicolons-needed-after-an-object-literal-assignment-in-javascript#42574" rel="nofollow">@TonyLa</a></strong>: You crack me up - why are you still fighting this battle? More importantly, why don't you quote the remainder of that portion of the standard? Here is the rest of it:</p><br/><br/><blockquote><br/>  <p>For convenience, however, such semicolons may be omitted from the source text in certain situations. These situations are described by saying that semicolons are automatically inserted into the source code token stream in those situations.</p><br/></blockquote><br/><br/><p>The fact is, what I said remains true: </p><br/><br/><blockquote><br/>  <p>...semicolons in JavaScript that humans create <em>are</em>, for all intents and purposes, optional.</p><br/></blockquote><br/><br/><p>Arguing about the particulars of the spec is worthless at this point, because you see it your way and I see it mine. By the way, the word "may" in the part you quote has a particular definition in English, maybe you should look it up. If it said "such semicolons <strong><em>must</em></strong> always appear explicitly in the source text," your point would be stronger.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      PAUS BEFOR FADE AN ELEMENT OUT USE JQUERI
+    </pattern>
+    <template>
+<![CDATA[<p>The new <code>delay()</code> function in jQuery 1.4 should do the trick.</p><br/><br/><pre><code>$('#foo').fadeIn(200).delay(5000).fadeOut(200).remove();<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      IMAG WIDTH WITH JAVASCRIPT
+    </pattern>
+    <template>
+<![CDATA[<p>@<a href="#42375" rel="nofollow">Sergio del Amo</a>: Indeed, if you check out my link you'll see that you want <code>clientWidth</code> instead.</p><br/><br/><p>@<a href="#42375" rel="nofollow">Sergio del Amo</a>: You cannot, unfortunately, accept your own answer. But you do have an extraneous period in the "px" suffix, so let's go with this, including the <code>clientWidth</code> change:</p><br/><br/><pre><code>// width in pixels<br/>function setImagesWidth(id, width)<br/>{<br/>    var images = document.getElementById(id).getElementsByTagName("img");<br/>    var newWidth = width + "px";<br/>    for (var i = 0; i &lt; images.length; ++i)<br/>    {<br/>        if (images[i].clientWidth &gt; width)<br/>        {<br/>            images[i].style.width = newWidth;<br/>        }                       <br/>    }<br/>}<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      REFER A JAVASCRIPT FILE
+    </pattern>
+    <template>
+<![CDATA[<p>If you reference the JS-file in a section that is "runat=server" you could write src="~/Javascript/jsfile.js" and it will always work.</p><br/><br/><p>You could also do this in your Page_Load (In your masterpage):</p><br/><br/><pre><code>Page.ClientScript.RegisterClientScriptInclude("myJsFile", Page.ResolveClientUrl("~/Javascript/jsfile.js"))<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      SERIAL A DOM TO XML TEXT USE JAVASCRIPT IN A CROSS BROWSER WAY
+    </pattern>
+    <template>
+<![CDATA[<p>You can use doc.xml in internet exlporer.</p><br/><br/><p>You'll get something like this:</p><br/><br/><pre><code>function xml2Str(xmlNode) {<br/>   try {<br/>      // Gecko- and Webkit-based browsers (Firefox, Chrome), Opera.<br/>      return (new XMLSerializer()).serializeToString(xmlNode);<br/>  }<br/>  catch (e) {<br/>     try {<br/>        // Internet Explorer.<br/>        return xmlNode.xml;<br/>     }<br/>     catch (e) {  <br/>        //Other browsers without XML Serializer<br/>        alert('Xmlserializer not supported');<br/>     }<br/>   }<br/>   return false;<br/>}<br/></code></pre><br/><br/><p>Found it <a href="http://www.webdeveloper.com/forum/showthread.php?t=187378" rel="nofollow">here</a>.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      THE JQUERI DIALOG WORK WITH THE THEMEROL THEME
+    </pattern>
+    <template>
+<![CDATA[<p>The solution was found in <a href="http://stackoverflow.com/questions/45600/a-problem-with-the-jquery-dialog-when-using-the-themeroller-css">a similar question</a> I posted:</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      LENGTH FOR HTML TEXT AREA
+    </pattern>
+    <template>
+<![CDATA[<p>The TEXTAREA tag does not have a MAXLENGTH attribute the way that an<br/>INPUT tag does, at least not in most standard browsers. A very simple and<br/>effective way to limit the number of characters that can be <em>typed</em> into a<br/>TEXTAREA tag is:</p><br/><br/><pre><code>&lt;textarea onKeyPress="return ( this.value.length &lt; 50 );"&gt;&lt;/textarea&gt;<br/></code></pre><br/><br/><p>This works because the boolean expression compares the field's length<br/>before the new character is added to the maximum length you want (50 in this<br/>example, use your own here), and returns true if there is room for one more,<br/>false if not. Returning false from most events cancels the default action.<br/>So if the current length is already 50 (or more), the handler returns false,<br/>the KeyPress action is cancelled, and the character is not added.</p><br/><br/><p>One fly in the ointment is the possibility of pasting into a TEXTAREA,<br/>which does not cause the KeyPress event to fire, circumventing this check.<br/>Internet Explorer 5+ contains an onPaste event whose handler can contain the<br/>check. However, note that you must also take into account how many<br/>characters are waiting in the clipboard to know if the total is going to<br/>take you over the limit or not. Fortunately, IE also contains a clipboard<br/>object from the window object.<a href="http://lists.evolt.org/archive/Week-of-Mon-20040315/156773.html" rel="nofollow">1</a> Thus:</p><br/><br/><pre><code>&lt;textarea onKeyPress="return ( this.value.length &lt; 50 );"<br/>onPaste="return (( this.value.length +<br/>window.clipboardData.getData('Text').length) &lt; 50 );"&gt;&lt;/textarea&gt;<br/></code></pre><br/><br/><p>Again, the onPaste event and clipboardData object are IE 5+ only. For a<br/>cross-browser solution, you will just have to use an OnChange or OnBlur<br/>handler to check the length, and handle it however you want (truncate the<br/>value silently, notify the user, etc.). Unfortunately, this doesn't catch<br/>the error as it's happening, only when the user attempts to leave the field,<br/>which is not quite as friendly.</p><br/><br/><p><a href="http://lists.evolt.org/archive/Week-of-Mon-20040315/156773.html" rel="nofollow">Source</a></p><br/><br/><p>Also, there is another way here, including a finished script you could include in your page:</p><br/><br/><p><a href="http://cf-bill.blogspot.com/2005/05/textarea-maxlength-revisited.html" rel="nofollow">http://cf-bill.blogspot.com/2005/05/textarea-maxlength-revisited.html</a></p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      HANDLER FROM PROTOTYPE.J LINE 3877
+    </pattern>
+    <template>
+<![CDATA[<p>I just found out this error also occurs if you accidentally leave on the parenthesis on your observer call:</p><br/><br/><pre><code>Event.observe(document, 'myapp:application_ready', myapp.MyClass.initApp());<br/></code></pre><br/><br/><p>instead of</p><br/><br/><pre><code>Event.observe(document, 'myapp:application_ready', myapp.MyClass.initApp);<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      SLICE AND CLICK EVENT
+    </pattern>
+    <template>
+<![CDATA[<p>The following selector should also work in jQuery: <code>'input:checkbox'</code>.</p><br/><br/><p>You can then string the <code>:gt(index)</code> and <code>:lt(index)</code> filters together, so if you want the 5th to 7th checkboxes, you'd use <code>'input:checkbox:gt(4):lt(2)'</code>.</p><br/><br/><p>To get the index of the currently clicked checkbox, just use <code>$("input:checkbox").index($(this))</code>.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      CAN YOU SELECT BY CSS RULE NOT CLASS
+    </pattern>
+    <template>
+<![CDATA[<pre><code>$(".container .component").each(function()<br/>{<br/>    $(".container", this).each(function() {<br/>        if($(this).css('width') == 'auto')<br/>        {<br/>            $(this).css('border', '1px solid #f00');<br/>        }<br/>    });<br/>});<br/></code></pre><br/><br/><p>Similar to the other answer but since components can also have multiple containers, also needs the .each() check in here too for the width.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      DEFAULT TITL OF CONFIRM ( ) IN JAVASCRIPT
+    </pattern>
+    <template>
+<![CDATA[<p>This is not possible, as you say, from a security stand point. The only way you could simulate it, is by creating a modeless dialog window.</p><br/><br/><p>There are many third-party javascript-plugins that you could use to fake this effect so you do not have to write all that code.</p><br/>]]>    </template>
+  </category>
+</aiml>

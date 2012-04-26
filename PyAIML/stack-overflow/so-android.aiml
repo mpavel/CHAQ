@@ -1,0 +1,40 @@
+<?xml version="1.0" ?>
+<aiml version="1.0">
+  <meta content="SimpleAIMLGenerator" name="author"/>
+  <meta content="en" name="language"/>
+  <category>
+    <pattern>
+      DEVELOP
+    </pattern>
+    <template>
+<![CDATA[<p>You might find this book, <a href="http://pragprog.com/titles/eband3/hello-android" rel="nofollow">Hello Android</a>, helpful. It includes information on getting started, installing the tools and so on. I've not read it, myself, but the company behind it is pretty solid.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      ITEMIZEDOVERLAY AND OVERLAYITEM IN ANDROID BETA 0.9
+    </pattern>
+    <template>
+<![CDATA[<p>For the sake of completeness I'll repeat the discussion on Reto's post over at the <a href="http://groups.google.com/group/android-developers/browse_thread/thread/36fe0648dabfe745#">Android Groups</a> here.</p><br/><br/><p>It seems that if you set the bounds on your drawable it does the trick:</p><br/><br/><pre><code>Drawable defaultMarker = r.getDrawable(R.drawable.icon);<br/><br/>// You HAVE to specify the bounds! It seems like the markers are drawn<br/>// through Drawable.draw(Canvas) and therefore must have its bounds set<br/>// before drawing.<br/>defaultMarker.setBounds(0, 0, defaultMarker.getIntrinsicWidth(),<br/>    defaultMarker.getIntrinsicHeight());<br/><br/>MyItemizedOverlay markers = new MyItemizedOverlay(defaultMarker);<br/>overlays.add(markers);<br/></code></pre><br/><br/><p>Btw, the above is shamelessly ripped from the demo at <a href="http://www.marcelp.info/2008/09/01/android-itemizedoverlay-demo/">MarcelP.info</a>. Also see <a href="http://androidguys.com/?p=1413">here</a> for a good howto.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      XI WHICH REQUIR AUTHENT WITH ANDROID EMUL
+    </pattern>
+    <template>
+<![CDATA[<p>I Managed to do it in the Adndroid 2.2 Emulator.</p><br/><br/><p>Go to "Settings" -> "Wireless &amp; Networks" -> "Mobile Networks" -> "Access Point Names" -> "Telkila"</p><br/><br/><p>Over there set the proxy host name in the property "Proxy"<br/>and the Proxy port in the property "Port"</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      MULTIPLATFORM FRAMEWORK FOR DEVELOP IPHON ANDROID APPLIC
+    </pattern>
+    <template>
+<![CDATA[<p>Both Android and the iPhone have very strongly defined user interfaces. Even if you found a framework that bridged the huge differences on the most lower aspect levels (Android is programmed in Java on top of a custom VM, iPhone is native code programmed in Objective-C) and in the higher levels (iPhone apps are a completely sandboxed and isolated, the Android object model is distributed and classes are freely invoked between apps and libraries) your final app would feel alien and out of place in either of them. Think about the lack of multitouch in Android, or the lack of dedicated hardware buttons in the iPhone.</p><br/><br/><p>Your best bet would be to develop a platform specific user interface and have the model and core logic of your application in some kind of scripting language. Then find an interpreter in plain C (for the iPhone) and one in Java (for Android.) Scheme, Lisp and Javascript could fit the bill. Just make sure the interpreter is not exposed to end users or you would be violating the iPhone NDA...</p><br/><br/><p>If your app is data-heavy you could follow the model of many iPhone apps and develop native user interfaces for iPhone and Android, and have all the application logic in a remote server. Your UI becomes the only installed part of the application and everything else is hosted away on the net. This has the added advantage of having the possibility to offer roaming profiles between different devices and a web interface.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      NDROID TAB ICON
+    </pattern>
+    <template>
+<![CDATA[<p>The short answer is, you're not missing anything.  The Android SDK doesn't provide a direct method to change the indicator of a TabHost after it's been created.  The TabSpec is only used to build the tab, so changing the TabSpec after the fact will have no effect.</p><br/><br/><p>I think there's a workaround, though.  Call mTabs.getTabWidget() to get a TabWidget object.  This is just a subclass of ViewGroup, so you can call getChildCount() and getChildAt() to access individual tabs within the TabWidget.  Each of these tabs is also a View, and in the case of a tab with a graphical indicator and a text label, it's almost certainly some other ViewGroup (maybe a LinearLayout, but it doesn't matter) that contains an ImageView and a TextView.  So with a little fiddling with the debugger or Log.i, you should be able to figure out a recipe to get the ImageView and change it directly.</p><br/><br/><p>The downside is that if you're not careful, the exact layout of the controls within a tab could change and your app could break.  Your initial solution is perhaps more robust, but then again it might lead to other unwanted side effects like flicker or focus problems.</p><br/>]]>    </template>
+  </category>
+</aiml>

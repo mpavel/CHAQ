@@ -1,0 +1,1048 @@
+<?xml version="1.0" ?>
+<aiml version="1.0">
+  <meta content="SimpleAIMLGenerator" name="author"/>
+  <meta content="en" name="language"/>
+  <category>
+    <pattern>
+      PROCESS IN PYTHON
+    </pattern>
+    <template>
+<![CDATA[<p>Personally, I've played with several of the built-in options on an XML-heavy project and have settled on <a href="http://docs.python.org/lib/module-xml.dom.pulldom.html" rel="nofollow">pulldom</a> as the best choice for less complex documents.</p><br/><br/><p>Especially for small simple stuff, I like the event-driven theory of parsing rather than setting up a whole slew of callbacks for a relatively simple structure.  <a href="http://www.prescod.net/python/pulldom.html" rel="nofollow">Here is a good quick discussion of how to use the API</a>.</p><br/><br/><p>What I like: you can handle the parsing in a <code>for</code> loop rather than using callbacks.  You also delay full parsing (the "pull" part) and only get additional detail when you call <code>expandNode()</code>.  This satisfies my general requirement for "responsible" efficiency without sacrificing ease of use and simplicity.</p>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      FULL PATH TO A FONT FROM IT DISPLAY NAME ON A MAC
+    </pattern>
+    <template>
+<![CDATA[<p>Unfortunately the only API that isn't deprecated is located in the ApplicationServices framework, which doesn't have a bridge support file, and thus isn't available in the bridge. If you're wanting to use ctypes, you can use ATSFontGetFileReference after looking up the ATSFontRef.</p><br/><br/><p>Cocoa doesn't have any native support, at least as of 10.5, for getting the location of a font.</p>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      PREVIEW JPEG OF A PDF ON WINDOW
+    </pattern>
+    <template>
+<![CDATA[<p>ImageMagick delegates the PDF->bitmap conversion to GhostScript anyway, so here's a command you can use (it's based on the actual command listed by the <code>ps:alpha</code> delegate in ImageMagick, just adjusted to use JPEG as output):</p><br/><br/><pre><code>gs -q -dQUIET -dPARANOIDSAFER -dBATCH -dNOPAUSE -dNOPROMPT \<br/>-dMaxBitmap=500000000 -dLastPage=1 -dAlignToPixels=0 -dGridFitTT=0 \<br/>-sDEVICE=jpeg -dTextAlphaBits=4 -dGraphicsAlphaBits=4 -r72x72 \<br/>-sOutputFile=$OUTPUT -f$INPUT<br/></code></pre><br/><br/><p>where <code>$OUTPUT</code> and <code>$INPUT</code> are the output and input filenames. Adjust the <code>72x72</code> to whatever resolution you need. (Obviously, strip out the backslashes if you're writing out the whole command as one line.)</p><br/><br/><p>This is good for two reasons:</p><br/><br/><ol><br/><li>You don't need to have ImageMagick installed anymore. Not that I have anything against ImageMagick (I love it to bits), but I believe in simple solutions.</li><br/><li>ImageMagick does a two-step conversion. First PDF->PPM, then PPM->JPEG. This way, the conversion is one-step.</li><br/></ol><br/><br/><p>Other things to consider: with the files I've tested, PNG compresses better than JPEG. If you want to use PNG, change the <code>-sDEVICE=jpeg</code> to <code>-sDEVICE=png16m</code>.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      INTEGR SYSTEM FOR A PYTHON CODEBAS
+    </pattern>
+    <template>
+<![CDATA[<p>We run <a href="http://buildbot.net/trac" rel="nofollow">Buildbot - Trac</a> at work, I haven't used it too much since my code base isn't part of the release cycle yet. But we run the tests on different environments (OSX/Linux/Win) and it sends emails --and it's written in python.</p>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      X ORACL HOW DO I ACCESS ORACL FROM PYTHON
+    </pattern>
+    <template>
+<![CDATA[<p>cx_Oracle is a Python extension module that allows access to Oracle databases and conforms to the Python database API specification.</p><br/><br/><p>More information is available <a href="http://python.net/crew/atuining/cx_Oracle/" rel="nofollow">here</a>.<br/>Here is a sample showing how to connect and process a query.</p><br/><br/><pre>#!/usr/bin/python<br/><br/>import cx_Oracle<br/>connstr='scott/tiger'<br/>conn = cx_Oracle.connect(connstr)<br/>curs = conn.cursor()<br/><br/>curs.execute('select * from emp')<br/>print curs.description<br/>for row in curs:<br/>    print row<br/>conn.close()<br/></pre>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      X ORACL WHAT IS THE BEST WAY TO ITER OVER A RESULT SET
+    </pattern>
+    <template>
+<![CDATA[<p>There are three ways to iterate over a result set.  The best way in terms of both<br/>readability and performance is usually to use the built-in cursor iterator.</p><br/><br/><pre>curs.execute('select * from people')<br/>for row in curs:<br/>    print row<br/></pre><br/><br/><p>You can fetch all the rows into a list, but this can have some bad<br/>side effects if the result set is large.</p><br/><br/><ul><br/><li><p>You have to wait for the entire result set to be returned to<br/>your client process.</p></li><br/><li><p>You may eat up a lot of memory in your client to hold<br/>the built-up list.</p></li><br/><li><p>It may take a while for Python to construct and deconstruct the<br/>list which you are going to immediately discard anyways.</p></li><br/></ul><br/><br/><pre>for row in curs.fetchall():<br/>    print row<br/></pre><br/><br/><p>Finally, you can loop over the result set fetching one row at <br/>a time.  In general, there's no particular advantage in doing this over<br/>using the iterator.  If there is something in your programming logic<br/>that seems to indicate there is an advantage in doing this, perhaps<br/>you should reconsider your programming logic.</p><br/><br/><p></p><pre>row = curs.fetchone()<br/>while row:<br/>    print row<br/>    row = curs.fetchone()<pre></pre></pre>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      IN TO MATCH AN ATTRIBUT OF PYTHON OBJECT IN AN ARRAY
+    </pattern>
+    <template>
+<![CDATA[<p>Using a list comprehension would build a temporary list, which could eat all your memory if the sequence being searched is large. Even if the sequence is not large, building the list means iterating over the whole of the sequence before <code>in</code> could start its search.</p><br/><br/><p>The temporary list can be avoiding by using a generator expression:</p><br/><br/><pre><code>foo = 12<br/>foo in (obj.id for obj in bar)<br/></code></pre><br/><br/><p>Now, as long as <code>obj.id == 12</code> near the start of <code>bar</code>, the search will be fast, even if <code>bar</code> is infinitely long.</p><br/><br/><p>As @Matt suggested, it's a good idea to use <code>hasattr</code> if any of the objects in <code>bar</code> can be missing an <code>id</code> attribute:</p><br/><br/><pre><code>foo = 12<br/>foo in (obj.id for obj in bar if hasattr(obj, 'id'))<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      VIEW IN DJANGO
+    </pattern>
+    <template>
+<![CDATA[<p>I've created and used my own generic view classes, defining <strong><code>__call__</code></strong> so an instance of the class is callable.  I really like it; while Django's generic views allow some customization through keyword arguments, OO generic views (if their behavior is split into a number of separate methods) can have much more fine-grained customization via subclassing, which lets me repeat myself a lot less.  (I get tired of rewriting the same create/update view logic anytime I need to tweak something Django's generic views don't quite allow).</p><br/><br/><p>I've posted some code at <a href="http://www.djangosnippets.org/snippets/1009/" rel="nofollow">djangosnippets.org</a>.</p><br/><br/><p>The only real downside I see is the proliferation of internal method calls, which may impact performance somewhat. I don't think this is much of a concern; it's rare that Python code execution would be your performance bottleneck in a web app.</p><br/><br/><p><strong>UPDATE</strong>: Django's own <a href="http://docs.djangoproject.com/en/dev/topics/class-based-views/" rel="nofollow">generic views</a> are now class-based.</p><br/><br/><p><strong>UPDATE</strong>: FWIW, I've changed my opinion on class-based views since this answer was written. After having used them extensively on a couple of projects, I feel they tend to lead to code that is satisfyingly DRY to write, but very hard to read and maintain later, because functionality is spread across so many different places, and subclasses are so dependent on every implementation detail of the superclasses and mixins. I now feel that <a href="https://docs.djangoproject.com/en/dev/ref/template-response/" rel="nofollow">TemplateResponse</a> and view decorators is a better answer for decomposing view code.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      MYSQL
+    </pattern>
+    <template>
+<![CDATA[<p>MySQLdb is what I have used before.</p><br/><br/><p>If you host is using Python version 2.5 or higher, support for sqlite3 databases is built in (sqlite allows you to have a relational database that is simply a file in your filesystem).  But buyer beware, sqlite is not suited for production, so it may depend what you are trying to do with it.</p><br/><br/><p>Another option may be to call your host and complain, or change hosts.  Honestly these days, any self respecting web host that supports python and mysql ought to have MySQLdb pre installed.</p>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      PYTHON S ITERTOOLS.GROUPBI ( )
+    </pattern>
+    <template>
+<![CDATA[<p>Can you show us your code? </p><br/><br/><p>The example on the Python docs is quite straight forward:</p><br/><br/><pre><code>groups = []<br>uniquekeys = []<br>for k, g in groupby(data, keyfunc):<br>    groups.append(list(g))      # Store group iterator as a list<br>    uniquekeys.append(k)<br></code></pre><br/><br/><p>So in your case, data is a list of nodes, keyfunc is where the logic of your criteria function goes and then groupby() groups the data. You must be careful to <strong>sort the data</strong> by the criteria before you call groupby or it won't work. groupby method actually just iterates through a list and whenever the key changes it creates a new group. </p>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      LEARN PYTHON GOOD EXAMPL CODE
+    </pattern>
+    <template>
+<![CDATA[<p>You're right that there's no substitute for looking at code, but I've found <a href="http://python.net/%7Egoodger/projects/pycon/2007/idiomatic/handout.html" rel="nofollow">Code Like a Pythonista</a> to be useful for those kinds of questions.  It has small sections on module structure and package organization at the end.</p><br/><br/><p><strong>Edit:</strong>  The Python Tutorial section on <a href="http://docs.python.org/tut/node8.html" rel="nofollow">modules</a> is also worth reading.</p>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      METHOD TO AN EXIST OBJECT
+    </pattern>
+    <template>
+<![CDATA[<p>In Python, there is a difference between functions and bound methods.</p><br/><br/><pre><code>&gt;&gt;&gt; def foo():<br/>...     print "foo"<br/>...<br/>&gt;&gt;&gt; class A:<br/>...     def bar( self ):<br/>...         print "bar"<br/>...<br/>&gt;&gt;&gt; a = A()<br/>&gt;&gt;&gt; foo<br/>&lt;function foo at 0x00A98D70&gt;<br/>&gt;&gt;&gt; a.bar<br/>&lt;bound method A.bar of &lt;__main__.A instance at 0x00A9BC88&gt;&gt;<br/>&gt;&gt;&gt;<br/></code></pre><br/><br/><p>Bound methods have been "bound" (how descriptive) to an instance, and that instance will be passed as the first argument whenever the method is called.</p><br/><br/><p>Callables that are attributes of a class (as opposed to an instance) are still unbound, though, so you can modify the class definition whenever you want:</p><br/><br/><pre><code>&gt;&gt;&gt; def fooFighters( self ):<br/>...     print "fooFighters"<br/>...<br/>&gt;&gt;&gt; A.fooFighters = fooFighters<br/>&gt;&gt;&gt; a2 = A()<br/>&gt;&gt;&gt; a2.fooFighters<br/>&lt;bound method A.fooFighters of &lt;__main__.A instance at 0x00A9BEB8&gt;&gt;<br/>&gt;&gt;&gt; a2.fooFighters()<br/>fooFighters<br/></code></pre><br/><br/><p>Previously defined instances are updated as well (as long as they haven't overridden the attribute themselves):</p><br/><br/><pre><code>&gt;&gt;&gt; a.fooFighters()<br/>fooFighters<br/></code></pre><br/><br/><p>The problem comes when you want to attach a method to a single instance:</p><br/><br/><pre><code>&gt;&gt;&gt; def barFighters( self ):<br/>...     print "barFighters"<br/>...<br/>&gt;&gt;&gt; a.barFighters = barFighters<br/>&gt;&gt;&gt; a.barFighters()<br/>Traceback (most recent call last):<br/>  File "&lt;stdin&gt;", line 1, in &lt;module&gt;<br/>TypeError: barFighters() takes exactly 1 argument (0 given)<br/></code></pre><br/><br/><p>The function is not automatically bound when it's attached directly to an instance:</p><br/><br/><pre><code>&gt;&gt;&gt; a.barFighters<br/>&lt;function barFighters at 0x00A98EF0&gt;<br/></code></pre><br/><br/><p>To bind it, we can use the <a href="http://docs.python.org/library/types.html?highlight=methodtype#module-types">MethodType function in the types module</a>:</p><br/><br/><pre><code>&gt;&gt;&gt; import types<br/>&gt;&gt;&gt; a.barFighters = types.MethodType( barFighters, a )<br/>&gt;&gt;&gt; a.barFighters<br/>&lt;bound method ?.barFighters of &lt;__main__.A instance at 0x00A9BC88&gt;&gt;<br/>&gt;&gt;&gt; a.barFighters()<br/>barFighters<br/></code></pre><br/><br/><p>This time other instances of the class have not been affected:</p><br/><br/><pre><code>&gt;&gt;&gt; a2.barFighters()<br/>Traceback (most recent call last):<br/>  File "&lt;stdin&gt;", line 1, in &lt;module&gt;<br/>AttributeError: A instance has no attribute 'barFighters'<br/></code></pre><br/><br/><p>More information can be found by reading about <a href="http://users.rcn.com/python/download/Descriptor.htm">descriptors</a> and <a href="http://www.onlamp.com/pub/a/python/2003/04/17/metaclasses.html">metaclass</a> <a href="http://www.gnosis.cx/publish/programming/metaclass_2.html">programming</a>.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      GRAPH DATA STRUCTUR IN PYTHON
+    </pattern>
+    <template>
+<![CDATA[<p>I would strongly advocate you look at <a href="https://networkx.lanl.gov/wiki" rel="nofollow">NetworkX</a>. It's a battle-tested war horse and the first tool most 'research' types reach for when they need to do analysis of network based data. I have manipulated graphs with 100s of thousands of edges without problem on a notebook. Its feature rich and very easy to use. You will find yourself focusing more on the problem at hand rather than the details in the underlying implementation.</p><br/><br/><p><strong>Example of <a href="http://en.wikipedia.org/wiki/Erd%C5%91s%E2%80%93R%C3%A9nyi_model" rel="nofollow">Erdős-Rényi</a> random graph generation and analysis</strong></p><br/><br/><pre><code><br/>"""<br/>Create an G{n,m} random graph with n nodes and m edges<br/>and report some properties.<br/><br/>This graph is sometimes called the Erd##[m~Qs-Rényi graph<br/>but is different from G{n,p} or binomial_graph which is also<br/>sometimes called the Erd##[m~Qs-Rényi graph.<br/>"""<br/>__author__ = """Aric Hagberg (hagberg@lanl.gov)"""<br/>__credits__ = """"""<br/>#    Copyright (C) 2004-2006 by <br/>#    Aric Hagberg <br/>#    Dan Schult <br/>#    Pieter Swart <br/>#    Distributed under the terms of the GNU Lesser General Public License<br/>#    http://www.gnu.org/copyleft/lesser.html<br/><br/>from networkx import *<br/>import sys<br/><br/>n=10 # 10 nodes<br/>m=20 # 20 edges<br/><br/>G=gnm_random_graph(n,m)<br/><br/># some properties<br/>print "node degree clustering"<br/>for v in nodes(G):<br/>    print v,degree(G,v),clustering(G,v)<br/><br/># print the adjacency list to terminal <br/>write_adjlist(G,sys.stdout)<br/></code></pre><br/><br/><p>Visualizations are also straightforward:</p><br/><br/><p><img src="http://www.visualcomplexity.com/vc/images/376_big01.jpg" alt="alt text" /></p><br/><br/><p>More visualization: <a href="http://jonschull.blogspot.com/2008/08/graph-visualization.html" rel="nofollow">http://jonschull.blogspot.com/2008/08/graph-visualization.html</a></p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      EXPRESS BINARI LITER IN PYTHON
+    </pattern>
+    <template>
+<![CDATA[<p>For reference&mdash;<em>future</em> Python possibilities:<br /><br/>Starting with Python 2.6 you can express binary literals using the prefix <strong>0b</strong> or <strong>0B</strong>:</p><br/><br/><pre><code>&gt;&gt;&gt; 0b101111<br/>47<br/></code></pre><br/><br/><p>You can also use the new <strong>bin</strong> function to get the binary representation of a number:</p><br/><br/><pre><code>&gt;&gt;&gt; bin(173)<br/>'0b10101101'<br/></code></pre><br/><br/><p>Development version of the documentation: <a href="http://docs.python.org/dev/whatsnew/2.6.html#pep-3127-integer-literal-support-and-syntax" rel="nofollow">What's New in Python 2.6</a></p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      MENU IN PYTHON THAT DOE NOT REQUIR THE USER TO PRESS ( ENTER ) TO MAKE A SELECT
+    </pattern>
+    <template>
+<![CDATA[<p><strong>On Windows:</strong></p><br/><br/><pre><code>import msvcrt<br/>answer=msvcrt.getch()<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      WHAT OS AM I RUN ON
+    </pattern>
+    <template>
+<![CDATA[<pre><code>&gt;&gt;&gt; import os<br>&gt;&gt;&gt; print os.name<br>posix<br>&gt;&gt;&gt; import platform<br>&gt;&gt;&gt; platform.system()<br>'Linux'<br>&gt;&gt;&gt; platform.release()<br>'2.6.22-15-generic'<br></code></pre><br/><br/><p>See: <a href="http://docs.python.org/lib/node441.html" rel="nofollow">http://docs.python.org/lib/node441.html</a></p>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      WHAT IS THE DIFFER BETWEEN ( 1 2 3 ) AND 1 2 3 AND WHEN SHOULD I USE EACH
+    </pattern>
+    <template>
+<![CDATA[<p>From the <a href="http://www.python.org/doc/faq/general/#why-are-there-separate-tuple-and-list-data-types" rel="nofollow">Python FAQ</a>:</p><br/><br/><blockquote><br/>  <p>Lists and tuples, while similar in many respects, are generally used in fundamentally different ways. Tuples can be thought of as being similar to Pascal records or C structs; they're small collections of related data which may be of different types which are operated on as a group. For example, a Cartesian coordinate is appropriately represented as a tuple of two or three numbers.</p><br/>  <br/>  <p>Lists, on the other hand, are more like arrays in other languages. They tend to hold a varying number of objects all of which have the same type and which are operated on one-by-one.</p><br/></blockquote><br/><br/><p>Generally by convention you wouldn't choose a list or a tuple just based on its (im)mutability.  You would choose a tuple for small collections of completely different pieces of data in which a full-blown class would be too heavyweight, and a list for collections of any reasonable size where you have a homogeneous set of data.</p>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      SIZE DIFFER AFTER COPI A FILE TO A SERVER V A FTP
+    </pattern>
+    <template>
+<![CDATA[<p>Do you need to open the locfile in binary using "rb"?</p><br/><br/><p>f = open (locfile, "rb")</p>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      HOST SERVIC IS BEST FOR DJANGO APPLIC
+    </pattern>
+    <template>
+<![CDATA[<p>I'm a huge fan of <a href="http://www.webfaction.com/" rel="nofollow">webfaction</a> as well. They are not the cheapest hosts at $9.50 a month (if you are not prepaying for a year) but they have supported django for as long as it has been around, they support the stable and 1.0 alpha releases and they have a control panel app that allows you to setup in about two minutes.  Have you checked out <a href="http://djangofriendly.com/hosts/" rel="nofollow">djangofriendly?</a>  There are quite a few reviews and recommendations for django hosts there. </p>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      EDITOR FOR LINUX ( BESID VI )
+    </pattern>
+    <template>
+<![CDATA[<p>Emacs is a wonderful text editor.  It has huge power once you become a power user.  You can access a shell, have as many files open as you want in as many sub-windows and an extremely powerful scripting support that lets you add all kinds of neat features.</p><br/><br/><p>I have been using a ruby-mode which adds syntax highlighting and whatnot to ruby, and the same exists for every major language.</p><br/><br/><p>If you keep at it, you can use exclusively the keyboard and never touch the mouse, which increases your editing speed by a significant margin.</p><br/><br/><p>If you want to start with something a lot more basic though, gedit is nice... it has built in syntax highlighting as well for most languages based on the filename extension.  It comes with the OS as well (though emacs you can easily install with apt-get or some similar package finder utility).</p><br/><br/><p>UPDATE: I think gedit is exclusively GUI based though, so it would be useful to learn emacs in case you are stuck with just a shell (it is fully featured in both shell and graphical mode).</p><br/><br/><p>FURTHER UPDATE: Just FYI, I am not trying to push Emacs over Vim, it's just what I use, and it's a great editor (as I'm sure Vim is too).  It is daunting at first (as I'm sure Vim is too), but the question was about text editors on Linux besides vi... Emacs seems the logical choice to me, but gedit is a great simple text editor with some nice features if that's all you are looking for.</p>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      EXECUT PYTHON APP
+    </pattern>
+    <template>
+<![CDATA[<p>First you will need some GUI library with Python bindings and then (if you want) some program that will convert your python scripts into standalone executables.</p><br/><br/><p><strong>Cross-platform GUI libraries with Python bindings (Windows, Linux, Mac)</strong></p><br/><br/><p>Of course, there are many, but the most popular that I've seen in wild are:</p><br/><br/><ul><br/><li><a href="http://wiki.python.org/moin/TkInter">Tkinter</a>  - based on <a href="http://www.tcl.tk/">Tk GUI toolkit</a> (de-facto standard GUI library for python, free for commercial projects)</li><br/><li><a href="http://www.wxpython.org/">WxPython</a> - based on <a href="http://www.wxwidgets.org/">WxWidgets</a> (very popular, free for commercial projects)</li><br/><li><a href="http://www.riverbankcomputing.co.uk/news">PyQt</a> - based on <a href="http://trolltech.com/products/qt/">Qt</a> (also very popular and more stable than WxWidgets but costly license for commercial projects)</li><br/></ul><br/><br/><p>Complete list is at <a href="http://wiki.python.org/moin/GuiProgramming">http://wiki.python.org/moin/GuiProgramming</a></p><br/><br/><p><strong>Single executable (Windows)</strong></p><br/><br/><ul><br/><li><a href="http://www.py2exe.org/">py2exe</a> - Probably the most popular out there (<a href="http://stackoverflow.com/questions/2933/an-executable-python-app/31859#31859">PyInstaller</a> is also gaining in popularity)</li><br/></ul><br/><br/><p><strong>Single executable (Linux)</strong></p><br/><br/><ul><br/><li><a href="http://wiki.python.org/moin/Freeze">Freeze</a> - works the same way like py2exe but targets Linux platform</li><br/></ul><br/><br/><p><strong>Single executable (Mac)</strong></p><br/><br/><ul><br/><li><a href="http://svn.pythonmac.org/py2app/py2app/trunk/doc/index.html">py2app</a> - again, works like py2exe but targets Mac OS</li><br/></ul><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      FUNCTION FROM A STRING WITH THE FUNCTION S NAME IN PYTHON
+    </pattern>
+    <template>
+<![CDATA[<p>Assuming module 'foo' with method 'bar':</p><br/><br/><pre><code>import foo<br>methodToCall = getattr(foo, 'bar')<br>result = methodToCall()<br></code></pre><br/><br/><p>As far as that goes lines 2 and three can be compressed to:</p><br/><br/><pre><code>result = getattr(foo, 'bar')()<br></code></pre><br/><br/><p>if that makes more sense for your use case.  You can use getattr in this fashion on class instance bound methods, module-level methods, classmethods... the list goes on.</p>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      SELL PYTHON TO A CLIENT BOSS PERSON WITH LOT OF CASH
+    </pattern>
+    <template>
+<![CDATA[<p>This is one of those cases that really boil down to personal preference or situational details. If you're more comfortable and experienced with Python, then say so. Are they asking you to justify it because they're more comfortable with one of the other environments? After you're done, will the system be passed off to someone else for long-term maintenance?</p><br/><br/><p>If they ask you to use a technology or language that you're not as familiar with, then make sure they know up-front that it's going to take you longer.</p>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      HAVE EXPERI CREAT A SHARE LIBRARI IN MATLAB
+    </pattern>
+    <template>
+<![CDATA[<p>I won't help much but I remember that I was able to wrap MATLAB simulation into DLL and then call it from Delphi app. It work really well.</p><br/><br/><p>Anyway: good luck!!!</p>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      BYTE TO FLOAT POINT NUMBER IN PYTHON
+    </pattern>
+    <template>
+<![CDATA[<pre><code>&gt;&gt;&gt; import struct<br/>&gt;&gt;&gt; struct.pack('f', 3.141592654)<br/>'\xdb\x0fI@'<br/>&gt;&gt;&gt; struct.unpack('f', '\xdb\x0fI@')<br/>(3.1415927410125732,)<br/>&gt;&gt;&gt; struct.pack('4f', 1.0, 2.0, 3.0, 4.0)<br/>'\x00\x00\x80?\x00\x00\x00@\x00\x00@@\x00\x00\x80@'<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      UNICOD AND THE WINDOW CONSOL
+    </pattern>
+    <template>
+<![CDATA[<p>Here is a page that details the problem and a solution (search the page for the text <em>Wrapping sys.stdout into an instance</em>):</p><br/><br/><p><a href="http://wiki.python.org/moin/PrintFails" rel="nofollow">PrintFails - Python Wiki</a></p>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      SIZE OF A FILE BEFOR DOWNLOAD IN PYTHON
+    </pattern>
+    <template>
+<![CDATA[<p>I have reproduced what you are seeing:</p><br/><br/><pre><code>import urllib, os<br>link = "http://python.org"<br>print "opening url:", link<br>site = urllib.urlopen(link)<br>meta = site.info()<br>print "Content-Length:", meta.getheaders("Content-Length")[0]<br><br>f = open("out.txt", "r")<br>print "File on disk:",len(f.read())<br>f.close()<br><br><br>f = open("out.txt", "w")<br>f.write(site.read())<br>site.close()<br>f.close()<br><br>f = open("out.txt", "r")<br>print "File on disk after download:",len(f.read())<br>f.close()<br><br>print "os.stat().st_size returns:", os.stat("out.txt").st_size<br></code></pre><br/><br/><p>Outputs this:</p><br/><br/><pre><code>opening url: http://python.org<br>Content-Length: 16535<br>File on disk: 16535<br>File on disk after download: 16535<br>os.stat().st_size returns: 16861<br></code></pre><br/><br/><p>What am I doing wrong here? Is os.stat().st_size not returning the correct size?</p><br/><br/><hr><br/><br/><p>Edit:<br/>OK, I figured out what the problem was:</p><br/><br/><pre><code>import urllib, os<br>link = "http://python.org"<br>print "opening url:", link<br>site = urllib.urlopen(link)<br>meta = site.info()<br>print "Content-Length:", meta.getheaders("Content-Length")[0]<br><br>f = open("out.txt", "rb")<br>print "File on disk:",len(f.read())<br>f.close()<br><br><br>f = open("out.txt", "wb")<br>f.write(site.read())<br>site.close()<br>f.close()<br><br>f = open("out.txt", "rb")<br>print "File on disk after download:",len(f.read())<br>f.close()<br><br>print "os.stat().st_size returns:", os.stat("out.txt").st_size<br></code></pre><br/><br/><p>this outputs:</p><br/><br/><pre><code>$ python test.py<br>opening url: http://python.org<br>Content-Length: 16535<br>File on disk: 16535<br>File on disk after download: 16535<br>os.stat().st_size returns: 16535<br></code></pre><br/><br/><p>Make sure you are opening both files for binary read/write.</p><br/><br/><pre><code>// open for binary write<br>open(filename, "wb")<br>// open for binary read<br>open(filename, "rb")<br></code></pre>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      ABSTRACT SEASON SHOW EPISOD DATA
+    </pattern>
+    <template>
+<![CDATA[<p>OK, what you need is classobj from new module. I cannot give you code sample at the moment, I'll try to do that in a feew hours. That would allow you to construct exception classes dynamically (classobj takes a string as an argument for the class name). </p><br/><br/><p>Edit: below a simple code sample that might help you</p><br/><br/><pre><code>import new<br/>myexc=new.classobj("ExcName",(Exception,),{})<br/>i=myexc("This is the exc msg!")<br/>raise i<br/></code></pre><br/><br/><p>this gives you:</p><br/><br/><pre><code>Traceback (most recent call last):<br/>File "&lt;stdin&gt;", line 1, in &lt;module&gt;<br/>__main__.ExcName: This is the exc msg!<br/></code></pre><br/><br/><p>remember that you can always get the class name through:</p><br/><br/><pre><code>self.__class__.__name__<br/></code></pre><br/><br/><p>so, after some string mangling ang concanetion you should be able to obtain appropriate exception class name and contruct a class object using that name and then raise that exception.<br/>HTH</p><br/><br/><p>P.S. - you can also raise strings, but this is deprecated.</p><br/><br/><pre><code>raise(self.__class__.__name__+"Exception")<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      STRAIGHT FORWARD PYTHON FRAMEWORK
+    </pattern>
+    <template>
+<![CDATA[<p><strong>Full-stack frameworks</strong></p><br/><br/><p><a href="http://www.djangoproject.com/" rel="nofollow">Django</a>, <a href="http://www.turbogears.org/" rel="nofollow">TurboGears</a>, and <a href="http://pylonshq.com/" rel="nofollow">Pylons</a> mostly have the feel of Lego blocks, where different apps can be used in different websites very easily, all using the prescribed tools for the database, network, etc.  If you like any of the apps currently in development (say, <a href="http://byteflow.su/" rel="nofollow">Byteflow</a>, <a href="http://sct.sphene.net/" rel="nofollow">Sphene Community Tools</a>, or Flatpages for Django), then there's not really much work to do.</p><br/><br/><p>Of the three, Django was the first I tried, and I went insane looking for the most trivial of things, like code for the URL of the page that was being rendered.  Django is well polished and it has good documentation, but it doesn't like letting you reach down to a lower level of abstraction.  It's also accused of being monolithic and having an NIH attitude, although it's becoming more and more modular.</p><br/><br/><p>TurboGears is written over CherryPy, Pylons is written over Paste, and TurboGears 2 is being written over Pylons.  Pylons and TurboGears have very similar philosophies: for the most part, they claim to use "best-of-breed" libraries.  However, they were initially developed at different times, and the state of Python libraries changed considerably in between.  Thus, both frameworks essentially provide glue around solid libraries, but they use different toolsets at for pretty much everything.  A brief overview:</p><br/><br/><ul><br/><li>TurboGears - CherryPy for HTTP, Genshi (XML-based) for templating, SqlObject (simpler) for persistence</li><br/><li>Pylons - Paste for HTTP, Mako (faster) for templating, SqlAlchemy (more powerful) for persistence</li><br/></ul><br/><br/><p>Paste and Pylons are architected entirely around WSGI.  WSGI (links: <a href="http://en.wikipedia.org/wiki/Web%5FServer%5FGateway%5FInterface" rel="nofollow">Wikipedia</a>, <a href="http://www.python.org/dev/peps/pep-0333/" rel="nofollow">PEP 333</a>, <a href="http://wsgi.org/wsgi/Learn%5FWSGI" rel="nofollow">WSGI wiki</a> is a low-level interface, essentially a powerful superset of CGI and its brethren.  While most people acknowledge its usefulness to framework developers, there's a lot of controversy over its usefulness to webapp developers, which I won't link to here.</p><br/><br/><p>Of the two, Pylons is probably the better choice because it offers more modern components.  The TurboGears community was divided a while ago; I'm not sure how they're doing right now, but it'll still be chaotic until the transition to TurboGears 2.</p><br/><br/><p><strong>HTTP frameworks</strong></p><br/><br/><p><a href="http://www.cherrypy.org/" rel="nofollow">CherryPy</a>, <a href="http://pythonpaste.org/" rel="nofollow">Paste</a>, and maybe <a href="http://webpy.org/" rel="nofollow">web.py</a> do lots of networking for you but little else.  If you want to use <a href="http://jinja.pocoo.org/2/" rel="nofollow">Jinja2</a>, <a href="http://genshi.edgewall.org/" rel="nofollow">Genshi</a>, <a href="http://www.makotemplates.org/" rel="nofollow">Mako</a>, <a href="http://www.cheetahtemplate.org/" rel="nofollow">Cheetah</a>, or any other templating engine, you'll have to integrate it yourself.  And if you want to use <a href="http://www.sqlalchemy.org/" rel="nofollow">SqlAlchemy</a>, <a href="https://storm.canonical.com/" rel="nofollow">Storm</a>, <a href="http://www.sqlobject.org/" rel="nofollow">SqlObject</a>, or <a href="http://www.aminus.net/dejavu" rel="nofollow">Dejavu</a> for databases, you'll have to integrate them yourself.  The benefit is that the low-level data is right in front of you.  For example, in CherryPy, getting the base of the URL, the list of cookies, and the list of headers is as simple as</p><br/><br/><pre><code>cherrypy.request.base<br/>cherrypy.request.cookie<br/>cherrypy.request.headers<br/></code></pre><br/><br/><p>because CherryPy is so pythonic.  The <code>request</code> is just an object that has all those attributes.  Similarly, <code>response</code> is an object so you can set the client's cookies with statements like</p><br/><br/><pre><code>cherrypy.response.cookie['cookieName'] = 'cookieValue'<br/>cherrypy.response.cookie['cookieName']['expires'] = 3600<br/></code></pre><br/><br/><p>Paste (which I haven't used outside of Pylons) is slower and less pythonic, but it uses WSGI exclusively and is currently gaining momentum.  The WSGI wars have simmered since CherryPy 3 was released in late 2006, adding better WSGI support; but the two design philosophies are still polar opposites.</p><br/><br/><p><strong>Other frameworks</strong></p><br/><br/><p>There's also Zope, the heavy-duty grandfather of Python frameworks, and Plone, a content management system that runs on top of it.  I haven't used either one, but Zope is generally compared to Java web frameworks - good if you're looking for a reliable platform, but not so good for rapid development.  Zope 3 has tremendously reduced the learning curve, but most Pythoneers have probably moved on.</p><br/><br/><p>There's also Twisted, a lower-level framework and server setup, and Nevow, another layer over Twisted.  I don't know enough about them to say much more, though.</p><br/><br/><p>There really are a lot of great choices out there; for the vast majority of users, Django, Pylons, and CherryPy offer the best coverage, and I find myself going back and forth between them for each project.  My personal preference is a custom setup with CherryPy, simply because I don't like the hierarchy and opaqueness that full-stack frameworks try to enforce.  For you, <strong>CherryPy</strong> sounds like a good bet, too.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      PYLON ERROR MYSQL SERVER HA GONE AWAY
+    </pattern>
+    <template>
+<![CDATA[<p>I think I fixed it. It's turns out I had a simple config error. My ini file read:</p><br/><br/><pre><code>sqlalchemy.default.url = [connection string here]<br/>sqlalchemy.pool_recycle = 1800<br/></code></pre><br/><br/><p>The problem is that my <code>environment.py</code> file declared that the engine would only map keys with the prefix: <code>sqlalchemy.default</code> so <code>pool_recycle</code> was ignored.</p><br/><br/><p>The solution is to simply change the second line in the ini to:</p><br/><br/><pre><code>sqlalchemy.default.pool_recycle = 1800<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      MOVE FROM C + + TO PYTHON ... OR ANOTH LANGUAG
+    </pattern>
+    <template>
+<![CDATA[<blockquote><br/>  <p>I like the idea of not needing to compile the programs each time we make a change. I understand that the interpreted languages probably wont hit the same performance we currently get.</p><br/></blockquote><br/><br/><p>This is the biggest issue; can you live with the performance hit. You could try to use Python and <a href="http://www.python.org/doc/ext/intro.html" rel="nofollow" title="http://www.scribd.com/doc/2547864/msnetformattingstrings">extending it with your current C++ modules</a> for the performance heavy parts. Still, switching your entire system seems like a big effort if the only reason is the lack of C++ talent. Hiring people who know C++ seems like the cheaper option.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      TREAT AN INTEG AS AN ARRAY OF BYTE IN PYTHON
+    </pattern>
+    <template>
+<![CDATA[<p>This will do what you want:</p><br/><br/><pre><code>signum = status &amp; 0xff<br/>exitstatus = (status &amp; 0xff00) &gt;&gt; 8<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      UNIT TEST A CODE GENER
+    </pattern>
+    <template>
+<![CDATA[<p>I started writing up a summary of my experience with my own code generator, then went back and re-read your question and found you had already touched upon the same issues yourself, focus on the execution results instead of the code layout/look.</p><br/><br/><p>Problem is, this is hard to test, the generated code might not be suited to actually run in the environment of the unit test system, and how do you encode the expected results?</p><br/><br/><p>I've found that you need to break down the code generator into smaller pieces and unit test those. Unit testing a full code generator is more like integration testing than unit testing if you ask me.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      CHECK THAT AN EXCEPT IS THROWN WITH DOCTEST IN PYTHON
+    </pattern>
+    <template>
+<![CDATA[<p>Yes. You can do it. The <a href="http://docs.python.org/lib/module-doctest.html" rel="nofollow">doctest module documentation</a> and Wikipedia has an <a href="http://en.wikipedia.org/wiki/Doctest#Example_2:_doctests_embedded_in_a_README.txt_file" rel="nofollow">example</a> of it.</p><br/><br/><pre><code>   &gt;&gt;&gt; x<br/>   Traceback (most recent call last):<br/>     ...<br/>   NameError: name 'x' is not defined<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      START DEVELOP ENVIRON FOR TEACHING LEARN PYTHON
+    </pattern>
+    <template>
+<![CDATA[<p>The IDLE can be incredibly frustrating to deal with.  It's quirks really take away from your coding experience.</p><br/><br/><p>I highly recommend that you download the <a href="http://www.eclipse.org/" rel="nofollow" title="dp">Eclipse IDE</a>.</p><br/><br/><p>Once you have the IDE Installed, start it up, go to <strong>Help</strong> >> <strong>Software Updates</strong>. Click the <strong>Available Software</strong> tab.  </p><br/><br/><p>Click <strong>Add Site</strong>, and add <a href="http://pydev.sourceforge.net/updates/" rel="nofollow">http://pydev.sourceforge.net/updates/</a>.  Select the box, and update.</p><br/><br/><p>The PyDev plugin for the IDE is excellent.  </p><br/><br/><p>From there, you'll need to <strong>Window</strong> >> <strong>Preferences</strong> and select <strong>Pydev</strong> >> <strong>Interpreter - Python</strong>.  Click <strong>New</strong> and navigate to your python install directory and add python.exe.</p><br/><br/><p>You'll be ready to rock and roll.  Add a new Python file, type print "Hello, World!" in the editor, and run it.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      FOR FOR... IF ARRAY ITER
+    </pattern>
+    <template>
+<![CDATA[<p>The increment in the original <code>foreach</code> loop will not affect the contents of the array, the only way to do this remains a <code>for</code> loop:</p><br/><br/><pre><code>for(int i = 0; i &lt; intArray.Length; ++i)<br/>{<br/>    if(intArray[i] &gt; 3) ++intArray[i];<br/>}<br/></code></pre><br/><br/><p>Linq is not intended to modify existing collections or sequences. It creates new sequences based on existing ones. It is possible to achieve the above code using Linq, though it is slightly against its purposes:</p><br/><br/><pre><code>var newArray1 = from i in intArray select ((i &gt; 3) ? (i + 1) : (i));<br/>var newArray2 = intArray.Select(i =&gt; (i &gt; 3) ? (i + 1) : (i));<br/></code></pre><br/><br/><p>Using <code>where</code> (or equivalent), as shown in some of the other answers, will exclude any values less than or equal to 3 from the resulting sequence.</p><br/><br/><pre><code>var intArray = new int[] { 10, 1, 20, 2 };<br/>var newArray = from i in intArray where i &gt; 3 select i + 1;<br/>// newArray == { 11, 21 }<br/></code></pre><br/><br/><p>There is a <code>ForEach</code> method on arrays that will allow you to use a lambda function instead of a <code>foreach</code> block, though for anything more than a method call I would stick with <code>foreach</code>.</p><br/><br/><pre><code>intArray.ForEach(i =&gt; DoSomething(i));<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      REGULAR EXPRESS TO IMPLEMENT STRING UNESCAP
+    </pattern>
+    <template>
+<![CDATA[<p>Isn't that what <a href="#13844" rel="nofollow">Anders' second example</a> does?</p><br/><br/><p>In 2.5 there's also a <code>string-escape</code> encoding you can apply:</p><br/><br/><pre><code>&gt;&gt;&gt; mystring = r"This is \n a test \r"<br/>&gt;&gt;&gt; mystring.decode('string-escape')<br/>'This is \n a test \r'<br/>&gt;&gt;&gt; print mystring.decode('string-escape')<br/>This is <br/> a test <br/>&gt;&gt;&gt;<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      EXPLAIN CLOSUR ( AS THEY RELAT TO PYTHON )
+    </pattern>
+    <template>
+<![CDATA[<p><a href="http://mrevelle.blogspot.com/2006/10/closure-on-closures.html" rel="nofollow">Closure on closures</a></p><br/><br/><blockquote><br/>  <p>Objects are data with methods<br/>  attached, closures are functions with<br/>  data attached.</p><br/></blockquote><br/><br/><pre><code>def make_counter():<br/>    i = 0<br/>    def counter(): # counter() is a closure<br/>        nonlocal i<br/>        i += 1<br/>        return i<br/>    return counter<br/><br/>c1 = make_counter()<br/>c2 = make_counter()<br/><br/>print (c1(), c1(), c2(), c2())<br/># -&gt; 1 2 1 2<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      OUND ( BELL )
+    </pattern>
+    <template>
+<![CDATA[<p>Have you tried :</p><br/><br/><pre><code>import sys<br/>sys.stdout.write('\a')<br/>sys.stdout.flush()<br/></code></pre><br/><br/><p>That works for me here on Mac OS 10.5</p><br/><br/><p>Actually, I think your original attempt works also with a little modification:</p><br/><br/><pre><code>print('\a')<br/></code></pre><br/><br/><p>(You just need the single quotes around the character sequence).</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      MODUL FOR REGEX MATCH IN ZIP FILE
+    </pattern>
+    <template>
+<![CDATA[<p>There's nothing that will automatically do what you want.</p><br/><br/><p>However, there is a python zipfile module that will make this easy to do.  Here's how to iterate over the lines in the file.</p><br/><br/><pre><code>#!/usr/bin/python<br/><br/>import zipfile<br/>f = zipfile.ZipFile('myfile.zip')<br/><br/>for subfile in f.namelist():<br/>    print subfile<br/>    data = f.read(subfile)<br/>    for line in data.split('\n'):<br/>        print line<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      AND UNICOD
+    </pattern>
+    <template>
+<![CDATA[<p>Use a subrange of [\u0000-\uFFFF] for what you want.</p><br/><br/><p>You can also use the re.UNICODE compile flag. <a href="http://docs.python.org/lib/re-syntax.html" rel="nofollow">The docs</a> say that if UNICODE is set, \w will match the characters [0-9_] plus whatever is classified as alphanumeric in the Unicode character properties database. </p><br/><br/><p>See also <a href="http://coding.derkeiler.com/Archive/Python/comp.lang.python/2004-05/2560.html" rel="nofollow">http://coding.derkeiler.com/Archive/Python/comp.lang.python/2004-05/2560.html</a>.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      PYOBJC DOCUMENT SO BAD
+    </pattern>
+    <template>
+<![CDATA[<p>I agree that that tutorial is flawed, throwing random, unexplained code right in front of your eyes. It introduces concepts such as the autorelease pool and user defaults without explaining why you would want them ("Autorelease pool for memory management" is hardly an explanation).</p><br/><br/><p>That said...</p><br/><br/><blockquote><br/>  <p>basically all I want to do is write Cocoa applications without having to learn ObjC.</p><br/></blockquote><br/><br/><p>I'm afraid that for the time being, you <em>will</em> need a basic grasp of ObjC in order to benefit from any language that uses Cocoa. PyObjC, RubyCocoa, Nu and others are niches at best, and all of them were developed by people intimately familiar with the ins and outs of ObjC <em>and</em> Cocoa.</p><br/><br/><p>For now, you will benefit the most if you realistically see those bridges as useful where scripting languages truly shine, rather than trying to build a whole application with them. While this <em>has</em> been done (with LimeChat, I'm using a RubyCocoa-written app right now), it is rare and likely will be for a while.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      VALID XML AGAINST A DTD FILE IN PYTHON
+    </pattern>
+    <template>
+<![CDATA[<p>Another good option is <a href="http://codespeak.net/lxml/validation.html" rel="nofollow">lxml's validation</a> which I find quite pleasant to use.</p><br/><br/><p>A simple example taken from the lxml site:</p><br/><br/><pre><code>from StringIO import StringIO<br/><br/>from lxml import etree<br/><br/>dtd = etree.DTD(StringIO("""&lt;!ELEMENT foo EMPTY&gt;"""))<br/>root = etree.XML("&lt;foo/&gt;")<br/>print(dtd.validate(root))<br/># True<br/><br/>root = etree.XML("&lt;foo&gt;bar&lt;/foo&gt;")<br/>print(dtd.validate(root))<br/># False<br/>print(dtd.error_log.filter_from_errors())<br/># &lt;string&gt;:1:0:ERROR:VALID:DTD_NOT_EMPTY: Element foo was declared EMPTY this one has content<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      WITH PYTHON CODE BEFOR COMPIL
+    </pattern>
+    <template>
+<![CDATA[<p>Finally a question that I can really put a value answer to :). </p><br/><br/><p>I have investigated f2py, boost.python, swig, cython and pyrex for my work (PhD in optical measurement techniques). I used swig extensively, boost.python some and pyrex and cython a lot. I also used ctypes. This is my breakdown:</p><br/><br/><p><strong>Disclaimer</strong>: This is my personal experience. I am not involved with any of these projects. </p><br/><br/><p><strong>swig:</strong><br/>does not play well with c++. It should, but name mangling problems in the linking step was a major headache for me on linux &amp; Mac OS X. If you have C code and want it interfaced to python, it is a good solution. I wrapped the GTS for my needs and needed to write basically a C shared library which I could connect to. I would not recommend it.</p><br/><br/><p><strong>Ctypes:</strong><br/>I wrote a libdc1394 (IEEE Camera library) wrapper using ctypes and it was a very straigtforward experience. You can find the code on <a href="https://launchpad.net/pydc1394" rel="nofollow">https://launchpad.net/pydc1394</a>. It is a lot of work to convert headers to python code, but then everything works reliably. This is a good way if you want to interface an external library. Ctypes is also in the stdlib of python, so everyone can use your code right away. This is also a good way to play around with a new lib in python quickly. I can recommend it to interface to external libs. </p><br/><br/><p><strong>Boost.Python</strong>: Very enjoyable. If you already have C++ code of your own that you want to use in python, go for this. It is very easy to translate c++ class structures into python class structures this way. I recommend it if you have c++ code that you need in python. </p><br/><br/><p><strong>Pyrex/Cython:</strong> Use Cython, not Pyrex. Period. Cython is more advanced and more enjoyable to use. Nowadays, I do everything with cython that i used to do with SWIG or Ctypes. It is also the best way if you have python code that runs too slow. The process is absolutely fantastic: you convert your python modules into cython modules, build them and keep profiling and optimizing like it still was python (no change of tools needed). You can then apply as much (or as little) C code mixed with your python code. This is by far faster then having to rewrite whole parts of your application in C; you only rewrite the inner loop. </p><br/><br/><p><strong>Timings</strong>: ctypes has the highest call overhead (~700ns), followed by boost.python (322ns), then directly by swig (290ns). Cython has the lowest call overhead (124ns) and the best feedback where it spends time on (cProfile support!). The numbers are from my box calling a trivial function that returns an integer from an interactive shell; module import overhead is therefore not timed, only function call overhead is. It is therefore easiest and most productive to get python code fast by profiling and using cython.</p><br/><br/><p><strong>Summary</strong>: For your problem, use Cython ;). I hope this rundown will be useful for some people. I'll gladly answer any remaining question.</p><br/><br/><p><hr /></p><br/><br/><p><strong>Edit</strong>: I forget to mention: for numerical purposes (that is, connection to NumPy) use Cython; they have support for it (because they basically develop cython for this purpose). So this should be another +1 for your decision. </p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      ENVIRON FOR PYTHON ON WINDOW
+    </pattern>
+    <template>
+<![CDATA[<p>You may do well with <a href="http://ironpython.com" rel="nofollow">IronPython</a>, which gives you Python for the .NET environment. It probably integrates with the Visual Studio debugger and everything. (I don't use Windows for dev these days, so I haven't tried it.)</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      DISTRIBUT PYTHON COMMAND LIN TOOL
+    </pattern>
+    <template>
+<![CDATA[<p>Try the <code>entry_points.console_scripts</code> parameter in the setup() call. As described in the <a href="http://peak.telecommunity.com/DevCenter/setuptools#automatic-script-creation" rel="nofollow">setuptools docs</a>, this should do what I think you want.</p><br/><br/><p>To reproduce here:</p><br/><br/><pre><code>setup(<br/>    # other arguments here...<br/>    entry_points = {<br/>        'console_scripts': [<br/>            'foo = package.module:func',<br/>            'bar = othermodule:somefunc',<br/>        ],<br/>    }<br/>)<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      LEARN PYTHON
+    </pattern>
+    <template>
+<![CDATA[<p>Best Tool(s): this depends on your preference as far as editors go.  I prefer a simple editor with syntax highlighting and a few other features such as regular expression find/replace.  So I'd recommend nedit for Linux or Notepad++ for Windows.  Textmate for a Mac is supposed to also be really good.  If you prefer a feature-heavy IDE then I recommend Eclipse with the PyDev plugin.</p><br/><br/><p>Best Book: if you're a beginning to programming then you should read either <a href="http://learnpythonthehardway.org/" rel="nofollow">Learn Python the Hard Way</a> or <a href="http://greenteapress.com/thinkpython/thinkpython.html" rel="nofollow">Think Python</a> (a new edition of the older book How to Think Like a Computer Scientist: Learning With Python) and if you want a Python book for experienced programmers, then you want <a href="http://www.diveintopython.net/" rel="nofollow">Dive Into Python</a></p><br/><br/><p>Best Website: the books mentioned above are both freely available online.  However, the official Python tutorial is a good reference for anyone learning the language, since it's well organized and explains Python's language syntax (how do if statements work, how do exceptions work, etc) and built-in types and classes (how do I perform common list operations, how do I deal with dates and times, etc).  You can find this at <a href="http://docs.python.org/tut/" rel="nofollow">http://docs.python.org/tut/</a></p><br/><br/><p>Best Problem Domain: Python is used by Google, Industrial Lights and Magic, The Washington Post, NASA, and everything in between.  It's a general purpose programming language and is well suited to most tasks.  However, it is increasingly popular with web developers, so you might want to try building a web application with Django once you familiarize yourself with the language: <a href="http://www.djangoproject.com/" rel="nofollow">http://www.djangoproject.com/</a></p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      WAY TO REMOV ITEM FROM SEQUENC IN PYTHON
+    </pattern>
+    <template>
+<![CDATA[<p>Two easy ways to accomplish just the filtering are:</p><br/><br/><ol><br/><li><p>Using "filter":</p><br/><br/><p>names = filter(lambda name: name[-5:] != "Smith", names)</p></li><br/><li><p>Using list comprehensions:</p><br/><br/><p>names = [name for name in names if name[-5:] != "Smith"]</p></li><br/></ol><br/><br/><p>Note that both cases keep the values for which the predicate function evaluates to True, so you have to reverse the logic (i.e. you say "keep the people who do not have the last name Smith" instead of "remove the people who have the last name smith").</p><br/><br/><p><strong>Edit</strong> Funny... two people individually posted both of the answers I suggested as I was posting mine.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      SET OF FILE CONFORM TO A NAME SCHEME
+    </pattern>
+    <template>
+<![CDATA[<blockquote><br/>  <p>I want to add a rule that checks for<br/>  the presence of a folder.jpg file in<br/>  each directory, but to add this would<br/>  make the code substantially more messy<br/>  in it's current state..</p><br/></blockquote><br/><br/><p>This doesn't look bad.  In fact your current code does it very nicely, and Sven mentioned a good way to do it as well:</p><br/><br/><ol><br/><li>Get a list of all the files</li><br/><li>Check for "required" files</li><br/></ol><br/><br/><p>You would just have have add to your dictionary a list of required files:</p><br/><br/><pre><code>checker = {<br/>  ...<br/>  'required': ['file', 'list', 'for_required']<br/>}<br/></code></pre><br/><br/><p>As far as there being a better/extensible way to do this?  I am not exactly sure.  I could only really think of a way to possibly drop the "multiple" regular expressions and build off of Sven's idea for using a delimiter.  So my strategy would be defining a dictionary as follows (and I'm sorry I don't know Python syntax and I'm a tad to lazy to look it up but it should make sense.  The /regex/ is shorthand for a regex):</p><br/><br/><pre><code>check_dict = {<br/>  'delim'    : /\-/,<br/>  'parts'    : [ 'Show Name', 'Episode Name', 'Episode Number' ],<br/>  'patterns' : [/valid name/, /valid episode name/, /valid number/ ],<br/>  'required' : ['list', 'of', 'files'],<br/>  'ignored'  : ['.*', 'hidden.txt'],<br/>  'start_dir': '/path/to/dir/to/test/'<br/>}<br/></code></pre><br/><br/><ol><br/><li>Split the filename based on the delimiter.</li><br/><li>Check each of the parts.</li><br/></ol><br/><br/><p>Because its an ordered list you can determine what parts are missing and if a section doesn't match any pattern it is malformed.  Here the <code>parts</code> and <code>patterns</code> have a 1 to 1 ratio.  Two arrays instead of a dictionary enforces the order.</p><br/><br/><p>Ignored and required files can be listed.  The <code>.</code> and <code>..</code> files should probably be ignored automatically.  The user should be allowed to input "globs" which can be shell expanded.  I'm thinking here of <code>svn:ignore</code> properties, but globbing is natural for listing files.</p><br/><br/><p>Here <code>start_dir</code> would be default to the current directory but if you wanted a single file to run automated testing of a bunch of directories this would be useful.</p><br/><br/><p>The real loose end here is the path template and along the same lines what path is required for "valid files".  I really couldn't come up with a solid idea without writing one large regular expression and taking groups from it... to build a template.  It felt a lot like writing a TextMate language grammar.  But that starts to stray on the ease of use.  The real problem was that the path template was not composed of <code>parts</code>, which makes sense but adds complexity.</p><br/><br/><p>Is this strategy in tune with what you were thinking of?</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      BASIC PYTHON ITER
+    </pattern>
+    <template>
+<![CDATA[<p>Iterator objects in python conform to the iterator protocol, which basically means they provide two methods: <code>__iter__()</code>  and  <code>next()</code>.  The <code>__iter__</code> returns the iterator object and is implicitly called at the start of loops.  The <code>next()</code> method returns the next value and is implicitly called at each loop increment.  <code>next()</code> raises a StopIteration exception when there are no more value to return, which is implicitly captured by looping constructs to stop iterating.</p><br/><br/><p>Here's a simple example of a counter:</p><br/><br/><pre><code>class Counter:<br/>    def __init__(self, low, high):<br/>        self.current = low<br/>        self.high = high<br/><br/>    def __iter__(self):<br/>        return self<br/><br/>    def next(self):<br/>        if self.current &gt; self.high:<br/>            raise StopIteration<br/>        else:<br/>            self.current += 1<br/>            return self.current - 1<br/><br/><br/>for c in Counter(3, 8):<br/>    print c<br/></code></pre><br/><br/><p>This will print:</p><br/><br/><pre><code>3<br/>4<br/>5<br/>6<br/>7<br/>8<br/></code></pre><br/><br/><p>This is easier to write using a generator, as covered in a previous answer:</p><br/><br/><pre><code>def counter(low, high):<br/>    current = low<br/>    while current &lt;= high:<br/>        yield current<br/>        current += 1<br/><br/>for c in counter(3, 8):<br/>    print c<br/></code></pre><br/><br/><p>The printed output will be the same.  Under the hood, the generator object supports the iterator protocol and does something roughly similar to the class Counter.</p><br/><br/><p>David Mertz's article, <a href="http://www.ibm.com/developerworks/library/l-pycon.html" rel="nofollow">Iterators and Simple Generators</a>, is a pretty good introduction. </p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      TRANSPOSE UNZIP FUNCTION IN PYTHON
+    </pattern>
+    <template>
+<![CDATA[<p>zip is its own inverse! Provided you use the special * operator.</p><br/><br/><pre><code>&gt;&gt;&gt; zip(*[('a', 1), ('b', 2), ('c', 3), ('d', 4)])<br/>[('a', 'b', 'c', 'd'), (1, 2, 3, 4)]<br/></code></pre><br/><br/><p>It's worth noting, however, that this might not scale well up at the larger end of the list scale. The way this works is by calling zip with the arguments:</p><br/><br/><pre><code>zip(('a', 1), ('b', 2), ('c', 3), ('d', 4))<br/></code></pre><br/><br/><p>This could be an issue for very large lists, because you're passing each and every one of those tuples on the stack, which can be costly.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      TRODUC PYTHON
+    </pattern>
+    <template>
+<![CDATA[<p>I recently introduced Python to my company, which does consulting work for the Post Office.  I did this by waiting until there was a project for which I would be the only programmer, then getting permission to do this new project in Python.  I then did another small project in Python with similarly impressive results.  In addition, I used Python for all of my small throwaway assignments ("can you parse the stats in these files into a CSV file organized by date and site?", etc) and had a quick turnaround time on all of them.</p><br/><br/><p>I also evangelized Python a bit; I went out of my way to NOT be obnoxious about it, but I'd occasionally describe why I liked it so much, talked about the personal projects I use it for in my free time and why it's awesome for me, etc.</p><br/><br/><p>Eventually we started another project and I convinced everyone to use Python for it.  I took care to point everyone to a lot of documentation, including the specific webpages relating to what they were working on, and every time they had a question, I'd explain how to do things properly by explaining the Pythonic approach to things, etc.</p><br/><br/><p>This has worked really well.  However, this might be somewhat different than what you're describing.  In my case I started with moderately small projects and Python is only being used for new projects.  Also, none of my co-workers were really Perl or PHP gurus; they all knew those languages and had been using them for awhile, but it didn't take much effort for them to become more productive in Python than they'd been before.</p><br/><br/><p>So if you're talking about new projects with people who currently use PHP but aren't super-experts and don't love that language, then I think switching to Python is a no-brainer.  However, if you're talking about working with a large existing PHP code base with a lot of very experienced PHP programmers who are happy with their current setup, then switching languages is probably not a good idea.  You're probably somewhere in between, so you'll have to weigh the tradeoffs; hopefully my answer will help you do that.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      GRAB PARS COMMAND LINE ARGUMENT PASS TO A PYTHON SCRIPT
+    </pattern>
+    <template>
+<![CDATA[<p>As other people pointed out, you are better off going with optparse over getopt.  getopt is pretty much a one-to-one mapping of the standard getopt(3) C library functions, and not very easy to use.</p><br/><br/><p>optparse, while being a bit more verbose, is much better structured and simpler to extend later on.</p><br/><br/><p>Here's a typical line to add an option to your parser:</p><br/><br/><pre><code>parser.add_option('-q', '--query',<br/>            action="store", dest="query",<br/>            help="query string", default="spam")<br/></code></pre><br/><br/><p>It pretty much speaks for itself; at processing time, it will accept -q or --query as options, store the argument in an attribute called query and has a default value if you don't specify it.  It is also self-documenting in that you declare the help argument (which will be used when run with -h/--help) right there with the option.</p><br/><br/><p>Usually you parse your arguments with:</p><br/><br/><pre><code>options, args = parser.parse_args()<br/></code></pre><br/><br/><p>This will, by default, parse the standard arguments passed to the script (sys.argv[1:])</p><br/><br/><p>options.query will then be set to the value you passed to the script.</p><br/><br/><p>You create a parser simply by doing</p><br/><br/><pre><code>parser = optparse.OptionParser()<br/></code></pre><br/><br/><p>These are all the basics you need.  Here's a complete Python script that shows this:</p><br/><br/><pre><code>import optparse<br/><br/>parser = optparse.OptionParser()<br/><br/>parser.add_option('-q', '--query',<br/>    action="store", dest="query",<br/>    help="query string", default="spam")<br/><br/>options, args = parser.parse_args()<br/><br/>print 'Query string:', options.query<br/></code></pre><br/><br/><p>5 lines of python that show you the basics.</p><br/><br/><p>Save it in sample.py, and run it once with</p><br/><br/><pre><code>python sample.py<br/></code></pre><br/><br/><p>and once with</p><br/><br/><pre><code>python sample.py --query myquery<br/></code></pre><br/><br/><p>Beyond that, you will find that optparse is very easy to extend.<br/>In one of my projects, I created a Command class which allows you to nest subcommands in a command tree easily.  It uses optparse heavily to chain commands together.  It's not something I can easily explain in a few lines, but feel free to <a href="https://thomas.apestaart.org/moap/trac/browser/trunk/moap/extern/command/command.py" rel="nofollow">browse around in my repository</a> for the main class, as well as <a href="https://thomas.apestaart.org/moap/trac/browser/trunk/moap/command/doap.py" rel="nofollow">a class that uses it and the option parser</a></p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      TEMPORARI FILE ( FOR WRITE TO ) IN C #
+    </pattern>
+    <template>
+<![CDATA[<p>That was covered here: <a href="http://stackoverflow.com/questions/16656/creating-tempory-folders" rel="nofollow"><a href="http://stackoverflow.com/questions/16656/creating-tempory-folders" rel="nofollow">http://stackoverflow.com/questions/16656/creating-tempory-folders</a></a></p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      BROKEN SYMLINK WITH PYTHON
+    </pattern>
+    <template>
+<![CDATA[<p>A common Python saying is that it's easier to ask forgiveness than permission.  While I'm not a fan of this statement in real life, it does apply in a lot of cases.  Usually you want to avoid code that chains two system calls on the same file, because you never know what will happen to the file in between your two calls in your code.</p><br/><br/><p>A typical mistake is to write something like:</p><br/><br/><pre><code>if os.path.exists(path):<br/>    os.unlink(path)<br/></code></pre><br/><br/><p>The second call (os.unlink) may fail if something else deleted it after your if test, raise an Exception, and stop the rest of your function from executing.  (You might think this doesn't happen in real life, but we just fished another bug like that out of our codebase last week - and it was the kind of bug that left a few programmers scratching their head and claiming 'Heisenbug' for the last few months)</p><br/><br/><p>So, in your particular case, I would probably do:</p><br/><br/><pre><code>try:<br/>    os.stat(path)<br/>except OSError, e:<br/>    if e.errno == errno.ENOENT:<br/>        print 'path %s does not exist or is a broken symlink' % path<br/>    else:<br/>        raise e<br/></code></pre><br/><br/><p>The annoyance here is that stat returns the same error code for a symlink that just isn't there and a broken symlink.</p><br/><br/><p>So, I guess you have no choice than to break the atomicity, and do something like</p><br/><br/><pre><code>if not os.path.exists(os.readlink(path)):<br/>    print 'path %s is a broken symlink' % path<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      N AUTO NOW DATETIMEFIELD IN A PARENT MODEL W DJANGO
+    </pattern>
+    <template>
+<![CDATA[<p>You would also need to then save the message.  Then it that should work.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      JAVA AND PYTHON GARBAG COLLECT METHOD ARE DIFFER
+    </pattern>
+    <template>
+<![CDATA[<p>There are drawbacks of using reference counting. One of the most mentioned is circular references: Suppose A references B, B references C and C references B. If A were to drop its reference to B, both B and C will still have a reference count of 1 and won't be deleted with traditional reference counting. CPython (reference counting is not part of python itself, but part of the C implementation thereof) catches circular references with a separate garbage collection routine that it runs periodically...</p><br/><br/><p>Another drawback: Reference counting can make execution slower. Each time an object is referenced and dereferenced, the interpreter/VM must check to see if the count has gone down to 0 (and then deallocate if it did). Garbage Collection does not need to do this.</p><br/><br/><p>Also, Garbage Collection can be done in a separate thread (though it can be a bit tricky). On machines with lots of RAM and for processes that use memory only slowly, you might not want to be doing GC at all! Reference counting would be a bit of a drawback there in terms of performance...</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      OPEN SOURC DEVELOP SHOWCAS THEIR PROJECT AND ASK FOR HELP WITH DEVELOP
+    </pattern>
+    <template>
+<![CDATA[<p>The hard answer you will have to expect is very few open source projects reach a critical mass of developer support.  </p><br/><br/><p>If a project is something somebody will want to help they will find it themselves there is no short answer to 'putting it out there' just make it visible on google and make sure it does what it says on the tin, that is the project does something and is obviously going somewhere.</p><br/><br/><p>Nobody expects things to be perfect from day one but if the project has even the hint of vapourware about it you won't see any support at all.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      VS UTF 8 CONFUS IN PYTHON DJANGO
+    </pattern>
+    <template>
+<![CDATA[<blockquote><br/>  <p>what is a "Unicode string" in Python? Does that mean UCS-2?</p><br/></blockquote><br/><br/><p>Unicode strings in Python are stored internally either as UCS-2 (fixed-length 16-bit representation, almost the same as UTF-16) or UCS-4/UTF-32 (fixed-length 32-bit representation). It's a compile-time option; on Windows it's always UTF-16 whilst many Linux distributions set UTF-32 ('wide mode') for their versions of Python.</p><br/><br/><p>You are generally not supposed to care: you will see Unicode code-points as single elements in your strings and you won't know whether they're stored as two or four bytes. If you're in a UTF-16 build and you need to handle characters outside the Basic Multilingual Plane you'll be Doing It Wrong, but that's still very rare, and users who really need the extra characters should be compiling wide builds.</p><br/><br/><blockquote><br/>  <p>plain wrong, or is it?</p><br/></blockquote><br/><br/><p>Yes, it's quite wrong. To be fair I think that tutorial is rather old; it probably pre-dates wide Unicode strings, if not Unicode 3.1 (the version that introduced characters outside the Basic Multilingual Plane).</p><br/><br/><p>There is an additional source of confusion stemming from Windows's habit of using the term "Unicode" to mean, specifically, the UTF-16LE encoding that NT uses internally. People from Microsoftland may often copy this somewhat misleading habit.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      NUMBER TO STRING IN PYTHON
+    </pattern>
+    <template>
+<![CDATA[<p>Formatting in Python is done via the <a href="http://docs.python.org/library/stdtypes.html#string-formatting-operations" rel="nofollow">string formatting (<code>%</code>) operator</a>:</p><br/><br/><pre><code>"%02d:%02d:%02d" % (hours, minutes, seconds)<br/></code></pre><br/><br/><p>/Edit: There's also <a href="http://docs.python.org/lib/module-time.html#l2h-2826" rel="nofollow">strftime</a>.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      WNLOAD A FILE OVER HTTP USE PYTHON
+    </pattern>
+    <template>
+<![CDATA[<p>Use urllib2 which comes with the standard library.</p><br/><br/><pre><code>import urllib2<br/>response = urllib2.urlopen('http://www.example.com/')<br/>html = response.read()<br/></code></pre><br/><br/><p>This is the most basic way to use the library, minus any error handling.  You can also do more complex stuff such as changing headers.  The documentation can be found <a href="http://docs.python.org/lib/module-urllib2.html" rel="nofollow">here.</a></p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      GRAPH THE LINE OF CODE HISTORI FOR GIT REPO
+    </pattern>
+    <template>
+<![CDATA[<p>You might also consider <a href="http://gitstats.sourceforge.net/" rel="nofollow">gitstats</a>, which generates this graph as an html file.  </p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      CODE GENER FOR VISUAL STUDIO
+    </pattern>
+    <template>
+<![CDATA[<p>OK, I see. Well, as far as I know there isn't any code generator for Python. There is a good introduction on how to roll your own <a href="http://www.drewnoakes.com/snippets/WritingACustomCodeGeneratorToolForVisualStudio/" rel="nofollow">here</a>.</p><br/><br/><p>Actually, that's quite an under-used part of the environment, I suppose it's so because it needs you to use the IDE to compile the project, as it'd seem only the IDE knows about these "generators", but MSBuild ignores them.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      PYTHON INTERPRET S AND OR CMD.EX S OUTPUT FROM A PYTHON SCRIPT
+    </pattern>
+    <template>
+<![CDATA[<p>If you are talking about the python interpreter or CMD.exe that is the 'parent' of your script then no, it isn't possible. In every POSIX-like system (now you're running Windows, it seems, and that might have some quirk I don't know about, YMMV) each process has three streams, standard input, standard output and standard error. Bu default (when running in a console) these are directed to the console, but redirection is possible using the pipe notation:</p><br/><br/><pre><code>python script_a.py | python script_b.py<br/></code></pre><br/><br/><p>This ties the standard output stream of script a to the standard input stream of script B. Standard error still goes to the console in this example. See the article on <a href="http://en.wikipedia.org/wiki/Standard_streams" rel="nofollow">standard streams</a> on Wikipedia.</p><br/><br/><p>If you're talking about a child process, you can launch it from python like so (stdin is also an option if you want two way communication):</p><br/><br/><pre><code>import subprocess<br/># Of course you can open things other than python here :)<br/>process = subprocess.Popen(["python", "main.py"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)<br/>x = process.stderr.readline()<br/>y = process.stdout.readline()<br/>process.wait()<br/></code></pre><br/><br/><p>See the Python <a href="http://docs.python.org/lib/module-subprocess.html" rel="nofollow">subprocess</a> module for information on managing the process. For communication, the process.stdin and process.stdout pipes are considered standard <a href="http://docs.python.org/lib/bltin-file-objects.html" rel="nofollow">file objects</a>.</p><br/><br/><p>For use with pipes, reading from standard input as <a href="http://stackoverflow.com/questions/24931/how-to-capture-python-interpreters-andor-cmdexes-output-from-a-python-script#24939" rel="nofollow">lassevk</a> suggested you'd do something like this:</p><br/><br/><pre><code>import sys<br/>x = sys.stderr.readline()<br/>y = sys.stdin.readline()<br/></code></pre><br/><br/><p>sys.stdin and sys.stdout are standard file objects as noted above, defined in the <a href="http://docs.python.org/lib/module-sys.html" rel="nofollow">sys</a> module. You might also want to take a look at the <a href="http://docs.python.org/lib/module-pipes.html" rel="nofollow">pipes</a> module.</p><br/><br/><p>Reading data with readline() as in my example is a pretty naïve way of getting data though. If the output is not line-oriented or indeterministic you probably want to look into <a href="http://docs.python.org/lib/poll-objects.html" rel="nofollow">polling</a> which unfortunately does not work in windows, but I'm sure there's some alternative out there.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      BUFFER IN PYTHON
+    </pattern>
+    <template>
+<![CDATA[<p>As long as you don't try to put any unicode data into your StringIO and you are careful NOT to use cStringIO you should be fine.</p><br/><br/><p>According to the <a href="http://docs.python.org/lib/module-StringIO.html" rel="nofollow">StringIO</a> documentation, as long as you keep to either unicode or 8-bits everything works as expected. Presumably, StringIO does something special when someone does a f.write(u"asdf") (which ZipFile does not do, to my knowledge). Anyway;</p><br/><br/><pre><code>import zipfile<br/>import StringIO<br/><br/>s = StringIO.StringIO()<br/>z = zipfile.ZipFile(s, "w")<br/>z.write("/mach_kernel")<br/>z.close()<br/>f = file("x.zip", "w")<br/>f.write(s.getvalue())<br/>s.close()<br/>f.close()<br/></code></pre><br/><br/><p>works just as expected, and there's no difference between the file in the resulting archive and the original file.</p><br/><br/><p>If you know of a particular case where this approach does not work, I'd be most interested to hear about it :)</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      MODUL FOR CONVERT PDF TO TEXT
+    </pattern>
+    <template>
+<![CDATA[<p>Try PDFMiner.  It can extract text from PDF files as HTML, SGML or "Tagged PDF" format.</p><br/><br/><p><a href="http://www.unixuser.org/~euske/python/pdfminer/index.html" rel="nofollow">http://www.unixuser.org/~euske/python/pdfminer/index.html</a></p><br/><br/><p>The Tagged PDF format seems to be the cleanest, and stripping out the XML tags leaves just the bare text.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      UPER CLASS REFLECT
+    </pattern>
+    <template>
+<![CDATA[<p><code>C.__bases__</code> is an array of the super classes, so you could implement your hypothetical function like so:</p><br/><br/><pre><code>def magicGetSuperClasses(cls):<br/>  return cls.__bases__<br/></code></pre><br/><br/><p>But I imagine it would be easier to just reference <code>cls.__bases__</code> directly in most cases.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      EST FASTEST SERVER SETUP FOR DJANGO
+    </pattern>
+    <template>
+<![CDATA[<p>Since i was looking for some more in-depth answers, i decided to research the issue myself in some more depth. Please let me know if i've misunderstood something.</p><br/><br/><p>General recommendation is to use a separate webserver for handling media. Separate means a webserver which is not running django. This server can be for instance:</p><br/><br/><ul><br/><li>Lighttpd (Lighty)</li><br/><li>Nginx (EngineX</li><br/><li>Or some other light-weight server</li><br/></ul><br/><br/><p>Then, for django, you can go down different paths. You can either:</p><br/><br/><ul><br/><li><p>Serve Django via <strong>Apache</strong> and:</p><br/><br/><ul><br/><li><p><strong>mod_python</strong></p><br/><br/><p>This is the stable and recommended/well documented way. Cons: uses a lot of memory.</p></li><br/><li><p><strong>mod_wsgi</strong></p><br/><br/><p>From what i understand, mod_wsgi is a newer alternative. It appears to be faster and easier on resources.</p></li><br/><li><p><strong>mod_fastcgi</strong></p><br/><br/><p>When using FastCGI you are delegating the serving of Django to another process. Since mod_python includes a python interpreter in every request it uses a lot of memory. This is a way to bypass that problem. Also there is some security concerns.</p><br/><br/><p>What you do is that you start your django fastcgi server in a separate process and then configures apache via rewrites to call this process when needed.</p></li><br/></ul></li><br/></ul><br/><br/><p>Or you can:</p><br/><br/><ul><br/><li><p>Serve django <strong>without using Apache</strong> but with another server that supports FastCGI natively:</p><br/><br/><p>(The documentation mentions that you can do this if you don't have any Apache specific needs. I guess the reason must be to save memory.)</p><br/><br/><ul><br/><li><strong>Lighttpd</strong></li><br/></ul><br/><br/><p>This is the server that runs Youtube. It seems fast and easy to use, however i've seen reports on memoryleaks.</p><br/><br/><ul><br/><li><strong>nginx</strong></li><br/></ul><br/><br/><p><p>I've seen benchmarks claiming that this server is even faster than lighttpd. It's mostly documented in russian though.</p></li><br/></ul><br/>Another thing, du to limitations in Python your server should be running in forked mode, note threaded.</p><br/><br/><p>So this is my current research, But i want more opinions and experiences.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      DIFFER BETWEEN FOO IS NONE AND FOO NONE
+    </pattern>
+    <template>
+<![CDATA[<p><code>is</code> always returns <code>True</code> if it compares the same object instance</p><br/><br/><p>Whereas <code>==</code> is ultimately determined by the <code>__eq__()</code> method</p><br/><br/><p>i.e.</p><br/><br/><pre><code><br/>>>> class foo(object):<br/>       def __eq__(self, other):<br/>           return True<br/><br/>>>> f = foo()<br/>>>> f == None<br/>True<br/>>>> f is None<br/>False<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      WXPYTHON HOW DO I EXAMIN DRAG DATA IN ONDRAGOV
+    </pattern>
+    <template>
+<![CDATA[<p>One solution, which is a hack of limited usefulness, is when a drag is initiated, store the dragged data in a global or static reference somewhere. This way, in the OnEnter and OnDragOver handlers, it is possible to get a reference to the data being dragged. This is of course only useful for drags within the same application (the same instance of the application, actually).</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      LEARN MORE ABOUT PYPI S TRANSLAT FUNCTION
+    </pattern>
+    <template>
+<![CDATA[<p>This document seems to go into quite a bit of detail (and I think a complete description is out of scope for a stackoverflow answer):</p><br/><br/><ul><br/><li><a href="http://codespeak.net/pypy/dist/pypy/doc/translation.html" rel="nofollow">http://codespeak.net/pypy/dist/pypy/doc/translation.html</a></li><br/></ul><br/><br/><p>The general idea of translating from one language to another isn't particularly revolutionary, but it has only recently been gaining popularity / applicability in "real-world" applications.  <a href="http://code.google.com/webtoolkit/" rel="nofollow">GWT</a> does this with Java (generating Javascript) and there is a library for translating Haskell into various other languages as well (called <a href="http://www.haskell.org/haskellwiki/Yhc" rel="nofollow">YHC</a>)</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      PHP HAVE AN EQUIVAL TO THI TYPE OF PYTHON STRING SUBSTITUT
+    </pattern>
+    <template>
+<![CDATA[<pre><code>function subst($str, $dict){<br/>    return preg_replace(array_map(create_function('$a', 'return "/%\\($a\\)s/";'), array_keys($dict)), array_values($dict), $str);<br/> }<br/></code></pre><br/><br/><p>You call it like so:</p><br/><br/><pre><code>echo subst('The %(site)s site %(adj)s because it %(adj)s', array('site'=&gt;'Stackoverflow', 'adj'=&gt;'rocks'));<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      SAFE EV REALLI SAFE
+    </pattern>
+    <template>
+<![CDATA[<p>Depends on your definition of safe I suppose. A lot of the security depends on what you pass in and what you are allowed to pass in the context. For instance, if a file is passed in, I can open arbitrary files:</p><br/><br/><pre><code>&gt;&gt;&gt; names['f'] = open('foo', 'w+')<br/>&gt;&gt;&gt; safeeval.safeeval("baz = type(f)('baz', 'w+')", names)<br/>&gt;&gt;&gt; names['baz']<br/>&lt;open file 'baz', mode 'w+' at 0x413da0&gt;<br/></code></pre><br/><br/><p>(above safeeval = safe_eval, the code block seems to break on underscores)</p><br/><br/><p>Furthermore, the environment is very restricted (you cannot pass in modules), thus, you can't simply pass in a module of utility functions like re or random.</p><br/><br/><p>On the other hand, you don't need to write your own parser, you could just write your own evaluator for the python ast:</p><br/><br/><pre><code>&gt;&gt;&gt; import compiler<br/>&gt;&gt;&gt; ast = compiler.parse("print 'Hello world!'")<br/></code></pre><br/><br/><p>That way, hopefully, you could implement safe imports. The other idea is to use Jython or IronPython and take advantage of Java/.Net sandboxing capabilities.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      PYTHON WAY EQUIVAL FOR WHILE ( ( X NEXT ( ) ) END )
+    </pattern>
+    <template>
+<![CDATA[<p>Short answer: there's no way to do inline variable assignment in a while loop in Python. Meaning that I <strong>cannot</strong> say:</p><br/><br/><pre><code>while x=next():<br/>    // do something here!<br/></code></pre><br/><br/><p>Since that's not possible, there are a number of "idiomatically correct" ways of doing this:</p><br/><br/><pre><code>while 1:<br/>    x = next()<br/>    if x != END:<br/>        // Blah<br/>    else:<br/>        break<br/></code></pre><br/><br/><p>Obviously, this is kind of ugly. You can also use one of the "iterator" approaches listed above, but, again, that may not be ideal. Finally, you can use the "pita pocket" approach that I actually just found while googling:</p><br/><br/><pre><code>class Pita( object ):<br/>    __slots__ = ('pocket',)<br/>    marker = object()<br/>    def __init__(self, v=marker):<br/>        if v is not self.marker:<br/>            self.pocket = v<br/>    def __call__(self, v=marker):<br/>        if v is not self.marker:<br/>            self.pocket = v<br/>        return self.pocket<br/></code></pre><br/><br/><p>Now you can do:</p><br/><br/><pre><code>p = Pita()<br/>while p( next() ) != END:<br/>    // do stuff with p.pocket!<br/></code></pre><br/><br/><p>Thanks for this question; learning about the <code>__call__</code> idiom was really cool! :)</p><br/><br/><p>EDIT: I'd like to give credit where credit is due. The 'pita pocket' idiom was found <a href="http://mail.python.org/pipermail/python-list/2003-July/216789.html" rel="nofollow">here</a></p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      EXTRACT DATA FROM A FILEMAK PRO DATABAS IN A SCRIPT
+    </pattern>
+    <template>
+<![CDATA[<p>It has been a <strong>really</strong> long time since I did anything with FileMaker Pro, but I know that it does have capabilities for an ODBC (and JDBC) connection to be made to it (however, I don't know how, or if, that translates to the linux/perl/python world though).  </p><br/><br/><p>This article shows how to share/expose your FileMaker data via ODBC &amp; JDBC:<br /><br/><a href="http://www.filemaker.com/help/15-Using%20ODBC2.html" rel="nofollow">Sharing FileMaker Pro data via ODBC or JDBC</a>   </p><br/><br/><p>From there, if you're able to create an ODBC/JDBC connection you could query out data as needed.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      REFACTOR TOOL DO YOU USE FOR PYTHON
+    </pattern>
+    <template>
+<![CDATA[<p>Most editors support the "whole word" search option. It's usually a checkbox in the search dialog, and what it does is only match the search term if it has leading and trailing spaces, dots, and most other delimiters.<br/>It will probably work in your case.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      USE WEB SERVIC IN PYTHON
+    </pattern>
+    <template>
+<![CDATA[<p><a href="http://www.jython.org" rel="nofollow">Jython</a> and <a href="http://www.codeplex.com/IronPython" rel="nofollow">IronPython</a> give access to great Java &amp; .NET SOAP libraries.</p><br/><br/><p>If you need CPython, <a href="http://pywebsvcs.sourceforge.net/" rel="nofollow">ZSI</a> has been flaky for me, but it could be possible to use a tool like <a href="http://robin.python-hosting.com/" rel="nofollow">Robin</a> to wrap a good C++ SOAP library such as <a href="http://gsoap2.sourceforge.net/" rel="nofollow">gSOAP</a> or <a href="http://ws.apache.org/axis/cpp/index.html" rel="nofollow">Apache Axis C++</a></p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      N XML DOCUMENT IN PYTHON
+    </pattern>
+    <template>
+<![CDATA[<p>Setting an attribute on an object won't give a compile-time or a run-time error, it will just do nothing useful if the object doesn't access it (i.e. "<code>node.noSuchAttr = 'bar'</code>" would also not give an error).</p><br/><br/><p>Unless you need a specific feature of <code>minidom</code>, I would look at <code>ElementTree</code>:</p><br/><br/><pre><code>import sys<br/>from xml.etree.cElementTree import Element, ElementTree<br/><br/>def make_xml():<br/>    node = Element('foo')<br/>    node.text = 'bar'<br/>    doc = ElementTree(node)<br/>    return doc<br/><br/>if __name__ == '__main__':<br/>    make_xml().write(sys.stdout)<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      DISTUTIL DOE ANYON KNOW HOW TO USE IT
+    </pattern>
+    <template>
+<![CDATA[<p>See the <a href="http://docs.python.org/dist/simple-example.html" rel="nofollow">distutils simple example</a>. That's basically what it is like, except real install scripts usually contain a bit more information. I have not seen any that are fundamentally more complicated, though. In essence, you just give it a list of what needs to be installed. Sometimes you need to give it some mapping dicts since the source and installed trees might not be the same.</p><br/><br/><p>Here is a real-life (anonymized) example:</p><br/><br/><pre><code>#!/usr/bin/python <br/><br/>from distutils.core import setup <br/><br/>setup (name = 'Initech Package 3', <br/>          description = "Services and libraries ABC, DEF", <br/>          author = "That Guy, Initech Ltd", <br/>          author_email = "that.guy@initech.com", <br/>          version = '1.0.5', <br/>          package_dir = {'Package3' : 'site-packages/Package3'}, <br/>          packages = ['Package3', 'Package3.Queries'], <br/>          data_files = [ <br/>                       ('/etc/Package3', ['etc/Package3/ExternalResources.conf']) <br/>          ])<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      EXERCIS TO HONE YOUR SKILL
+    </pattern>
+    <template>
+<![CDATA[<p><a href="http://www.pythonchallenge.com/" rel="nofollow">Python Challenge</a></p><br/><br/><p><a href="http://projecteuler.net/" rel="nofollow">Project Euler</a> - when you answer a question, you are able to see and discuss other peoples solutions.</p><br/><br/><p><a href="http://cm.baylor.edu/ICPCWiki/Wiki.jsp?page=Problem%20Resources" rel="nofollow">ACM programming challenges</a></p><br/><br/><p><a href="http://web.archive.org/web/20100808125507/http://cse.ucdavis.edu/~chaos/courses/nlp/Software/PythonProgramming.html" rel="nofollow">Some python problems focusing on science / math</a></p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      BACK PINGBACK LIBRARI FOR PYTHON RUBI
+    </pattern>
+    <template>
+<![CDATA[<p>Here is a <a href="http://mathieu.fenniak.net/python-pingback-library/" rel="nofollow">Python implementation</a>.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      PYTHON TO MATCH DIRECTORI LAYOUT IN OS X 10.5
+    </pattern>
+    <template>
+<![CDATA[<p>Personally, I wouldn't worry about it until you see a problem.  Messing with the default python install on a *Nix system can cause more trouble than it's worth.  I can say from personal experience that you never truly understand what python has done for the nix world until you have a problem with it.</p><br/><br/><p>You can also add a second python installation, but that also causes more problems than it's worth IMO.</p><br/><br/><p>So I suppose the best question to start out with would be why exactly do you want to use the 64 bit version of python?</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      THREAD WORK IN PYTHON AND WHAT ARE COMMON PYTHON THREAD SPECIF PITFAL
+    </pattern>
+    <template>
+<![CDATA[<p>Yes, because of the Global Interpreter Lock (GIL) there can only run one thread at a time. Here are some links with some insights about this:</p><br/><br/><ul><br/><li><a href="http://blog.snaplogic.org/?p=94" rel="nofollow">http://blog.snaplogic.org/?p=94</a></li><br/><li><a href="http://www.artima.com/weblogs/viewpost.jsp?thread=214235" rel="nofollow">http://www.artima.com/weblogs/viewpost.jsp?thread=214235</a></li><br/><li><a href="http://effbot.org/pyfaq/can-t-we-get-rid-of-the-global-interpreter-lock.htm" rel="nofollow">http://effbot.org/pyfaq/can-t-we-get-rid-of-the-global-interpreter-lock.htm</a></li><br/><li><a href="http://smoothspan.wordpress.com/2007/09/14/guido-is-right-to-leave-the-gil-in-python-not-for-multicore-but-for-utility-computing/" rel="nofollow">http://smoothspan.wordpress.com/2007/09/14/guido-is-right-to-leave-the-gil-in-python-not-for-multicore-but-for-utility-computing/</a></li><br/></ul><br/><br/><p>From the last link an interesting quote:</p><br/><br/><blockquote><br/>  <p>Let me explain what all that means. <br/>  Threads run inside the same virtual<br/>  machine, and hence run on the same<br/>  physical machine.  Processes can run<br/>  on the same physical machine or in<br/>  another physical machine.  If you<br/>  architect your application around<br/>  threads, you've done nothing to access<br/>  multiple machines.  So, you can scale<br/>  to as many cores are on the single<br/>  machine (which will be quite a few<br/>  over time), but to really reach web<br/>  scales, you'll need to solve the<br/>  multiple machine problem anyway.</p><br/></blockquote><br/><br/><p>If you want to use multi core, <a href="http://www.python.org/dev/peps/pep-0371/" rel="nofollow">pyprocessing</a> defines an process based API to do real parallelization. The <a href="http://en.wikipedia.org/wiki/Python_Enhancement_Proposal#Development" rel="nofollow">PEP</a> also includes some interesting benchmarks.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      PRIETARI PLUG IN FOR GPL PROGRAM WHAT ABOUT INTERPRET LANGUAG
+    </pattern>
+    <template>
+<![CDATA[<blockquote><br/>  <p>he distinction between fork/exec and dynamic linking, besides being kind of artificial,</p><br/></blockquote><br/><br/><p>I don't think its artificial at all.  Basically they are just making the division based upon the level of integration.  If the program has "plugins" which are essentially fire and forget with no API level integration, then the resulting work is unlikely to be considered a derived work.  Generally speaking a plugin which is merely forked/exec'ed would fit this criteria, though there may be cases where it does not.  This case especially applies if the "plugin" code would work independently of your code as well.</p><br/><br/><p>If, on the other hand, the code is deeply dependent upon the GPL'ed work, such as extensively calling APIs, or tight data structure integration, then things are more likely to be considered a derived work.  Ie, the "plugin" cannot exist on its own without the GPL product, and a product with this plugin installed is essentially a derived work of the GPLed product.</p><br/><br/><p>So to make it a little more clear, the same principles could apply to your interpreted code.  If the interpreted code relies heavily upon your APIs (or vice-versa) then it would be considered a derived work.  If it is just a script that executes on its own with extremely little integration, then it may not.</p><br/><br/><p>Does that make more sense?</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      SIMPL ELEG WAY TO DEFIN SINGLETON IN PYTHON
+    </pattern>
+    <template>
+<![CDATA[<p>I don't really see the need, as a module with functions (and not a class) would serve well as a singleton. All its variables would be bound to the module, which could not be instantiated repeatedly anyways. </p><br/><br/><p>If you do wish to use a class, there is no way of creating private classes or private constructors in python, so you can't protect against multiple instantiations, other than just via convention in use of your API. I would still just put methods in a module, and consider the module as the singleton.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      RENDER A TREE STRUCTUR ( RECURS ) USE A DJANGO TEMPLAT
+    </pattern>
+    <template>
+<![CDATA[<p>I think the canonical answer is: "Don't".</p><br/><br/><p>What you should probably do instead is unravel the thing in your <em>view</em> code, so it's just a matter of iterating over (in|de)dents in the template. I think I'd do it by appending indents and dedents to a list while recursing through the tree and then sending that "travelogue" list to the template. (the template would then insert <code>&lt;li&gt;</code> and <code>&lt;/li&gt;</code> from that list, creating the recursive structure with "understanding" it.)</p><br/><br/><p>I'm also pretty sure recursively including template files is really a <em>wrong</em> way to do it...</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      EDIT PYTHON SOURC
+    </pattern>
+    <template>
+<![CDATA[<p>Python's standard library provides pretty good facilities for working with Python source; note the <a href="http://docs.python.org/lib/module-tokenize.html" rel="nofollow">tokenize</a> and <a href="http://docs.python.org/lib/module-parser.html" rel="nofollow">parser</a> modules.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      RUN A PYTHON SCRIPT AS A SERVIC ( IN WINDOW ) HOW
+    </pattern>
+    <template>
+<![CDATA[<p>Yes you can. I do it using the pythoncom libraries that come included with <a href="http://www.activestate.com/Products/activepython/index.mhtml" rel="nofollow">ActivePython</a></p><br/><br/><p>This is a basic skeleton for a simple service:</p><br/><br/><pre><code>import pythoncom<br/>import win32serviceutil<br/>import win32service<br/>import win32event<br/>import servicemanager<br/>import socket<br/><br/><br/>class AppServerSvc (win32serviceutil.ServiceFramework):<br/>    _svc_name_ = "TestService"<br/>    _svc_display_name_ = "Test Service"<br/><br/>    def __init__(self,args):<br/>        win32serviceutil.ServiceFramework.__init__(self,args)<br/>        self.hWaitStop = win32event.CreateEvent(None,0,0,None)<br/>        socket.setdefaulttimeout(60)<br/><br/>    def SvcStop(self):<br/>        self.ReportServiceStatus(win32service.SERVICE_STOP_PENDING)<br/>        win32event.SetEvent(self.hWaitStop)<br/><br/>    def SvcDoRun(self):<br/>        servicemanager.LogMsg(servicemanager.EVENTLOG_INFORMATION_TYPE,<br/>                              servicemanager.PYS_SERVICE_STARTED,<br/>                              (self._svc_name_,''))<br/>        self.main()<br/><br/>    def main(self):<br/>        pass<br/><br/>if __name__ == '__main__':<br/>    win32serviceutil.HandleCommandLine(AppServerSvc)<br/></code></pre><br/><br/><p>Your code would go in the main() method, usually with some kind of infinite loop that might be interrumped by checking a flag, that you set in the SvcStop method</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      DYNAM UNIT TEST IN PYTHON
+    </pattern>
+    <template>
+<![CDATA[<p>i use something like this:</p><br/><br/><pre><code>import unittest<br/><br/>l = [["foo", "a", "a",], ["bar", "a", "b"], ["lee", "b", "b"]]<br/><br/>class TestSequense(unittest.TestCase):<br/>    pass<br/><br/>def test_generator(a, b):<br/>    def test(self):<br/>        self.assertEqual(a,b)<br/>    return test<br/><br/>if __name__ == '__main__':<br/>    for t in l:<br/>        test_name = 'test_%s' % t[0]<br/>        test = test_generator(t[1], t[2])<br/>        setattr(TestSequense, test_name, test)<br/>    unittest.main()<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      SSH HANG WHEN COMMAND INVOK DIRECTLI BUT EXIT CLEANLI WHEN RUN INTERACT
+    </pattern>
+    <template>
+<![CDATA[<blockquote><br/><pre><code>s = p.stderr.readline()<br/></code></pre><br/></blockquote><br/><br/><p>I suspect it's the above line.  When you invoke a command directly through ssh, you don't get your full pty (assuming Linux), and thus no stderr to read from.</p><br/><br/><p>When you log in interactively, stdin, stdout, and stderr are set up for you, and so your script works.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      BASE CLASS IN PYTHON
+    </pattern>
+    <template>
+<![CDATA[<p><strong>int</strong> is a value type, so each time you do an assignment, (e.g. both instances of <strong>+=</strong> above), it doesn't modify the object you have on the heap, but replaces the reference with one of the result of the right hand side of the assignment (i.e. an int)</p><br/><br/><p><strong>list</strong> isn't a value type, so it isn't bound by the same rules.</p><br/><br/><p>this page has more details on the differences: <a href="http://docs.python.org/ref/objects.html" rel="nofollow">http://docs.python.org/ref/objects.html</a></p><br/><br/><p>IMO, yes, you should define a new class that keeps an int as an instance variable</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      USE TEXTMAT FEATUR
+    </pattern>
+    <template>
+<![CDATA[<p>Don't neglect the 'mate' command line tool. You can use it to pipe output into TextMate, so if you do the following...</p><br/><br/><pre><code>diff file1.py file2.py | mate<br/></code></pre><br/><br/><p>...it will not only open in TextMate, but it is smart enough to know that you're looking at a diff and highlight lines on screen.</p><br/><br/><p>TextMate's SVN integration is great; it also seems to have bundles for some other version control systems as well.</p><br/><br/><p>Add GetBundle to browse the bundle repository. I found the jQuery bundle through it and it's very handy.</p><br/><br/><p>As others have mentioned, rolling your own bundle for frequently used snippets is very helpful. If you have some snippets that are specific to a project or framework, you might want to prefix all of them with a common letter to keep the namespace tidy.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      HOW MUCH MEMORI IS BE USE BY AN OBJECT IN PYTHON
+    </pattern>
+    <template>
+<![CDATA[<p><strong>There's no easy way to find out the memory size of a python object</strong>. One of the problems you may find is that Python objects - like lists and dicts - may have references to other python objects (in this case, what would your size be? The size containing the size of each object or not?). There are some pointers overhead and internal structures related to object types and garbage collection. Finally, some python objects have non-obvious behaviors. For instance, lists reserve space for more objects than they have, most of the time; dicts are even more complicated since they can operate in different ways (they have a different implementation for small number of keys and sometimes they over allocate entries).</p><br/><br/><p>There is a <a href="http://code.activestate.com/recipes/544288/" rel="nofollow">big chunk of code</a> out there to try to best approximate the size of a python object in memory. There's also some <a href="http://mail.python.org/pipermail/python-list/2008-January/472683.html" rel="nofollow">simpler approximations</a>. But they will always be approximations.</p><br/><br/><p>You may also want to check some <a href="http://mail.python.org/pipermail/python-list/2002-March/135223.html" rel="nofollow">old description about PyObject</a> (the internal C struct that represents virtually all python objects).</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      PYTHON THREAD BUGGI
+    </pattern>
+    <template>
+<![CDATA[<p>Python threads are good for <strong>concurrent I/O programming</strong>. Threads are swapped out of the CPU as soon as they block waiting for input from file, network, etc. This allows other Python threads to use the CPU while others wait. This would allow you to write a multi-threaded web server or web crawler, for example.</p><br/><br/><p>However, Python threads are serialized by the <a href="http://en.wikipedia.org/wiki/Global_Interpreter_Lock" rel="nofollow">GIL</a> when they enter interpreter core. This means that if two threads are crunching numbers, only one can run at any given moment. It also means that you can't take advantage of multi-core or multi-processor architectures.</p><br/><br/><p>There are solutions like running multiple Python interpreters concurrently, using a C based threading library. This is not for the faint of heart and the benefits might not be worth the trouble. Let's hope for an all Python solution in a future release.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      IMAGEFIELD CORE FALS IN NEWFORM ADMIN
+    </pattern>
+    <template>
+<![CDATA[<p>To get rid of "This field is required," you need to make it not required, by using blank=True (and possibly null=True as well, if it's not a CharField).</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      DESCRIPTOR PROTOCOL ANALOG IN OTHER LANGUAG
+    </pattern>
+    <template>
+<![CDATA[<p>I've not heard of a direct equivalent either. You could probably achieve the same effect with macros, especially in a language like Lisp which has extremely powerful macros.</p><br/><br/><p>I wouldn't be at all surprised if other languages start to incorporate something similar because it is so powerful.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      WINDOW AWAR OF A SERVIC I HAVE WRITTEN IN PYTHON
+    </pattern>
+    <template>
+<![CDATA[<p>As with most "aware" things in Windows, the answer is "Registry".</p><br/><br/><p>Take a look at this Microsoft Knowledge Base article: <a href="http://support.microsoft.com/kb/103000" rel="nofollow">http://support.microsoft.com/kb/103000</a></p><br/><br/><p>Search for "A Win32 program that can be started by the Service Controller and that obeys the service control protocol." This is the kind of service you're interested in.</p><br/><br/><p>The service registration (contents of KEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services<br/>\myservice) carries information about the service, including things like its executable location, what to do when it fails (halt the OS?), what services must be started before this one, what user it runs as.</p><br/><br/><p>As to service control protocol, main() of your program is supposed to invoke a Windows API call, setting up callbacks for start, stop, pause for your service. What you do in those callbacks is all up to you.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      METHOD AN OBJECT HA
+    </pattern>
+    <template>
+<![CDATA[<p>It appears you can use this code, replacing 'object' with the object you're interested in:-</p><br/><br/><pre><code>[method for method in dir(object) if callable(getattr(object, method))]<br/></code></pre><br/><br/><p>I discovered it at <a href="http://www.diveintopython.net/power_of_introspection/index.html" rel="nofollow">this site</a>, hopefully that should provide some further detail!</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      QUICK READ PYTHON BOOK OUT THERE
+    </pattern>
+    <template>
+<![CDATA[<p>I loved <a href="http://www.diveintopython.net/toc/index.html" rel="nofollow">Dive Into Python</a>, especially if you're a quick study.  The beginning basics are all covered (and may move slowly for you), but the latter few chapters are great learning tools.</p><br/><br/><p>Plus, Pilgrim is a pretty good writer.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      TOOLKIT FOR DO 2D GAME PROGRAM WITH PYTHON
+    </pattern>
+    <template>
+<![CDATA[<p>I use <a href="http://www.pygame.org/news.html" rel="nofollow">pygame</a> myself and it is very good. It has good documentation and tutorials, and is quite well designed. I've also heard wonderful reviews of <a href="http://www.pyglet.org/" rel="nofollow">pyglet</a>.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      SCAFFOLD IN PYLON
+    </pattern>
+    <template>
+<![CDATA[<p>The question is super old, but hell: <a href="http://code.google.com/p/formalchemy/" rel="nofollow">http://code.google.com/p/formalchemy/</a></p><br/><br/><p>Gives you basic crud out of the box, customizable to do even relatively complex things easily, and gives you a drop-in Pylons admin app too (written and customizable with the same api, no magic).</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      STATIC ANALYSI TOOL FOR PYTHON
+    </pattern>
+    <template>
+<![CDATA[<p>Here are my first impressions of pyflakes, pychecker and pylint:</p><br/><br/><ul><br/><li><p><strong>pychecker</strong>: It crashes frequently, most of the runs I tried resulted in Errors that originated in the pychecker code (eg: AttributeError or IndexError: list index out of range were the most common).  For some reason I had to set the DJANGO_SETTINGS_MODULE environment variable before it would even run on any of the app code, and the documentation is very sparse.</p></li><br/><li><p><strong>pyflakes</strong>: 'pyflakes --help' throws a TypeError -- erm... Documentation is also very sparse, and pyflakes is very forgiving (as far as I can tell, it only reports compile errors, warnings, redefinitions, and some concerns about imports--such as unused and wildcards).  pyflakes also seems to repeat itself:</p><br/><br/><blockquote><br/>  <p>eventlist/views.py:4: 'Http404' imported but unused<br><br/>      eventlist/views.py:4: 'Http404' imported but unused<br><br/>      eventlist/views.py:5: 'from eventlist.models import *' used; unable to detect undefined names<br/>      eventlist/views.py:59: 'authenticate' imported but unused<br><br/>      eventlist/views.py:61: redefinition of unused 'login' from<br/>  line 59<br><br/>      eventlist/views.py:5: 'from eventlist.models import *' used;<br/>  unable to detect undefined names <br><br/>     eventlist/views.py:4: 'Http404' imported but unused</p><br/></blockquote></li><br/><li><p><strong>pylint</strong>: This seems to be the most capable of the tools suggested.  It has the best documentation.  LogiLab provides a tutorial, pylint has a help screen, and there is a (broken) link to a user manual, which would be extremely helpful.  There are some issues with applying pylint to django, since pylint doesn't know about the django classes (such as models.Model).  This means that a fair number of otherwise valuable errors are generated about missing class fields.  eg:</p><br/><br/><blockquote><br/>  <p>E:105:get_events_by_tag: Class 'Tag' has no 'objects' member<br></p><br/></blockquote><br/><br/><p>Parsing these out automatically will be very difficult without some additional knowledge of the classes in use.  I'm not sure adding that is feasible, but it does seem likely that pylint is capable of dealing with this in the "right" way.  (I probably just need to point it to the django source, but there are no command line params that look likely, and, as mentioned earlier, the user manual is inaccessible.)</p></li><br/></ul><br/><br/><p>For the moment, I'm still looking into pylint -- pychecker and pyflakes need better documentation and they need to become more robust.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      ( X ) HTML IN PYTHON
+    </pattern>
+    <template>
+<![CDATA[<p>XHTML is easy, use <a href="http://codespeak.net/lxml/validation.html" rel="nofollow">lxml</a>.</p><br/><br/><p>HTML is harder, since there's traditionally not been as much interest in validation among the HTML crowd (run StackOverflow itself through a validator, yikes). The easiest solution would be to execute external applications such as <a href="http://www.jclark.com/sp/" rel="nofollow">nsgmls</a> or <a href="http://openjade.sourceforge.net/" rel="nofollow">OpenJade</a>, and then parse their output.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      PYTHON S ITER ( ) ON A MAP RETURN ITERKEY ( ) INSTEAD OF ITERITEM ( )
+    </pattern>
+    <template>
+<![CDATA[<p>Check out <a href="http://mail.python.org/pipermail/python-3000/2007-September/010209.html" rel="nofollow">this thread</a> for a discussion on the reasons behind this behavior (including that Guido likes it, and it's <a href="http://mail.python.org/pipermail/python-3000/2007-September/010222.html" rel="nofollow">not likely to change</a>).</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      IS EQUIVAL
+    </pattern>
+    <template>
+<![CDATA[<p>Use <code>a.equal? b</code></p><br/><br/><p><a href="http://www.ruby-doc.org/core/classes/Object.html" rel="nofollow">http://www.ruby-doc.org/core/classes/Object.html</a></p><br/><br/><blockquote><br/>  <p>Unlike ==, the equal? method should never be overridden by subclasses: it is used to determine object identity (that is, a.equal?(b) iff a is the same object as b). </p><br/></blockquote><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      PYTHON GOOD FOR BIG SOFTWAR PROJECT ( NOT WEB BASE )
+    </pattern>
+    <template>
+<![CDATA[<p>We've used IronPython to build our flagship spreadsheet application (40kloc production code - and it's Python, which IMO means loc per feature is low) at <a href="http://www.resolversystems.com/" rel="nofollow">Resolver Systems</a>, so I'd definitely say it's ready for production use of complex apps.</p><br/><br/><p>There are two ways in which this might not be a useful answer to you :-)</p><br/><br/><ol><br/><li>We're using IronPython, not the more usual CPython.  This gives us the huge advantage of being able to use .NET class libraries.  I may be setting myself up for flaming here, but I would say that I've never really seen a CPython application that looked "professional" - so having access to the WinForms widget set was a huge win for us.  IronPython also gives us the advantage of being able to easily drop into C# if we need a performance boost.  (Though to be honest we have <em>never</em> needed to do that.  All of our performance problems to date have been because we chose dumb algorithms rather than because the language was slow.)  Using C# from IP is much easier than writing a C Extension for CPython.  </li><br/><li>We're an Extreme Programming shop, so we write tests before we write code.  I would not write production code in a dynamic language without writing the tests first; the lack of a compile step needs to be covered by something, and as other people have pointed out, refactoring without it can be tough.  (Greg Hewgill's answer suggests he's had the same problem.  On the other hand, I don't think I would write - or especially refactor - production code in <em>any</em> language these days without writing the tests first - but YMMV.)</li><br/></ol><br/><br/><p>Re: the IDE - we've been pretty much fine with each person using their favourite text editor; if you prefer something a bit more heavyweight then <a href="http://www.wingware.com/products" rel="nofollow">WingIDE</a> is pretty well-regarded.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      INSTANC VARIABL NOT IN DICT
+    </pattern>
+    <template>
+<![CDATA[<p>B.name is a class attribute, not an instance attribute.  It shows up in B.__dict__, but not in b = B(); b.__dict__.</p><br/><br/><p>The distinction is obscured somewhat because when you access an attribute on an instance, the class dict is a fallback.  So in the above example, b.name will give you the value of B.name.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      OS.SYSTEM ( ) CALL IN PYTHON
+    </pattern>
+    <template>
+<![CDATA[<p>This is what I use:</p><br/><br/><pre><code>def shellquote(s):<br/>    return "'" + s.replace("'", "'\\''") + "'"<br/></code></pre><br/><br/><p>The shell will always accept a quoted filename and remove the surrounding quotes before passing it to the program in question. Notably, this avoids problems with filenames that contain spaces or any other kind of nasty shell metacharacter.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      NICE TO PROGRAM GUI TOOLKIT FOR PYTHON
+    </pattern>
+    <template>
+<![CDATA[<p>Have you looked at <a href="http://trolltech.com/products/qt" rel="nofollow">Qt</a>/<a href="http://www.riverbankcomputing.co.uk/software/pyqt/intro" rel="nofollow">PyQt</a>? Although PyQt <em>is</em> a direct port from the C++ library, I find it much more pythonic and nice to program with compared to the others you listed. It also has very good documentation.</p><br/><br/><p><a href="http://dabodev.com/" rel="nofollow">Dabo</a> has a nice ui library implemented on top of wxPython. It's a framework intended mostly for database-centric applications, but the ui library can be used separately. </p><br/><br/><p>There are/were several other attempts to create a very pythonic gui as a layer on top of PyGtk or wxPython, such as <a href="http://wiki.wxpython.org/Wax" rel="nofollow">wax</a> and <a href="http://www.cosc.canterbury.ac.nz/greg.ewing/python_gui/" rel="nofollow">PyGui</a>, which seem to be "stuck" at various degrees of being complete.</p><br/><br/><p>Also, an exhaustive list of Python GUI toolkits can be found <a href="http://wiki.python.org/moin/GuiProgramming" rel="nofollow">here</a>.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      TEMPLAT AND VARIABL ATTRIBUT
+    </pattern>
+    <template>
+<![CDATA[<p>I found a "nicer"/"better" solution for getting variables inside<br/>Its not the nicest way, but it works.</p><br/><br/><p>You install a custom filter into django which gets the key of your dict as a parameter</p><br/><br/><p>To make it work in google app-engine you need to add a file to your main directory,<br/>I called mine *django_hack.py* which contains this little piece of code</p><br/><br/><pre><code>from google.appengine.ext import webapp<br/><br/>register = webapp.template.create_template_register()<br/><br/>def hash(h,key):<br/>    if key in h:<br/>        return h[key]<br/>    else:<br/>        return None<br/><br/>register.filter(hash)<br/></code></pre><br/><br/><p>Now that we have this file, all we need to do is tell the app-engine to use it...<br/>we do that by adding this little line to your main file</p><br/><br/><pre><code>webapp.template.register_template_library('django_hack')<br/></code></pre><br/><br/><p>and in your template view add this template instead of the usual code</p><br/><br/><pre><code>{{ user|hash:item }}<br/></code></pre><br/><br/><p>And its should work perfectly =)</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      SORT A LIST OF STRING IN PYTHON
+    </pattern>
+    <template>
+<![CDATA[<p>Basic answer:</p><br/><br/><pre><code>mylist = ["b", "C", "A"]<br/>mylist.sort()<br/></code></pre><br/><br/><p>This modifies your original list (i.e. sorts in-place). To get a sorted copy of the list, without changing the original, use the <a href="http://docs.python.org/library/functions.html#sorted"><code>sorted()</code></a> function:</p><br/><br/><pre><code>for x in sorted(mylist):<br/>    print x<br/></code></pre><br/><br/><p>However, the examples above are a bit naive, because they don't take locale into account, and perform a case-sensitive sorting. You can take advantage of the optional parameter <code>key</code> to specify custom sorting order (the alternative, using <code>cmp</code>, is a deprecated solution, as it has to be evaluated multiple times - <code>key</code> is only computed once per element).</p><br/><br/><p>So, to sort according to the current locale, taking language-specific rules into account (<a href="http://docs.python.org/library/functools.html#functools.cmp_to_key"><code>cmp_to_key</code></a> is a helper function from functools):</p><br/><br/><pre><code>sorted(mylist, key=cmp_to_key(locale.strcoll))<br/></code></pre><br/><br/><p>And finally, if you need, you can specify a <a href="http://docs.python.org/library/locale.html">custom locale</a> for sorting:</p><br/><br/><pre><code>import locale<br/>locale.setlocale(locale.LC_ALL, 'en_US.UTF-8') # vary depending on your lang/locale<br/>assert sorted((u'Ab', u'ad', u'aa'),<br/>  key=cmp_to_key(locale.strcoll)) == [u'aa', u'Ab', u'ad']<br/></code></pre><br/><br/><p>Last note: you will see examples of case-insensitive sorting which use the <code>lower()</code> method - those are incorrect, because they work only for the ASCII subset of characters. Those two are wrong for any non-English data:</p><br/><br/><pre><code># this is incorrect!<br/>mylist.sort(key=lambda x: x.lower())<br/># alternative notation, a bit faster, but still wrong<br/>mylist.sort(key=str.lower)<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      SYSTEM CAN NOT FIND THE FILE SPECIFI WHEN INVOK SUBPROCESS.POPEN IN PYTHON
+    </pattern>
+    <template>
+<![CDATA[<p>It's a bug, see the <a href="http://docs.python.org/lib/node528.html" rel="nofollow">documentation of <code>subprocess.Popen</code></a>. There either needs to be a <code>"shell=True</code>" option, or the first argument needs to be a sequence <code>['svn', '--version']</code>. As it is now, <code>Popen</code> is looking for an executable named, literally, "svn --version" which it doesn't find.</p><br/><br/><p>I don't know why it would work for your colleagues though, if they are running the same OS and version of Python... FWIW it gives me the same error message on a mac, and either of the two ways I gave fixes it.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      IN PYTHON
+    </pattern>
+    <template>
+<![CDATA[<p>Python has several testing frameworks, including <code>unittest</code>, <code>doctest</code>, and <code>nose</code>. The most xUnit-like is <code>unittest</code>, which is documented on Python.org.</p><br/><br/><ul><br/><li><a href="http://docs.python.org/lib/module-unittest.html" rel="nofollow"><code>unittest</code> documentation</a></li><br/><li><a href="http://docs.python.org/lib/module-doctest.html" rel="nofollow"><code>doctest</code> documentation</a></li><br/></ul><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      UP DJANGO WITH WSGI AND APACH
+    </pattern>
+    <template>
+<![CDATA[<p>What happens if you remove the <code>Alias /</code> directive?</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      DATA TO AN EXIST MODEL IN DJANGO
+    </pattern>
+    <template>
+<![CDATA[<p>You will want to wire your URL to the Django <a href="http://docs.djangoproject.com/en/dev/ref/generic-views/#django-views-generic-create-update-create-object">create_object generic view</a>, and pass it either "model" (the model you want to create) or "form_class" (a customized <a href="http://docs.djangoproject.com/en/dev/topics/forms/modelforms/#topics-forms-modelforms">ModelForm</a> class).  There are a number of <a href="http://docs.djangoproject.com/en/dev/ref/generic-views/#django-views-generic-create-update-create-object">other arguments</a> you can also pass to override default behaviors.</p><br/><br/><p>Sample URLconf for the simplest case:</p><br/><br/><pre><code>from django.conf.urls.defaults import *<br/>from django.views.generic.create_update import create_object<br/><br/>from my_products_app.models import Product<br/><br/>urlpatterns = patterns('',<br/>    url(r'^admin/products/add/$', create_object, {'model': Product}))<br/></code></pre><br/><br/><p>Your template will get the context variable "form", which you just need to wrap in a &lt;form> tag and add a submit button.  The simplest working template (by default should go in "my_products_app/product_form.html"):</p><br/><br/><pre><code>&lt;form action="." method="POST"&gt;<br/>  {{ form }}<br/>  &lt;input type="submit" name="submit" value="add"&gt;<br/>&lt;/form&gt;<br/></code></pre><br/><br/><p>Note that your Product model must have a get_absolute_url method, or else you must pass in the post_save_redirect parameter to the view.  Otherwise it won't know where to redirect to after save.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      AND DO FOR PYTHON PARAMET
+    </pattern>
+    <template>
+<![CDATA[<p>The *args and **kwargs ist a common idiom to allow arbitrary number of arguments to functions as described in the section <a href="http://docs.python.org/dev/tutorial/controlflow.html#more-on-defining-functions" rel="nofollow">more on defining functions</a> in the  the python documentation.</p><br/><br/><p>The *args will give you all funtion parameters a a list:</p><br/><br/><pre><code>In [1]: def foo(*args):<br/>   ...:     for a in args:<br/>   ...:         print a<br/>   ...:         <br/>   ...:         <br/><br/>In [2]: foo(1)<br/>1<br/><br/><br/>In [4]: foo(1,2,3)<br/>1<br/>2<br/>3<br/></code></pre><br/><br/><p>The **kwargs will give you all <br/><strong>keyword arguments</strong> except for those corresponding to a formal parameter as a dictionary.</p><br/><br/><pre><code>In [5]: def bar(**kwargs):<br/>   ...:     for a in kwargs:<br/>   ...:         print a, kwargs[a]<br/>   ...:         <br/>   ...:         <br/><br/>In [6]: bar(name="one", age=27)<br/>age 27<br/>name one<br/></code></pre><br/><br/><p>Both idioms can be mixed with normal arguments to allow a set of fixed and some variable arguments:</p><br/><br/><pre><code>def foo(kind, *args, **kwargs):<br/>   pass<br/></code></pre><br/><br/><p>An other usage of the *l idiom is to <strong>unpack argument lists</strong> when calling a function.</p><br/><br/><pre><code>In [9]: def foo(bar, lee):<br/>   ...:     print bar, lee<br/>   ...:     <br/>   ...:     <br/><br/>In [10]: l = [1,2]<br/><br/>In [11]: foo(*l)<br/>1 2<br/></code></pre><br/><br/><p>In the upcoming python 3.0 it will be possible to use *l on the left side of an assignment (<a href="http://www.python.org/dev/peps/pep-3132/" rel="nofollow">Extended Iterable Unpacking</a>):</p><br/><br/><pre><code>first, *rest = [1,2,3,4]<br/>first, *l, last = [1,2,3,4]<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      IMPLEMENT AN ENUM IN PYTHON
+    </pattern>
+    <template>
+<![CDATA[<p>Python doesn't have an equivalent but you can implement your own.</p><br/><br/><p>Myself, I like keeping it simple (I've seen some horribly complex examples on the net), something like this ...</p><br/><br/><pre><code>class Animal:<br/>    DOG=1<br/>    CAT=2<br/><br/>x = Animal.DOG<br/></code></pre><br/><br/><p><strike>Edit:</strike> </p><br/><br/><p><strike>Nowadays Python has an equivalent of enums: it's described [here][1].</strike></p><br/><br/><p><strike>    >>> Weekdays = enum('sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat')</strike><br/><strike>    >>> Grades = enum('A', 'B', 'C', 'D', 'F')</strike></p><br/><br/><p><strike>  [1]: <a href="http://www.python.org/dev/peps/pep-0354/">http://www.python.org/dev/peps/pep-0354/</a></strike></p><br/><br/><p>(This PEP has been rejected, as it says on the page linked.)</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      SIMPLI INHERIT METHOD FROM AN EXIST INSTANC
+    </pattern>
+    <template>
+<![CDATA[<blockquote><br/>  <p>Very close, but then I lose everything from ClassX. Below is something a collegue gave me that does do the trick, but it's hideous. There has to be a better way.</p><br/></blockquote><br/><br/><p>Looks like you're trying to set up some sort of proxy object scheme. That's doable, and there are better solutions than your colleague's, but first consider whether it would be easier to just patch in some extra methods. This won't work for built-in classes like <code>bool</code>, but it will for your user-defined classes:</p><br/><br/><pre><code>def HTMLDecorator (obj):<br/>    def html ():<br/>        sep = cgi.escape (repr (obj))<br/>        return sep.join (("&lt;H1&gt;", "&lt;/H1&gt;"))<br/>    obj.html = html<br/>    return obj<br/></code></pre><br/><br/><p>And here is the proxy version:</p><br/><br/><pre><code>class HTMLDecorator(object):<br/>    def __init__ (self, wrapped):<br/>        self.__wrapped = wrapped<br/><br/>    def html (self):<br/>        sep = cgi.escape (repr (self.__wrapped))<br/>        return sep.join (("&lt;H1&gt;", "&lt;/H1&gt;"))<br/><br/>    def __getattr__ (self, name):<br/>        return getattr (self.__wrapped, name)<br/><br/>    def __setattr__ (self, name, value):<br/>        if not name.startswith ('_HTMLDecorator__'):<br/>            setattr (self.__wrapped, name, value)<br/>            return<br/>        super (HTMLDecorator, self).__setattr__ (name, value)<br/><br/>    def __delattr__ (self, name):<br/>        delattr (self.__wraped, name)<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      OUT HTML TAG AND RESOLV ENTITI IN PYTHON
+    </pattern>
+    <template>
+<![CDATA[<p>Use <a href="http://codespeak.net/lxml/lxmlhtml.html" rel="nofollow">lxml</a> which is the best xml/html library for python.</p><br/><br/><pre><code>import lxml.html<br/>t = lxml.html.fromstring("...")<br/>t.text_content()<br/></code></pre><br/><br/><p>And if you just want to sanitize the html look at the lxml.html.clean <a href="http://codespeak.net/lxml/lxmlhtml.html#cleaning-up-html" rel="nofollow">module</a></p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      WAY TO READ A FOXPRO DBF FILE FROM PYTHON
+    </pattern>
+    <template>
+<![CDATA[<p>You can try this <a href="http://code.activestate.com/recipes/362715/">recipe on Active State</a>. </p><br/><br/><p>There is also a <a href="http://www.garshol.priv.no/download/software/python/dbfreader.py">DBFReader module</a> which you can try.</p><br/><br/><p>For support for <a href="http://www.physics.ox.ac.uk/users/santoso/dbf.py.src">memo fields</a>.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      CHECK IN LINUX WITH PYTHON IF A PROCESS IS STILL RUN
+    </pattern>
+    <template>
+<![CDATA[<p>Mark's answer is the way to go, after all, that's why the /proc file system is there. For something a little more copy/pasteable:</p><br/><br/><pre><code> &gt;&gt;&gt; import os.path<br/> &gt;&gt;&gt; os.path.exists("/proc/0")<br/> False<br/> &gt;&gt;&gt; os.path.exists("/proc/12")<br/> True<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      SUBPROCESS.POPEN CLASS NOT NAME SUBPROCESS
+    </pattern>
+    <template>
+<![CDATA[<p>Now, I'm not saying that this is the greatest name in the world, but here was the idea as I understand it.</p><br/><br/><p>Originally, the popen family was in the os module and was an implementation of the venerable posix popen.  The movement to the subprocess module would have been an opportune time to rename them, but I guess that keeping Popen makes it easier to find in the docs for those who have a long history with python or even to the venerable posix functions.</p><br/><br/><p>From it's earliest posix incarnation, <code>Popen</code> has always been meant to open a Process and allow you to read and write from it's stdio like a file. Thus the mnemonic for <code>Popen</code> is that it is short for <code>ProccesOpen</code> in an attempt to kind of, sorta, look like open.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      CLASS METHOD IN PYTHON FOR
+    </pattern>
+    <template>
+<![CDATA[<p>Class methods are for when you need to have methods that aren't specific to any particular instance, but still involve the class in some way. The most interesting thing about them is that they can be overridden by subclasses, something that's simply not possible in Java's static methods or Python's module-level functions.</p><br/><br/><p>If you have a class <code>MyClass</code>, and a module-level function that operates on MyClass (factory, dependency injection stub, etc), make it a <code>classmethod</code>. Then it'll be available to subclasses.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      LUA CONSID A GAME LANGUAG
+    </pattern>
+    <template>
+<![CDATA[<p>Languages rarely become popular simply on the merits of their technical features. Ruby languished for a decade, more or less, before people noticed it because of Rails. Lua would be a complete unknown without WoW's programming APIs. Lua is no more a "gaming" language than Ruby is a "web" language.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      AN ORACL TIMESTAMP USE PYTHON S WIN32 ODBC MODUL
+    </pattern>
+    <template>
+<![CDATA[<p>I believe this is a bug in the Oracle ODBC driver. Basically, the Oracle ODBC driver does not support the <code>TIMESTAMP WITH (LOCAL) TIME ZONE</code> data types, only the <code>TIMESTAMP</code> data type. As you have discovered, one workaround is in fact to use the <code>TO_CHAR</code> method.</p><br/><br/><p>In your example you are not actually reading the time zone information. If you have control of the table you could convert it to a straight <code>TIMESTAMP</code> column. If you don't have control over the table, another solution may be to create a view that converts from <code>TIMESTAMP WITH TIME ZONE</code> to <code>TIMESTAMP</code> via a string - sorry, I don't know if there is a way to convert directly from <code>TIMESTAMP WITH TIME ZONE</code> to <code>TIMESTAMP</code>.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      RETURN MULTIPL VALU FROM A FUNCTION IN PYTHON
+    </pattern>
+    <template>
+<![CDATA[<pre><code>def f(in_str):<br/>    out_str = in_string.upper()<br/>    return True, out_str # Creates tuple automatically<br/><br/>succeeded, b = f("a") # Automatic tuple unpacking<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      DJANGO TIME D WIDGET IN CUSTOM FORM
+    </pattern>
+    <template>
+<![CDATA[<p>What you have to do to make this work:</p><br/><br/><ol><br/><li><p>Define your own ModelForm subclass for your model (best to put it in forms.py in your app), and tell it to use the AdminDateWidget / AdminTimeWidget / AdminSplitDateTime (replace 'mydate' etc with the proper field names from your model):</p><br/><br/><pre><code>from django import forms<br/>from my_app.models import Product<br/>from django.contrib.admin import widgets                                       <br/><br/><br/>class ProductForm(forms.ModelForm):<br/>    class Meta:<br/>        model = Product<br/>    def __init__(self, *args, **kwargs):<br/>        super(ProductForm, self).__init__(*args, **kwargs)<br/>        self.fields['mydate'].widget = widgets.AdminDateWidget()<br/>        self.fields['mytime'].widget = widgets.AdminTimeWidget()<br/>        self.fields['mydatetime'].widget = widgets.AdminSplitDateTime()<br/></code></pre></li><br/><li><p>Change your URLconf to pass 'form_class': ProductForm instead of 'model': Product to the generic create_object view (that'll mean "from my_app.forms import ProductForm" instead of "from my_app.models import Product", of course).</p></li><br/><li><p>In the head of your template, include {{ form.media }} to output the links to the Javascript files.</p></li><br/><li><p>And the hacky part: the admin date/time widgets presume that the i18n JS stuff has been loaded, and also require core.js, but don't provide either one automatically.  So in your template above {{ form.media }} you'll need:</p><br/><br/><pre><code>&lt;script type="text/javascript" src="/my_admin/jsi18n/"&gt;&lt;/script&gt;<br/>&lt;script type="text/javascript" src="/media/admin/js/core.js"&gt;&lt;/script&gt;<br/></code></pre><br/><br/><p>You may also wish to use the following admin CSS (thanks <a href="http://stackoverflow.com/questions/38601/using-django-time-date-widgets-in-custom-form/719583#719583">Alex</a> for mentioning this):</p><br/><br/><pre><code>&lt;link rel="stylesheet" type="text/css" href="/media/admin/css/forms.css"/&gt;<br/>&lt;link rel="stylesheet" type="text/css" href="/media/admin/css/base.css"/&gt;<br/>&lt;link rel="stylesheet" type="text/css" href="/media/admin/css/global.css"/&gt;<br/>&lt;link rel="stylesheet" type="text/css" href="/media/admin/css/widgets.css"/&gt;<br/></code></pre></li><br/></ol><br/><br/><p>This implies that Django's admin media (ADMIN_MEDIA_PREFIX) is at /media/admin/ - you can change that for your setup.  Ideally you'd use a context processor to pass this values to your template instead of hardcoding it, but that's beyond the scope of this question.</p><br/><br/><p>This also requires that the URL /my_admin/jsi18n/ be manually wired up to the django.views.i18n.javascript_catalog view (or null_javascript_catalog if you aren't using I18N).  You have to do this yourself instead of going through the admin application so it's accessible regardless of whether you're logged into the admin (thanks <a href="http://stackoverflow.com/questions/38601/using-django-time-date-widgets-in-custom-form/408230#408230">Jeremy</a> for pointing this out).  Sample code for your URLconf:</p><br/><br/><pre><code>(r'^my_admin/jsi18n', 'django.views.i18n.javascript_catalog'),<br/></code></pre><br/><br/><p>Lastly, if you are using Django 1.2 or later, you need some additional code in your template to help the widgets find their media:</p><br/><br/><pre><code>{% load adminmedia %} /* At the top of the template. */<br/><br/>/* In the head section of the template. */<br/>&lt;script type="text/javascript"&gt;<br/>window.__admin_media_prefix__ = "{% filter escapejs %}{% admin_media_prefix %}{% endfilter %}";<br/>&lt;/script&gt;<br/></code></pre><br/><br/><p>Thanks <a href="http://stackoverflow.com/questions/38601/using-django-time-date-widgets-in-custom-form/2818128#2818128">lupefiasco</a> for this addition.</p><br/><br/><p>The growing complexity of this answer over time, and the many hacks required, probably ought to caution you against doing this at all. It's relying on undocumented internal implementation details of the admin, is likely to break again in future versions of Django, and is no easier to implement than just finding another JS calendar widget and using that.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      MERG TWO PYTHON DICTIONARI AS A SINGL EXPRESS
+    </pattern>
+    <template>
+<![CDATA[<p>In your case, what you can do is:</p><br/><br/><pre><code>z = dict(x.items() + y.items())<br/></code></pre><br/><br/><p>This will, as you want it, put the final dict in z, and make the value for b be properly overridden by the second dict's value:</p><br/><br/><pre><code>&gt;&gt;&gt; x = {'a':1, 'b': 2}<br/>&gt;&gt;&gt; y = {'b':10, 'c': 11}<br/>&gt;&gt;&gt; z = dict(x.items() + y.items())<br/>&gt;&gt;&gt; z<br/>{'a': 1, 'c': 11, 'b': 10}<br/></code></pre><br/><br/><p>If you use Python 3, it is only a little more complicated.  To create z:</p><br/><br/><pre><code>&gt;&gt;&gt; z = dict(list(x.items()) + list(y.items()))<br/>&gt;&gt;&gt; z<br/>{'a': 1, 'c': 11, 'b': 10}<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      AND REPLAC A LINE IN A FILE IN PYTHON
+    </pattern>
+    <template>
+<![CDATA[<p>I guess something like this should do it. It basically writes the content to a new file and replaces the old file with the new file:</p><br/><br/><pre><code>from tempfile import mkstemp<br/>from shutil import move<br/>from os import remove, close<br/><br/>def replace(file, pattern, subst):<br/>    #Create temp file<br/>    fh, abs_path = mkstemp()<br/>    new_file = open(abs_path,'w')<br/>    old_file = open(file)<br/>    for line in old_file:<br/>        new_file.write(line.replace(pattern, subst))<br/>    #close temp file<br/>    new_file.close()<br/>    close(fh)<br/>    old_file.close()<br/>    #Remove original file<br/>    remove(file)<br/>    #Move new file<br/>    move(abs_path, file)<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      DO BIT FIELD MANIPUL IN PYTHON
+    </pattern>
+    <template>
+<![CDATA[<p>It's an often-asked question.  There's an <a href="http://code.activestate.com/recipes/113799/" rel="nofollow">ASPN Cookbook</a> entry on it that has served me in the past.</p><br/><br/><p>And there is an <a href="http://wiki.python.org/moin/BitManipulation" rel="nofollow">extensive page of requirements one person would like to see from a module doing this.</a></p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      PGP SIGNATUR FROM PYTHON
+    </pattern>
+    <template>
+<![CDATA[<p>I think <a href="http://www.gnupg.org/related_software/gpgme/" rel="nofollow">GPGME</a> and the <a href="http://pyme.sourceforge.net/" rel="nofollow">PyMe Python wrapper</a> should do what you need.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      LOCAL ( )
+    </pattern>
+    <template>
+<![CDATA[<ul><br/><li><p>locals() - No. </p></li><br/><li><p>globals() - Yes.</p></li><br/></ul><br/><br/><p><code>window</code> is a reference to the global scope, like <code>globals()</code> in python.</p><br/><br/><pre><code>globals()["foo"]<br/></code></pre><br/><br/><p>is the same as:</p><br/><br/><pre><code>window["foo"]<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      X ORACL HOW DO I GET THE ORA XXXXX ERROR NUMBER
+    </pattern>
+    <template>
+<![CDATA[<pre><code>try:<br/>   cursor.execute("select 1 / 0 from dual")<br/>except cx_Oracle.DatabaseError, exc:<br/>   error, = exc<br/>   print "Code:", error.code<br/>   print "Message:", error.message<br/></code></pre><br/><br/><p>This results in the following output:</p><br/><br/><pre><code>Code: 1476<br/>Message: ORA-01476: divisor is equal to zero<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      DEPLOY AND USR BIN ENV PORTABL
+    </pattern>
+    <template>
+<![CDATA[<p>"env" simply executes the first thing it finds in the PATH env var. To switch to different python, prepend the directory for that python's executable to the path before invoking your script.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      LWAY INCLUD THE USER IN THE DJANGO TEMPLAT CONTEXT
+    </pattern>
+    <template>
+<![CDATA[<p>In a more general sense of not having to explicitly set variables in each view, it sounds like you want to look at writing your own <a href="http://docs.djangoproject.com/en/dev/ref/templates/api/#writing-your-own-context-processors" rel="nofollow">context processor</a>.</p><br/><br/><p>From the docs:</p><br/><br/><blockquote><br/>  <p>A context processor has a very simple interface: It's just a Python function that takes one argument, an HttpRequest object, and returns a dictionary that gets added to the template context. Each context processor must return a dictionary.</p><br/></blockquote><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      MONKEYPATCH IN PYTHON
+    </pattern>
+    <template>
+<![CDATA[<p>A print statement does its IO through "sys.stdout.write" so you can override sys.stdout if you want to manipulate the print stream.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      TUPL IN PYTHON BEST PRACTIC
+    </pattern>
+    <template>
+<![CDATA[<p>I'd say that a dictionary is definitely the best way to do it.  It's easily extensible, allows you to give each value a sensible name, and Python has a lot of built-in language features for using and manipulating dictionaries.  If you need to add more fields later, all you need to change is the code that converts the tuple to a dictionary and the code that actually makes use of the new values.</p><br/><br/><p>For example:</p><br/><br/><pre><code>job={}<br/>job['jobid'], job['label'], job['username']=&lt;querycode&gt;<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      WAY TO OPEN A FOLDER WINDOW IN LINUX
+    </pattern>
+    <template>
+<![CDATA[<p>os.system('xdg-open "%s"' % foldername)</p><br/><br/><p>xdg-open can be used for files/urls also</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      TUPL USE FOR
+    </pattern>
+    <template>
+<![CDATA[<ul><br/><li>Tuples are used whenever you want to return multiple results from a function.</li><br/><li>Since they're immutable, they can be used as keys for a dictionary (lists can't).</li><br/></ul><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      PYTHON LIBRARI TO GENER IDENTICON
+    </pattern>
+    <template>
+<![CDATA[<p>I've found two implementations:<br /><br/><a href="http://coderepos.org/share/browser/lang/python/misc/identicon.py" rel="nofollow">http://coderepos.org/share/browser/lang/python/misc/identicon.py</a><br /><br/><a href="http://code.google.com/p/visicon/" rel="nofollow">http://code.google.com/p/visicon/</a></p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      EXTRACT TEXT FROM A WORD DOC WITHOUT USE COM AUTOM
+    </pattern>
+    <template>
+<![CDATA[<p>I use catdoc or antiword for this, whatever gives the result that is the easiest to parse. I have embedded this in python functions, so it is easy to use from the parsing system (which is written in python).</p><br/><br/><pre><code>import os<br/><br/>def doc_to_text_catdoc(filename):<br/>    (fi, fo, fe) = os.popen3('catdoc -w "%s"' % filename)<br/>    fi.close()<br/>    retval = fo.read()<br/>    erroroutput = fe.read()<br/>    fo.close()<br/>    fe.close()<br/>    if not erroroutput:<br/>        return retval<br/>    else:<br/>        raise OSError("Executing the command caused an error: %s" % erroroutput)<br/><br/># similar doc_to_text_antiword()<br/></code></pre><br/><br/><p>The -w switch to catdoc turns off line wrapping, BTW.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      RE.SUB MULTILIN CARET MATCH
+    </pattern>
+    <template>
+<![CDATA[<p>Look at the definition of <a href="http://docs.python.org/library/re.html#re.sub" rel="nofollow"><code>re.sub</code></a>:</p><br/><br/><pre><code>sub(pattern, repl, string[, count])<br/></code></pre><br/><br/><p>The 4th argument is the count, you are using <code>re.MULTILINE</code> (which is 8) as the count, not as a flag.</p><br/><br/><p>You have to compile your regex if you wish to use flags.</p><br/><br/><pre><code>re.sub(re.compile('^//', re.MULTILINE), '', s)<br/></code></pre><br/><br/><p>A <code>flags</code> argument was added in Python 2.7, so the full definition is now:</p><br/><br/><pre><code>re.sub(pattern, repl, string[, count, flags])<br/></code></pre><br/><br/><p>Which means that:</p><br/><br/><pre><code>re.sub('^//', '', s, flags=re.MULTILINE)<br/></code></pre><br/><br/><p>works.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      LAST DAY OF THE MONTH IN PYTHON
+    </pattern>
+    <template>
+<![CDATA[<p>I didn't notice this earlier when I was looking at the <a href="http://docs.python.org/lib/module-calendar.html" rel="nofollow">documentation for the calendar module</a>, but a method called <a href="http://docs.python.org/library/calendar.html#calendar.monthrange" rel="nofollow">monthrange</a> provides this information:</p><br/><br/><blockquote><br/>  <p><b>monthrange(year, month)</b><br><br/>  &nbsp;&nbsp;&nbsp;&nbsp;Returns weekday of first day of the month and number of days in month, for the specified year and month. </p><br/></blockquote><br/><br/><pre><code>&gt;&gt;&gt; import calendar<br/>&gt;&gt;&gt; calendar.monthrange(2002,1)<br/>(1, 31)<br/>&gt;&gt;&gt; calendar.monthrange(2008,2)<br/>(4, 29)<br/>&gt;&gt;&gt; calendar.monthrange(2100,2)<br/>(0, 28)<br/></code></pre><br/><br/><p>so:</p><br/><br/><pre><code>calendar.monthrange(year, month)[1]<br/></code></pre><br/><br/><p>seems like the simplest way to go.</p><br/><br/><p><a href="http://stackoverflow.com/questions/42950/get-last-day-of-the-month-in-python#43088">My previous answer</a> still works, but is clearly suboptimal.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      COMMIT MESSAG FROM A BZR POST COMMIT HOOK
+    </pattern>
+    <template>
+<![CDATA[<p>And the answer is like so:</p><br/><br/><pre><code>def check_commit_msg(local, master, old_revno, old_revid, new_revno, new_revid):<br/>    branch = local or master<br/>    revision = branch.repository.get_revision(new_revid)<br/>    print revision.message<br/></code></pre><br/><br/><p>local and master are Branch objects, so once you have a revision, it's easy to extract the message.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      URL IN DJANGO
+    </pattern>
+    <template>
+<![CDATA[<p>If you need to use something similar to the {% url %} template tag in your code, Django provides the django.core.urlresolvers.reverse(). The reverse() function has the following signature:</p><br/><br/><pre><code>reverse(viewname, urlconf=None, args=None, kwargs=None)<br/></code></pre><br/><br/><p><a href="http://www.djangoproject.com/documentation/url_dispatch/#utility-methods" rel="nofollow">http://www.djangoproject.com/documentation/url_dispatch/#utility-methods</a></p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      WRITE NATIV IPHON APP USE PYTHON
+    </pattern>
+    <template>
+<![CDATA[<p>Not currently, currently the only languages available to access the iPhone SDK are C/C++ and Objective C.</p><br/><br/><p>There is no technical reason why this could not change in the future but I wouldn't hold your breath for this happening in the short term.</p><br/><br/><p>That said, Objective C really isn't that scary...</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      MIME TYPE OF A FILE IN PYTHON
+    </pattern>
+    <template>
+<![CDATA[<p>The <a href="http://docs.python.org/lib/module-mimetypes.html" rel="nofollow">mimetypes module</a> in the standard library will determine/guess the MIME type from a file extension.</p><br/><br/><p>If users are uploading files the HTTP post will contain the MIME type of the file alongside the data.  For example, Django makes this data available as an attribute of the <a href="http://www.djangoproject.com/documentation/upload_handling/#uploadedfile-objects" rel="nofollow">UploadedFile</a> object.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      ULU OPER WITH NEG VALU WEIRD THING
+    </pattern>
+    <template>
+<![CDATA[<p>By the way: most programming languages would disagree with Python and give the result <code>-2</code>. Depending on the interpretation of modulus this is correct. However, the most agreed-upon mathematical definition states that the modulus of <em>a</em> and <em>b</em> is the (strictly positive) rest <em>r</em> of the division of <em>a</em> / <em>b</em>. More precisely, 0 &lt;= <em>r</em> &lt; <em>b</em> by definition.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      WEB DEVELOP ENVIRON ON MAC
+    </pattern>
+    <template>
+<![CDATA[<p>For pure development in Python, I'd look into the <a href="http://www.djangoproject.com/" rel="nofollow">django project</a>.  I've found it to be a nice mix of functionality and flexibility.  You can even deploy django applications to Google Apps with some fiddling.  </p><br/><br/><p>By default, django comes with a light-weight web server (I believe implemented in Python) that runs on a default OSX build.  They walk you through deployment with Apache and mod_python farther down the line.</p><br/><br/><p>This is what I would develop in, if I had choice of language.</p><br/>]]>    </template>
+  </category>
+</aiml>

@@ -57,6 +57,10 @@ form .helptext {
     color: #777;
 }
 
+input#question {
+    width: 355px;
+}
+
 .errorlist {
     margin: 0;
 }

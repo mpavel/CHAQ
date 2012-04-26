@@ -1,0 +1,481 @@
+<?xml version="1.0" ?>
+<aiml version="1.0">
+  <meta content="SimpleAIMLGenerator" name="author"/>
+  <meta content="en" name="language"/>
+  <category>
+    <pattern>
+      PERCENTAG WIDTH CHILD IN ABSOLUT POSIT PARENT WORK IN IE 7
+    </pattern>
+    <template>
+<![CDATA[<p>Does the parent div have a defined width either pixel or percentage? Not 100% sure but I think in IE7, the parent div needs a defined width for child percentage divs to work correctly.</p>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      TEST LAYOUT DESIGN ACROSS MULTIPL BROWSERS OSS
+    </pattern>
+    <template>
+<![CDATA[<p>Screen capturing services are a great way to do this.</p><br/><br/><p><a href="http://browsershots.org/" rel="nofollow">http://browsershots.org/</a> is free.</p><br/><br/><p>and there are some "pay" services like:</p><br/><br/><p><a href="http://www.browsercam.com" rel="nofollow">http://www.browsercam.com</a><br/>and<br/><a href="http://litmusapp.com" rel="nofollow">http://litmusapp.com</a></p><br/><br/><p>These kinds of services are nice because they allow you to specify a certain amount of time to wait for the page to load, and allow you have them perform actions (clicking links etc). Then you get a nice array of screenshots you can quickly browse to ensure your site looks like you expected across your desired platforms.</p><br/><br/><p>Also, there is a service for Firefox that allows you to run sand-boxed versions of multiple browsers on your machine called <a href="http://spoon.net/Browsers/" rel="nofollow">"Browser Sandbox" from spoon.net</a>.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      FONT IN JAVASCRIPT
+    </pattern>
+    <template>
+<![CDATA[<p>I've seen it done in a kind of iffy, but pretty reliable way.  Basically, an element is set to use a specific font and a string is set to that element.  If the font set for the element does not exist, it takes the font of the parent element.  So, what they do is measure the width of the rendered string.  If it matches what they expected for the desired font as opposed to the derived font, it's present.</p><br/><br/><p>Here's where it came from:<br/><a href="http://ajaxian.com/archives/javascriptcss-font-detector" rel="nofollow">Javascript/CSS Font Detector (ajaxian.com; 12 Mar 2007)</a></p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      HTML HOW TO WORD BREAK ON A DASH
+    </pattern>
+    <template>
+<![CDATA[<p>Replace your hyphens with this:</p><br/><br/><pre><code>&amp;shy;<br></code></pre><br/><br/><p>It's called a "soft" hyphen.</p>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      EDITOR
+    </pattern>
+    <template>
+<![CDATA[<p><a href="http://www.aptana.com/" rel="nofollow">Aptana</a> is rather nice if you want all the bells and whistles without paying for Visual Studio. If, like sasb suggested, you can get Microsoft products for free from school, then I would tend to lean towards Microsoft Expression Web or Visual Studio.</p>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      RECOMMEND A GOOD CSS ONLIN RESOURC OR BOOK
+    </pattern>
+    <template>
+<![CDATA[<p>Well, if you are looking to fix bugs, I would recommend you going through <a href="http://www.quirksmode.org/" rel="nofollow">http://www.quirksmode.org/</a>. This website has a comprehensive list of different browser 'quirks' and loads of other CSS resources.</p>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      ITE OFFER FREE QUALITI WEB SITE DESIGN TEMPLAT
+    </pattern>
+    <template>
+<![CDATA[<p>Check out:</p><br/><br/><ul><br/><li><a href="http://www.oswd.org/" rel="nofollow">Open Source Web Designs</a></li><br/><li><a href="http://cssremix.com/" rel="nofollow">CSS Remix</a></li><br/><li><a href="http://bestwebgallery.com/" rel="nofollow">Best Web Gallery</a></li><br/><li><a href="http://www.cssbased.com/" rel="nofollow">CSS Based</a></li><br/><li><a href="http://www.cssbeauty.com/gallery/" rel="nofollow">CSS Beauty</a></li><br/></ul>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      THE BROWSER SEE CSS AND JAVASCRIPT CHANG
+    </pattern>
+    <template>
+<![CDATA[<p>I found that if you append the last modified timestamp of the file onto the end of the URL the browser will request the files when it is modified. For example in PHP:</p><br/><br/><pre><code>function urlmtime($url) {<br>   $parsed_url = parse_url($url);<br>   $path = $parsed_url['path'];<br>   if ($path[0] == "/") {<br>       $filename = $_SERVER['DOCUMENT_ROOT'] . "/" . $path;<br>   } else {<br>       $filename = $path;<br>   }<br>   if (!file_exists($filename)) {<br>       // If not a file then use the current time<br>       $lastModified = date('YmdHis');<br>   } else {<br>       $lastModified = date('YmdHis', filemtime($filename));<br>   }<br>   if (strpos($url, '?') === false) {<br>       $url .= '?ts=' . $lastModified;<br>   } else {<br>       $url .= '&amp;ts=' . $lastModified;<br>   }<br>   return $url;<br>}<br><br>function include_css($css_url, $media='all') {<br>   // According to Yahoo, using link allows for progressive <br>   // rendering in IE where as @import url($css_url) does not<br>   echo '&lt;link rel="stylesheet" type="text/css" media="' .<br>      $media . '" href="' .<br>      urlmtime($css_url) . '"&gt;'."\n";<br>}<br><br>function include_javascript($javascript_url) {<br>   echo '&lt;script type="text/javascript" src="' .<br>     urlmtime($javascript_url) .<br>     '"&gt;&lt;/script&gt;'."\n";<br>}<br></code></pre>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      COLOR IN JAVASCRIPT
+    </pattern>
+    <template>
+<![CDATA[<p>In general, CSS properties are converted to JavaScript by making them camelCase without any dashes. So "background-color" becomes "backgroundColor".</p><br/><br/><pre><code>function setColor(element, color)<br>{<br>    element.style.backgroundColor = color;<br>}<br></code></pre>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      LIST INTO COLUMN
+    </pattern>
+    <template>
+<![CDATA[<p>So I dug up this article from A List Apart <a href="http://www.alistapart.com/articles/multicolumnlists" rel="nofollow">CSS Swag: Multi-Column Lists</a>.  I ended up using the first solution, it's not the best but the others require either using complex HTML that can't be generated dynamically, or creating a lot of custom classes, which could be done but would require loads of in-line styling and possibly a huge page.</p><br/><br/><p>Other solutions are still welcome though.</p>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      DIV S HEIGHT IN HTML WITH CSS
+    </pattern>
+    <template>
+<![CDATA[<p>Ahem</p><br/><br/><blockquote><br/>  <blockquote><br/>    <p>The short answer to your question is that you must set the height of 100% to the body and html tag, then set the height to 100% on each div element you want to make 100% the height of the page.</p><br/>  </blockquote><br/></blockquote><br/><br/><p>actually, 100% height will not work in most design situations - this may be short but it is not a good answer. Google "any column longest" layouts. The best way is to put the left and right cols inside a wrapper div, float the left and right cols and then float the wrapper - this makes it stretch to the height of the inner containers - then set background image on the outer wrapper. But watch for any horizontal margins on the floated elements in case you get the IE double margin float bug.</p>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      A CSS SWITCHER IN ASP.NET
+    </pattern>
+    <template>
+<![CDATA[<P>In Asp.net 3.5, you should be able to set up the Link tag in the header as a server tag. Then in the codebehind you can set the href property for the link element, based on a cookie value, querystring, date, etc.</P><br/><P>In your aspx file:</P><PRE><CODE>&lt;head&gt;<br/>  &lt;link id="linkStyles" rel="stylesheet" type="text/css" runat="server" /&gt;<br/>&lt;/head&gt;<br/></CODE></PRE><br/><P>And in the Code behind:</P><PRE><CODE>protected void Page_Load(object sender, EventArgs e) {<br/>  string stylesheetAddress = // logic to determine stylesheet<br/>  linkStyles.Href = stylesheetAddress;<br/>}<br/></CODE></PRE>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      FF3 WINXP FF3 UBUNTU WHI
+    </pattern>
+    <template>
+<![CDATA[<p>I would first suggesting getting you html and css code validated. If there are any errors in your markup, these can cause errors in the rendering.</p><br/><br/><ul><br/><li><a href="http://jigsaw.w3.org/css-validator/" rel="nofollow">CSS Validator</a></li><br/><li><a href="http://validator.w3.org/" rel="nofollow">HTML Validator</a></li><br/></ul>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      CREAT ROUND CORNER USE CSS
+    </pattern>
+    <template>
+<![CDATA[<p>I don't know if you can say that there is any one technique that is "the best". Below are a whole bunch of different approaches. Find one that suits your site and coding style, and go with it.</p><br/><br/><ol><br/><li><a href="http://www.alistapart.com/articles/customcorners/" rel="nofollow">CSS Design: Creating Custom Corners<br/>&amp; Borders</a></li><br/><li><a href="http://www.smileycat.com/miaow/archives/000044.php" rel="nofollow">CSS Rounded Corners 'Roundup'</a></li><br/><li><a href="http://www.cssjuice.com/25-rounded-corners-techniques-with-css/" rel="nofollow">25 Rounded Corners Techniques with CSS</a></li><br/></ol><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      S TEXTAREA USE PROTOTYP
+    </pattern>
+    <template>
+<![CDATA[<p>Facebook does it, when you write on people's walls, but only resizes vertically. </p><br/><br/><p>Horizontal resize strikes me as being a terrible mess, due to word-wrap, long lines, and so on, but vertical resize would be pretty safe and nice</p><br/><br/><p>Facebook is inhabited by every idiot on the planet, and none of the facebook-using-idiots I know have ever mentioned anything about it or been remotely confused.</p><br/><br/><p>I'd use this as anecdotal evidence to say 'go ahead, implement it'</p><br/><br/><p>Some javascript to do it, using prototype.js (cos that's what I know)</p><br/><br/><pre><code>&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"<br/>  "http://www.w3.org/TR/html4/loose.dtd"&gt;<br/>&lt;html&gt;<br/>&lt;head&gt;<br/>  &lt;script src="http://www.google.com/jsapi"&gt;&lt;/script&gt;<br/>  &lt;script language="javascript"&gt;<br/>  google.load('prototype', '1.6.0.2');<br/>  &lt;/script&gt;<br/>&lt;/head&gt;<br/>&lt;body&gt;<br/>  &lt;textarea id="text-area" rows="1" cols="50"&gt;&lt;/textarea&gt;<br/><br/>  &lt;script type="text/javascript" language="javascript"&gt;<br/>  resizeIt = function() {<br/>    var str = $('text-area').value;<br/>    var cols = $('text-area').cols;<br/><br/>    var linecount = 0;<br/>    $A(str.split("\n")).each( function(l) {<br/>      linecount += Math.ceil( l.length / cols ); // take into account long lines<br/>    } )<br/>    $('text-area').rows = linecount + 1;<br/>  };<br/><br/>  Event.observe('text-area', 'keydown', resizeIt ); // you could attach to keyUp or whatever if keydown doesn't work<br/>  resizeIt(); //initial on load<br/>  &lt;/script&gt;<br/>&lt;/body&gt;<br/>&lt;/html&gt;<br/></code></pre><br/><br/><p>PS: Obviously this javascript is very naive, and you probably don't want to use it on textboxes with novels in them, but you get the general idea</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      OVERFLOW AUTO WITH MAX HEIGHT
+    </pattern>
+    <template>
+<![CDATA[<p>This is a really nasty bug as it affects us heavily on Stack Overflow with <code>&lt;pre&gt;</code> code blocks, which have <code>max-height:600</code> and <code>width:auto</code>.</p><br/><br/><p>It is logged as a bug in the final version of IE8 with no fix.</p><br/><br/><p><a href="http://connect.microsoft.com/IE/feedback/ViewFeedback.aspx?FeedbackID=408759" rel="nofollow">http://connect.microsoft.com/IE/feedback/ViewFeedback.aspx?FeedbackID=408759</a></p><br/><br/><p>There is a really, really hacky CSS workaround:</p><br/><br/><p><a href="http://my.opera.com/dbloom/blog/2009/03/11/css-hack-for-ie8-standards-mode" rel="nofollow">http://my.opera.com/dbloom/blog/2009/03/11/css-hack-for-ie8-standards-mode</a></p><br/><br/><pre><code>/*<br/>SUPER nasty IE8 hack to deal with this bug<br/>*/<br/>pre <br/>{<br/>    max-height: none\9 <br/>}<br/></code></pre><br/><br/><p>and of course conditional CSS as others have mentioned, but I dislike that because it means you're serving up extra HTML cruft in every page request.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      SOLV THE SELECT OVERLAP BUG IN IE6
+    </pattern>
+    <template>
+<![CDATA[<p>I don't know anything better than an Iframe</p><br/><br/><p>But it does occur to me that this could be added in JS by looking for a couple of variables </p><br/><br/><ol><br/><li>IE 6</li><br/><li>A high Z-Index (you tend to have to set a z-index if you are floating a div over)</li><br/><li>A box element</li><br/></ol><br/><br/><p>Then a script that looks for these items and just add an iframe layer would be a neat solution</p><br/><br/><p>Paul</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      MPORT IS W3C XHTML CSS VALID WHEN FINAL WORK
+    </pattern>
+    <template>
+<![CDATA[<p>a) Must look the same</p><br/><br/><p>b) As standards-compliant as possible, but not so anal that it blocks finishing work</p><br/><br/><p>In a situation where you have perpetual access to the code, I don't think standards-compliance is all that important, since you can always make changes to the code if something breaks. If you don't have perpetual access (ie, you sign off on the code and it becomes someone else's responsibility), it's probably best to be as standards-compliant as possible to minimize maintenance headaches later... even if you never have to deal with the code again, your reputation persists and can be transmitted to other potential clients, and many teams like to blame the previous developer(s) for problems that come up.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      .DISPLAY NOT WORK IN FIREFOX OPERA SAFARI IE7 OK
+    </pattern>
+    <template>
+<![CDATA[<p>Since setting the properties with javascript never seemed to work, but setting using Firebug's inspect did, I started to suspect that the javascript ID selector was broken - maybe there were multiple items in the DOM with the same ID?  The source didn't show that there were, but looping through all divs using javascript I found that that was the case. Here's the function I ended up using to show the popup:</p><br/><br/><pre><code>function openPopup(popupID)<br/>{<br/>  var divs = getObjectsByTagAndClass('div','popupDiv');<br/>  if (divs != undefined &amp;&amp; divs != null)<br/>  {<br/>    for (var i = 0; i &lt; divs.length; i++)<br/>    {<br/>      if (divs[i].id == popupID)<br/>        divs[i].style.display = 'block';    	<br/>    }<br/>  }<br/>}<br/></code></pre><br/><br/><p>(utility function getObjectsByTagAndClass not listed)</p><br/><br/><p>Ideally I'll find out why the same item is being inserted multiple times, but I don't have control over the rendering platform, just its inputs.</p><br/><br/><p>So when debugging issues like this, <strong>remember to check for duplicate IDs in the DOM, which can break getElementById</strong>.</p><br/><br/><p>To everyone who answered, thanks for your help!</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      CUSTOM THE NUMBER IN AN ORDER LIST
+    </pattern>
+    <template>
+<![CDATA[<p>This is the solution I have working in Firefox 3, Opera and Google Chrome. The list still displays in IE7 (but without the close bracket and left align numbers):</p><br/><br/><pre><code>&lt;style type="text/css"&gt;<br/>&lt;!--<br/>ol {<br/>    counter-reset: item;<br/>    margin-left: 0;<br/>    padding-left: 0;<br/>}<br/>li {<br/>    display: block;<br/>    margin-bottom: .5em;<br/>    margin-left: 2em;<br/>}<br/>li:before {<br/>    display: inline-block;<br/>    content: counter(item) ") ";<br/>    counter-increment: item;<br/>    width: 2em;<br/>    margin-left: -2em;<br/>}<br/>--&gt;<br/>&lt;/style&gt;<br/>&lt;body&gt;<br/>&lt;ol&gt;<br/>  &lt;li&gt;One&lt;/li&gt;<br/>  &lt;li&gt;Two&lt;/li&gt;<br/>  &lt;li&gt;Three&lt;/li&gt;<br/>  &lt;li&gt;Four&lt;/li&gt;<br/>  &lt;li&gt;Five&lt;/li&gt;<br/>  &lt;li&gt;Six&lt;/li&gt;<br/>  &lt;li&gt;Seven&lt;/li&gt;<br/>  &lt;li&gt;Eight&lt;/li&gt;<br/>  &lt;li&gt;Nine&lt;br&gt;Items&lt;/li&gt;<br/>  &lt;li&gt;Ten&lt;br&gt;Items&lt;/li&gt;<br/>&lt;/ol&gt;<br/></code></pre><br/><br/><p><strong>EDIT:</strong> Included multiple line fix by strager</p><br/><br/><blockquote><br/>  <p>Also is there a CSS solution to change from numbers to alphabetic/roman lists instead of using the type attribute on the ol element.</p><br/></blockquote><br/><br/><p>Refer to <a href="http://www.w3.org/TR/CSS2/generate.html#lists" rel="nofollow">list-style-type</a> CSS property. Or when using counters the second argument accepts a list-style-type value. For example the following will use upper roman:</p><br/><br/><pre><code>li:before {<br/>    content: counter(item, upper-roman) ") ";<br/>    counter-increment: item;<br/>/* ... */<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      ALL BROWSER COMPAT HANG INDENT STYLE IN CSS IN A SPAN
+    </pattern>
+    <template>
+<![CDATA[<p><code>&lt;span&gt;</code> is an inline element. The term <em>hanging indent</em> is meaningless unless you're talking about a paragraph (which generally means a block element). You can, of course, change the margins on <code>&lt;p&gt;</code> or <code>&lt;div&gt;</code> or any other block element to get rid of extra vertical space between paragraphs.</p><br/><br/><p>You may want something like <code>display: run-in</code>, where the tag will become either block or inline depending on context... sadly, this is not yet widely supported by browsers.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      HEADER ABOV MENU
+    </pattern>
+    <template>
+<![CDATA[<p>Try the IE Developer Toolbar, which will let you inspect what is going on with the elements and give you outlines of the areas covered.  It might give you a better understanding of the problem.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      ON THE WEB
+    </pattern>
+    <template>
+<![CDATA[<p>Safari and to a lesser extent Firefox 3 have support for @font-face in CSS which lets you use custom fonts. You need to have the appropriate licence to distribute the font files though. These articles explain it in more detail:</p><br/><br/><ul><br/><li><a href="http://www.css3.info/preview/web-fonts-with-font-face/" rel="nofollow"><a href="http://www.css3.info/preview/web-fonts-with-font-face/" rel="nofollow">http://www.css3.info/preview/web-fonts-with-font-face/</a></a></li><br/><li><a href="http://www.alistapart.com/articles/cssatten" rel="nofollow"><a href="http://www.alistapart.com/articles/cssatten" rel="nofollow">http://www.alistapart.com/articles/cssatten</a></a></li><br/><li><a href="http://www.sitepoint.com/blogs/2008/07/30/custom-web-fonts-pick-your-poison/" rel="nofollow"><a href="http://www.sitepoint.com/blogs/2008/07/30/custom-web-fonts-pick-your-poison/" rel="nofollow">http://www.sitepoint.com/blogs/2008/07/30/custom-web-fonts-pick-your-poison/</a></a></li><br/></ul><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      GENER CSS SKELETON
+    </pattern>
+    <template>
+<![CDATA[<p><a href="http://lab.xms.pl/css-generator/" rel="nofollow">http://lab.xms.pl/css-generator/</a> seems to fit the description.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      BEST PRACTIC
+    </pattern>
+    <template>
+<![CDATA[<blockquote><br/>  <p>I should also have mentioned that I would like the banner rotation to keep moving. When the visitor clicks on a link, the banner rotation starts over. It would be nice if the "animation" kept rotating, regardless of the page the user visits.Blockquote</p><br/></blockquote><br/><br/><p>Well, in that case I would strongly recommend not doing that. The only real way of achieving that is to have the actual website content in the iframe, which means that you suddenly have lots of negative sides to the site: not being able to bookmark urls easily due to the address bar not changing; accessibility concerns; etc</p><br/><br/><p>I think you'll find that most people won't care that it reloads again. Once a visitor lands on your website, they'll marvel at the wonderful banner immediately, and then will continue to ignore it while they browse your site - until an image they haven't seen appears and distracts them away from your content.</p><br/><br/><p>Keep the rotation random enough, and with enough images, and people will stop to look at it from whatever page they're on.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      WAY OF CHECK FOR MOZ BORDER RADIU SUPPORT
+    </pattern>
+    <template>
+<![CDATA[<p>How about this?</p><br/><br/><pre><code>var mozborderAvailable = false;<br/>try {<br/>  if (typeof(document.body.style.MozBorderRadius) !== "undefined") {<br/>    mozborderAvailable = true;<br/>  }<br/>} catch(err) {}<br/></code></pre><br/><br/><p>I tested it in Firefox 3 (true) and false in: Safari, IE7, and Opera.</p><br/><br/><p>(Edit: better undefined test)</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      SET OR WHERE IS THE LOCAL DOCUMENT ROOT
+    </pattern>
+    <template>
+<![CDATA[<p>It depends on what browser you use, but Internet Explorer, for example, would take you to the root directory of your harddrive (eg. C:/), while browsers such as Firefox does nothing. </p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      FIX CSS J DROP DOWN PROBLEM IN IE7 WHEN PAGE INCLUD GOOGL MAP
+    </pattern>
+    <template>
+<![CDATA[<p>I don't know if this will fix your problem but you may want to try <a href="http://www.cssplay.co.uk/menus/pro_drop8.html" rel="nofollow">this solution at ccsplay.co.uk</a> which fixes the problem of menus appearing underneath drop-down lists. I don't know if it will work for sure, but it's worth a shot.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      GO FROM A PHOTOSHOP MOCKUP TO SEMANT HTML AND CSS
+    </pattern>
+    <template>
+<![CDATA[<p>I have a fairly natural way of coding. The key is to treat the page like a document or an article. If you think of it like this the following becomes logically clear:</p><br/><br/><ol><br/><li><p>The page title is a top level heading </p><br/><br/><ul><br/><li>Whether you make the site title or actual page title the h1 is up to you - personally I'd make About Us the h1 rather than Stack Overflow.</li><br/></ul></li><br/><li><p>The navigation is a table of contents, and thus an <strong>ordered list</strong> - you may as well use an ol over a ul.</p></li><br/><li><p>Section headers are h2, sections within those sections are h3s etc. Stack them up.</p></li><br/><li><p>Use blockquotes and quotes where possible. Don't just surround it with ".</p></li><br/><li><p>Don't use b and i. Use strong and em. This is because HTML is structural rather than presentational markup. <strong>Strong</strong> and <strong>em</strong>phasis tags should be used where you'd put emphasis on the word.</p></li><br/><li><p><code>&lt;label&gt;</code> your form elements.</p></li><br/><li><p>Use <code>&lt;acronym&gt;</code>s and <code>&lt;abbr&gt;</code>s where possible, but only in the first instance.</p></li><br/><li><p>The easiest: always, <em>always</em> give your images some alternate text.</p></li><br/><li><p>There's lots of HTML tags you could use that you probably haven't - address for postal addresses, screen code output. Have a look at <a href="http://www.htmldog.com/" rel="nofollow">HTML Dog</a> for some, it's my favourite reference.</p></li><br/></ol><br/><br/><p>That's just a few pointers, I'm sure I could think of more.</p><br/><br/><p>Oh, and if you want a challenge write your XHTML first, then write the CSS. When CSS-ing you aren't allowed to touch the HTML. It's actually harder than you think (but I've found it's made me quicker).</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      YUI RESET CSS MAKE STRONG EM THI NOT WORK EM STRONG
+    </pattern>
+    <template>
+<![CDATA[<p>If your strong declaration comes after YUI's yours should override it. You can force it like this:</p><br/><br/><pre><code>strong, b, strong *, b * { font-weight: bold !important; }<br/>em, i, em *, i * { font-style: italic !important; }<br/></code></pre><br/><br/><p>This works - see for yourself:</p><br/><br/><pre><code>&lt;html&gt;<br/>&lt;head&gt;<br/>  &lt;style type="text/css"&gt;<br/>    address,caption,cite,code,dfn,em,strong,th,var {<br/>      font-style:normal;<br/>      font-weight:normal;<br/>    }<br/>    strong, b, strong *, b * { font-weight: bold !important; }<br/>    em, i, em *, i * { font-style: italic !important; }<br/>  &lt;/style&gt;<br/>&lt;/head&gt;<br/>&lt;body&gt;<br/>  &lt;strong&gt;Bold&lt;/strong&gt; - &lt;em&gt;Italic&lt;/em&gt; - &lt;strong&gt;Bold and &lt;em&gt;Italic&lt;/em&gt;&lt;/strong&gt;<br/>&lt;/body&gt;<br/>&lt;/html&gt;<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      CELL LARGER THAN THEY ARE MEANT TO BE
+    </pattern>
+    <template>
+<![CDATA[<p>I think you need to use 'display: block' on your images. When images are inline there's a little extra space for the line spacing.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      3RD PARTI ASP.NET MENU CONTROL REPLAC
+    </pattern>
+    <template>
+<![CDATA[<p>Why not roll you own based upon some existing code? I have been using a modified version of the <a href="http://htmldog.com/articles/suckerfish/dropdowns/" rel="nofollow">Son of Suckerfish Dropdowns</a> without any major issues. There are a couple of <a href="http://htmldog.com/ptg/archives/000050.php" rel="nofollow">fixes</a> that you need to get things working across the various browsers but once they are up and running they give you an extremely nice platform to work off of.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      ASP.NET AND OR CSS THEME
+    </pattern>
+    <template>
+<![CDATA[<p>I wouldn't bother looking for ASP.NET stuff specifically (probably won't find any anyways). Finding a good CSS theme easily can be used in ASP.NET.   </p><br/><br/><p>Here's some sites that I love for CSS goodness:</p><br/><br/><p><a href="http://www.freecsstemplates.org/" rel="nofollow">http://www.freecsstemplates.org/</a><br /><br/><a href="http://www.oswd.org/" rel="nofollow">http://www.oswd.org/</a><br /><br/><a href="http://www.openwebdesign.org/" rel="nofollow">http://www.openwebdesign.org/</a><br /><br/><a href="http://www.styleshout.com/" rel="nofollow">http://www.styleshout.com/</a><br /><br/><a href="http://www.freelayouts.com/" rel="nofollow">http://www.freelayouts.com/</a>  </p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      SPAN HEIGHT IN FIREFOX
+    </pattern>
+    <template>
+<![CDATA[<pre><code>&lt;style&gt;<br/>#div1 { float:left; height:20px; width:20px; }<br/>#div2 { float:left; height:30px; width:30px }<br/>&lt;/style&gt;<br/><br/>&lt;div id="div1"&gt;FirstDiv&lt;/div&gt;<br/>&lt;div id="div2"&gt;SecondDiv&lt;/div&gt;<br/></code></pre><br/><br/><p>As long as the container for whatever is holding div's 1 and 2 is wide enough for them to fit, this should be fine.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      BSTRACT AWAY FROM CSS
+    </pattern>
+    <template>
+<![CDATA[<p>You can always use a template engine to add variables and caclulated fields to your CSS files.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      YOUR BEST TOOL OR TECHNIQU FOR GET THE SAME DISPLAY ON IE6 7 AND FIREFOX
+    </pattern>
+    <template>
+<![CDATA[<p>If you guys are still coding for IE6, you're making a mistake.  </p><br/><br/><p>I use <strong>IE7.js</strong> to get IE6 to render pages like IE7.  IE7 is not perfect, but at least it has some semblance of standards.  Since I only have to code for IE7 and FF it makes me 33% more efficient in terms of testing against browsers, something I think makes good business sense.</p><br/><br/><p>Link:  <a href="http://code.google.com/p/ie7-js/" rel="nofollow">IE7.js</a></p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      WEBSIT EXPAND ON WINDOW RESIZ
+    </pattern>
+    <template>
+<![CDATA[<p>Raw HTML does just that.  Are you changing your data so that it doesn't render so good in random sized windows?</p><br/><br/><p>In the olden days, everyone had VGA screens.  Now, that resolution is most uncommon.  Who knows what resolutions are going to be common in the future?  And why expect a certain minimum width or height?</p><br/><br/><p>From a usability viewpoint, demanding a certain resolution from your users is just going to create a degraded experience for anyone not using that resolution.  Another thing that comes from this is what <em>is</em> fixed width?  I've seen plenty of fixed size windows (popups) that just don't render right because my fonts are different from the designer's.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      SIMPL WAY TO MAKE HTML TEXTAREA AND INPUT TYPE TEXT EQUAL WIDE
+    </pattern>
+    <template>
+<![CDATA[<p>You should be able to use</p><br/><br/><pre><code>   .mywidth{<br/>       width:100px;   <br/>   }<br/><br/><br/>  &lt;input class="mywidth" &gt;<br/> &lt;textarea class="mywidth"&gt;&lt;/textarea&gt;<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      SELECT TAG WITH BLACK BACKGROUND DROPDOWN TRIANGL IS INVIS IN FIREFOX 3
+    </pattern>
+    <template>
+<![CDATA[<p>Must be a Vista problem.  I have XP SP 2 and it looks normal.  </p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      REPEAT CONSTANT IN CSS
+    </pattern>
+    <template>
+<![CDATA[<p>Elements can belong to more than one class, so you can do something like this:  </p><br/><br/><pre><code>.DefaultBackColor<br/>{<br/>    background-color: #123456;<br/>}<br/>.SomeOtherStyle<br/>{<br/>    //other stuff here<br/>}<br/>.DefaultForeColor<br/>{<br/>    color:#654321;<br/>}<br/></code></pre><br/><br/><p>And then in the content portion somewhere:  </p><br/><br/><pre><code>&lt;div class="DefaultBackColor SomeOtherStyle DefaultForeColor"&gt;Your content&lt;/div&gt;<br/></code></pre><br/><br/><p>The weaknesses here are that it gets pretty wordy in the body and you're unlikely to be able to get it down to listing a color only once.  But you might be able to do it only two or three times and you can group those colors together, perhaps in their own sheet.  Now when you want to change the color scheme they're all together and the change is pretty simple.</p><br/><br/><p>But, yeah, my biggest complain with CSS is the inability to define your own constants.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      INSTEAD OF DIV
+    </pattern>
+    <template>
+<![CDATA[<p>The whole "Tables vs Divs" thing just barely misses the mark.  It's not "table" or "div".  It's about using a semantic layout.</p><br/><br/><p>Even the div tag plays only a small part in a well laid out page.  Don't overuse it.  You shouldn't need that many if you put your html together correctly.  Things like lists, field sets, legends, labels, paragraphs, etc can replace much of what a div or span is often used to accomplish.  Div should be used primarily when it makes sense to indicate a logical *<em>div</em>*ision, and only appropriated for extra layout when absolutely necessary.  The same is true for table; use it when you have tabular data, but not otherwise.</p><br/><br/><p>Then you have a more semantic page and you don't need quite as many classes defined in your CSS; you can target the tags directly instead.  Possibly most importantly, you have a page that will score much better with Google (anecdotally) than the equivalent table or div-heavy page and will help you better connect with a portion of your audience.</p><br/><br/><p>So if we go back and look at it in terms of table vs div, it's my opinion that we've actually come to the point where div is over-used and table is under-used.  Why? Because when you really think about it, there are a lot of things out there that fall into the category of "tabular data" that tend to be overlooked.  Answers and comments on this very web page, for example.  They consist of multiple records, each with the same set of fields, and stored in a database table.  The exact definition of tabular data.  So an html table tag would absolutely be a good semantic choice to layout something like the posts here on StackOverflow.  And this same principle applies to many other things as well.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      PAGE LAYOUT IN IE6
+    </pattern>
+    <template>
+<![CDATA[<p>Might be overkill for your project, but <a href="http://dean.edwards.name/IE7/" rel="nofollow">Dean Edwards' IE7 javascript adds support for fixed positioning to IE6</a>.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      ENFORC WEB STANDARD
+    </pattern>
+    <template>
+<![CDATA[<p>We don't have a physical document we all adhere to where I work. There are a number of guidelines we try and keep in mind but there isn't really enough information to require a physcial document.  <a href="http://www.louddog.com/bloggity/2008/03/css-best-practices.php" rel="nofollow">This article</a> sums them up these guidelines pretty well.  You may also consider formatting your CSS to make it easier to read.  <a href="http://www.smashingmagazine.com/2008/05/02/improving-code-readability-with-css-styleguides/" rel="nofollow">Smashing Magazine</a> has a great article on this subject.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      REMEMB IN CSS THAT MARGIN IS OUTSID THE BORDER AND PAD INSID
+    </pattern>
+    <template>
+<![CDATA[<p>When working with CSS finally drives you mad the padded cell that they will put you in has the padding on the <em>inside</em> of the walls.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      HEIGHT OF A DIV DYNAM
+    </pattern>
+    <template>
+<![CDATA[<p>Try this simple, specific function:</p><br/><br/><pre><code>function resizeElementHeight(element) {<br/>  var height = 0;<br/>  var body = window.document.body;<br/>  if (window.innerHeight) {<br/>      height = window.innerHeight;<br/>  } else if (body.parentElement.clientHeight) {<br/>      height = body.parentElement.clientHeight;<br/>  } else if (body &amp;&amp; body.clientHeight) {<br/>      height = body.clientHeight;<br/>  }<br/>  element.style.height = ((height - element.offsetTop) + "px");<br/>}<br/></code></pre><br/><br/><p>It does not depend on the current distance from the top of the body being specified (in case your 300px changes).</p><br/><br/><p><hr /></p><br/><br/><p>EDIT: By the way, you would want to call this on that div every time the user changed the browser's size, so you would need to wire up the event handler for that, of course.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      ELEG SEMANT CSS WITH ASP.NET STILL A PIPE DREAM
+    </pattern>
+    <template>
+<![CDATA[<p>The easiest way to generate elegant HTML and CSS is to use MVC framework, where you have much more control over HTML generation than with Web Forms.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      UNUS IMAG AND CSS STYLE IN A WEBSIT
+    </pattern>
+    <template>
+<![CDATA[<p>There's a Firefox extension that finds unused CSS selectors on a page. It has an option to spider the whole site.</p><br/><br/><p><a href="https://addons.mozilla.org/en-US/firefox/addon/dust-me-selectors/" rel="nofollow">https://addons.mozilla.org/en-US/firefox/addon/dust-me-selectors/</a></p><br/><br/><p>Use this for the newest version on FF:</p><br/><br/><p><a href="https://addons.mozilla.org/en-US/firefox/addon/css-usage/" rel="nofollow">https://addons.mozilla.org/en-US/firefox/addon/css-usage/</a></p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      CSS BUG HOW DO I MAINTAIN A POSIT ABSOLUT WHEN DYNAM JAVASCRIPT CONTENT ON THE PAGE CHANG
+    </pattern>
+    <template>
+<![CDATA[<p>Its a bug in the rendering engine. I run into it all the time. One potential way to solve it is to hide and show the div whenever you change the content (that in turn changes the height):</p><br/><br/><pre><code>var divCol = document.getElementById('column');<br/>divCol.style.display = 'none';<br/>divCol.style.display = 'block';<br/></code></pre><br/><br/><p>Hopefully this happens fast enough that it isn't noticeable :)</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      WIDTH OF A PRINT STRING BY A WEBAPP
+    </pattern>
+    <template>
+<![CDATA[<p>Here's another take on it and you don't have to live without the ellipsis!</p><br/><br/><pre><code>&lt;html&gt;<br/>&lt;head&gt;<br/><br/>&lt;style&gt;<br/>div.sidebox {<br/>    width: 25%;<br/>}<br/><br/>div.sidebox div.qrytxt {<br/>    height: 1em;<br/>    line-height: 1em;<br/>    overflow: hidden;<br/>}<br/><br/>div.sidebox div.qrytxt span.ellipsis {<br/>    float: right;<br/>}<br/>&lt;/style&gt;<br/><br/><br/>&lt;/head&gt;<br/><br/>&lt;body&gt;<br/><br/>&lt;div class="sidebox"&gt;<br/>    &lt;div class="qrytxt"&gt;<br/>    	&lt;span class="ellipsis"&gt;&amp;hellip;&lt;/span&gt;<br/>    	Some long text which will arbitrarily be cut off at whatever word fits best but will have an ellipsis at the end.<br/>    &lt;/div&gt;<br/>    &lt;div class="qrytxt"&gt;<br/>    	&lt;span class="ellipsis"&gt;&amp;hellip;&lt;/span&gt;<br/>    	Some more long text which will arbitrarily be cut off at whatever word fits best but will have an ellipsis at the end.<br/>    &lt;/div&gt;<br/>    &lt;div class="qrytxt"&gt;<br/>    	&lt;span class="ellipsis"&gt;&amp;hellip;&lt;/span&gt;<br/>    	Short text. Fail!<br/>    &lt;/div&gt;<br/>&lt;/body&gt;<br/><br/>&lt;/html&gt;<br/></code></pre><br/><br/><p>There is one flaw with this, if the text is short enough to be fully displayed, the ellipses will still be displayed as well.</p><br/><br/><p>[EDIT: 6/26/2009]</p><br/><br/><p>At the suggestion of Power-Coder I have revised this a little. There are really only two changes, the addition of the doctype (see notes below) and the addition of the "display: inline-block" attribute on the qrytxt div.  Here is what it looks like now...</p><br/><br/><pre><code>&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd"&gt;<br/>&lt;html&gt;<br/>&lt;head&gt;<br/>    &lt;style&gt;<br/>        div.sidebox <br/>        {<br/>            width: 25%;<br/>        }<br/><br/>        div.sidebox div.qrytxt<br/>        {<br/>            height: 1em;<br/>            line-height: 1em;<br/>            overflow: hidden;<br/>            display: inline-block;<br/>        }<br/><br/>        div.sidebox div.qrytxt span.ellipsis<br/>        {<br/>            float: right;<br/>        }<br/>&lt;/style&gt;<br/>&lt;/head&gt;<br/><br/>&lt;body&gt;<br/>    &lt;div class="sidebox"&gt;<br/>        &lt;div class="qrytxt"&gt;<br/>            &lt;span class="ellipsis"&gt;&amp;hellip;&lt;/span&gt;<br/>            Some long text which will arbitrarily be cut off at whatever word fits best but will have an ellipsis at the end.<br/>        &lt;/div&gt;<br/><br/>        &lt;div class="qrytxt"&gt;<br/>            &lt;span class="ellipsis"&gt;&amp;hellip;&lt;/span&gt;<br/>            Some more long text which will arbitrarily be cut off at whatever word fits best but will have an ellipsis at the end.<br/>        &lt;/div&gt;<br/><br/>        &lt;div class="qrytxt"&gt;<br/>            &lt;span class="ellipsis"&gt;&amp;hellip;&lt;/span&gt;<br/>            Short text. FTW<br/>        &lt;/div&gt;<br/>    &lt;/div&gt;<br/>&lt;/body&gt;<br/>&lt;/html&gt;<br/></code></pre><br/><br/><p>Notes:</p><br/><br/><ul><br/><li><p>Viewed in IE 8.0, Opera 9, FF 3</p></li><br/><li><p>A doctype is required for IE to get the "display: inline-block" to work correctly.</p></li><br/><li><p>If the qrytxt div's overflow occurs on a long word, there is going to be a wide gap between the ellipsis and the last visible word.  You can see this by viewing the example and resizing your browser width in small increments. (this probably existed in the original example as well, I just may have not noticed it then)</p></li><br/></ul><br/><br/><p>So again, an imperfect CSS-only solution.  Javascript may be the only thing that can get the effect perfect.</p><br/><br/><p>[EDIT: 6/27/2009]</p><br/><br/><p>Here is another alternative which uses browser specific extensions.</p><br/><br/><pre><code>&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd"&gt;<br/><br/>&lt;html&gt;<br/>&lt;head&gt;<br/>    &lt;style&gt;<br/>    	div.sidebox <br/>    	{<br/>    		width: 26%;<br/>    	}<br/><br/>    	div.sidebox div.qrytxt<br/>    	{<br/>    		height: 1em;<br/>    		line-height: 1em;<br/>    		overflow: hidden;<br/>    		text-overflow:ellipsis;<br/>    		-o-text-overflow:ellipsis;<br/>    		-ms-text-overflow:ellipsis;<br/>    		-moz-binding:url(ellipsis-xbl.xml#ellipsis);<br/>    		white-space:nowrap;<br/>    	}<br/>    &lt;/style&gt;<br/>&lt;/head&gt;<br/><br/>&lt;body&gt;<br/>    &lt;div class="sidebox"&gt;<br/>    	&lt;div class="qrytxt"&gt;<br/>    		Some long text which will arbitrarily be cut off at whatever word fits best but will have an ellipsis at the end.<br/>    	&lt;/div&gt;<br/><br/>    	&lt;div class="qrytxt"&gt;<br/>    		Some more long text which will arbitrarily be cut off at whatever word fits best but will have an ellipsis at the end.<br/>    	&lt;/div&gt;<br/><br/>    	&lt;div class="qrytxt"&gt;<br/>    		Short text. FTW<br/>    	&lt;/div&gt;<br/>    &lt;/div&gt;<br/>&lt;/body&gt;<br/>&lt;/html&gt;<br/></code></pre><br/><br/><p>Note that in order for the above example to work, you must create the xml file referenced by the -moz-binding rule, <strong><em>ellipsis-xbl.xml</em></strong>. It's should contain the following xml:</p><br/><br/><pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;<br/>  &lt;bindings xmlns="http://www.mozilla.org/xbl" xmlns:xbl="http://www.mozilla.org/xbl" xmlns:xul="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"&gt;<br/>    &lt;binding id="ellipsis"&gt;<br/>      &lt;content&gt;<br/>        &lt;xul:window&gt;<br/>          &lt;xul:description crop="end" xbl:inherits="value=xbl:text"&gt;&lt;children/&gt;&lt;/xul:description&gt;<br/>        &lt;/xul:window&gt;<br/>      &lt;/content&gt;<br/>    &lt;/binding&gt;<br/>  &lt;/bindings&gt;<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      USER CONTROL KNOW ABOUT CSS CLASS IN ASP.NET
+    </pattern>
+    <template>
+<![CDATA[<p>Here's what I did:</p><br/><br/><pre><code>&lt;link rel="Stylesheet" type="text/css" href="Stylesheet.css" id="style" runat="server" visible="false" /&gt;<br/></code></pre><br/><br/><p>It fools Visual Studio into thinking you've added a stylesheet to the page but it doesn't get rendered.</p><br/><br/><p><hr /></p><br/><br/><p>Here's an even more concise way to do this with multiple references;</p><br/><br/><pre><code>&lt;% if (false) { %&gt;<br/>    &lt;link rel="Stylesheet" type="text/css" href="Stylesheet.css" /&gt;<br/>    &lt;script type="text/javascript" src="js/jquery-1.2.6.js" /&gt;<br/>&lt;% } %&gt;<br/></code></pre><br/><br/><p>As seen in <a href="http://haacked.com/archive/2008/11/21/combining-jquery-form-validation-and-ajax-submission-with-asp.net.aspx" rel="nofollow">this blog post</a> from Phil Haack.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      UNORD LIST INLIN BUT KEEP THE BULLET
+    </pattern>
+    <template>
+<![CDATA[<p>The best option I saw in other answers was to use <code>float:left;</code>.  Unfortunately, it doesn't work in IE7 which is a requirement here &mdash; you still lose the bullet.  I'm not really keen on using a background image either.</p><br/><br/><p>What I'm gonna do instead (that no one else suggested, hence the self-answer) is go with manually adding <code>&amp;bull;</code> to the my html, rather than styling this.  It's less than ideal, but it's the most compatible option I found.  </p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      SWAP DIV ON MOUSEOV ( JQUERI )
+    </pattern>
+    <template>
+<![CDATA[<pre><code>$(document).ready(function() {<br/>    switches = $('#switches &gt; li');<br/>    slides = $('#slides &gt; div');<br/>    switches.each(function(idx) {<br/>            $(this).data('slide', slides.eq(idx));<br/>        }).hover(<br/>        function() {<br/>            switches.removeClass('active');<br/>            slides.removeClass('active');             <br/>            $(this).addClass('active');  <br/>            $(this).data('slide').addClass('active');<br/>        });<br/>    });<br/></code></pre><br/><br/><p>Rather than displaying all slides when JS is off (which would likely break the page layout) I would place inside the switch LIs real A links to server-side code which returns the page with the "active" class pre-set on the proper switch/slide.</p><br/><br/><p>And here's the HTML:</p><br/><br/><pre><code>&lt;html&gt;<br/>&lt;head&gt;<br/><br/>&lt;title&gt;test&lt;/title&gt;<br/><br/>&lt;script type="text/javascript" src="jquery.js"&gt;&lt;/script&gt;<br/>&lt;script type="text/javascript" src="switch.js"&gt;&lt;/script&gt;<br/><br/>&lt;style type="text/css"&gt;<br/><br/>#switches .active {<br/>  font-weight: bold;<br/>}<br/><br/>#slides div {<br/>  display: none;<br/>}<br/><br/>#slides div.active {<br/>  display: block;<br/>}<br/><br/>&lt;/style&gt;<br/>&lt;/head&gt;<br/>&lt;body&gt;<br/><br/>&lt;ul id="switches"&gt;<br/>  &lt;li class="active"&gt;First slide&lt;/li&gt;<br/>  &lt;li&gt;Second slide&lt;/li&gt;<br/>  &lt;li&gt;Third slide&lt;/li&gt;<br/>  &lt;li&gt;Fourth slide&lt;/li&gt;<br/>&lt;/ul&gt;<br/>&lt;div id="slides"&gt;<br/>  &lt;div class="active"&gt;Well well.&lt;/div&gt;<br/>  &lt;div&gt;Oh no!&lt;/div&gt;<br/>  &lt;div&gt;You again?&lt;/div&gt;<br/>  &lt;div&gt;I'm gone!&lt;/div&gt;<br/>&lt;/div&gt;<br/><br/>&lt;/body&gt;<br/>&lt;/html&gt;<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      E BLOCK ON SPAN
+    </pattern>
+    <template>
+<![CDATA[<pre><code>float: left;<br/></code></pre><br/><br/><p>Try adding that to span.left</p><br/><br/><p>It will cause it to float to the left (as suggested by the syntax).</p><br/><br/><hr><br/><br/><p>I am not a CSS expert by any means so please don't take this as unarguable fact but I find that when something is floated, it makes no difference to the vertical position of things below it.</p><br/><br/><p>If you float the span.right to the right then add text beneath them you should get some interesting results, to stop these "interesting results" you can use "clear: left/right/both" which will cause the block with the clear styling to be under anything floated to the left/right/both. <a href="http://w3schools.com/css/pr_class_clear.asp" rel="nofollow">W3Schools</a> have a page on this property too.</p><br/><br/><p>And welcome to Stackoverflow.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      N IFRAM TAKE VERTIC SPACE
+    </pattern>
+    <template>
+<![CDATA[<p>This should set the IFRAME height to its content's height:</p><br/><br/><pre><code>&lt;script type="text/javascript"&gt;<br/>the_height = document.getElementById('the_iframe').contentWindow.document.body.scrollHeight;<br/>document.getElementById('the_iframe').height = the_height;<br/>&lt;/script&gt;<br/></code></pre><br/><br/><p>You may want to add <code>scrolling="no"</code> to your IFRAME to turn off the scrollbars.</p><br/><br/><p><em>edit:</em> Oops, forgot to declare <code>the_height</code>.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      WAY MY DRUPAL THEME DISPLAY THE FRONT PAGE
+    </pattern>
+    <template>
+<![CDATA[<p>The main css file that drives your content is the styles.css file located in your currently selected theme.  In your case that means that most of your site styling is driven by this file: /aroda/roda/themes/garland/style.css with basic coloring effects handled by this file:<br/>/aroda/roda/files/color/garland-d3985506/style.css</p><br/><br/><p>You're currently using Garland, the default Drupal theme included with the core download, so for best practices you shouldn't edit the included style.css file directly.  Instead, you should, as Daniel James said, create a subdirectory in /sites/all called "themes".</p><br/><br/><p>If you're using Drupal 6, I'd follow Daniel James directions from there.  If you're using Drupal 5, I'd go ahead and copy the garland directory into the themes directory and rename it for something specific to your site (aroda_v1) so you would have something like /sites/all/themes/aroda_v1 which would contain styles.css.  At that point, you can edit the styles.css file directly to make any changes you see fit.  Hope that helps!</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      ONLIN RESOURC FOR CSS DESIGN PATTERN
+    </pattern>
+    <template>
+<![CDATA[<p>I refer to <a href="http://www.alistapart.com/" rel="nofollow">A List Apart</a> articles all the time for those sorts of things. They do a lot of trial-and-error research to come up with really creative ways to handle those common CSS problems in the cleanest most portable way possible.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      A TWO COLUMN PAGE HOW CAN I GROW THE LEFT DIV TO THE SAME HEIGHT OF THE RIGHT DIV USE CSS OR JAVASCRIPT
+    </pattern>
+    <template>
+<![CDATA[<p>Use jQuery for this problem; just call this function in your ready function:</p><br/><br/><pre><code>function setHeight(){<br/>  var height = $(document).height(); //optionally, subtract some from the height<br/>  $("#leftDiv").css("height", height + "px");<br/>}<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      6 CSS HOVER NON ANCHOR TAG
+    </pattern>
+    <template>
+<![CDATA[<p>I would say that the simplest method would be to add onmouseover/out Javascript functions.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      MAKE DIV ALIGN HORIZONT
+    </pattern>
+    <template>
+<![CDATA[<p>You may put an inner div in the container that is enough wide to hold all the floated divs.</p><br/><br/><pre><code>&lt;div id="container" style="background-color:red;overflow:hidden;width:200px"&gt;<br/>  &lt;div id="inner" style="overflow:hidden;width: 2000px"&gt;<br/>     &lt;div style="float:left;background-color:blue;width:50px;height:50px"&gt;<br/>     &lt;/div&gt;<br/>     &lt;div style="float:left;background-color:blue;width:50px;height:50px"&gt;<br/>     &lt;/div&gt;<br/>     &lt;div style="float:left;background-color:blue;width:50px;height:50px"&gt;<br/>     &lt;/div&gt;<br/>     ...<br/>  &lt;/div&gt;<br/>&lt;/div&gt;<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      THE WEB WHAT FONT SHOULD I USE TO CREAT AN EQUIVAL EXPERI CROSS PLATFORM
+    </pattern>
+    <template>
+<![CDATA[<p>Here are some good up-to-date listings of the most-installed fonts for PC, Mac, and Linux:</p><br/><br/><p><a href="http://www.codestyle.org/css/font-family/sampler-SansSerif.shtml" rel="nofollow">Sans serif font sampler and survey results</a></p><br/><br/><p><a href="http://www.codestyle.org/css/font-family/sampler-Serif.shtml" rel="nofollow">Serif font sampler and survey results</a></p><br/><br/><p>Hope this helps your decision!</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      STOP .NET EAT ID
+    </pattern>
+    <template>
+<![CDATA[<p>The short answer is no, with webforms the id can always be rewritten depending on the nesting of the element.  You can get access to the id through the ClientID property, so you could set the ids into variables in a script at the end of the page/control then put them into jQuery.  </p><br/><br/><p>something like this:</p><br/><br/><pre><code>&lt;asp:button id="ImAButton" runat="server"&gt;Click Me&lt;/asp:button&gt;<br/><br/>&lt;script type="text/javascript"&gt;<br/>var buttonId = "&lt;%=ImAButton.ClientId%&gt;";<br/>$("#"+buttonId).bind('click', function() { alert('hi); });<br/>&lt;/script&gt;<br/></code></pre><br/><br/><p>It's a hack I know, but it will work.<br/>(I should note for the un-initiated, I'm using the Prototype $ get by id method there)</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      HTML HELPER ASP.NET MVC
+    </pattern>
+    <template>
+<![CDATA[<p>You can pass it into the TextBox call as a parameter.</p><br/><br/><pre><code>Name:&lt;br/&gt;    <br/>&lt;%= Html.TextBox("txtName", "20", new { @class = "hello" }) %&gt;<br/></code></pre><br/><br/><p>This line will create a text box with the value 20 and assign the class attribute with the value hello.  I put the @ character in front of the class, because class is a reserved keyword.  If you want to add other attributes, just separate the key/value pairs with commas.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      GET IMAG TO STRETCH A DIV
+    </pattern>
+    <template>
+<![CDATA[<p>Add <code>overflow:auto;</code> to <code>.product1</code></p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      THE FOOTER TO STAY AT THE BOTTOM OF A WEB PAGE
+    </pattern>
+    <template>
+<![CDATA[<p>Sticky footer on <a href="http://ryanfait.com/sticky-footer/" rel="nofollow">google</a></p><br/><br/><p>Have a <code>&lt;div&gt;</code> with <code>class="wrapper"</code> contain everything. After the <code>wrapper &lt;/div&gt;</code> place the <code>push div</code>, then the <code>footer div</code>.</p><br/><br/><pre><code>* {<br/>    margin: 0;<br/>  }<br/>  html, body {<br/>    height: 100%;<br/>  }<br/>  .wrapper {<br/>    min-height: 100%;<br/>    height: auto !important;<br/>    height: 100%;<br/>    margin: 0 auto -142px; /* the bottom margin is the negative value of the footer's height */<br/>  }<br/>  .footer, .push {<br/>    height: 142px; /* .push must be the same height as .footer */<br/>  }<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      REND UL S INCORRECTLI
+    </pattern>
+    <template>
+<![CDATA[<p>try giving it hasLayout with</p><br/><br/><pre><code>zoom: 1<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      QUOT VS DIV
+    </pattern>
+    <template>
+<![CDATA[<p>In theory, HTML should be as "semantic" as possible - meaning that every element should indicate something about its content. &lt;h1&gt;s should enclose the most important headline; &lt;p&gt;s should surround paragraphs; &lt;em&gt; should indicate emphasis, etc.</p><br/><br/><p>That way the code makes sense when you - or a screen reader, or whatever - look at it. This also helps for devices that don't understand all (or any) of your CSS rules.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      HTML LAYOUT WITH MULTIPL CSS STYLE AVAIL
+    </pattern>
+    <template>
+<![CDATA[<p>I've used <a href="http://www.blueprintcss.org/" rel="nofollow">Bluprint CSS</a>, it's easy and useful as you'll see. It also has some ruby scripts that allow you to change the number of columns and the distance between them. By default it's 950px for a span-24 element.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      STYLE ( CSS ) RADIO BUTTON AND LABEL
+    </pattern>
+    <template>
+<![CDATA[<p>The first part of your question can be solved with just HTML &amp; CSS; you'll need to use Javascript for the second part.</p><br/><br/><h3>Getting the Label Near the Radio Button</h3><br/><br/><p>I'm not sure what you mean by "next to": on the same line and near, or on separate lines? If you want all of the radio buttons on the same line, just use margins to push them apart. If you want each of them on their own line, you have two options (unless you want to venture into <code>float:</code> territory):</p><br/><br/><ul><br/><li>Use <code>&lt;br /&gt;s </code> to split the options apart and some CSS to vertically align them:</li><br/></ul><br/><br/><br/><br/><pre><code>&lt;style type='text/css'&gt;<br/>    .input input<br/>    {<br/>        width: 20px;<br/>    }<br/>&lt;/style&gt;<br/>&lt;div class="input radio"&gt;<br/>    &lt;fieldset&gt;<br/>        &lt;legend&gt;What color is the sky?&lt;/legend&gt;<br/>        &lt;input type="hidden" name="data[Submit][question]" value="" id="SubmitQuestion" /&gt;<br/><br/>        &lt;input type="radio" name="data[Submit][question]" id="SubmitQuestion1" value="1"  /&gt;<br/>        &lt;label for="SubmitQuestion1"&gt;A strange radient green.&lt;/label&gt;<br/>        &lt;br /&gt;<br/>        &lt;input type="radio" name="data[Submit][question]" id="SubmitQuestion2" value="2"  /&gt;<br/>        &lt;label for="SubmitQuestion2"&gt;A dark gloomy orange&lt;/label&gt;<br/>        &lt;br /&gt;<br/>        &lt;input type="radio" name="data[Submit][question]" id="SubmitQuestion3" value="3"  /&gt;<br/>        &lt;label for="SubmitQuestion3"&gt;A perfect glittering blue&lt;/label&gt;<br/>    &lt;/fieldset&gt;<br/>&lt;/div&gt;<br/></code></pre><br/><br/><ul><br/><li>Follow <em>A List Apart</em>'s article: <a href="http://www.alistapart.com/articles/prettyaccessibleforms" rel="nofollow">Prettier Accessible Forms</a></li><br/></ul><br/><br/><h3>Applying a Style to the Currently Selected Label + Radio Button</h3><br/><br/><p>Styling the <code>&lt;label&gt;</code> is why you'll need to resort to Javascript. A library like <a href="http://jquery.com" rel="nofollow">jQuery</a><br/>is perfect for this:</p><br/><br/><pre><code>&lt;style type='text/css'&gt;<br/>    .input label.focused<br/>    {<br/>        background-color: #EEEEEE;<br/>        font-style: italic;<br/>    }<br/>&lt;/style&gt;<br/>&lt;script type='text/javascript' src='jquery.js'&gt;&lt;/script&gt;<br/>&lt;script type='text/javascript'&gt;<br/>    $(document).ready(function() {<br/>        $('.input :radio').focus(updateSelectedStyle);<br/>        $('.input :radio').blur(updateSelectedStyle);<br/>        $('.input :radio').change(updateSelectedStyle);<br/>    })<br/><br/>    function updateSelectedStyle() {<br/>        $('.input :radio').removeClass('focused').next().removeClass('focused');<br/>        $('.input :radio:checked').addClass('focused').next().addClass('focused');<br/>    }<br/>&lt;/script&gt;<br/></code></pre><br/><br/><p>The <code>focus</code> and <code>blur</code> hooks are needed to make this work in IE.</p><br/>]]>    </template>
+  </category>
+</aiml>

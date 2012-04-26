@@ -1,0 +1,16 @@
+GCC compiler warning: format â€˜%câ€™ expects argument of type â€˜char *â€™, but argument 2 has type â€˜int *â€™ [-Wformat]
+
+GCC compiler warning: format ‘%c’ expects argument of type ‘char *’, but argument 2 has type ‘int *’ [-Wformat]
+
+â€˜ = ' (open)
+â€™ = ' (close)
+
+â€œâ€¦ = "...
+
+â€¦ = ...
+
+â€“ = -
+â€” = -
+â€ = -
+
+update answer set body = REPLACE(body, '', '')

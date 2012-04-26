@@ -1,0 +1,257 @@
+<?xml version="1.0" ?>
+<aiml version="1.0">
+  <meta content="SimpleAIMLGenerator" name="author"/>
+  <meta content="en" name="language"/>
+  <category>
+    <pattern>
+      ADDRESS BAR URL IN AJAX APP TO MATCH CURRENT STATE
+    </pattern>
+    <template>
+<![CDATA[<p>The way to do this is to manipulate <code>location.hash</code> when AJAX updates result in a state change that you'd like to have a discreet URL.  For example, if your page's url is:</p><br/><br/><blockquote><br/>  <p><a href="http://example.com/" rel="nofollow">http://example.com/</a></p><br/></blockquote><br/><br/><p>If a client side function executed this code:</p><br/><br/><pre><code>// AJAX code to display the "foo" state goes here.<br/><br/>location.hash = 'foo';<br/></code></pre><br/><br/><p>Then, the URL displayed in the browser would be updated to:</p><br/><br/><blockquote><br/>  <p><a href="http://example.com/#foo" rel="nofollow">http://example.com/#foo</a></p><br/></blockquote><br/><br/><p>This allows users to bookmark the "foo" state of the page, and use the browser history to navigate between states.</p><br/><br/><p>With this mechanism in place, you'll then need to parse out the hash portion of the URL on the client side using JavaScript to create and display the appropriate initial state, as fragment identifiers (the part after the #) are not sent to the server.</p><br/><br/><p><a href="http://benalman.com/projects/jquery-hashchange-plugin/" rel="nofollow">Ben Alman's hashchange plugin</a> makes the latter a breeze if you're using jQuery.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      AJAX WEBCONTROL
+    </pattern>
+    <template>
+<![CDATA[<p>Check out the <a href="http://www.telerik.com/products/aspnet-ajax/controls/ajax/overview.aspx" rel="nofollow">RadAjax</a> control from Telerik - it allows you to avoid using UpdatePanels, and limit the amount of info passed back and forth between server and client by declaring direct relationships between calling controls, and controls that should be "Ajaxified" when the calling controls submit postbacks. </p>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      STATE USE ASP.NET AJAX ICALLBACKEVENTHANDL
+    </pattern>
+    <template>
+<![CDATA[<p>If you're already shuffling the ViewState around anyway, you might as well use an UpdatePanel.  Its partial postbacks <strong>will</strong> update the page's ViewState automatically.</p>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      PROGRESS ENHANC
+    </pattern>
+    <template>
+<![CDATA[<p>See also <a href="http://en.wikipedia.org/wiki/Unobtrusive_JavaScript" rel="nofollow">Unobtrusive Javascript</a> which is the bedrock progressive enhancement is built.</p>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      SP.NET AJAX PARTIAL RENDER WORK INSID A SHAREPOINT 2007 APPLIC PAGE
+    </pattern>
+    <template>
+<![CDATA[<p>You need to have Sharepoint 2007 service pack 1 -- or else there's no chance.<br/>(Sharepoint 2007 predates ajax 1.0 -- they built some support into service pack 1)</p><br/><br/><p>Next, from a trouble shooting point of view, test that the <strong>exact</strong> same code functions as expected when hosted in a regular asp.net page. (Literally copy and paste your code across into a fresh page, to rule out any typographical errors). Ruling sharepoint in or out of the problem area will help narrow down the solution space.</p>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      AJAX LIBRARI FOR SHAREPOINT
+    </pattern>
+    <template>
+<![CDATA[<p>If by WSS application you mean a SharePoint or MOSS site, there are no <strong>free</strong> full-featured AJAX libraries that are specifically designed for MOSS.</p><br/><br/><p>However, the most recent service pack for SharePoint 2007 included some updates to improve compatibility with the standard <a href="http://www.asp.net/ajax/" rel="nofollow">ASP.NET AJAX control suite</a>.</p><br/><br/><p>Telerik's <a href="http://www.telerik.com/products/aspnet-ajax/overview.aspx" rel="nofollow">RadControls</a> are far from free (1000USD per developer seat), but their RichText editor has a <a href="http://www.telerik.com/products/sharepoint/radeditor.aspx" rel="nofollow">MOSS-specific version</a>. Microsoft's official guidance for enterprise deployments is to use the Telerik RadEdit control instead of SharePoint's built-in rich text editor. I can say from experience that it is not bug-free, but if you just plan on using it out of the box, it is pretty slick.</p><br/><br/><p>As far as the rest of Telerik's AJAX controls, implementation inside of MOSS is difficult but possible.</p>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      IE6 + SSL + AJAX + POST FORM 404 ERROR
+    </pattern>
+    <template>
+<![CDATA[<p>First port of call would be to fire up <a href="http://www.fiddlertool.com/fiddler/" rel="nofollow">Fiddler</a> and analyze the data going to and from the browser.</p><br/><br/><p>Take a look at the headers, the url actually being called and the params (if any) being passed to the AJAX method and see if it all looks good before getting to the server.</p><br/><br/><p>If that all looks ok, is there any way you can verify it's actually hitting the server via logging, or tracing in the AJAX method?</p><br/><br/><p>ed: another thing I would try is rig up a test page to call the AJAX method on the server using a non-ajax based call and analyze the traffic in fiddler and compare the two.</p>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      GRAPH JAVASCRIPT LIBRARI
+    </pattern>
+    <template>
+<![CDATA[<p><a href="http://code.google.com/p/flot/" rel="nofollow">Flot</a> can create some really nice looking charts. It's a JavaScript library rather than a service like Google Charts. It does require jQuery though.</p>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      PROJECT SUGGEST
+    </pattern>
+    <template>
+<![CDATA[<p>I would suggest starting with a single Chat application. There would be some code to read new chat entries every few seconds and there would also be an input box which would automatically send data into the chat database.</p><br/><br/><p>You could start this as a very simple chat environment and then add more and more features like users, emotions, private messages etc.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      CE FACE FILEINPUT FILE PATH AND FILE NAME PROPERTI
+    </pattern>
+    <template>
+<![CDATA[<p>I believe that the real answer is that you can't.  The file path won't be sent by the browser for security reasons.  The file name will be sent, however I don't believe it gets sent without an actual upload.</p><br/><br/><p>The closest you could come, afaik, would be to forcibly kill the connection just when the upload starts.  That would net you the filename with little actual transferred data, but it doesn't sound like it would be useful to you.</p><br/><br/><p>Alternatively, a signed Java applet might get you closer to a solution that you'd want.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      AN ASP.NET WEB SITE OR APPLIC
+    </pattern>
+    <template>
+<![CDATA[<ol><br/><li><a href="http://weblogs.asp.net/scottgu/archive/2008/05/12/visual-studio-2008-and-net-framework-3-5-service-pack-1-beta.aspx" rel="nofollow">Script Combining in .net 3.5 SP1</a></li><br/><li><a href="http://developer.yahoo.com/performance/rules.html" rel="nofollow">Best Practices for fast websites</a></li><br/><li>HTTP Compression (gzip)</li><br/><li>Compress JS / CSS (different than http compression, minify javascript)<br/><ol><br/><li><a href="http://developer.yahoo.com/yui/compressor/" rel="nofollow">YUI Compressor</a></li><br/><li><a href="http://www.codeplex.com/YUICompressor" rel="nofollow">.NET YUI Compressor</a></li><br/></ol></li><br/></ol><br/><br/><p>My best advice is to check out the <a href="http://developer.yahoo.com/YUI" rel="nofollow">YUI content</a>. They have some great articles that talk about things like <a href="http://www.alistapart.com/articles/sprites/" rel="nofollow">CSS sprites</a> and have some <a href="http://developer.yahoo.com/yui/imageloader/" rel="nofollow">nice javascript libraries to help reduce the number of requests</a> the browser is making.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      OVERFLOW DIV WITH JAVASCRIPT
+    </pattern>
+    <template>
+<![CDATA[<p><code>scrollHeight</code> should be the total height of content. <code>scrollTop</code> specifies the pixel offset into that content to be displayed at the top of the element's client area.</p><br/><br/><p>So you really want (still using jQuery):</p><br/><br/><pre><code>$("#thediv").each( function() <br/>{<br/>   // certain browsers have a bug such that scrollHeight is too small<br/>   // when content does not fill the client area of the element<br/>   var scrollHeight = Math.max(this.scrollHeight, this.clientHeight);<br/>   this.scrollTop = scrollHeight - this.clientHeight;<br/>});<br/></code></pre><br/><br/><p>...which will set the scroll offset to the last <code>clientHeight</code> worth of content.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      DRAG DROP
+    </pattern>
+    <template>
+<![CDATA[<p>The Mootools sortables plugin does just that, and best of all, it's free ;)</p><br/><br/><p><a href="http://demos.mootools.net/Sortables" rel="nofollow">http://demos.mootools.net/Sortables</a></p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      ACCEPT CERTAIN AJAX REQUEST FROM AUTHENT USER
+    </pattern>
+    <template>
+<![CDATA[<p>You were correct in trying to use session variables.  Once your user authenticates, you should store that information in their session so that each subsequent page view will see that.  Make sure you are calling <code>session_start()</code> on both pages (blog.php and delete.php) before accessing $_SESSION.  Also make sure you have cookies enabled -- and if not, you should pass an additional parameter in the query string, usually PHPSESSID=&lt;<code>session_id()</code>>.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      MINIM JAVASCRIPT HTTP CALL FROM AJAXCONTROLTOOLKIT CONTROL
+    </pattern>
+    <template>
+<![CDATA[<p>I always preferred to write my Ajax calls in javascript using JQuery or Prototype. ASP.NET Ajax Toolkit does make things easier, but it never seems to do so elegantly.</p><br/><br/><p>I personally would make a new Calendar Controller. This way you can control the AJAX (using JQuery/Prototype) calls that are being made.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      REASON NOT TO USE JSONP FOR AJA X REQUEST
+    </pattern>
+    <template>
+<![CDATA[<p>Downside? It's fairly limited - you trigger a "GET" request and get back some script that's executed. You don't get error handling if your server throws an error, so you need to wrap all errors in JSON as well. You can't really cancel or retry the request. You're at the mercy of the various browser author opinions of "correct" behavior for dynamically-generated <code>&lt;script&gt;</code> tags. Debugging is somewhat more difficult. </p><br/><br/><p>That said, i've used it on occasion, and haven't suffered. YMMV.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      SOME WAY TO PUSH DATA FROM WEB SERVER TO BROWSER
+    </pattern>
+    <template>
+<![CDATA[<p>Yes, what you're looking for is COMET <a href="http://en.wikipedia.org/wiki/Comet_(programming)" rel="nofollow">http://en.wikipedia.org/wiki/Comet_(programming)</a>.  Other good Google terms to search for are AJAX-push and reverse-ajax.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      OB AIR HANDL JSON OBJECT FROM SERVER
+    </pattern>
+    <template>
+<![CDATA[<p>You can find a <a href="http://www.JSON.org/js.html" rel="nofollow">JSON parser written in JavaScript here</a> (<a href="http://www.JSON.org/json2.js" rel="nofollow">source code here</a>). You can also use the as3corelib JSON parser from JavaScript, there's <a href="http://help.adobe.com/en_US/AIR/1.1/devappshtml/WS5b3ccc516d4fbf351e63e3d118666ade46-7ed9.html" rel="nofollow">a description of how to access ActionScript libraries from JavaScript here</a>.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      HTTPREQUEST RETURN VALU
+    </pattern>
+    <template>
+<![CDATA[<p>If you're looking for a quick solution that should work with most available frameworks, I'd go for JSON. It's easy to start with and works.</p><br/><br/><p>If you're trying to build a larger application that you're going to extend (in terms of size or maybe your own API for 3rd party extensions) I'd go for XML. You could write a proxy to provide the information in JSON or HTML too, but having XML as the main source is definitly worth the time and effort while building the app.</p><br/><br/><p>Like <a href="http://stackoverflow.com/users/1450/john-topley" rel="nofollow">@John Topley</a> said: it depends.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      TEST AN AJAX TIMEOUT CONDIT
+    </pattern>
+    <template>
+<![CDATA[<p>First off, I think you need to be clearer in your question - what technology are you using and where is this process that is timing out - server-side or client-side?</p><br/><br/><p>If you want to have the server-side code take a long time and you are using .NET, place this line in the method you call server-side:</p><br/><br/><pre><code>System.Threading.Thread.Sleep(timeoutMilliseconds);<br/></code></pre><br/><br/><p>As long as you use a number sufficient so that your client-side code assumes the server has timed out, you should be good.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      ON AJAX DEVELOP ENVIRON FOR PHP
+    </pattern>
+    <template>
+<![CDATA[<p>As T.O. says, try Aptana. There's a very good free version, and they really push the AJAX. They even have Jaxer, an "AJAX Server" that they're working on. If nothing else, the plugins are great, and, other than a few quirks, I really like working in it.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      ENCOD IN .GETJSON JQUERI
+    </pattern>
+    <template>
+<![CDATA[<p>I think that you'll probably have to use <a href="http://docs.jquery.com/Ajax/jQuery.ajax#options" rel="nofollow"><code>$.ajax()</code></a> if you want to change the encoding, see the <code>contentType</code> param below (the <code>success</code> and <code>error</code> callbacks assume you have <code>&lt;div id="success"&gt;&lt;/div&gt;</code> and <code>&lt;div id="error"&gt;&lt;/div&gt;</code> in the html):</p><br/><br/><pre><code>$.ajax({<br/>    type: "POST",<br/>    url: "SomePage.aspx/GetSomeObjects",<br/>    contentType: "application/json; charset=utf-8",<br/>    dataType: "json",<br/>    data: "{id: '" + someId + "'}",<br/>    success: function(json) {<br/>        $("#success").html("json.length=" + json.length);<br/>        itemAddCallback(json);<br/>    },<br/>    error: function (xhr, textStatus, errorThrown) {<br/>        $("#error").html(xhr.responseText);<br/>    }<br/>});<br/></code></pre><br/><br/><p>I actually just had to do this about an hour ago, what a coincidence!</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      JAVASCRIPT CALLBACK WITHOUT FULL POSTBACK
+    </pattern>
+    <template>
+<![CDATA[<p>If you don't want to create a blank page, you could call a IHttpHandler (ashx) file:</p><br/><br/><pre><code>public class RSSHandler : IHttpHandler<br/>    {<br/>    	public void ProcessRequest (HttpContext context)<br/>    	{   <br/>    		context.Response.ContentType = "text/xml";<br/><br/>    		string sXml = BuildXMLString(); //not showing this function, <br/>    		//but it creates the XML string<br/>    		context.Response.Write( sXml );<br/>    	}<br/><br/>    	public bool IsReusable<br/>    	{<br/>    		get { return true; }<br/>    	}<br/><br/>    }<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      HANDL ERROR WHEN USE JQUERY.AJAX ( )
+    </pattern>
+    <template>
+<![CDATA[<blockquote><br/>  <p>Should I be throwing the errors in the<br/>  ashx, or should I be returning a<br/>  status code as part of the data<br/>  returned by the call to<br/>  userCreation.ashx, then using this to<br/>  decide what action to take? How do you<br/>  handle these situations?</p><br/></blockquote><br/><br/><p>Personally, if possible, I would prefer to handle this on the server side and work up a message to the user there. This works very well in a scenario where you only want to display a message to the user telling them what happened (validation message, essentially).</p><br/><br/><p>However, if you want to perform an action based on what happened on the server, you may want to use a status code and write some javascript to perform various actions based on that status code.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      RECEIV A Q NUM ERROR WHEN ABORT A JQUERI QUEUE PIPELIN
+    </pattern>
+    <template>
+<![CDATA[<p>It looks like you've got fewer items in q than you were expecting when you started iterating. Your script may be trying to access q[q.length], i.e. the element after the last element.</p><br/><br/><p>Could it be that your successful request has been popped from the queue, and you have a race condition? Are you trying to abort a request that has already completed its life cycle? Alternatively, have you made a silly mistake as people sometimes do, and got your loop termination condition wrong?</p><br/><br/><p>Just a few thoughts, I hope they help.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      RETURN A VARIABL FROM A .GETJSON FUNCTION
+    </pattern>
+    <template>
+<![CDATA[<p>Yeah, my previous answer does not work because I didn't pay any attention to your code. :)</p><br/><br/><p>The problem is that the anonymous function is a callback function - i.e. getJSON is an async operation that will return at some indeterminate point in time, so even if the scope of the variable were outside of that anonymous function (i.e. a closure), it would not have the value you would think it should:</p><br/><br/><pre><code>var studentId = null;<br/>j.getJSON(url, data, function(result)<br/>{<br/>    studentId = result.Something;<br/>});<br/><br/>// studentId is still null right here, because this line <br/>// executes before the line that sets its value to result.Something<br/></code></pre><br/><br/><p>Any code that you want to execute with the value of studentId set by the getJSON call needs to happen either <strong>within</strong> that callback function or <strong>after</strong> the callback executes.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      PASS SPECIAL CHAR WITH OBSERVE FIELD
+    </pattern>
+    <template>
+<![CDATA[<p>This is an escaping issue (as stated by others).</p><br/><br/><p>You'll want to change your observe_field :with statement to something like:</p><br/><br/><pre><code>  :with =&gt; "'postbody=' + encodeURIComponent(value)"<br/></code></pre><br/><br/><p>Then in your controller:</p><br/><br/><pre><code>def textile_to_html<br/>  text = URI.unescape(params['postbody'])<br/>  ...<br/></code></pre><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      AJAX FRAMEWORK
+    </pattern>
+    <template>
+<![CDATA[<p><a href="http://jquery.com/" rel="nofollow">jQuery</a> is, well, the shizznit, IMHO. After I bought "<a href="http://www.google.com/search?hl=en&amp;q=jQuery+in+Action&amp;btnG=Google+Search&amp;aq=f&amp;oq=" rel="nofollow">jQuery In Action</a>", I realized there was no going back. There are a ton of ASP.NET developers (including those behind this very site) out there who use it if you are trying to figure out how to get rocking &amp; rolling, right away.</p><br/><br/><p>I would check out the following blogs:</p><br/><br/><blockquote><br/>  <ol><br/>  <li><a href="http://west-wind.com/Weblog/" rel="nofollow">Rick Strahl's Web Log</a><br/>  <br></li><br/>  <li>The ever talented Scott Guthrie mentioned <a href="http://mattberseth.com/" rel="nofollow">Matt Berseth</a><br/>  <br></li><br/>  <li>And my personal favorite Dave Ward's blog <a href="http://encosia.com/" rel="nofollow">Encosia</a>. (I think <a href="http://stackoverflow.com/users/60/dave-ward" rel="nofollow">this is his StackOverflow profile</a>.)</li><br/>  </ol><br/></blockquote><br/><br/><p>However, of course there are plenty of other libraries out there. In the end I really like JS Libraries because it frequently comes down to code re-use. Don't roll the same JS functionality from scratch over-and-over. Also, most of these community previewed products have had a helluva lot more eyes on the code than anything you roll yourself (probably). </p><br/><br/><p>With all of that said, I also highly suggest checking out these frameworks:</p><br/><br/><blockquote><br/>  <ol><br/>  <li><a href="http://extjs.com/" rel="nofollow">Ext JS</a><br/>  <br></li><br/>  <li><a href="http://www.mochikit.com/" rel="nofollow">MochiKit</a><br/>  <br></li><br/>  <li>Also check out Omar Al Zabir's (founder of <a href="http://www.pageflakes.com/" rel="nofollow">PageFlakes.com</a>) <a href="http://www.codeproject.com/KB/ajax/MakingGoogleIG.aspx" rel="nofollow">CodeProject article</a> and <a href="http://rads.stackoverflow.com/amzn/click/0596510500" rel="nofollow">his book</a> for cool stuff you can do with the ASP.NET AJAX Framework.</li><br/>  </ol><br/></blockquote><br/><br/><p>I believe Ext JS comes out of the box with ColdFusion installations these days, but I have been happy with the few .NET projects I dropped it into as well.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      SVG
+    </pattern>
+    <template>
+<![CDATA[<p>Unfortunately, I don't have an answer, but I do have three pointers to projects that you could look at.</p><br/><br/><p>The first is the <a href="http://Research.Sun.Com/projects/lively/" rel="nofollow" title="Lively Kernel">Lively Kernel</a> by Dan Ingalls (yes, <em>the</em> Dan Ingalls) at Sun Labs. It is an implementation of a Smalltalk Virtual World in JavaScript on top of SVG. More precisely, it is an implementation of the Morphic GUI framework from Squeak Smalltalk in JavaScript using SVG and a port of (parts of) Squeak Smalltalk in JavaScript.</p><br/><br/><p>Or, if you're not a Smalltalker and the above doesn't make sense to you: it's an Operating System, written in JavaScript with the JavaScript interpreter as the CPU, SVG as the graphics card and the browser as the computer.</p><br/><br/><p>This is about as extreme as it gets, when it comes to JavaScript and SVG. And it only <em>fully</em> works in Safari 3 and partly in Firefox 3, although there is an experimental port to Internet Explorer as well.</p><br/><br/><p>The second project is John Resig's <a href="http://EJohn.Org/blog/processingjs/" rel="nofollow" title="Processing.js">Processing.js</a> port of the Processing visualization language to JavaScript. It uses the <code>&lt;canvas&gt;</code> element instead of SVG precisely because of the problems that you mentioned. This one however, only works in Firefox 3.</p><br/><br/><p>The third one is <a href="http://UselessPickles.Com/triangles/demo.html" rel="nofollow" title="Triangles in JavaScript">Real-Time 3D in JavaScript</a> by Useless Pickles. It uses <em>only</em> JavaScript, DOM and CSS and <em>no</em> SVG or <code>&lt;canvas&gt;</code> or Flash or whatever. <em>And</em> it is portable to almost any browser, including Internet Explorer 7 and up. Doing 2D should be even easier than this.</p><br/><br/><p>Between those three projects you should be able to find some inspiration and also to find some people who tried to push the envelope with JavaScript and SVG or JavaScript and Graphics and can tell you what works and what doesn't.</p><br/><br/><p>Conclusion: doing cross-browser SVG or cross-browser <code>&lt;canvas&gt;</code> is nigh impossible, but with a little bit of craziness, cross-browser graphics <em>without</em> SVG or <code>&lt;canvas&gt;</code> is possible.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      MORE IS NEED FOR AJAX THAN THI FUNCTION
+    </pattern>
+    <template>
+<![CDATA[<p>I strongly recommend you not roll your own Ajax code. Instead, use a framework such as Prototype, Dojo, or any of the others. They've taken care of handling all the ReadyStates you're not handling (2 means it's been sent, 3 means it's in process, etc.), and they should escape the reponse you're getting so you don't insert potentially insecure javascript or something into your page.</p><br/><br/><p>Another thing a more robust framework will give you is the ability to do more than just use innerHTML to replace items in the DOM. Your function here can only be used to replace one element with the response from the ajax call. There's a lot more you can do with Ajax.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      POLL
+    </pattern>
+    <template>
+<![CDATA[<p>You might also want to look into <a href="http://en.wikipedia.org/wiki/Comet_(programming)" rel="nofollow">Comet</a>.</p><br/><br/><p>It's used by GTalk, Meebo, and many <a href="http://ajaxian.com/archives/comet-a-new-approach-to-ajax-applications" rel="nofollow">other chat applications</a>. A few years ago when I was experimenting with it, there weren't very many libraries or details about server architecture to implement it, but it looks like there is a lot more stuff out now.</p><br/><br/><p>Have a look at the <a href="http://cometdproject.dojotoolkit.org/" rel="nofollow">cometd</a> project for more technical information.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      ADVIC FOR JQUERI AJAX DATA POST
+    </pattern>
+    <template>
+<![CDATA[<p>Any request that the AJAX calls in your pages can make can also be made by someone outside of the application.  If done right, you will not be able to tell if they were made as part of an AJAX call from your webapp or by hand/other means.</p><br/><br/><p>There are two scenarios I can think of which you might be talking about when you say you want to make sure that only your AJAX calls can post data: either you don't want a malicious user to be able to post data that interferes with another user's data or you actually want to restrict the posts to being in the "flow" of a multi-request operation.  </p><br/><br/><p>If you are concerned with the first case (someone posting malicious data to/as another user) the solution is the same whether you are using AJAX or not -- you just have to authenticate the user through whatever means is necessary -- usually via session cookie.</p><br/><br/><p>If you are concerned with the second case, then you are going to have to do something like issue a unique token at each step of the process, and store the expected token on the server side.  Then when a request is made, check that there is a corresponding entry on the server side for the action that is being taken and that the expected tokens match and that that token has not been used yet.  If there is no, you reject the request, if there is, then you mark that token as used and process the request.</p><br/><br/><p>If what you are concerned about is something other than one of these two scenarios then the answer will depend on more specifics than you have provided.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      YOU GOT A CASCADINGDROPDOWN WORK WITH ASP.NET MVC
+    </pattern>
+    <template>
+<![CDATA[<p>jQuery, action, return JSON.</p><br/><br/><p><a href="http://devlicio.us/blogs/mike_nichols/archive/2008/05/25/jquery-cascade-cascading-values-from-forms.aspx" rel="nofollow">http://devlicio.us/blogs/mike_nichols/archive/2008/05/25/jquery-cascade-cascading-values-from-forms.aspx</a></p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      DROPDOWN WITH LINKBUTTON OR AJAX GONE WILD
+    </pattern>
+    <template>
+<![CDATA[<p>This widget can be made with three items: a text input, button input, and an unordered list to hold the results.</p><br/><br/><pre><code> __________  _<br/>|__________||v|__             &lt;-- text and button<br/>  |              |            &lt;-- ul (styled to appear relative to text input)<br/>  |              |<br/>  |              |<br/>  |______________|<br/></code></pre><br/><br/><p>ul shown on:</p><br/><br/><ul><br/><li>'keyUp' event of the text input (if value is non-empty) </li><br/><li>'click' event of the button input (if currently not visible)</li><br/></ul><br/><br/><p>ul hidden on:</p><br/><br/><ul><br/><li>'click' event of the button input (if currently visible)</li><br/><li>'click' event of list items</li><br/></ul><br/><br/><p>When the ul is shown or the 'keyUp' event of the text input is triggered an AJAX call to the server needs to be made to update the list. </p><br/><br/><p>On success the results should be placed in the ul. When creating the list items they should have a 'click' event attached to them that sets the text input value and hides the ul (may have to add a link inside the li to attach the event to).</p><br/><br/><p>The hardest part is really the CSS. The JavaScript is simple especially with a solid library like prototype that supports multiple browsers. </p><br/><br/><p>You will probably want to support some IDs for the items, so you can add some hidden inputs to each list item with the id and next to the text input to store the selected items ID.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      AJAX PHP CONTACT FORM WITH VALID
+    </pattern>
+    <template>
+<![CDATA[<p><a href="http://www.dustindiaz.com/ajax-contact-form/" rel="nofollow">This one</a> is a few years old, but should work fine.</p><br/><br/><p>Personally, I'd recommend taking a look at the jQuery <a href="http://plugins.jquery.com/project/form" rel="nofollow">Form Plug-in</a>. It's not plug and play, but it's well tested and easy to build on top of.</p><br/>]]>    </template>
+  </category>
+  <category>
+    <pattern>
+      SOPHIST SHOULD MY AJAX CODE BE
+    </pattern>
+    <template>
+<![CDATA[<p>The code you posted is missing one important ingredient: the function stateChanged.</p><br/><br/><p>If you don't quite understand the code you posted yourself, then what happens is when the call to getchats.php is complete, a function "stateChanged" is called and that function will be responsible for handling the response. Since the script you're calling and the function itself is prefixed with "gets" then I'm pretty sure the response is something you're going to be interested in. </p><br/><br/><p>That aside, there are a number of ways to improve on the code you posted. I'd guess it works by declaring a single "xmlHttp" object and then making that available to every function (because if it doesn't, the stateChanged function has no way of getting the response). This is fine until you run an AJAX request before the last one (or last few) haven't replied yet, which in that case the object reference is overwritten to the latest request each time.</p><br/><br/><p>Also, any AJAX code worth its salt provides functionality for sucess and failure (server errors, page not found, etc.) cases so that the appriopiate message can be delivered to the user.</p><br/><br/><p>If you just want to use AJAX functionality on your website then I'd point you in the direction of <a href="http://www.jquery.com" rel="nofollow">jQuery</a> or a <a href="http://www.prototypejs.org" rel="nofollow">similar</a> <a href="http://www.mootools.net" rel="nofollow">framework</a>.</p><br/><br/><p>BUT if you actually want to understand the technology and what is happening behind the scenes, I'd continue doing what you're doing and asking specific questions as you try to build a small lightweight AJAX class on your own. This is how I done it, and although I use the jQuery framework today.. I'm still glad I know how it works behind the scenes.</p><br/>]]>    </template>
+  </category>
+</aiml>

@@ -12,40 +12,50 @@
     <p class="notice">{{ notice_message }}</p>
   {% endif %}
 
-  <form method="post" action="{% url chaqinterface.ask %}" class="well form-inline">
+  <form method="post" action="{% url chaqinterface.ask %}" class="well form-inline" autocomplete="off">
     {% csrf_token %}
-    <p>
-      <label for="topics">Topics:</label>
-      <a href="#" class="label label-info" title="Click to remove topic">PHP</a>
-      <a href="#" class="label label-info" title="Click to remove topic">Security</a>
-      <a href="#" class="label label-info" title="Click to remove topic">Database</a>
-      <button class="btn">+</button>
-    </p>
-    <p>
+    <!-- <p>
+      {% if topic %}
+      <label for="topics">Topic:</label>
+      <span style="text-transform: uppercase;" class="label label-info">{{ topic }}</span>
+      {% endif %}
+      {# <button class="btn">+</button> #}
+    </p> -->
+    <p style="margin: 0;>
       <label for="question">Ask: </label>
       <input type="text" name="question" id="question" placeholder="Ask your questions" required/>
       <input type="submit" name="ask-question" value="Go!" class="btn"/>
     </p>
+    <!--
+    <p style="margin: 0;">
+      Be polite! Ask "Can we talk about ..." before starting a conversation.
+    </p> -->
   </form>
 
   {% if conversation_log %}
-    <ul class="conversation">
+    <div class="conversation">
       {% for conversation in conversation_log %}
-        <li>
-          <span>{{ conversation.timestamp }}</span>
-          <br/>
-          {{ conversation.question }}
-          <br/>
-          {{ conversation.answer }}
-        </li>
+          <p class="question">
+            <strong>{{ conversation.question }}</strong>
+            <br/>
+            {{ conversation.timestamp }}
+          </p>
+          <div class="answer">
+            {% autoescape off %}
+              {{ conversation.answer|linebreaks }}
+            {% endautoescape %}
+        </div>
+        <hr/>
       {% endfor %}
-    </ul>
+    </div>
   {% else %}
     {% if conversation %}
-      <p>
-      Question: {{ conversation.question }}<br/>
-      Answer: {{ conversation.answer }}
-      </p>
+      <p><strong>{{ conversation.question }}</strong></p>
+      <div>
+        {% autoescape off %}
+        {{ conversation.answer }}
+        {% endautoescape %}
+      </div>
     {% endif %}
     <p class="alert alert-error">No logs available until you log in &hellip;</p>
   {% endif %}
