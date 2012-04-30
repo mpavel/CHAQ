@@ -355,8 +355,8 @@ class Kernel:
         if len(input) == 0:
             return ""
 
-        # if self._verboseMode:
-        #     print input
+        if self._verboseMode:
+            print input
 
         # guard against infinite recursion
         inputStack = self.getPredicate(self._inputStack, sessionID)

@@ -1,1 +1,6 @@
 corpora/text/*.txt
+PyAIML/stack-overflow/*
+PyAIML/session_data/*
+PyAIML/standard/*
+SOcrawler/log.txt
+weirdchars.txt

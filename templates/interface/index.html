@@ -14,6 +14,7 @@
 
   <form method="post" action="{% url chaqinterface.ask %}" class="well form-inline" autocomplete="off">
     {% csrf_token %}
+    <p>Ask about: .Net, Ajax, Android, Asp.Net, C, C#, C++, Css, Django, Git, HTML, Iphone, Java, Javascript, Jquery, JSON, Linux, MySql, Perl, PHP, Python, Ruby-on-Rails, SQL, Wordpress</p>
     <!-- <p>
       {% if topic %}
       <label for="topics">Topic:</label>
@@ -21,7 +22,7 @@
       {% endif %}
       {# <button class="btn">+</button> #}
     </p> -->
-    <p style="margin: 0;>
+    <p style="margin: 0;">
       <label for="question">Ask: </label>
       <input type="text" name="question" id="question" placeholder="Ask your questions" required/>
       <input type="submit" name="ask-question" value="Go!" class="btn"/>
@@ -57,7 +58,12 @@
         {% endautoescape %}
       </div>
     {% endif %}
-    <p class="alert alert-error">No logs available until you log in &hellip;</p>
+    {% if request.user.is_authenticated %}
+
+    {% else %}
+      <br/>
+      <p class="alert alert-error">No logs available until you log in &hellip;</p>
+    {% endif %}
   {% endif %}
 </div>
 

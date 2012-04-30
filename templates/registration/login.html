@@ -5,7 +5,7 @@
         <p class="error">Oops, invalid username or password</p>
     {% endif %}
 
-    <form action="{% url login %}?next=/" method="post">
+    <form action="{% url login %}?next=/chat/" method="post">
         {% csrf_token %}
         {{ form.as_p }}
         <input type="submit" value="Login" />

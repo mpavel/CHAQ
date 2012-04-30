@@ -70,8 +70,7 @@ def normalizeQuestion(qin, stem=True):
 
     question = question.upper()
 
-    # pat = "[A-Z0-9\+-.\\\]\[\?#\*\!]+"
-    pat = "[a-zA-Z0-9\.\+\(\)\# ]+"
+    pat = "[a-zA-Z0-9\.\+\(\)\#]+"
     prog = re.compile(pat)
     result = prog.findall(question)
     # tokens = nltk.word_tokenize(question)
@@ -101,8 +100,8 @@ def getQuestions():
         FROM question
         LEFT JOIN answer 
         ON question.id = answer.qid 
-        ORDER BY question.id ASC
-        LIMIT 0,2000
+        ORDER BY question.up_vote DESC
+        # LIMIT 0,150000
         """)
     except MySQLdb.Error, e:
         log("Error %d: %s" % (e.args[0], e.args[1]))
@@ -112,27 +111,35 @@ def getQuestions():
         if row == None:
             break
 
-        item = {
-            'questionID': row[0], 
-            'question': row[1].decode("utf-8"), 
-            'questionBody': strip(row[2]), 
-            'tags': row[3],
-            'answerID': row[4], 
-            'answer': row[5].decode("utf-8")
-        }
+        try:
+            item = {
+                'questionID': row[0], 
+                'question': row[1].decode("utf-8"), 
+                'questionBody': strip(row[2]), 
+                'tags': row[3],
+                'answerID': row[4], 
+                'answer': row[5].decode("utf-8")
+            }
 
-        item['question'] = normalizeQuestion(item['question'])
+        except AttributeError as e:
+            msg = "Error on ID " + str(row[0]) + " " + str(e) + "\n"
+            with open(sys.path[0] + "/missing_answers.log", "a") as logfile:
+                logfile.write(msg)
+        except:
+            print "Error on ID " + str(row[0]) + " " + str(sys.exc_info()[0])
+        else:
+            item['question'] = normalizeQuestion(item['question'])
 
-        if item['question'] is not None:
-            tags = set(eval(item['tags'].encode('utf-8')))
-            # intersect the row's tags with the tags from crawler, to only get the common used ones
-            tags_to_use = tag_list & tags
-            if len(tags_to_use) == 0:
-                tags_to_use = ['unknown']
+            if item['question'] is not None:
+                tags = set(eval(item['tags'].encode('utf-8')))
+                # intersect the row's tags with the tags from crawler, to only get the common used ones
+                tags_to_use = tag_list & tags
+                if len(tags_to_use) == 0:
+                    tags_to_use = ['unknown']
 
-            for tag in tags_to_use:
-                # And append that data in multiple files according to the tags associated
-                addAiml(item, tag)
+                for tag in tags_to_use:
+                    # And append that data in multiple files according to the tags associated
+                    addAiml(item, tag)
 
 def writeStemmedQuestions():
     global _db
@@ -257,16 +264,17 @@ def saveQuestionStarts(limit=50):
                 break
 
             questions.add(row[1])
-            print row[1]
         count += 1
 
     # remove old files
     try:
         os.remove(sys.path[0] + '/question_starts.sess')
+        print "Removed ./question_starts.sess"
     except OSError, e:
         print e
     try:
         os.remove(sys.path[0] + '/aiml/so-srai.aiml')
+        print "Removed ./aiml/so-srai.aiml"
     except OSError, e:
         print e
     # save questions starts in file (marshal dump)
@@ -275,6 +283,7 @@ def saveQuestionStarts(limit=50):
     qs = file(filename, "wb")
     marshal.dump(questions, qs)
     qs.close()
+    print "Generated new file ./question_starts.sess"
 
     # Generate srai AIML file
     saveAimlQuestionStart(questions)
@@ -320,6 +329,7 @@ def saveAimlQuestionStart(questions):
     f = open(filename, 'a+')
     f.write(doc.toprettyxml("  "))
     f.close()
+    print "Generated new file ./aiml/so-srai.aiml"
 
 def addAiml(item, tag):
     """
@@ -376,6 +386,8 @@ def addAiml(item, tag):
     question = split_start(item['question'])
     question = question.encode('utf-8')
     answer = item['answer']
+    answer = answer.replace("<![CDATA[", "")
+    answer = answer.replace("]]>", "")
     answer = answer.replace("\n", "<br/>")
     answer = answer.encode('utf-8')
     doc = docs[tag]
@@ -406,13 +418,13 @@ def split_start(question):
 
     for start in starts:
         l = len(start)
-        if start[:l] == question[:l]:
+        if start[:l] == question[:l] and len(question) > l:
             if question[l] == ' ':
                 return question[l+1:]
             else:
                 return question[l:]
     return question
-# HOW TO GRAB THE CONTENT OF HTML TAG
+
 def main():
 
     global tag_list, docs

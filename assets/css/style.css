@@ -16,10 +16,12 @@
     line-height: 70px;
     word-wrap: break-word;
     margin-left: 0;
+    min-width: 155px;
 }
 @media (max-width: 979px) {
     #header h1 {
         font-size: 40px;
+        min-width: 0;
     }
     #header hgroup h2 {
         font-size: 12px;

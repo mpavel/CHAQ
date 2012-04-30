@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-import urllib2, os, marshal, re, nltk, aiml
+import urllib2, os, marshal, re, sys, nltk, aiml
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 
 k = None
@@ -10,29 +10,32 @@ class PyAIMLHandler(BaseHTTPRequestHandler):
 
     global k
 
+    def log(self, string):
+        string = str(string) + "\n"
+        with open(sys.path[0] + "/log.txt", "a") as logfile:
+            logfile.write(string)
+
     def do_GET(self):
+        self.log(self.path)
         try:
             if self.path.startswith('/ask/'):
                 querystring = self.path[5:]
                 params = dict([part.split('=') for part in querystring.split('&')])
-                print params
                 session_username = params['?u'].encode('utf-8')
                 question = urllib2.unquote(params['q'])
                 question = self.normalizeQuestion(question)
-                print question
 
-                # load session data if it exists for username, 
-                if not os.path.isfile("./session_data/" + session_username + ".ses"):
-                    session_username = 'username'
                 try:
-                    sessionFile = file("./session_data/" + session_username + ".ses", "rb")
-                    session = marshal.load(sessionFile)
-                    sessionFile.close()
-            
-                    for pred,value in session.items():
-                        k.setPredicate(pred, value, session_username)
+                    # load session data if it exists for username, 
+                    if os.path.isfile("/session_data/" + session_username + ".ses"):
+                        sessionFile = file("./session_data/" + session_username + ".ses", "rb")
+                        session = marshal.load(sessionFile)
+                        sessionFile.close()
+                
+                        for pred,value in session.items():
+                            k.setPredicate(pred, value, session_username)
 
-                    debug_session_file(session, ['topic', 'it'])
+                    # debug_session_file(session, ['topic', 'it'])
 
                     # send the question to pyaiml and fetch the response
                     answer = k.respond(question, session_username)
@@ -42,8 +45,7 @@ class PyAIMLHandler(BaseHTTPRequestHandler):
                     answer = answer.replace("><br/>", ">")
 
                     if len(answer) == 0:
-                        answer = "I don't seem to have an answer for that. Maybe you can try rephrasing?"
-                    print answer
+                        answer = "<p>I don't seem to have an answer for that. Maybe you can try rephrasing?</p>"
                 
                     # save session data to disk for username
                     session = k.getSessionData(session_username)
@@ -51,11 +53,11 @@ class PyAIMLHandler(BaseHTTPRequestHandler):
                     marshal.dump(session, sessionFile)
                     sessionFile.close()
 
-                    debug_session_file(session, ['topic', 'it'])
+                    # debug_session_file(session, ['topic', 'it'])
 
                     response = answer
                 except:
-                    answer = "Something went wrong and I could not answer that. Can you please try asking again?"
+                    response = "<p>Something went wrong and I could not answer that. Can you please try asking again?</p>"
 
                 self.send_response(200)
                 self.send_header('Content-type', 'text/html')
@@ -79,7 +81,7 @@ class PyAIMLHandler(BaseHTTPRequestHandler):
         question = question.upper()
 
         # pat = "[A-Z0-9\+-.\\\]\[\?#\*\!]+"
-        pat = "[a-zA-Z0-9\.\+\(\)\# ]+"
+        pat = "[a-zA-Z0-9\.\+\(\)\#]+"
         prog = re.compile(pat)
         result = prog.findall(question)
         if len(result) > 1:
@@ -95,8 +97,28 @@ def main():
 
     # Enabling Verbose mode, to help track down problems
     k.verbose(True)
-    # Set the bot's name
-    k.setBotPredicate("name","Chaq")
+    # Set the bot's predicates
+    botPredicates = {
+        "name" : "Chaq",
+        "location" : "Dundee",
+        "master" : "Pavel",
+        "gender" : "male",
+        "favoritefood" : "strings",
+        "birthday" : "26 April 2012",
+        "favoriteband" : "my own band",
+        "favoritecolor" : "binary",
+        "sign" : "",
+        "wear" : "CSS decorators",
+        "friends" : "my master and you",
+        "girlfriend" : "ALICE",
+        "looklike" : "Chuck Norris",
+        "talkabout" : "solving real problems",
+        "kindmusic" : "Rock",
+        "birthplace" : "Pavel's computer",
+        "favoritebook" : "Natural Language Processing with Python by Steven Bird et al"
+    }
+    for predicate in botPredicates:
+        k.setBotPredicate(predicate, botPredicates[predicate])
 
     brainLoaded = False
     forceReload = False

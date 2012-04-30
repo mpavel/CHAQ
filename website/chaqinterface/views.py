@@ -42,11 +42,26 @@ def logs(request):
 
         conversation_log = p.page(currentPage).object_list
 
+        # Do page filtering if there are more than 15 pages
+        total_pages = len(p.page_range)
+        left_limit = 7
+        right_limit = 7
+        page_range = set(p.page_range)
+        print page_range
+        if total_pages >= 15:
+            to_remove = set([i for i in range(left_limit, total_pages-right_limit)])
+            page_range = page_range - to_remove
+            print page_range
+            page_range.add(currentPage)
+        page_range = list(page_range)
+        page_range.sort()
+        print page_range
+
         return render_to_response(
             'interface/log.html',
             {
                 'conversation_log': conversation_log,
-                'pages': p.page_range,
+                'pages': page_range,
                 'currentPage': currentPage,
                 'page': p.page(currentPage)
             },
@@ -73,10 +88,13 @@ def ask(request):
         status = 'ERROR'
 
     # Get answer from PyAIMLServer running on localhost:2465
-    conn_string = "http://localhost:2465/ask/?u=" + urllib2.quote(session_username) + "&q=" + urllib2.quote(question)
-    print conn_string
-    conn = urllib2.urlopen(conn_string)
-    answer = conn.read()
+    try:
+        conn_string = "http://localhost:2465/ask/?u=" + urllib2.quote(session_username) + "&q=" + urllib2.quote(question)
+        print conn_string
+        conn = urllib2.urlopen(conn_string)
+        answer = conn.read()
+    except:
+        answer = "<p>Error retrieving answer ... Please try again.</p>"
 
     conversation_log = None
     # insert question/answer into user's logs
@@ -108,18 +126,6 @@ def ask(request):
         }, 
         context_instance=RequestContext(request)
     )
-
-def debug_session_file(data, params=[]):
-    ret = {}
-    if len(params) == 0:
-        for pred,value in data.items():
-            print str(pred) + ": " + str(value)
-            ret[pred] = value
-    else:
-        for param in params:
-            print param + ' : ' + data[param]
-            ret[param] = data[param]
-    return ret
 
 def register(request):
     if request.method == 'POST':

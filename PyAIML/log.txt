@@ -1,0 +1,381 @@
+pavel@edge:~/www/Chaq/PyAIML$ ./PyAIMLServer.py 
+Loading brain from ./standard.brn... done (359405 categories in 17.42 seconds)
+Kernel bootstrap completed in 17.42 seconds
+Existing brain loaded
+Started PyAIML Server on port 2465 ...
+localhost - - [27/Apr/2012 20:02:25] "GET /ask/?u=anonymous&q=Hello HTTP/1.1" 200 -
+HOW ARE YOU
+localhost - - [27/Apr/2012 20:02:42] "GET /ask/?u=anonymous&q=How%20are%20you%3F HTTP/1.1" 200 -
+HOW TO SETUP WORDPRESS ON WINDOW
+ WORDPRESS ON WINDOW 
+ ON WINDOW 
+localhost - - [27/Apr/2012 20:02:52] "GET /ask/?u=anonymous&q=How%20to%20setup%20wordpress%20on%20windows%3F HTTP/1.1" 200 -
+WORDPRESS ON WINDOW
+ ON WINDOW 
+localhost - - [27/Apr/2012 20:04:08] "GET /ask/?u=anonymous&q=Wordpress%20on%20windows HTTP/1.1" 200 -
+localhost - - [27/Apr/2012 20:07:08] "GET /ask/?u=anonymous&q= HTTP/1.1" 200 -
+HOW ARE YOU
+localhost - - [27/Apr/2012 20:51:24] "GET /ask/?u=anonymous&q=how%20are%20you%3F HTTP/1.1" 200 -
+I M WELL THANK YOU
+I M WELL
+ WELL 
+localhost - - [27/Apr/2012 20:51:35] "GET /ask/?u=anonymous&q=I%27m%20well%20thank%20you HTTP/1.1" 200 -
+HOW S THE WEATHER TODAY
+FIND S THE WEATHER TODAY
+ S THE WEATHER TODAY 
+IT IS THE WEATHER TODAY
+localhost - - [27/Apr/2012 20:51:47] "GET /ask/?u=anonymous&q=how%27s%20the%20weather%20today%3F HTTP/1.1" 200 -
+localhost - - [27/Apr/2012 20:54:02] "GET /ask/?u=anonymous&q=Ajax HTTP/1.1" 200 -
+HOW DO YOU USE AJAX
+localhost - - [27/Apr/2012 20:54:13] "GET /ask/?u=anonymous&q=How%20do%20you%20use%20Ajax HTTP/1.1" 200 -
+YOUR A DICK
+YOU ARE A DICK
+ARE YOU A DICK
+localhost - - [27/Apr/2012 20:54:22] "GET /ask/?u=anonymous&q=Your%20a%20dick HTTP/1.1" 200 -
+YOU RE FUNNI
+localhost - - [27/Apr/2012 20:54:39] "GET /ask/?u=anonymous&q=You%27re%20funny HTTP/1.1" 200 -
+WHAT IS JAVASCRIPT
+localhost - - [27/Apr/2012 20:54:44] "GET /ask/?u=anonymous&q=what%20is%20javascript HTTP/1.1" 200 -
+localhost - - [27/Apr/2012 20:54:48] "GET /ask/?u=anonymous&q=hehe HTTP/1.1" 200 -
+WHAT ARE THE BENEFIT OF USE PHP VS
+ BENEFIT OF USE PHP VS 
+WARNING: No match found for input:  BENEFIT OF USE PHP VS 
+NET
+WARNING: No match found for input: NET
+localhost - - [27/Apr/2012 20:55:07] "GET /ask/?u=anonymous&q=what%20are%20the%20benefits%20of%20using%20PHP%20vs%20.Net HTTP/1.1" 200 -
+WHAT IS THE LANGUAG OF THE GOD
+ LANGUAG OF THE GOD 
+WARNING: No match found for input:  LANGUAG OF THE GOD 
+localhost - - [27/Apr/2012 20:55:29] "GET /ask/?u=anonymous&q=what%20is%20the%20language%20of%20the%20Gods%3F HTTP/1.1" 200 -
+HOW DO I CLEAR A FLOAT
+localhost - - [27/Apr/2012 20:56:09] "GET /ask/?u=anonymous&q=How%20do%20I%20clear%20a%20float HTTP/1.1" 200 -
+HOW DO I CLEAR A FLOAT
+localhost - - [27/Apr/2012 20:56:24] "GET /ask/?u=anonymous&q=How%20do%20I%20clear%20a%20float%3F HTTP/1.1" 200 -
+WHAT DOE
+FIND DOE
+ DOE 
+WARNING: No match found for input:  DOE 
+DO IN PERL
+localhost - - [27/Apr/2012 20:56:27] "GET /ask/?u=anonymous&q=what%20does%20%24.%20do%20in%20perl HTTP/1.1" 200 -
+localhost - - [27/Apr/2012 20:56:55] "GET /ask/?u=anonymous&q=json HTTP/1.1" 200 -
+WHAT DOE MEAN IN PERL
+ IN PERL 
+localhost - - [27/Apr/2012 20:57:00] "GET /ask/?u=anonymous&q=what%20does%20%24/%20mean%20in%20perl HTTP/1.1" 200 -
+HOW DID PERL REGEX CHANG IN 5
+14
+WARNING: No match found for input: 14
+localhost - - [27/Apr/2012 20:57:41] "GET /ask/?u=anonymous&q=how%20did%20perl%20regexes%20change%20in%205.14 HTTP/1.1" 200 -
+WHICH IS BETTER PROTOTYP JS OR JQUERI
+localhost - - [27/Apr/2012 20:58:06] "GET /ask/?u=anonymous&q=which%20is%20better%2C%20prototype%20JS%20or%20jquery HTTP/1.1" 200 -
+localhost - - [27/Apr/2012 20:58:16] "GET /ask/?u=anonymous&q=php HTTP/1.1" 200 -
+HOW MANI WAY DOE WORDPRESS SUCK
+ WAY DOE WORDPRESS SUCK 
+ DOE WORDPRESS SUCK 
+ WORDPRESS SUCK 
+ SUCK 
+localhost - - [27/Apr/2012 20:58:24] "GET /ask/?u=anonymous&q=how%20many%20ways%20does%20wordpress%20suck HTTP/1.1" 200 -
+localhost - - [27/Apr/2012 20:58:29] "GET /ask/?u=anonymous&q=what%3F HTTP/1.1" 200 -
+HOW DO YOU SECUR WORDPRESS
+localhost - - [27/Apr/2012 20:58:44] "GET /ask/?u=anonymous&q=how%20do%20you%20secure%20wordpress%3F HTTP/1.1" 200 -
+ARE THERE MANI JOB IN C #
+localhost - - [27/Apr/2012 20:59:04] "GET /ask/?u=anonymous&q=are%20there%20many%20jobs%20in%20c%23 HTTP/1.1" 200 -
+IPHON OR ANDROID
+ OR ANDROID 
+localhost - - [27/Apr/2012 20:59:13] "GET /ask/?u=anonymous&q=iphone%20or%20android HTTP/1.1" 200 -
+HOW DO YOU SECUR WORDPRESS
+localhost - - [27/Apr/2012 21:00:43] "GET /ask/?u=anonymous&q=how%20do%20you%20secure%20wordpress%3F HTTP/1.1" 200 -
+HOW MANI WAY DOE WORDPRESS SUCK
+ WAY DOE WORDPRESS SUCK 
+ DOE WORDPRESS SUCK 
+ WORDPRESS SUCK 
+ SUCK 
+localhost - - [27/Apr/2012 21:01:05] "GET /ask/?u=anonymous&q=how%20many%20ways%20does%20wordpress%20suck%3F HTTP/1.1" 200 -
+GIT OR SUBVERS
+ OR SUBVERS 
+WARNING: No match found for input:  OR SUBVERS 
+localhost - - [27/Apr/2012 21:02:32] "GET /ask/?u=anonymous&q=git%20or%20subversion HTTP/1.1" 200 -
+DECOD A URL WITH JAVASCRIPT
+ A URL WITH JAVASCRIPT 
+localhost - - [27/Apr/2012 21:02:50] "GET /ask/?u=anonymous&q=decode%20a%20url%20with%20javascript HTTP/1.1" 200 -
+EDIT GIT COMMIT LOG
+ GIT COMMIT LOG 
+ LOG 
+localhost - - [27/Apr/2012 21:03:31] "GET /ask/?u=anonymous&q=edit%20git%20commit%20log HTTP/1.1" 200 -
+HOW OLD IS ANDROID
+localhost - - [27/Apr/2012 21:04:08] "GET /ask/?u=anonymous&q=How%20old%20is%20Android HTTP/1.1" 200 -
+WHEN DID THE IPHON LAUNCH
+localhost - - [27/Apr/2012 21:04:20] "GET /ask/?u=anonymous&q=when%20did%20the%20iphone%20launch HTTP/1.1" 200 -
+BEST RESOURC TO LEARN JAVASCRIPT
+ RESOURC TO LEARN JAVASCRIPT 
+localhost - - [27/Apr/2012 21:04:21] "GET /ask/?u=anonymous&q=best%20resources%20to%20learn%20javascript HTTP/1.1" 200 -
+IS WORDPRESS TASTI
+ WORDPRESS TASTI 
+ TASTI 
+WARNING: No match found for input:  TASTI 
+localhost - - [27/Apr/2012 21:04:32] "GET /ask/?u=anonymous&q=is%20wordpress%20tasty HTTP/1.1" 200 -
+localhost - - [27/Apr/2012 21:07:34] "GET /ask/?u=anonymous&q=Sd HTTP/1.1" 200 -
+WHAT DOE HTML STAND FOR
+ HTML STAND FOR 
+ STAND FOR 
+localhost - - [27/Apr/2012 21:07:55] "GET /ask/?u=anonymous&q=What%20does%20HTML%20stand%20for%3F HTTP/1.1" 200 -
+SQL SELECT
+localhost - - [27/Apr/2012 21:11:42] "GET /ask/?u=anonymous&q=sql%20select HTTP/1.1" 200 -
+WHAT THE HELL IST THI
+localhost - - [27/Apr/2012 21:15:49] "GET /ask/?u=anonymous&q=What%20the%20hell%20ist%20this%3F HTTP/1.1" 200 -
+WHAT IS PHP
+ PHP 
+localhost - - [27/Apr/2012 21:16:04] "GET /ask/?u=anonymous&q=What%20is%20php HTTP/1.1" 200 -
+HOW DO I CREAT A SHOP BASKET USE PHP
+ SHOP BASKET USE PHP 
+WARNING: No match found for input:  SHOP BASKET USE PHP 
+localhost - - [27/Apr/2012 21:17:37] "GET /ask/?u=anonymous&q=how%20do%20i%20create%20a%20shopping%20basket%20using%20php%3F HTTP/1.1" 200 -
+PHP SHOP CART
+ SHOP CART 
+localhost - - [27/Apr/2012 21:17:47] "GET /ask/?u=anonymous&q=php%20shopping%20cart HTTP/1.1" 200 -
+ADD TO CART PHP
+localhost - - [27/Apr/2012 21:18:19] "GET /ask/?u=anonymous&q=add%20to%20cart%20php HTTP/1.1" 200 -
+CART PHP
+WARNING: No match found for input: CART PHP
+localhost - - [27/Apr/2012 21:18:24] "GET /ask/?u=anonymous&q=cart%20php HTTP/1.1" 200 -
+PHP SQ SHOP CART
+ SQ SHOP CART 
+WARNING: No match found for input:  SQ SHOP CART 
+localhost - - [27/Apr/2012 21:18:36] "GET /ask/?u=anonymous&q=php%20sq%3B%20shopping%20cart HTTP/1.1" 200 -
+PHP SQL SHOP BASKET
+ SQL SHOP BASKET 
+ SHOP BASKET 
+WARNING: No match found for input:  SHOP BASKET 
+localhost - - [27/Apr/2012 21:18:45] "GET /ask/?u=anonymous&q=php%20sql%20shopping%20basket HTTP/1.1" 200 -
+SQL SHOP CART
+ SHOP CART 
+localhost - - [27/Apr/2012 21:18:53] "GET /ask/?u=anonymous&q=sql%20shopping%20cart HTTP/1.1" 200 -
+CONNECT TO MYSQL
+localhost - - [27/Apr/2012 21:24:06] "GET /ask/?u=anonymous&q=Connecting%20to%20mysql HTTP/1.1" 200 -
+HOW TO CONNECT TO MYSQL
+ TO MYSQL 
+I WANT TO MYSQL
+localhost - - [27/Apr/2012 21:30:57] "GET /ask/?u=anonymous&q=how%20to%20connect%20to%20mysql%3F HTTP/1.1" 200 -
+CONNECT TO MYSQL
+localhost - - [27/Apr/2012 21:31:02] "GET /ask/?u=anonymous&q=connect%20to%20mysql HTTP/1.1" 200 -
+I WANT TO CONNECT TO MYSQL
+localhost - - [27/Apr/2012 21:31:23] "GET /ask/?u=anonymous&q=i%20want%20to%20connect%20to%20mysql HTTP/1.1" 200 -
+localhost - - [27/Apr/2012 21:32:06] "GET /ask/?u=anonymous&q=c HTTP/1.1" 200 -
+localhost - - [27/Apr/2012 21:32:11] "GET /ask/?u=anonymous&q=C HTTP/1.1" 200 -
+localhost - - [27/Apr/2012 21:32:20] "GET /ask/?u=anonymous&q=.Net HTTP/1.1" 200 -
+localhost - - [27/Apr/2012 21:32:26] "GET /ask/?u=anonymous&q=net HTTP/1.1" 200 -
+localhost - - [27/Apr/2012 21:32:31] "GET /ask/?u=anonymous&q=HTML HTTP/1.1" 200 -
+localhost - - [27/Apr/2012 21:32:38] "GET /ask/?u=anonymous&q=htmk HTTP/1.1" 200 -
+localhost - - [27/Apr/2012 21:32:41] "GET /ask/?u=anonymous&q=html HTTP/1.1" 200 -
+localhost - - [27/Apr/2012 21:33:26] "GET /ask/?u=anonymous&q=hello HTTP/1.1" 200 -
+localhost - - [27/Apr/2012 21:33:32] "GET /ask/?u=anonymous&q=hi HTTP/1.1" 200 -
+WHAT ARE COMMON PROGRAM MISTAK FOR PHP DEVELOP TO AVOID
+FIND COMMON PROGRAM MISTAK FOR PHP DEVELOP TO AVOID
+ COMMON PROGRAM MISTAK FOR PHP DEVELOP TO AVOID 
+ PROGRAM MISTAK FOR PHP DEVELOP TO AVOID 
+localhost - - [27/Apr/2012 21:33:53] "GET /ask/?u=anonymous&q=What%20are%20common%20programming%20mistakes%20for%20PHP%20developers%20to%20avoid%3F HTTP/1.1" 200 -
+localhost - - [27/Apr/2012 21:37:18] "GET /ask/?u=anonymous&q=hi HTTP/1.1" 200 -
+PHP IMAG GALLERI FROM MYSQL DATABAS
+ IMAG GALLERI FROM MYSQL DATABAS 
+ GALLERI FROM MYSQL DATABAS 
+WARNING: No match found for input:  GALLERI FROM MYSQL DATABAS 
+localhost - - [27/Apr/2012 21:52:05] "GET /ask/?u=anonymous&q=php%20image%20gallery%20from%20MySQL%20database HTTP/1.1" 200 -
+HOW DO YOU DO A LOOP IN C #
+localhost - - [27/Apr/2012 21:55:55] "GET /ask/?u=anonymous&q=how%20do%20you%20do%20a%20loop%20in%20c%23 HTTP/1.1" 200 -
+WHAT IS PHP
+ PHP 
+localhost - - [27/Apr/2012 21:56:11] "GET /ask/?u=anonymous&q=what%20is%20php HTTP/1.1" 200 -
+localhost - - [27/Apr/2012 21:56:29] "GET /ask/?u=anonymous&q=git HTTP/1.1" 200 -
+WHAT IS GIT
+ GIT 
+localhost - - [27/Apr/2012 21:56:39] "GET /ask/?u=anonymous&q=what%20is%20git HTTP/1.1" 200 -
+HOW DOE AJAX WORK
+ AJAX WORK 
+ WORK 
+localhost - - [27/Apr/2012 21:57:00] "GET /ask/?u=anonymous&q=how%20does%20ajax%20work HTTP/1.1" 200 -
+HOW DO I USE SQL
+localhost - - [27/Apr/2012 21:58:16] "GET /ask/?u=anonymous&q=How%20do%20I%20use%20SQL HTTP/1.1" 200 -
+HOW DO I USE SQL WITH
+NET
+WARNING: No match found for input: NET
+localhost - - [27/Apr/2012 21:58:29] "GET /ask/?u=anonymous&q=How%20do%20i%20use%20sql%20with%20.net HTTP/1.1" 200 -
+WHI SHOULD I USE WORDPRESS
+ USE WORDPRESS 
+ WORDPRESS 
+localhost - - [27/Apr/2012 21:58:43] "GET /ask/?u=anonymous&q=Why%20should%20I%20use%20wordpress HTTP/1.1" 200 -
+localhost - - [27/Apr/2012 21:58:46] "GET /ask/?u=andyklyon&q=regex HTTP/1.1" 200 -
+WHAT IS REGEX
+ REGEX 
+localhost - - [27/Apr/2012 21:59:05] "GET /ask/?u=andyklyon&q=what%20is%20regex%3F HTTP/1.1" 200 -
+WHAT THE FUCK
+localhost - - [27/Apr/2012 21:59:33] "GET /ask/?u=anonymous&q=WHAT%20THE%20FUCK HTTP/1.1" 200 -
+FUCK OFF
+localhost - - [27/Apr/2012 21:59:41] "GET /ask/?u=anonymous&q=fuck%20off HTTP/1.1" 200 -
+FUCK YOU
+localhost - - [27/Apr/2012 21:59:45] "GET /ask/?u=anonymous&q=fuck%20you HTTP/1.1" 200 -
+localhost - - [27/Apr/2012 21:59:50] "GET /ask/?u=anonymous&q=shit HTTP/1.1" 200 -
+HOW DO I DO A LEFT JOIN
+ A LEFT JOIN 
+localhost - - [27/Apr/2012 21:59:50] "GET /ask/?u=andyklyon&q=how%20do%20i%20do%20a%20left%20join%3F HTTP/1.1" 200 -
+WHO IS PAVEL
+FIND PAVEL
+ PAVEL 
+localhost - - [27/Apr/2012 22:00:01] "GET /ask/?u=anonymous&q=who%20is%20pavel HTTP/1.1" 200 -
+^CShutting down PyAIML Server ...
+^[[Apavel@edge:~/www/Chaq/PyAIML$ ./PyAIMLServer.py 
+Loading brain from ./standard.brn... done (359405 categories in 23.40 seconds)
+Kernel bootstrap completed in 23.40 seconds
+Existing brain loaded
+Started PyAIML Server on port 2465 ...
+localhost - - [27/Apr/2012 22:01:16] "GET /ask/?u=anonymous&q=hi HTTP/1.1" 200 -
+localhost - - [27/Apr/2012 22:01:19] "GET /ask/?u=anonymous&q=hello HTTP/1.1" 200 -
+WHAT TIME IS IT
+localhost - - [27/Apr/2012 22:01:22] "GET /ask/?u=anonymous&q=what%20time%20is%20it%3F HTTP/1.1" 200 -
+HOW DO I USE GIT
+localhost - - [27/Apr/2012 22:01:32] "GET /ask/?u=andyklyon&q=how%20do%20i%20use%20git%3F HTTP/1.1" 200 -
+WHAT IS THE DIFFER BETWEEN JQUERI AND JAVASCRIPT
+ JQUERI AND JAVASCRIPT 
+localhost - - [27/Apr/2012 22:01:37] "GET /ask/?u=anonymous&q=what%20is%20the%20difference%20between%20jquery%20and%20javascript HTTP/1.1" 200 -
+WHAT IS DJANGO
+ DJANGO 
+localhost - - [27/Apr/2012 22:01:58] "GET /ask/?u=anonymous&q=what%20is%20Django HTTP/1.1" 200 -
+SHOULD I READ THE INSTRUCT
+localhost - - [27/Apr/2012 22:02:28] "GET /ask/?u=andyklyon&q=should%20i%20read%20the%20instructions%3F HTTP/1.1" 200 -
+WHERE CAN I FIND THE GIT INSTRUCT
+ THE GIT INSTRUCT 
+localhost - - [27/Apr/2012 22:03:17] "GET /ask/?u=andyklyon&q=where%20can%20i%20find%20the%20git%20instructions%3F HTTP/1.1" 200 -
+THE GIT DOCUMENT
+localhost - - [27/Apr/2012 22:03:41] "GET /ask/?u=andyklyon&q=the%20git%20documentation HTTP/1.1" 200 -
+WHERE CAN I FIND THE GIT DOCUMENT
+ THE GIT DOCUMENT 
+localhost - - [27/Apr/2012 22:04:05] "GET /ask/?u=andyklyon&q=where%20can%20i%20find%20the%20git%20documentation%3F HTTP/1.1" 200 -
+
+
+/ask/?u=anonymous&q=what%20time%20is%20it%3F
+/ask/?u=andyklyon&q=how%20do%20i%20use%20git%3F
+/ask/?u=anonymous&q=what%20is%20the%20difference%20between%20jquery%20and%20javascript
+/ask/?u=anonymous&q=what%20is%20Django
+/ask/?u=andyklyon&q=should%20i%20read%20the%20instructions%3F
+/ask/?u=andyklyon&q=where%20can%20i%20find%20the%20git%20instructions%3F
+/ask/?u=andyklyon&q=the%20git%20documentation
+/ask/?u=andyklyon&q=where%20can%20i%20find%20the%20git%20documentation%3F
+/ask/?u=andyklyon&q=how%20do%20i%20format%20a%20json%20array%3F
+/ask/?u=andyklyon&q=please%20show%20me%20how%20to%20format%20a%20json%20array
+/ask/?u=andyklyon&q=right%20here%20on%20this%20page
+/ask/?u=andyklyon&q=how%20do%20i%20start%20a%20mysql%20trigger%3F
+/ask/?u=anonymous&q=why%20is%20android%20superior%20to%20apple%20in%20every%20way%3F
+/ask/?u=anonymous&q=what%20is%20the%20difference%20between%20c%23%20and%20C%2B%2B
+/ask/?u=anonymous&q=what%20is%20php
+/ask/?u=andyklyon&q=why%20do%20.net%20people%20hate%20php%20so%20much%3F
+/ask/?u=anonymous&q=yuio
+/ask/?u=anonymous&q=cunty
+/ask/?u=anonymous&q=if%20i%20have%20an%20itchy%20bum%2C%20will%20php%20help%3F
+/ask/?u=andyklyon&q=Why%20not%20use%20tables%20for%20layout%20in%20HTML%3F
+/ask/?u=andyklyon&q=hi%20my%20name%20is%20andy%20whats%20yours%3F
+/ask/?u=andyklyon&q=i%20am%20a%20man
+/ask/?u=andyklyon&q=hi%20my%20name%20is%20andy
+/ask/?u=andyklyon&q=man
+/ask/?u=andyklyon&q=i%20am%20a%20man
+/ask/?u=andyklyon&q=what%20are%20your%20hobbies%3F
+/ask/?u=anonymous&q=Are%20you%20good%20at%20web%20design%3F
+/ask/?u=anonymous&q=Are%20you%20a%20weird%20person%3F
+/ask/?u=anonymous&q=Java
+/ask/?u=anonymous&q=What%20is%20java%3F
+/ask/?u=anonymous&q=Is%20java%20more%20difficult%20than%20git%3F
+/ask/?u=fungoidmass&q=Can%20Wordpress%20be%20used%20as%20a%20suitable%20content%20management%20system%3F
+/ask/?u=fungoidmass&q=What%20do%20you%20know%20about%20Wordpress%3F
+/ask/?u=fungoidmass&q=So%20the%20answer%20to%20my%20previous%20question%20is%2C%20%22no%20much.%22%20Is%20that%20right%3F
+/ask/?u=fungoidmass&q=Tell%20me%20about%20Git.
+/ask/?u=fungoidmass&q=We%20were%20trying%20to%20talk%20about%20GIT.%20But%20did%20we%3F
+/ask/?u=fungoidmass&q=I%20know%20the%20answer%20to%20that.%20How%20about%20Ajax%3F%20Help%20me%20with%20Ajax%3F
+/ask/?u=fungoidmass&q=What%20is%20Ajax%3F
+/ask/?u=fungoidmass&q=You%20said%20IEs.%20What%20are%20IEs%3F
+/ask/?u=fungoidmass&q=IE%3F
+/ask/?u=fungoidmass&q=What%20is%20IE%3F
+/ask/?u=fungoidmass&q=What%20is%20HTML%3F
+/ask/?u=fungoidmass&q=What%20is%20Hyper%20Text%20Markup%20Language%3F
+/ask/?u=anonymous&q=what%20is%20jquery
+/ask/?u=fungoidmass&q=What%20is%20Hypertext%20Markup%20Language%3F
+/ask/?u=fungoidmass&q=What%20is%20Java%3F
+/ask/?u=anonymous&q=how%20do%20i%20use%20a%20loop%20in%20javascript%3F
+/ask/?u=anonymous&q=What%20are%20common%20programming%20mistakes%20for%20PHP%20developers%20to%20avoid%3F
+/ask/?u=anonymous&q=What%20is%20the%20best%20way%20to%20stop%20SQL%20injections%20in%20PHP%3F
+/ask/?u=fungoidmass&q=Hi
+/ask/?u=anonymous&q=What%20are%20the%20best%20resources%20to%20learn%20Javascript%3F
+/ask/?u=fungoidmass&q=What%27s%20the%20weather%20like%3F
+/ask/?u=fungoidmass&q=Weather%3F
+/ask/?u=fungoidmass&q=What%20does%20Ruby%20have%20that%20Python%20doesn%27t%2C%20and%20vice%20versa%3F
+/ask/?u=fungoidmass&q=How%20do%20I%20check%20if%20a%20file%20exists%20using%20Python%3F
+/ask/?u=fungoidmass&q=What%20is%20SQL%3F
+/ask/?u=fungoidmass&q=What%20is%20the%20difference%20between%20MySql%20and%20SQL%3F
+/ask/?u=anonymous&q=whats%20this%20all%20about%3F
+/ask/?u=fungoidmass&q=What%20is%20Android%3F
+/ask/?u=anonymous&q=chrome
+/ask/?u=fungoidmass&q=What%20does%20CSS%20mean%3F
+/ask/?u=fungoidmass&q=Django
+/ask/?u=fungoidmass&q=What%20is%20Django%3F
+/ask/?u=anonymous&q=html
+/ask/?u=anonymous&q=whats%20your%20name%3F
+/ask/?u=anonymous&q=how%20can%20i%20style%20a%20table%3F
+/ask/?u=anonymous&q=how%20can%20i%20make%20text%20stay%20on%20the%20left%20using%20css
+/ask/?u=anonymous&q=what%20properties%20style%20tables%3F
+/ask/?u=anonymous&q=how%20is%20the%20weather%20where%20you%20are%3F
+/ask/?u=anonymous&q=do%20you%20have%20a%20name%3F
+/ask/?u=anonymous&q=what%20is%20your%20programmers%20name%3F
+/ask/?u=anonymous&q=no
+/ask/?u=anonymous&q=what%20doc%20type%20should%20i%20use%3F
+/ask/?u=anonymous&q=who%20is%20pavel%3F
+/ask/?u=anonymous&q=find%20Pavel
+/ask/?u=anonymous&q=what%20is%20django%3F
+/ask/?u=Abel&q=What%20is%20.NET%3F
+/ask/?u=Abel&q=Has%20Microsoft%20created%20.NET%3F
+/ask/?u=Abel&q=What%20is%20Ajax%20good%20for%3F
+/ask/?u=Abel&q=Do%20you%20understand%20what%20I%27m%20asking%3F
+/ask/?u=Abel&q=Is%20Android%20better%20than%20IPhone%3F
+/ask/?u=Abel&q=Where%20are%20you%20getting%20your%20answers%20from%3F
+/ask/?u=Abel&q=I%27m%20in%20Romania
+/ask/?u=Abel&q=It%27s%20not%20an%20allusion
+/ask/?u=Abel&q=It%20is%20that
+/ask/?u=Abel&q=%3A%29
+/ask/?u=Abel&q=You%20are%20funny
+/ask/?u=Abel&q=No%2C%20not%20funni.%20Funny
+/ask/?u=Abel&q=I%20don%27t%20think%20so
+/ask/?u=Abel&q=Do%20you%20have%20any%20idea%20what%27s%20coming%20in%20HTML%206%3F
+/ask/?u=anonymous&q=how%20many%20functions%20does%20php%20have%3F
+/ask/?u=Abel&q=Let%20me%20tell%20you.%20Read%20this%20to%20see%20what%27s%20coming%20in%20HTML%206%3A%20http%3A//www.infoq.com/news/2012/04/HTML-Next
+/ask/?u=Abel&q=Yes%2C%20you%20do%2C%20it%27s%20public
+/ask/?u=Abel&q=Did%20you%20know%20that%20C%20is%20again%20the%20most%20used%20language%20according%20to%20Tiobe%3F
+/ask/?u=Abel&q=Well%2C%20wait%20to%20grow%20up%20and%20you%20may%20understand%20that%20some%20day
+/ask/?u=Abel&q=really%3F%20I%20hope%20it%20is%20not%20Pavel%20behind%20this%20prompter
+/ask/?u=Abel&q=I%20am%20Abel%20from%20Romania
+/ask/?u=Abel&q=I%20am%20Abel%20Avram
+/ask/?u=Abel&q=yes
+/ask/?u=Abel&q=I%20live%20in%20Romania
+/ask/?u=Abel&q=Great
+/ask/?u=Abel&q=I%20got%20to%20go.%20I%20hope%20you%20have%20enough%20data%20in%20you%20logs
+/ask/?u=anonymous&q=How%20do%20I%20create%20an%20array
+/ask/?u=anonymous&q=what%20is%20Django
+/ask/?u=anonymous&q=.net
+/ask/?u=anonymous&q=do%20you%20like%20.net%3F
+/ask/?u=anonymous&q=I%20am%20from%20Romania
+/ask/?u=anonymous&q=Bye
+/ask/?u=anonymous&q=Bye%20bye
+/ask/?u=anonymous&q=I%20have%20to%20go%20now
+/ask/?u=anonymous&q=What%20is%20the%20best%20way%20to%20stop%20SQL%20injections%20in%20PHP%3F
+/ask/?u=anonymous&q=what%20is%20css%3F
+/ask/?u=anonymous&q=How%20to%20check%20a%20checkbox%20with%20Jquery%20or%20Javascript%3F%20
+/ask/?u=anonymous&q=how%20do%20i%20php
+/ask/?u=anonymous&q=html
+/ask/?u=anonymous&q=HTML
+/ask/?u=anonymous&q=what%20is%20HTML%3F
+/ask/?u=anonymous&q=what%20is%20php%3F
+/ask/?u=anonymous&q=How%20do%20I%20get%20the%20length%20of%20a%20string%3F
+/ask/?u=anonymous&q=wordpress
+/ask/?u=anonymous&q=what%3F
+/ask/?u=anonymous&q=do%20you%20know%20drupal%3F
+/ask/?u=anonymous&q=i%20can%27t...%20i%20know%20little%20myself
+/ask/?u=anonymous&q=hi
+/ask/?u=anonymous&q=django
+/ask/?u=anonymous&q=Hello
+/ask/?u=anonymous&q=Hi
+/ask/?u=anonymous&q=What%27s%20your%20name%3F
+/ask/?u=anonymous&q=what%20operating%20system%20does%20Iphone%204s%20use%3F%20
