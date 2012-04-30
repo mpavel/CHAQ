@@ -1,1055 +1,0 @@
-<?xml version="1.0" ?>
-<aiml version="1.0">
-  <meta content="SimpleAIMLGenerator" name="author"/>
-  <meta content="en" name="language"/>
-  <category>
-    <pattern>
-      FLAT FILE DATABAS IN PHP
-    </pattern>
-    <template>
-<![CDATA[<p>Well, what is the nature of the flat databases.  Are they large or small.  Is it simple arrays with arrays in them?  if its something simple say userprofiles built as such:</p><br/><br/><pre><code>$user = array("name" =&gt; "dubayou", <br/>              "age" =&gt; 20,<br/>              "websites" =&gt; array("dubayou.com","willwharton.com","codecream.com"),<br/>              "and_one" =&gt; "more");<br/></code></pre><br/><br/><p>and to save or update the <em>db record</em> for that user.</p><br/><br/><pre><code>$dir = "../userdata/";  //make sure to put it bellow what the server can reach.<br/>file_put_contents($dir.$user['name'],serialize($user));<br/></code></pre><br/><br/><p>and to load the <em>record</em> for the user</p><br/><br/><pre><code>function &amp;get_user($name){<br/>     return unserialize(file_get_contents("../userdata/".$name));<br/>}<br/></code></pre><br/><br/><p>but again this implementation will vary on the application and nature of the database you need.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      T SQL CAST IN C # VB.NET
-    </pattern>
-    <template>
-<![CDATA[<p>Hazzah!!!!</p><br/><br/><p>I went back to Michael's post, did some more poking and realized that I did needed to do a double conversion, and eventually worked out this little nugget:</p><br/><br/><pre><code>Convert.ToString(Convert.ToChar(Int32.Parse(EncodedString.Substring(intParseIndex, 2), System.Globalization.NumberStyles.HexNumber)));<br/></code></pre><br/><br/><p>From there I simply made a loop to go through all the characters 2 by 2 and get them "hexified" and then translated to a string.</p><br/><br/><p>To Nick, and anybody else interested, I went ahead and <a href="http://www.codeplex.com/urldecoder" rel="nofollow">posted my little app</a> over in CodePlex, feel free to use/modify as you need.</p><br/><br/><p>Thanks again all!</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      SITE MAP
-    </pattern>
-    <template>
-<![CDATA[<p>I wrote a dynamic sitemap class a while ago, and blogged about it here: <a href="http://harriyott.com/2007/03/adding-dynamic-nodes-to-aspnet-site.aspx" rel="nofollow">http://harriyott.com/2007/03/adding-dynamic-nodes-to-aspnet-site.aspx</a></p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      EXPORT DATA FROM SQL SERVER 2005 TO MYSQL
-    </pattern>
-    <template>
-<![CDATA[<p>I've heard a few people using <a href="http://www.kofler.cc/mysql/mssql2mysql.html">MSSQL2MySQL</a> with success, but I can't vouch for it myself.</p>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      VERSION CONTROL SYSTEM FOR DATABAS STRUCTUR CHANG
-    </pattern>
-    <template>
-<![CDATA[<p>In Ruby on Rails, there's a concept of a <a href="http://wiki.rubyonrails.org/rails/pages/UnderstandingMigrations" rel="nofollow">migration</a> -- a quick script to change the database.</p><br/><br/><p>You generate a migration file, which has rules to increase the db version (such as adding a column) and rules to downgrade the version (such as removing a column). Each migration is numbered, and a table keeps track of your current db version.</p><br/><br/><p>To _migrate up_, you run a command called "db:migrate" which looks at your version and applies the needed scripts. You can migrate down in a similar way.</p><br/><br/><p>The migration scripts themselves are kept in a version control system -- whenever you change the database you check in a new script, and any developer can apply it to bring their local db to the latest version.</p>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      X ORACL HOW DO I ACCESS ORACL FROM PYTHON
-    </pattern>
-    <template>
-<![CDATA[<p>cx_Oracle is a Python extension module that allows access to Oracle databases and conforms to the Python database API specification.</p><br/><br/><p>More information is available <a href="http://python.net/crew/atuining/cx_Oracle/" rel="nofollow">here</a>.<br/>Here is a sample showing how to connect and process a query.</p><br/><br/><pre>#!/usr/bin/python<br/><br/>import cx_Oracle<br/>connstr='scott/tiger'<br/>conn = cx_Oracle.connect(connstr)<br/>curs = conn.cursor()<br/><br/>curs.execute('select * from emp')<br/>print curs.description<br/>for row in curs:<br/>    print row<br/>conn.close()<br/></pre>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      X ORACL WHAT IS THE BEST WAY TO ITER OVER A RESULT SET
-    </pattern>
-    <template>
-<![CDATA[<p>There are three ways to iterate over a result set.  The best way in terms of both<br/>readability and performance is usually to use the built-in cursor iterator.</p><br/><br/><pre>curs.execute('select * from people')<br/>for row in curs:<br/>    print row<br/></pre><br/><br/><p>You can fetch all the rows into a list, but this can have some bad<br/>side effects if the result set is large.</p><br/><br/><ul><br/><li><p>You have to wait for the entire result set to be returned to<br/>your client process.</p></li><br/><li><p>You may eat up a lot of memory in your client to hold<br/>the built-up list.</p></li><br/><li><p>It may take a while for Python to construct and deconstruct the<br/>list which you are going to immediately discard anyways.</p></li><br/></ul><br/><br/><pre>for row in curs.fetchall():<br/>    print row<br/></pre><br/><br/><p>Finally, you can loop over the result set fetching one row at <br/>a time.  In general, there's no particular advantage in doing this over<br/>using the iterator.  If there is something in your programming logic<br/>that seems to indicate there is an advantage in doing this, perhaps<br/>you should reconsider your programming logic.</p><br/><br/><p></p><pre>row = curs.fetchone()<br/>while row:<br/>    print row<br/>    row = curs.fetchone()<pre></pre></pre>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      UNIQU INDEX COLUMN VALU IN DATABAS
-    </pattern>
-    <template>
-<![CDATA[<p>I think you should go for solution 2. There is no 'swap' function in any SQL variant I know of.</p><br/><br/><p>If you need to do this regularly, I suggest solution 1, depending on how other parts of the software are using this data. You can have locking issues if you're not careful.</p><br/><br/><p>But in short: there is no other solution than the ones you provided.</p>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      INDEX A DATABAS COLUMN
-    </pattern>
-    <template>
-<![CDATA[<p>The following is SQL92 standard so should be supported by the majority of RDMBS that use SQL:</p><br/><br/><pre><code>CREATE INDEX [index name] ON [table name] ( [column name] )<br></code></pre>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      HANDL MULTIPL PERMISS TYPE
-    </pattern>
-    <template>
-<![CDATA[<p>I agree with John Downey.</p><br/><br/><p>Personally, I sometimes use a flagged enumeration of permissions. This way you can use AND, OR, NOT and XOR bitwise operations on the enumeration's items.</p><br/><br/><pre><code>"[Flags]<br>public enum Permission<br>{<br>    VIEWUSERS = 1, // 2^0 // 0000 0001<br>    EDITUSERS = 2, // 2^1 // 0000 0010<br>    VIEWPRODUCTS = 4, // 2^2 // 0000 0100<br>    EDITPRODUCTS = 8, // 2^3 // 0000 1000<br>    VIEWCLIENTS = 16, // 2^4 // 0001 0000<br>    EDITCLIENTS = 32, // 2^5 // 0010 0000<br>    DELETECLIENTS = 64, // 2^6 // 0100 0000<br>}"<br></code></pre><br/><br/><p>Then, you can combine several permissions using the AND bitwise operator. <br><br><br/>For example, if a user can view &amp; edit users, the binary result of the operation is 0000 0011 which converted to decimal is 3. <br><br/>You can then store the permission of one user into a single column of your DataBase (in our case it would be 3).<br><br><br/>Inside your application, you just need another bitwise operation (OR) to verify if a user has a particular permission or not. </p>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      LANGUAG DO YOU USE FOR POSTGRESQL TRIGGER AND STORE PROCEDUR
-    </pattern>
-    <template>
-<![CDATA[<p>Skype uses PostgreSQL together with python, and they have improved PL/Python to it's current state so I would doubt that python support is far behind perl. They have written queuing/replication system on top of those bindings, after all :-) Take a look: https://developer.skype.com/SkypeGarage/DbProjects/SkyTools</p><br/><br/><p>From a quick look in documentation, python seems to have less documentation than perl bindings, but I would suggest to just stick with language you are most comfortable with.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      AVOID SQL INJECT ATTACK
-    </pattern>
-    <template>
-<![CDATA[<p>Oracle has got an <a href="http://download.oracle.com/oll/tutorials/SQLInjection/index.htm" rel="nofollow">extensive tutorial on that topic</a></p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      BOOK FOR A NEW DATABAS DEVELOP
-    </pattern>
-    <template>
-<![CDATA[<p>Are they helping with data maintenance issues, or more operational items?  There is a <strong>huge</strong> body of knowledge for either of these in MS SQL.</p><br/><br/><ul><br/><li>For operations: <a href="http://rads.stackoverflow.com/amzn/click/0470047046">Beginning SQL Server 2005 Administration</a></li><br/><li>For data maintenance/programming: <a href="http://rads.stackoverflow.com/amzn/click/0764584332">Beginning SQL Server 2005 Programming</a></li><br/></ul><br/><br/><p>Once they get comfortable, get them something really like <a href="http://rads.stackoverflow.com/amzn/click/0735609985">Kalen Delaney's Inside Microsoft SQL Server 2000</a>.</p>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      HASHBYT TO VARCHAR
-    </pattern>
-    <template>
-<![CDATA[<p>I have found the solution else where:</p><br/><br/><pre><code>SELECT SUBSTRING(master.dbo.fn_varbintohexstr(HashBytes('MD5', 'HelloWorld')), 3, 32) <br></code></pre>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      CRUD DATABAS SAMPL
-    </pattern>
-    <template>
-<![CDATA[<p>I just created a scaffolder that will generate this code for you in a nice testable way - my stab at "how it should be done" in a CRUD fashion. Have a look:</p><br/><br/><p><a href="http://blog.wekeroad.com/blog/subsonic-mvc-scaffold-addin/" rel="nofollow">http://blog.wekeroad.com/blog/subsonic-mvc-scaffold-addin/</a></p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      STRING IN SQL
-    </pattern>
-    <template>
-<![CDATA[<p>You may find the solution in <em><a href="http://www.codeproject.com/KB/database/SQL_UDF_to_Parse_a_String.aspx" rel="nofollow">SQL User Defined Function to Parse a Delimited String</a></em> helpful (from <a href="http://en.wikipedia.org/wiki/The_Code_Project" rel="nofollow">The Code Project</a>).</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      NEED TO ESCAP WHEN SEND A ( MY ) SQL QUERI
-    </pattern>
-    <template>
-<![CDATA[<p>For maximum security, performance, and correctness use prepared statements.<br/>Here's how to do this with lots of examples in different languages, including PHP:</p><br/><br/><p><a href="http://stackoverflow.com/questions/1973/what-is-the-best-way-to-avoid-sql-injection-attacks" rel="nofollow">http://stackoverflow.com/questions/1973/what-is-the-best-way-to-avoid-sql-injection-attacks</a></p>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      T SQL GROUP BY
-    </pattern>
-    <template>
-<![CDATA[<P>To retrieve the number of widgets from each widget category that has more than 5 widgets, you could do this:</P><BR>SELECT WidgetCategory, count(*)<BR>FROM Widgets<BR>GROUP BY WidgetCategory<BR>HAVING count(*) &gt; 5<BR><br/><P>The "having" clause is something people often forget about, instead opting to retrieve all their data to the client and iterating through it there.</P>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      FOR XML EXPLICIT NEED HELP FORMAT
-    </pattern>
-    <template>
-<![CDATA[<p>try</p><br/><br/><pre><code>SELECT 1 AS Tag,<br/>0 AS Parent,<br/>AccountNumber AS [Root!1!AccountNumber!element]<br/>FROM Location.LocationMDAccount<br/>WHERE LocationID = 'long-guid-here'<br/>FOR XML EXPLICIT<br/></code></pre>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      SQL SERVER 2005 RESULT
-    </pattern>
-    <template>
-<![CDATA[<p>You can use <code>the Row_Number()</code> function.<br/>Its used as follows:</p><br/><br/><pre><code>SELECT Row_Number() OVER(ORDER BY UserName) As RowID, UserFirstName, UserLastName<br/>FROM Users<br/></code></pre><br/><br/><p>From which it will yield a result set with a <code>RowID</code> field which you can use to page between.</p><br/><br/><pre><code>SELECT * <br/>FROM <br/>    ( SELECT Row_Number() OVER(ORDER BY UserName) As RowID, UserFirstName, UserLastName<br/>      FROM Users <br/>    ) As RowResults<br/>WHERE RowID Between 5 AND 10<br/></code></pre><br/><br/><p>etc</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      COUNT AND GROUP BY
-    </pattern>
-    <template>
-<![CDATA[<p>Couldn't be simpler...</p><br/><br/><pre><code>Select<br>Name,<br>Count(Name) As Count<br>From<br>Table<br>Group By<br>Name<br>Having<br>Count(Name) &gt; 1<br>Order By<br>Count(Name) Desc<br></code></pre><br/><br/><p>This could also be extended to delete duplicates:</p><br/><br/><pre><code>Delete<br>From<br>Table<br>Where<br>Key In (<br>    Select<br>    Max(Key)<br>    From<br>    Table<br>    Group By<br>    Name<br>    Having<br>Count(Name) &gt; 1)<br></code></pre>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      R BAS EVENT TRIGGER
-    </pattern>
-    <template>
-<![CDATA[<p>Why not use a SQL Job instead of the Windows Service?  You can encapsulate all of you db "trigger" code in Stored Procedures.  Then your UI and SQL Job can call the same Stored Procedures and create the triggers the same way whether it's manually or at a time interval.</p>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      QUERI A DB SCHEME
-    </pattern>
-    <template>
-<![CDATA[<p>The following query will bring back a unique list of Tables where Column_Name is equal to the column you are looking for:</p><br/><br/><pre><code>Select<br>Table_Name<br>From<br>INFORMATION_SCHEMA.COLUMNS<br>Where<br>Column_Name = 'Desired_Column_Name'<br>Group By<br>Table_Name<br></code></pre>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      BACKUP SQL SCHEMA ONLI
-    </pattern>
-    <template>
-<![CDATA[<p>Use a 3 step process:</p><br/><br/><ol><br/><li>Generate a script from the working database</li><br/><li>Create a new database from that script</li><br/><li>Create a backup of the new database</li><br/></ol>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      DISTRIBUT OF TABL IN TIME
-    </pattern>
-    <template>
-<![CDATA[<p>Michal Sznajder almost had it, but you can't use column aliases in a WHERE clause in SQL.  So you have to wrap it as a derived table.  I tried this and it returns 20 rows:</p><br/><br/><pre><code>SELECT * FROM (<br/>    SELECT @rownum:=@rownum+1 AS rownum, e.*<br/>    FROM (SELECT @rownum := 0) r, entries e) AS e2<br/>WHERE uid = ? AND rownum % 150 = 0;<br/></code></pre><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      PROGRAM CAN I USE TO GENER DIAGRAM OF SQL VIEW TABL STRUCTUR
-    </pattern>
-    <template>
-<![CDATA[<p>I am a big fan of Embarcadero's <a href="http://www.embarcadero.com/products/erstudio/index.html" rel="nofollow">ER/Studio</a>.  It is very powerful and produces excellent on-screen as well as printed results.  They have a free trial as well, so you should be able to get in and give it a shot without too much strife.</p><br/><br/><p>Good luck!</p>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      CASE STATEMENT SYNTAX
-    </pattern>
-    <template>
-<![CDATA[<p>The <strong>complete</strong> syntax depends on the database engine you're working with:</p><br/><br/><p>For SQL Server:</p><br/><br/><pre><code>  CASE case-expression<br/>      WHEN when-expression-1 THEN value-1<br/>    [ WHEN when-expression-n THEN value-n ... ]<br/>[ ELSE else-value ]<br/>  END<br/></code></pre><br/><br/><p>or:</p><br/><br/><pre><code>  CASE<br/>      WHEN boolean-when-expression-1 THEN value-1<br/>    [ WHEN boolean-when-expression-n THEN value-n ... ]<br/>[ ELSE else-value ]<br/>  END<br/></code></pre><br/><br/><p>expressions, etc:</p><br/><br/><pre><code>case-expression    - something that produces a value<br/>when-expression-x  - something that is compared against the case-expression<br/>value-1            - the result of the CASE statement if:<br/>                         the when-expression == case-expression<br/>                      OR the boolean-when-expression == TRUE<br/>boolean-when-exp.. - something that produces a TRUE/FALSE answer<br/></code></pre><br/><br/><p>Link: <a href="http://msdn.microsoft.com/en-us/library/ms181765.aspx" rel="nofollow">http://msdn.microsoft.com/en-us/library/ms181765.aspx</a></p><br/><br/><p>Also note that the ordering of the WHEN statements is important. You can easily write multiple WHEN clauses that overlap, and <strong>the first one that matches is used</strong>.</p><br/><br/><p><strong>Note</strong>: If no ELSE clause is specified, and no matching WHEN-condition is found, the value of the CASE expression will be <em>NULL</em>.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      POINT SHOULD SOMEON DECID TO SWITCH DATABAS SYSTEM
-    </pattern>
-    <template>
-<![CDATA[<p>It depends on what you are doing. You might switch if:</p><br/><br/><ul><br/><li>You need more scalability or better performance - say from SQLite to SQL Server or Oracle.</li><br/><li>You need access to more specific datatypes.</li><br/><li>You need to support a customer that only runs a particular database.</li><br/><li>You need better DBA tools.</li><br/><li>Your application is using a different platform where your database no longer runs, or it's libraries do not run.</li><br/></ul><br/><br/><p>There are many more reasons for switching and it all depends on your requirements.</p>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      HERIT IN DATABAS
-    </pattern>
-    <template>
-<![CDATA[<p>There is no such thing as inheritance between tables in SQL Server 2005, and as noted by the others, you can get as far as getting help adding the necessary columns to the tables when you create them, but it won't be inheritance as you know it.</p><br/><br/><p>Think of it more like a template for your source code files.</p><br/><br/><p>As GateKiller mentions, you can create a table containing the shared data and reference it with a foreign key, but you'll either have to have audit hooks, triggers, or do the update manually.</p><br/><br/><p>Bottom line: Manual work.</p>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      2000 5 ESCAP AN UNDERSCOR
-    </pattern>
-    <template>
-<![CDATA[<p><a href="http://msdn.microsoft.com/en-us/library/aa933232%28SQL.80%29.aspx" rel="nofollow">T-SQL Reference for LIKE for SQL Server 2000</a>:</p><br/><br/><blockquote><br/>  <p>You can use the wildcard pattern matching characters as literal characters. To use a wildcard character as a literal character, enclose the wildcard character in brackets. The table shows several examples of using the LIKE keyword and the [ ] wildcard characters.</p><br/></blockquote><br/><br/><p>For your case:</p><br/><br/><pre><code>... LIKE '%[_]d'<br/></code></pre>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      FOREIGN KEY
-    </pattern>
-    <template>
-<![CDATA[<p>You defined the primary key twice. Try:</p><br/><br/><pre><code>CREATE TABLE SHIPPING_GRID(  <br/>    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT 'Unique ID for each row',  <br/>    shipping_vendor_no INT(6) NOT NULL COMMENT 'Foreign key to VENDOR.no for the shipping vendor (vendors_type must be 3)',  <br/>    start_vendor_no INT(6) NOT NULL COMMENT 'Foreign key to VENDOR.no for the vendor being shipped from',  <br/>    end_vendor_no INT(6) NOT NULL COMMENT 'Foreign key to the VENDOR.no for the vendor being shipped to',  <br/>    shipment_duration INT(1) DEFAULT 1 COMMENT 'Duration in whole days shipment will take',  <br/>    price FLOAT(5,5) NOT NULL COMMENT 'Price in US dollars per shipment lbs (down to 5 decimal places)',  <br/>    is_flat_rate TINYINT(1) DEFAULT 0 COMMENT '1 if is flat rate regardless of weight, 0 if price is by lbs',  <br/>    INDEX (shipping_vendor_no),  <br/>    INDEX (start_vendor_no),  <br/>    INDEX (end_vendor_no),  <br/>    FOREIGN KEY (shipping_vendor_no) REFERENCES VENDOR (no),  <br/>    FOREIGN KEY (start_vendor_no) REFERENCES VENDOR (no),  <br/>    FOREIGN KEY (end_vendor_no) REFERENCES VENDOR (no)  <br/>) TYPE = INNODB;<br/></code></pre><br/><br/><p>The VENDOR primary key must be INT(6), and both tables must be of type InnoDB.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      COMMA SEPAR LIST TO A STORE PROCEDUR
-    </pattern>
-    <template>
-<![CDATA[<p>If you're using Sybase 12.5 or earlier then you can't use functions. A workouround might be to populate a temporary table with the values and read them from there.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      SQL
-    </pattern>
-    <template>
-<![CDATA[<p>Everything there is to know is pretty broad.  Like <a href="http://stackoverflow.com/questions/6519/learning-sql#6521" rel="nofollow">Adhip</a> suggested below if you want to cover all topics then a book is probably going to be best because they will have taken the time to cover all the topics.  What I think you're going to want to be concerned with is:</p><br/><br/><ol><br/><li>Normalization - designing tables to reduce redundancy and dependencies</li><br/><li>Joins, Set Logic - working entirely with sets in a declarative language is a different way of thinking</li><br/><li>Optimization - why certain queries outperform others, reducing disk reads, indexing, differences in different database engines</li><br/></ol><br/><br/><p>Over time I've found a few articles worth mentioning.  But again, these aren't the all encompassing things you were looking for but they will shed some light on things you might want to look into.  <a href="http://www.codinghorror.com/blog/archives/000976.html" rel="nofollow">Coding Horror's Visual Joins</a> article and <a href="http://www.catonmat.net/blog/performance-tuning-best-practices-for-mysql/" rel="nofollow">Video on Performance Tuning and Best Practices</a>.  I think if you see those now, that when you do find a book or something and you get introduced those topics that things will click pretty easily.</p><br/><br/><p>Be aware of the documentation for your dialect of SQL and use it often.  I am not ashamed of the fact that whenever I need to run SQL I open up the <a href="http://dev.mysql.com/doc/refman/5.0/en/sql-syntax.html" rel="nofollow" title="here">MySQL documentation</a> and I check the syntax, string functions, etc.  Although SQL statements typically don't change much between different SQL dialects (Microsoft, Mysql, Oracle) there are small differences that will catch you if you aren't careful.  Be aware that these differences exist, so if you're doing something on one SQL server that you know should have worked, these small "gotchas" might be the cause of errors.</p><br/><br/><p>However you go about doing it be sure that you're actively trying out the SQL statements.  Any decent Database Engine has a console (I know MySQL and Oracle do).  If you ever come across a situation where you think, "What happens if I do this" do it!  <code>SELECT</code> statements won't alter your database.  You will also probably have ideas with other statements, <code>INSERT</code>, etc. make a test database with some very simple tables and hack away.  I feel that, especially with SQL, you learn a lot more by <em>doing</em>, then my book learning.</p><br/><br/><p>Remember, SQL isn't hard if you know it.  Investing the time to learn it correctly (like you seem to be interested in doing) is the right thing to do.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      A GROUP OF TABL IN SQL SERVER
-    </pattern>
-    <template>
-<![CDATA[<p>At the risk of sounding stupid, I don't believe SQL Server supports the delete / cascade syntax. I think you can configure a delete rule to do cascading deletes (<a href="http://msdn.microsoft.com/en-us/library/ms152507.aspx" rel="nofollow">http://msdn.microsoft.com/en-us/library/ms152507.aspx</a>), but as far as I know the trick with SQL Server is to just to run your drop query once for each table you're dropping, then check it worked.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      RECOVERI STATE
-    </pattern>
-    <template>
-<![CDATA[<p>GateKiller,</p><br/><br/><p>In simple terms (and not a copy-paste out of the SQLBOL) so you can understand the concepts:</p><br/><br/><p>RESTORE WITH RECOVERY uses the backup media file (eg. fulldata.bak) to restore the database to back to the time that backup file was created.  This is great if you want to go back in time to restore the database to an earlier state - like when developing a system.</p><br/><br/><p>If you want to restore the database TO THE VERY LATEST DATA, (i.e. like if your doing a system Disaster Recovery and you cannot lose any data) then you want to restore that backup AND THEN all the transaction logs created since that backup.  This is when you use RESTORE NORECOVERY.  It will allow you to restore the later transaction logs right up to the point of failure (as long as you have them).</p><br/><br/><p>RECOVERY WITH STANDBY is the ability to restore the database up to a parital date (like NORECOVERY above) but to allow the database still to be used READONLY. New transaction logs can still be applied to the database to keep it up to date (a standby server).  Use this when it would take too long to restore a full database in order to Return To Operations the system.  (ie. if you have a multi TB database that would take 16 hours to restore, but could receive transaction log updates every 15 minutes).</p><br/><br/><p>This is a bit like a mirror server - but without having "every single transaction" send to the backup server in real time.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      INSERT SQL STATEMENT FROM A CSV FILE
-    </pattern>
-    <template>
-<![CDATA[<p>It's a bit crude - but for one off jobs, I sometimes use Excel.</p><br/><br/><p>If you import the CSV file into Excel, you can create a formula which creates an INSERT statement by using string concatenation in the formula.  So - if your CSV file has 3 columns that appear in columns A, B and C in Excel, you could write a formula like...</p><br/><br/><p>="INSERT INTO MyTable (Col1, Col2, Col3) VALUES (" &amp; A1 &amp; ", " &amp; B1 &amp; ", " &amp; C1 &amp; ")"</p><br/><br/><p>Then you can replicate the formula down all of your rows, and copy and paste the answer into a text file to run against your database.</p><br/><br/><p>Like I say - it's crude - but it can be quite a 'quick and dirty' way of getting a job done!</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      SAMPL MYSQL DATABAS I CAN DOWNLOAD
-    </pattern>
-    <template>
-<![CDATA[<p>There are some example databases at <a href="http://dev.mysql.com/doc/" rel="nofollow">http://dev.mysql.com/doc/</a></p><br/><br/><p>Or more specifically on <a href="http://dev.mysql.com/doc/index-other.html" rel="nofollow">http://dev.mysql.com/doc/index-other.html</a></p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      TABLE VALU SQL FUNCTION FROM .NET
-    </pattern>
-    <template>
-<![CDATA[<p>No because you need to select them.  However you can create a stored proc wrapper.  Which may defeat the point of having a table function.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      BIDIRECT OUTER JOIN
-    </pattern>
-    <template>
-<![CDATA[<p>It's called a full outer join and it's not supported natively in MySQL, judging from its <a href="http://dev.mysql.com/doc/refman/4.1/en/join.html" rel="nofollow">docs</a>. You can work around this limitation using UNION as described in the comments to the page I linked to.</p><br/><br/><p>[edit] Since others posted snippets, here you go. You can see explanation on the linked page.</p><br/><br/><pre><code>SELECT *<br/>FROM A LEFT JOIN B ON A.id = B.id<br/>UNION ALL<br/>SELECT *<br/>FROM A RIGHT JOIN B ON A.id = B.id<br/>WHERE A.id IS NULL<br/></code></pre><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      TIME OUT FROM WEB APP BUT RUN FINE FROM MANAG STUDIO
-    </pattern>
-    <template>
-<![CDATA[<p>This is what I've learned so far from my research.</p><br/><br/><p>.NET sends in connection settings that are not the same as what you get when you log in to management studio.  Here is what you see if you sniff the connection with Sql Profiler:</p><br/><br/><p>-- network protocol: TCP/IP<br /><br/>set quoted<em>identifier off<br /><br/>set arithabort off<br /><br/>set numeric</em>roundabort off<br /><br/>set ansi<em>warnings on<br /><br/>set ansi</em>padding on<br /><br/>set ansi<em>nulls off<br /><br/>set concat</em>null<em>yields</em>null on<br /><br/>set cursor<em>close</em>on<em>commit off<br /><br/>set implicit</em>transactions off<br /><br/>set language us_english<br /><br/>set dateformat mdy<br /><br/>set datefirst 7<br /><br/>set transaction isolation level read committed  </p><br/><br/><p>I am now pasting those setting in above every query that I run when logged in to sql server, to make sure the settings are the same.</p><br/><br/><p>For this case, I tried each setting individually, after disconnecting and reconnecting, and found that changing arithabort from off to on reduced the problem query from 90 seconds to 1 second.</p><br/><br/><p>The most probable explanation is related to parameter sniffing, which is a technique Sql Server uses to pick what it thinks is the most effective query plan.  When you change one of the connection settings, the query optimizer might choose a different plan, and in this case, it apparently chose a bad one.</p><br/><br/><p>But I'm not totally convinced of this.  I have tried comparing the actual query plans after changing this setting and I have yet to see the diff show any changes.</p><br/><br/><p>Is there something else about the arithabort setting that might cause a query to run slowly in some cases?</p><br/><br/><p>The solution seemed simple: Just put set arithabort on into the top of the stored procedure.  But this could lead to the opposite problem: change the query parameters and suddenly it runs faster with 'off' than 'on'.  </p><br/><br/><p>For the time being I am running the procedure 'with recompile' to make sure the plan gets regenerated each time.  It's Ok for this particular report, since it takes maybe a second to recompile, and this isn't too noticeable on a report that takes 1-10 seconds to return (it's a monster).</p><br/><br/><p>But it's not an option for other queries that run much more frequently and need to return as quickly as possible, in just a few milliseconds.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      A PAGE OF RESULT FROM SQL
-    </pattern>
-    <template>
-<![CDATA[<p>On MS SQL Server 2005 and above, <a href="http://msdn.microsoft.com/en-us/library/ms186734.aspx" rel="nofollow" title="I/O management and disk scheduling">ROW_NUMBER()</a> seems to work:</p><br/><br/><p><a href="http://blogs.x2line.com/al/archive/2005/11/18/1323.aspx" rel="nofollow" title="Inside Windows Vista Kernel"><a href="http://blogs.x2line.com/al/archive/2005/11/18/1323.aspx" rel="nofollow">http://blogs.x2line.com/al/archive/2005/11/18/1323.aspx</a></a></p><br/><br/><pre><code>DECLARE @PageNum AS INT;<br/>DECLARE @PageSize AS INT;<br/>SET @PageNum = 2;<br/>SET @PageSize = 10;<br/><br/>WITH OrdersRN AS<br/>(<br/>    SELECT ROW_NUMBER() OVER(ORDER BY OrderDate, OrderID) AS RowNum<br/>          ,OrderID<br/>          ,OrderDate<br/>          ,CustomerID<br/>          ,EmployeeID<br/>      FROM dbo.Orders<br/>)<br/><br/>SELECT * <br/>  FROM OrdersRN<br/> WHERE RowNum BETWEEN (@PageNum - 1) * @PageSize + 1 <br/>                  AND @PageNum * @PageSize<br/> ORDER BY OrderDate<br/>         ,OrderID;<br/></code></pre><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      TOOL FOR AUTO GENER SQL CHANG SCRIPT FOR SQL SERVER
-    </pattern>
-    <template>
-<![CDATA[<blockquote><br/>  <p><strong><a href="http://msdn.microsoft.com/en-us/library/ms162843(SQL.90).aspx" rel="nofollow">tablediff utility</a></strong></p><br/></blockquote><br/><br/><p>It is free with SQL Server 2005 and later versions. The tool can be found in the following file directory:</p><br/><br/><blockquote><br/>  <p>C:\Program Files\Microsoft SQL<br/>  Server\90\COM\tablediff.exe</p><br/></blockquote><br/><br/><p>According to <a href="http://www.microsoft.com/technet/prodtechnol/sql/bestpractice/gems-top-10.mspx" rel="nofollow">this link on SQL Server features</a>:</p><br/><br/><blockquote><br/>  <p>TableDiff.exe...Table Difference tool<br/>  allows you to discover and reconcile<br/>  differences between a source and<br/>  destination table or a view. Tablediff<br/>  Utility can report differences on<br/>  schema and data. The most popular<br/>  feature of tablediff is the fact that<br/>  it can generate a script that you can<br/>  run on the destination that will<br/>  reconcile differences between the<br/>  tables.</p><br/></blockquote><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      REASON LENGTH OF TIME TO KEEP A SQL CURSOR OPEN
-    </pattern>
-    <template>
-<![CDATA[<p>@lomaxx, @ChanChan: to the best of my knowledge cursors are only a problem on SQL Server and Sybase (T-SQL variants). If your database of choice is Oracle, then cursors are your friend. I've seen a number of cases where the use of cursors has actually improved performance. Cursors are an incredibly useful mechanism and tbh, saying things like "if you use a cursor we fire you" is a little ridiculous.</p><br/><br/><p>Having said that, you only want to keep a cursor open for the absolute minimum that is required. Specifying a maximum time would be arbitrary and pointless without understanding the problem domain.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      AUXILIARI TABL OF NUMBER
-    </pattern>
-    <template>
-<![CDATA[<p>Heh... sorry I'm so late responding to an old post.  And, yeah, I had to respond because the most popular answer (at the time, the Recursive CTE answer with the link to 14 different methods) on this thread is, ummm... performance challenged at best.</p><br/><br/><p>First, the article with the 14 different solutions is fine for seeing the different methods of creating a Numbers/Tally table on the fly but as pointed out in the article and in the cited thread, there's a <em>very</em> important quote...</p><br/><br/><blockquote><br/>  <p>"suggestions regarding efficiency and<br/>  performance are often subjective.<br/>  Regardless of how a query is being<br/>  used, the physical implementation<br/>  determines the efficiency of a query.<br/>  Therefore, rather than relying on<br/>  biased guidelines, it is imperative<br/>  that you test the query and determine<br/>  which one performs better."</p><br/></blockquote><br/><br/><p>Ironically, the article itself contains many subjective statements and "biased guidelines" such as <em>"a recursive CTE can generate a number listing <strong>pretty efficiently</strong>"</em> and <em>"This is <strong>an efficient method</strong> of using WHILE loop from a newsgroup posting by Itzik Ben-Gen"</em> (which I'm sure he posted just for comparison purposes).  C'mon folks... Just mentioning Itzik's good name may lead some poor slob into actually using that horrible method.  The author should practice what (s)he preaches and should do a little performance testing before making such ridiculously incorrect statements especially in the face of any scalablility.</p><br/><br/><p>With the thought of actually doing some testing before making any subjective claims about what any code does or what someone "likes", here's some code you can do your own testing with.  Setup profiler for the SPID you're running the test from and check it out for yourself... just do a "Search'n'Replace" of the number 1000000 for your "favorite" number and see...</p><br/><br/><pre><code>--===== Test for 1000000 rows ==================================<br/>GO<br/>--===== Traditional RECURSIVE CTE method<br/>   WITH Tally (N) AS <br/>        ( <br/>         SELECT 1 UNION ALL <br/>         SELECT 1 + N FROM Tally WHERE N &lt; 1000000 <br/>        ) <br/> SELECT N <br/>   INTO #Tally1 <br/>   FROM Tally <br/> OPTION (MAXRECURSION 0);<br/>GO<br/>--===== Traditional WHILE LOOP method<br/> CREATE TABLE #Tally2 (N INT);<br/>    SET NOCOUNT ON;<br/>DECLARE @Index INT;<br/>    SET @Index = 1;<br/>  WHILE @Index &lt;= 1000000 <br/>  BEGIN <br/>         INSERT #Tally2 (N) <br/>         VALUES (@Index);<br/>            SET @Index = @Index + 1;<br/>    END;<br/>GO<br/>--===== Traditional CROSS JOIN table method<br/> SELECT TOP (1000000)<br/>        ROW_NUMBER() OVER (ORDER BY (SELECT 1)) AS N<br/>   INTO #Tally3<br/>   FROM Master.sys.All_Columns ac1<br/>  CROSS JOIN Master.sys.ALL_Columns ac2;<br/>GO<br/>--===== Itzik's CROSS JOINED CTE method<br/>   WITH E00(N) AS (SELECT 1 UNION ALL SELECT 1),<br/>        E02(N) AS (SELECT 1 FROM E00 a, E00 b),<br/>        E04(N) AS (SELECT 1 FROM E02 a, E02 b),<br/>        E08(N) AS (SELECT 1 FROM E04 a, E04 b),<br/>        E16(N) AS (SELECT 1 FROM E08 a, E08 b),<br/>        E32(N) AS (SELECT 1 FROM E16 a, E16 b),<br/>   cteTally(N) AS (SELECT ROW_NUMBER() OVER (ORDER BY N) FROM E32)<br/> SELECT N<br/>   INTO #Tally4<br/>   FROM cteTally<br/>  WHERE N &lt;= 1000000;<br/>GO<br/>--===== Housekeeping<br/>   DROP TABLE #Tally1, #Tally2, #Tally3, #Tally4;<br/>GO<br/></code></pre><br/><br/><p>While we're at it, here's the numbers I get from SQL Profiler for the values of 100, 1000, 10000, 100000, and 1000000...</p><br/><br/><pre><code>SPID TextData                                 Dur(ms) CPU   Reads   Writes<br/>---- ---------------------------------------- ------- ----- ------- ------<br/>  51 --===== Test for 100 rows ==============       8     0       0      0<br/>  51 --===== Traditional RECURSIVE CTE method      16     0     868      0<br/>  51 --===== Traditional WHILE LOOP method CR      73    16     175      2<br/>  51 --===== Traditional CROSS JOIN table met      11     0      80      0<br/>  51 --===== Itzik's CROSS JOINED CTE method        6     0      63      0<br/>  51 --===== Housekeeping   DROP TABLE #Tally      35    31     401      0<br/><br/>  51 --===== Test for 1000 rows =============       0     0       0      0<br/>  51 --===== Traditional RECURSIVE CTE method      47    47    8074      0<br/>  51 --===== Traditional WHILE LOOP method CR      80    78    1085      0<br/>  51 --===== Traditional CROSS JOIN table met       5     0      98      0<br/>  51 --===== Itzik's CROSS JOINED CTE method        2     0      83      0<br/>  51 --===== Housekeeping   DROP TABLE #Tally       6    15     426      0<br/><br/>  51 --===== Test for 10000 rows ============       0     0       0      0<br/>  51 --===== Traditional RECURSIVE CTE method     434   344   80230     10<br/>  51 --===== Traditional WHILE LOOP method CR     671   563   10240      9<br/>  51 --===== Traditional CROSS JOIN table met      25    31     302     15<br/>  51 --===== Itzik's CROSS JOINED CTE method       24     0     192     15<br/>  51 --===== Housekeeping   DROP TABLE #Tally       7    15     531      0<br/><br/>  51 --===== Test for 100000 rows ===========       0     0       0      0<br/>  51 --===== Traditional RECURSIVE CTE method    4143  3813  800260    154<br/>  51 --===== Traditional WHILE LOOP method CR    5820  5547  101380    161<br/>  51 --===== Traditional CROSS JOIN table met     160   140     479    211<br/>  51 --===== Itzik's CROSS JOINED CTE method      153   141     276    204<br/>  51 --===== Housekeeping   DROP TABLE #Tally      10    15     761      0<br/><br/>  51 --===== Test for 1000000 rows ==========       0     0       0      0<br/>  51 --===== Traditional RECURSIVE CTE method   41349 37437 8001048   1601<br/>  51 --===== Traditional WHILE LOOP method CR   59138 56141 1012785   1682<br/>  51 --===== Traditional CROSS JOIN table met    1224  1219    2429   2101<br/>  51 --===== Itzik's CROSS JOINED CTE method     1448  1328    1217   2095<br/>  51 --===== Housekeeping   DROP TABLE #Tally       8     0     415      0<br/></code></pre><br/><br/><p>As you can see, <strong>the Recursive CTE method is the second worst only to the While Loop for Duration and CPU and has 8 times the memory pressure in the form of logical reads than the While Loop</strong>. It's RBAR on steroids and should be avoided, at all cost, for any single row calculations just as a While Loop should be avoided.  <strong>There are places where recursion is quite valuable but this ISN'T one of them</strong>.</p><br/><br/><p>As a side bar, Mr. Denny is absolutely spot on... a correctly sized permanent Numbers or Tally table is the way to go for most things.  What does correctly sized mean?  Well, most people use a Tally table to generate dates or to do splits on VARCHAR(8000).  If you create an 11,000 row Tally table with the correct clustered index on "N", you'll have enough rows to create more than 30 years worth of dates (I work with mortgages a fair bit so 30 years is a key number for me) and certainly enough to handle a VARCHAR(8000) split.  Why is "right sizing" so important?  If the Tally table is used a lot, it easily fits in cache which makes it blazingly fast without much pressure on memory at all.</p><br/><br/><p>Last but not least, every one knows that if you create a permanent Tally table, it doesn't much matter which method you use to build it because 1) it's only going to be made once and 2) if it's something like an 11,000 row table, all of the methods are going to run "good enough".  <strong>So why all the indigination on my part about which method to use???</strong></p><br/><br/><p>The answer is that some poor guy/gal who doesn't know any better and just needs to get his or her job done might see something like the Recursive CTE method and decide to use it for something much larger and much more frequently used than building a permanent Tally table and I'm trying to <strong>protect those people, the servers their code runs on, and the company that owns the data on those servers</strong>.  Yeah... it's that big a deal. It should be for everyone else, as well.  Teach the right way to do things instead of "good enough".  Do some testing before posting or using something from a post or book... the life you save may, in fact, be your own especially if you think a recursive CTE is the way to go for something like this. ;-)</p><br/><br/><p>Thanks for listening...</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      OF EXPLICIT JOIN TRANSIT CLOSUR IN SQL
-    </pattern>
-    <template>
-<![CDATA[<p>You don't need to do this in todays database engines, but there was a time when things like that would give the query optimizer more hints as to possible index paths and thus to speedier results.</p><br/><br/><p>These days that entire syntax is going out anyway.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      TABL ALIAS GOOD OR BAD
-    </pattern>
-    <template>
-<![CDATA[<p>Table aliases are a necessary evil when dealing with highly normalized schemas. For example, and I'm not the architect on this DB so bear with me, it can take 7 joins in order to get a clean and complete record back which includes a person's name, address, phone number and company affiliation. </p><br/><br/><p>Rather than the somewhat standard single character aliases, I tend to favor short word aliases so the above example's SQL ends up looking like: </p><br/><br/><pre><code>select person.FirstName<br/>      ,person.LastName<br/>      ,addr.StreetAddress<br/>      ,addr.City<br/>      ,addr.State<br/>      ,addr.Zip<br/>      ,phone.PhoneNumber<br/>      ,company.CompanyName<br/>from tblPeople person<br/>left outer join tblAffiliations affl on affl.personID = person.personID<br/>left outer join tblCompany company on company.companyID = affl.companyID<br/></code></pre><br/><br/><p>... etc</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      BIG WOULD SUCH A DATABAS BE
-    </pattern>
-    <template>
-<![CDATA[<p>you can from the size of the data types for the columns in a table. You can then get a rough estimate of the size of a row in that table.  then for 1 to n tables, then for 1 row in 1 table for x rows in x tables = estimate of the database for a given rowsize.</p><br/><br/><p>Long handed I know but this is how i normally do this.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      ACH
-    </pattern>
-    <template>
-<![CDATA[<p>I think the maxim "let the computer do it; it's smarter than you" applies here. Just like memory management and other complicated things, the computer is a lot more informed about what it's doing than your are; consequently, able to get more performance than you are.</p><br/><br/><p>Microsoft has had a team of engineers working on it and they've probably managed to squeeze much more performance out of the system than would be possible for you to. It's also likely that ASP.NET's built-in caching operates at a different level (which is inaccessible to your application), making it much faster.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      RESOURC FOR RELAT DATABAS DESIGN
-    </pattern>
-    <template>
-<![CDATA[<p>Book: <a href="http://rads.stackoverflow.com/amzn/click/0201752840" rel="nofollow">Database Design for Mere Mortals</a></p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      HAD ANI SUCCESS IN UNIT TEST SQL STORE PROCEDUR
-    </pattern>
-    <template>
-<![CDATA[<p>I ran into this same issue a while back and found that if I created a simple abstract base class for data access that allowed me to inject a connection and transaction, I could unit test my sprocs to see if they did the work in SQL that I asked them to do and then rollback so none of the test data is left in the db.  </p><br/><br/><p>This felt better than the usual "run a script to setup my test db, then after the tests run do a cleanup of the junk/test data".  This also felt closer to unit testing because these tests could be run alone w/out having a great deal of "everything in the db needs to be 'just so' before I run these tests".</p><br/><br/><p><strong>Here is a snippet of the abstract base class used for data access</strong></p><br/><br/><pre><code>Public MustInherit Class Repository(Of T As Class)<br/>    Implements IRepository(Of T)<br/><br/>    Private mConnectionString As String = ConfigurationManager.ConnectionStrings("Northwind.ConnectionString").ConnectionString<br/>    Private mConnection As IDbConnection<br/>    Private mTransaction As IDbTransaction<br/><br/>    Public Sub New()<br/>        mConnection = Nothing<br/>        mTransaction = Nothing<br/>    End Sub<br/><br/>    Public Sub New(ByVal connection As IDbConnection, ByVal transaction As IDbTransaction)<br/>        mConnection = connection<br/>        mTransaction = transaction<br/>    End Sub<br/><br/>    Public MustOverride Function BuildEntity(ByVal cmd As SqlCommand) As List(Of T)<br/><br/>    Public Function ExecuteReader(ByVal Parameter As Parameter) As List(Of T) Implements IRepository(Of T).ExecuteReader<br/>        Dim entityList As List(Of T)<br/>        If Not mConnection Is Nothing Then<br/>            Using cmd As SqlCommand = mConnection.CreateCommand()<br/>                cmd.Transaction = mTransaction<br/>                cmd.CommandType = Parameter.Type<br/>                cmd.CommandText = Parameter.Text<br/>                If Not Parameter.Items Is Nothing Then<br/>                    For Each param As SqlParameter In Parameter.Items<br/>                        cmd.Parameters.Add(param)<br/>                    Next<br/>                End If<br/>                entityList = BuildEntity(cmd)<br/>                If Not entityList Is Nothing Then<br/>                    Return entityList<br/>                End If<br/>            End Using<br/>        Else<br/>            Using conn As SqlConnection = New SqlConnection(mConnectionString)<br/>                Using cmd As SqlCommand = conn.CreateCommand()<br/>                    cmd.CommandType = Parameter.Type<br/>                    cmd.CommandText = Parameter.Text<br/>                    If Not Parameter.Items Is Nothing Then<br/>                        For Each param As SqlParameter In Parameter.Items<br/>                            cmd.Parameters.Add(param)<br/>                        Next<br/>                    End If<br/>                    conn.Open()<br/>                    entityList = BuildEntity(cmd)<br/>                    If Not entityList Is Nothing Then<br/>                        Return entityList<br/>                    End If<br/>                End Using<br/>            End Using<br/>        End If<br/><br/>        Return Nothing<br/>    End Function<br/>End Class<br/></code></pre><br/><br/><p><strong>next you will see a sample data access class using the above base to get a list of products</strong></p><br/><br/><pre><code>Public Class ProductRepository<br/>    Inherits Repository(Of Product)<br/>    Implements IProductRepository<br/><br/>    Private mCache As IHttpCache<br/><br/>    'This const is what you will use in your app<br/>    Public Sub New(ByVal cache As IHttpCache)<br/>        MyBase.New()<br/>        mCache = cache<br/>    End Sub<br/><br/>    'This const is only used for testing so we can inject a connectin/transaction and have them roll'd back after the test<br/>    Public Sub New(ByVal cache As IHttpCache, ByVal connection As IDbConnection, ByVal transaction As IDbTransaction)<br/>        MyBase.New(connection, transaction)<br/>        mCache = cache<br/>    End Sub<br/><br/>    Public Function GetProducts() As System.Collections.Generic.List(Of Product) Implements IProductRepository.GetProducts<br/>        Dim Parameter As New Parameter()<br/>        Parameter.Type = CommandType.StoredProcedure<br/>        Parameter.Text = "spGetProducts"<br/>        Dim productList As List(Of Product)<br/>        productList = MyBase.ExecuteReader(Parameter)<br/>        Return productList<br/>    End Function<br/><br/>    'This function is used in each class that inherits from the base data access class so we can keep all the boring left-right mapping code in 1 place per object<br/>    Public Overrides Function BuildEntity(ByVal cmd As System.Data.SqlClient.SqlCommand) As System.Collections.Generic.List(Of Product)<br/>        Dim productList As New List(Of Product)<br/>        Using reader As SqlDataReader = cmd.ExecuteReader()<br/>            Dim product As Product<br/>            While reader.Read()<br/>                product = New Product()<br/>                product.ID = reader("ProductID")<br/>                product.SupplierID = reader("SupplierID")<br/>                product.CategoryID = reader("CategoryID")<br/>                product.ProductName = reader("ProductName")<br/>                product.QuantityPerUnit = reader("QuantityPerUnit")<br/>                product.UnitPrice = reader("UnitPrice")<br/>                product.UnitsInStock = reader("UnitsInStock")<br/>                product.UnitsOnOrder = reader("UnitsOnOrder")<br/>                product.ReorderLevel = reader("ReorderLevel")<br/>                productList.Add(product)<br/>            End While<br/>            If productList.Count &gt; 0 Then<br/>                Return productList<br/>            End If<br/>        End Using<br/>        Return Nothing<br/>    End Function<br/>End Class<br/></code></pre><br/><br/><p><strong>And now in your unit test you can also inherit from a very simple base class that does your setup / rollback work - or keep this on a per unit test basis</strong></p><br/><br/><p><strong>below is the simple testing base class I used</strong></p><br/><br/><pre><code>Imports System.Configuration<br/>Imports System.Data<br/>Imports System.Data.SqlClient<br/>Imports Microsoft.VisualStudio.TestTools.UnitTesting<br/><br/>Public MustInherit Class TransactionFixture<br/>    Protected mConnection As IDbConnection<br/>    Protected mTransaction As IDbTransaction<br/>    Private mConnectionString As String = ConfigurationManager.ConnectionStrings("Northwind.ConnectionString").ConnectionString<br/><br/>    &lt;TestInitialize()&gt; _<br/>    Public Sub CreateConnectionAndBeginTran()<br/>        mConnection = New SqlConnection(mConnectionString)<br/>        mConnection.Open()<br/>        mTransaction = mConnection.BeginTransaction()<br/>    End Sub<br/><br/>    &lt;TestCleanup()&gt; _<br/>    Public Sub RollbackTranAndCloseConnection()<br/>        mTransaction.Rollback()<br/>        mTransaction.Dispose()<br/>        mConnection.Close()<br/>        mConnection.Dispose()<br/>    End Sub<br/>End Class<br/></code></pre><br/><br/><p><strong>and finally - the below is a simple test using that test base class that shows how to test the entire CRUD cycle to make sure all the sprocs do their job and that your ado.net code does the left-right mapping correctly</strong></p><br/><br/><p><strong>I know this doesn't test the "spGetProducts" sproc used in the above data access sample, but you should see the power behind this approach to unit testing sprocs</strong></p><br/><br/><pre><code>Imports SampleApplication.Library<br/>Imports System.Collections.Generic<br/>Imports Microsoft.VisualStudio.TestTools.UnitTesting<br/><br/>&lt;TestClass()&gt; _<br/>Public Class ProductRepositoryUnitTest<br/>    Inherits TransactionFixture<br/><br/>    Private mRepository As ProductRepository<br/><br/>    &lt;TestMethod()&gt; _<br/>    Public Sub Should-Insert-Update-And-Delete-Product()<br/>        mRepository = New ProductRepository(New HttpCache(), mConnection, mTransaction)<br/>        '** Create a test product to manipulate throughout **'<br/>        Dim Product As New Product()<br/>        Product.ProductName = "TestProduct"<br/>        Product.SupplierID = 1<br/>        Product.CategoryID = 2<br/>        Product.QuantityPerUnit = "10 boxes of stuff"<br/>        Product.UnitPrice = 14.95<br/>        Product.UnitsInStock = 22<br/>        Product.UnitsOnOrder = 19<br/>        Product.ReorderLevel = 12<br/>        '** Insert the new product object into SQL using your insert sproc **'<br/>        mRepository.InsertProduct(Product)<br/>        '** Select the product object that was just inserted and verify it does exist **'<br/>        '** Using your GetProductById sproc **'<br/>        Dim Product2 As Product = mRepository.GetProduct(Product.ID)<br/>        Assert.AreEqual("TestProduct", Product2.ProductName)<br/>        Assert.AreEqual(1, Product2.SupplierID)<br/>        Assert.AreEqual(2, Product2.CategoryID)<br/>        Assert.AreEqual("10 boxes of stuff", Product2.QuantityPerUnit)<br/>        Assert.AreEqual(14.95, Product2.UnitPrice)<br/>        Assert.AreEqual(22, Product2.UnitsInStock)<br/>        Assert.AreEqual(19, Product2.UnitsOnOrder)<br/>        Assert.AreEqual(12, Product2.ReorderLevel)<br/>        '** Update the product object **'<br/>        Product2.ProductName = "UpdatedTestProduct"<br/>        Product2.SupplierID = 2<br/>        Product2.CategoryID = 1<br/>        Product2.QuantityPerUnit = "a box of stuff"<br/>        Product2.UnitPrice = 16.95<br/>        Product2.UnitsInStock = 10<br/>        Product2.UnitsOnOrder = 20<br/>        Product2.ReorderLevel = 8<br/>        mRepository.UpdateProduct(Product2) '**using your update sproc<br/>        '** Select the product object that was just updated to verify it completed **'<br/>        Dim Product3 As Product = mRepository.GetProduct(Product2.ID)<br/>        Assert.AreEqual("UpdatedTestProduct", Product2.ProductName)<br/>        Assert.AreEqual(2, Product2.SupplierID)<br/>        Assert.AreEqual(1, Product2.CategoryID)<br/>        Assert.AreEqual("a box of stuff", Product2.QuantityPerUnit)<br/>        Assert.AreEqual(16.95, Product2.UnitPrice)<br/>        Assert.AreEqual(10, Product2.UnitsInStock)<br/>        Assert.AreEqual(20, Product2.UnitsOnOrder)<br/>        Assert.AreEqual(8, Product2.ReorderLevel)<br/>        '** Delete the product and verify it does not exist **'<br/>        mRepository.DeleteProduct(Product3.ID)<br/>        '** The above will use your delete product by id sproc **'<br/>        Dim Product4 As Product = mRepository.GetProduct(Product3.ID)<br/>        Assert.AreEqual(Nothing, Product4)<br/>    End Sub<br/><br/>End Class<br/></code></pre><br/><br/><p>I know this is a long example, but it helped to have a reusable class for the data access work, and yet another reusable class for my testing so I didn't have to do the setup/teardown work over and over again ;)</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      UPDAT STORE PROC ON SQL SERVER
-    </pattern>
-    <template>
-<![CDATA[<p>Your assumption is right, this is the optimal way to do it and it's called <a href="http://en.wikipedia.org/wiki/Upsert" rel="nofollow">upsert/merge</a>.</p><br/><br/><p><a href="http://www.sqlservercentral.com/articles/T-SQL/61773/" rel="nofollow">Importance of UPSERT - from sqlservercentral.com</a>: </p><br/><br/><blockquote><br/>  <p>For every update in the case mentioned above we are removing one<br/>  additional read from the table if we<br/>  use the UPSERT instead of EXISTS.<br/>  Unfortunately for an Insert, both the<br/>  UPSERT and IF EXISTS methods use the<br/>  same number of reads on the table.<br/>  Therefore the check for existence<br/>  should only be done when there is a<br/>  very valid reason to justify the<br/>  additional I/O. The optimized way to<br/>  do things is to make sure that you<br/>  have little reads as possible on the<br/>  DB.</p><br/>  <br/>  <p>The best strategy is to attempt the<br/>  update. If no rows are affected by the<br/>  update then insert. In most<br/>  circumstances, the row will already<br/>  exist and only one I/O will be<br/>  required.</p><br/></blockquote><br/><br/><p><strong>Edit</strong>: <br/>Please check out <a href="http://stackoverflow.com/questions/13540/insert-update-stored-proc-on-sql-server/193876#193876">this answer</a> and the linked blog post to learn about the problems with this pattern and how to make it work safe.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      PARAMET BIND WHAT HAPPEN UNDER THE HOOD
-    </pattern>
-    <template>
-<![CDATA[<p>The MySQL manual page on prepared statements provides lots of information (which should apply to any other RDBMS): <a href="http://dev.mysql.com/doc/refman/5.0/en/c-api-prepared-statements.html" rel="nofollow">http://dev.mysql.com/doc/refman/5.0/en/c-api-prepared-statements.html</a></p><br/><br/><p>Basically, your statement is parsed and processed ahead of time, and the parameters are sent separately instead of being handled along with the SQL code.  This eliminates SQL-injection attacks because the SQL is parsed before the parameters are even set.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      QUERI ON 2 TABL ON DIFFER DATABAS SERVER
-    </pattern>
-    <template>
-<![CDATA[<p>With both queries, it looks like you are trying to insert into #temp. #temp is located on one of the databases (for arguments sake, databaseA). So when you try to insert into #temp from databaseB, it reports that it does not exist.</p><br/><br/><p>Try changing it from <em>Into <strong>#temp</strong> From</em> to <em>Into <strong>databaseA.dbo.#temp</strong> From</em> in both statements. </p><br/><br/><p>Also, make sure that the connection strings have permissions on the other DB, otherwise this will not work.</p><br/><br/><p>Update: relating to the temp table going out of scope - if you have one connection string that has permissions on both databases, then you could use this for both queries (while keeping the connection alive). While querying the table in the other DB, be sure to use [DBName].[Owner].[TableName] format when referring to the table.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      ALPHABET NAVIG
-    </pattern>
-    <template>
-<![CDATA[<p>So, there were plenty of good suggestions, but none did exactly what I wanted. Fortunately I was able to use them to figure out what I really wanted to do. The only thing the following doesn't do is print the last few unused letters (if there are any). That's why I have that cfif statement checking for 'W' as that's the last letter I use, otherwise it should check for Z.</p><br/><br/><pre><code>&lt;cfquery datasource="#application.dsn#" name="qTitles"&gt;<br/>SELECT title, url, substr(titles,1,1) as indexLetter<br/>FROM list<br/>ORDER BY indexLetter,title<br/>&lt;/cfquery&gt;<br/><br/>&lt;cfset linkLetter = "#asc('A')#"&gt;<br/>&lt;cfoutput query="titles" group="indexletter"&gt;<br/>    &lt;cfif chr(linkLetter) eq #qTitles.indexletter#&gt;<br/>        &lt;a href="###ucase(qTitles.indexletter)#"&gt;#ucase(qTitles.indexletter)#&lt;/a&gt;<br/>        &lt;cfif asc('W') neq linkLetter&gt;|&lt;/cfif&gt;<br/>        &lt;cfset linkLetter = ++LinkLetter&gt;<br/>    &lt;cfelse&gt;<br/>        &lt;cfscript&gt;<br/>        while(chr(linkLetter) != qTitles.indexletter)<br/>                {<br/>                        WriteOutput(" " &amp; chr(linkLetter) &amp; " ");<br/>                        IF(linkLetter != asc('W')){WriteOutput("|");};<br/>                        ++LinkLetter;<br/>                }<br/>        &lt;/cfscript&gt;<br/><br/>        &lt;a href="###ucase(qTitles.indexletter)#"&gt;#ucase(qTitles.indexletter)#&lt;/a&gt;<br/>        &lt;cfif asc('W') neq linkLetter&gt;|&lt;/cfif&gt;<br/>        &lt;cfset linkLetter = ++LinkLetter&gt;<br/>    &lt;/cfif&gt;<br/>&lt;/cfoutput&gt;<br/><br/>&lt;ul&gt;<br/>&lt;cfset currentLetter = ""&gt;<br/>&lt;cfoutput query="qTitles" group="title"&gt;<br/>&lt;cfif currentLetter neq #qTitles.indexletter#&gt;<br/>    &lt;li&gt;&lt;a name="#ucase(qTitles.indexletter)#"&gt;#ucase(qTitles.indexletter)#&lt;/a&gt;&lt;/li&gt;<br/>&lt;/cfif&gt;<br/>&lt;cfset currentLetter = #qTitles.indexletter#&gt;<br/>&lt;li&gt;&lt;a href="#url#"&gt;#title#&lt;/a&gt;&lt;/li&gt;<br/>&lt;/cfoutput&gt;<br/>&lt;/ul&gt;<br/></code></pre><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      THE NTH ROW IN A SQL DATABAS TABL
-    </pattern>
-    <template>
-<![CDATA[<p>There are ways of doing this in optional parts of the standard, but a lot of databases support their own way of doing it.</p><br/><br/><p>A really good site that talks about this and other things is <a href="http://troels.arvin.dk/db/rdbms/#select-limit" rel="nofollow">http://troels.arvin.dk/db/rdbms/#select-limit</a>.</p><br/><br/><p>Basically, PostgreSQL and MySQL supports the non-standard:</p><br/><br/><pre><code>SELECT...<br/>LIMIT y OFFSET x <br/></code></pre><br/><br/><p>Oracle, DB2 and MSSQL supports the standard windowing functions:</p><br/><br/><pre><code>SELECT * FROM (<br/>  SELECT<br/>    ROW_NUMBER() OVER (ORDER BY key ASC) AS rownumber,<br/>    columns<br/>  FROM tablename<br/>) AS foo<br/>WHERE rownumber &lt;= n<br/></code></pre><br/><br/><p>(which I just copied from the site linked above since I never use those DBs)</p><br/><br/><p><em>Update:</em> As of PostgreSQL 8.4 the standard windowing functions are supported, so expect the second example to work for PostgreSQL as well. </p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      ENTERPRIS REPORT SOLUT
-    </pattern>
-    <template>
-<![CDATA[<p>I've used Cognos Series 7, Cognos Series 8, Crystal Reports, Business Objects XI R2 WebIntelligence, Reporting Services 2000, Reporting Services 2005, and Reporting Services 2008.  Here's my feedback on what I've learned:</p><br/><br/><p><strong>Reporting Services 2008/2005/2000</strong></p><br/><br/><p>PROS</p><br/><br/><ol><br/><li><p>Cost: Cheapest enterprise business intelligence solution if you are using MS SQL Server as a back-end.  You also have a best-in-class ETL solution at no additional cost if you throw in SSIS.</p></li><br/><li><p>Most Flexible: Most flexible reporting solution I've ever used.  It has always met all my business needs, particularly in its latest incarnation.</p></li><br/><li><p>Easily Scalable: We initially used this as a departmental solution supporting about 20 users.  We eventually expanded it to cover a few thousand users.  Despite having a really bad quality virtual server located in a remote data center, we were able to scale to about 50-100 concurrent user requests.  On good hardware at a consulting gig, I was able to scale it to a larger set of concurrent users without any issues.  I've also seen implementations where multiple SSRS servers were deployed in different countries and SSIS was used to synch the data in the back-ends.  This allowed for solid performance in a distributed manner at almost no additional cost.</p></li><br/><li><p>Source Control Integration: This is CRITICAL to me when developing reports with my business intelligence teams.  No other BI suite offers an out-of-box solution for this that I've ever used.  Every other platform I used either required purchasing a 3rd party add-in or required you to promote reports between separate development, test, and production environments.</p></li><br/><li><p>Analysis Services: I like the tight integration with Analysis Services between SSRS and SSIS.  I've read about instances where Oracle and DB2 quotes include installing a SQL Server 2005 Analysis Services server for OLAP cubes.</p></li><br/><li><p>Discoverability: No system has better discoverability than SSRS.  There are more books, forums, articles, and code sites on SSRS than any other BI suite that I've ever used.  If I needed to figuire out how to do something in SSRS, I could almost always find it with a few minutes or hours of work.</p></li><br/></ol><br/><br/><p>CONS</p><br/><br/><ol><br/><li><p>IIS Required for SSRS 2005/2000: Older versions of SSRS required installing IIS on the database server.  This was not permissible from an internal controls perspective when I worked at a large bank.  We eventually implemented SSRS without authorized approval from IT operations and basically asked for forgiveness later.  <strong>This is not an issue in SSRS 2008 since IIS is no longer required.</strong></p></li><br/><li><p>Report Builder: The web-based report builder was non-existant in SSRS 2000.  The web-based report builder in SSRS 2005 was difficult to use and did not have enough functionality.  The web-based report builder in SSRS 2008 is definitely better, but it is still too difficult to use for most business users.</p></li><br/><li><p>Database Bias: It works best with Microsoft SQL Server.  It isn't great with Oracle, DB2, and other back-ends.</p></li><br/></ol><br/><br/><p><strong>Business Objects XI WebIntelligence</strong></p><br/><br/><p>PROS</p><br/><br/><ol><br/><li><p>Ease of Use: Easiest to use for your average non-BI end-user for developing ad hoc reports.</p></li><br/><li><p>Database Agnostic: Definitely a good solution if you expect to use Oracle, DB2, or another database back-end.</p></li><br/><li><p>Performant: Very fast performance since most of the page navigations are basically file-system operations instead of database-calls.</p></li><br/></ol><br/><br/><p>CONS</p><br/><br/><ol><br/><li><p>Cost: Number one problem.  If I want to scale up my implementation of Business Objects from 30 users to 1000 users, then SAP will make certain to charge you a few hundred thousands of dollars.  And that's just for the Business Objects licenses.  Add in the fact that you will also need database server licenses, you are now talking about a very expensive system.  Of course, that could be the personal justification for getting Business Objects: if you can convince management to purchase a very expensive BI system, then you can probably convince management to pay for a large BI department.</p></li><br/><li><p>No Source Control: Lack of out-of-the-box source control integration leads to errors  in accidentally modifying and deploying old report definitions by mistake.  The "work-around" for this is promote reports between environments -- a process that I do NOT like to do since it slows down report development and introduces environmental differences variables.</p></li><br/><li><p>No HTML Email Support: You cannot send an HTML email via a schedule.  I regularly do this in SSRS.  You can buy an expensive 3rd party add-in to do this, but you shouldn't have to spend more money for this functionality.</p></li><br/><li><p>Model Bias: Report development requires universes -- basically a data model.  That's fine for ad hoc report development, but I prefer to use stored procedures to have full control of performance.  I also like to build flat tables that are then queried to avoid costly complex joins during report run-time.  It is silly to have to build universes that just contain flat tables that are only used by one report.  You shouldn't have to build a model just to query a table.  Store procedure support is also not supported out of the box without hacking the SQL Overrides.</p></li><br/><li><p>Poor Parameter Support: Parameter support is terrible in BOXI WebIntelligence reports.  Although I like the meta-data refresh options for general business users, it just isn't robust enough when trying to setup schedules.  I almost always have to clone reports and alter the filters slightly which leads to unnecessary report definition duplication.  SSRS beats this hands down, particularly since you can make the value and the label have different values -- unlike BOXI.</p></li><br/><li><p>Inadequate Report Linking Support: I wanted to store one report definition in a central folder and then create linked reports for other users.  However, I quickly found out end-users needed to have full rights on the parent object to use the object in their own folder.  This defeated the entire purpose of using a linked report object.  Give me SSRS!</p></li><br/><li><p>Separate CMC: Why do you have to launch another application just to manage your object security?  Worse, why isn't the functionality identical between CMC and InfoSys?  For example, if you want to setup a scheduled report to retry on failed attempts, then you can specify the number of retries and the retry interval in CMC.  However, you can't do this in InfoSys and you can't see the information either.  InfoSys allows you to setup event-driven schedules and CMC does not support this feature.</p></li><br/><li><p>Java Version Dependency: BOXI works great on end-user machines so long as they are running the same version of java as the server.  However, once a newer version of java is installed on your machine, things starts to break.  We're running Java 1.5 on our BOXI R2 server (the default java client) and almost everyone in the company is on Java 1.6.  If you use Java 1.6, then prompts can freeze your IE and FoxFire sessions or crash your report builder unexpectedly.</p></li><br/><li><p>Weak Discoverability: Aside from BOB (Business Objects Board), there isn't much out there on the Internet regarding troubleshooting Business Objects problems.</p></li><br/></ol><br/><br/><p><strong>Cognos Series 8</strong></p><br/><br/><p>PROS</p><br/><br/><ol><br/><li><p>Ease of Use: Although BOXI is easier to use for writing simple reports for general business users, Cognos is a close 2nd in this area.</p></li><br/><li><p>Database Agnostic: Like BOXI this is definitely a good solution if you expect to use Oracle, DB2, or another database back-end.</p></li><br/><li><p>FrameWork Manager: This is definitely a best-in-class meta-data repository.  BOXI's universe builder wishes it was half as good.  This tool is well suited to promoting packages across Development, Test, and Production environments.</p></li><br/></ol><br/><br/><p>CONS</p><br/><br/><ol><br/><li><p>Cost: Same issue as Business Objects.  Similar cost structure.  Similar database licensing requirements as well.</p></li><br/><li><p>No Source Control: Same issue as Business Objects.  I'm not aware of any 3rd party tools that resolve this issue, but they might exist.</p></li><br/><li><p>Model Bias: Same issue as Business Objects.  Has better support for stored procedures in FrameWork Manager, though.</p></li><br/><li><p>Poor Parameter Support: Same issue as Business Objects.  Has better support for creating prompt-pages if you can code in Java.  Buggy behavior, though, when users click the back-button to return to the prompt-page.  SSRS beats this out hands-down.</p></li><br/><li><p>Inadequate Error Handling: Error messages in Cognos are nearly impossible to decipher.  They generally give you a long negative number and a stack dump as part of the error message.  I don't know how many times we "resolved" these error messages by rebuilding reports from scratch.  For some reason, it is pretty easy to corrupt a report definition.</p></li><br/><li><p>No Discoverability: It is very hard to track down any answers on how to troubleshoot problems or to implement functionality in Cognos.  There just isn't adequate community support in Internet facing websites for the products.</p></li><br/></ol><br/><br/><p>As you can guess from my answer, I believe Microsoft's BI suite is the best platform on the market.  However, I must state that most articles I've read on comparisons of BI suites usually do not rate Microsoft's offering as well as SAP's Business Objects and Cognos's Series 8 products.  Also, I've also seen Microsoft come out on the bottom in internal reviews of BI Suites in two separate companies after they were review by the reigning CIO's.  In both instances, though, it seemed like it all boiled down to wanting to be perceived as a major department that justified a large operating budget.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      COMPAR PRODUCT SALE BY MONTH
-    </pattern>
-    <template>
-<![CDATA[<p>The Case Statement is my best sql friend.  You also need a table for time to generate your 0 rev in both months.</p><br/><br/><p>Assumptions are based on the availability of following tables:</p><br/><br/><blockquote><br/>  <p>sales: Category | Revenue  |  Yearh  |<br/>  Month</p><br/></blockquote><br/><br/><p>and</p><br/><br/><blockquote><br/>  <p>tm: Year | Month  (populated with all<br/>  dates required for reporting)</p><br/></blockquote><br/><br/><p>Example 1 without empty rows:</p><br/><br/><pre><code>select<br/>    Category<br/>    ,month<br/>    ,SUM(CASE WHEN YEAR = 2008 THEN Revenue ELSE 0 END) this_year<br/>    ,SUM(CASE WHEN YEAR = 2007 THEN Revenue ELSE 0 END) last_year<br/><br/>from<br/>    sales<br/><br/>where<br/>    year in (2008,2007)<br/><br/>group by<br/>    Category<br/>    ,month<br/></code></pre><br/><br/><p>RETURNS:</p><br/><br/><pre><code>Category  |  Month  |  Rev. This Year  |  Rev. Last Year<br/>Bikes          1          10 000               0<br/>Bikes          2          12 000               11 000<br/>Bikes          3          12 000               11 500<br/>Bikes          4          0                    15 400<br/></code></pre><br/><br/><p>Example 2 with empty rows:<br/>I am going to use a sub query (but others may not) and will return an empty row for every product and year month combo.</p><br/><br/><pre><code>select<br/>    fill.Category<br/>    ,fill.month<br/>    ,SUM(CASE WHEN YEAR = 2008 THEN Revenue ELSE 0 END) this_year<br/>    ,SUM(CASE WHEN YEAR = 2007 THEN Revenue ELSE 0 END) last_year<br/><br/>from<br/>    sales<br/>    Right join (select distinct  --try out left, right and cross joins to test results.<br/>                   product<br/>                   ,year<br/>                   ,month<br/>               from<br/>                  sales --this ideally would be from a products table<br/>                  cross join tm<br/>               where<br/>                    year in (2008,2007)) fill<br/><br/><br/>where<br/>    fill.year in (2008,2007)<br/><br/>group by<br/>    fill.Category<br/>    ,fill.month<br/></code></pre><br/><br/><p>RETURNS:</p><br/><br/><pre><code>Category  |  Month  |  Rev. This Year  |  Rev. Last Year<br/>Bikes          1          10 000               0<br/>Bikes          2          12 000               11 000<br/>Bikes          3          12 000               11 500<br/>Bikes          4          0                    15 400<br/>Bikes          5          0                    0<br/>Bikes          6          0                    0<br/>Bikes          7          0                    0<br/>Bikes          8          0                    0<br/></code></pre><br/><br/><p>Note that most reporting tools will do this crosstab or matrix functionality, and now that i think of it SQL Server 2005 has pivot syntax that will do this as well.</p><br/><br/><p>Here are some additional resources.<br/>CASE<br/><a href="http://www.4guysfromrolla.com/webtech/102704-1.shtml" rel="nofollow">http://www.4guysfromrolla.com/webtech/102704-1.shtml</a><br/>SQL SERVER 2005 PIVOT<br/><a href="http://msdn.microsoft.com/en-us/library/ms177410.aspx" rel="nofollow">http://msdn.microsoft.com/en-us/library/ms177410.aspx</a></p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      USE T SQL MS SQL TO APPEND A STRING TO EXIST TABL CELL
-    </pattern>
-    <template>
-<![CDATA[<p>The solution is:</p><br/><br/><pre><code>UPDATE tablename SET [filename] = RTRIM([filename]) + '.jpg' WHERE id &gt; 50<br/></code></pre><br/><br/><p>RTRIM is required because otherwise the [filename] column in its entirety will be selected for the string concatenation i.e. if it is a varchar(20) column and filename is only 10 letters long then it will still select those 10 letters and then 10 spaces.  This will in turn result in an error as you try to fit 20 + 3 characters into a 20 character long field.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      LEARN SQL SERVER
-    </pattern>
-    <template>
-<![CDATA[<p>If you're planning on coding against a sql database using .NET, skip ADO and go directly to Linq.  You will NOT miss anything.</p><br/><br/><p>Oh, also, Joe Celko. If you see his name on an article or a book about SQL, read it.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      A UNION TABL WITH FIELD AS COLUMN
-    </pattern>
-    <template>
-<![CDATA[<p>Is this for SQL server?</p><br/><br/><p>If yes then</p><br/><br/><p><a href="http://wiki.lessthandot.com/index.php/Concatenate_Values_From_Multiple_Rows_Into_One_Column" rel="nofollow">Concatenate Values From Multiple Rows Into One Column (2000)</a><br><br/><a href="http://wiki.lessthandot.com/index.php/Concatenate_Values_From_Multiple_Rows_Into_One_Column_Ordered" rel="nofollow">Concatenate Values From Multiple Rows Into One Column Ordered (2005+)</a></p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      WHAT ELS DO YOU USE BESID DATASET
-    </pattern>
-    <template>
-<![CDATA[<p>Since .NET 3.5 came out, I've exclusively used LINQ. It's really that good; I don't see any reason to use any of those old crutches any more. </p><br/><br/><p>As great as LINQ is, though, I think any ORM system would allow you to do away with that dreck.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      A TABL SCAN AND A CLUSTER INDEX SCAN
-    </pattern>
-    <template>
-<![CDATA[<p>In a table without a clustered index (a heap table), data pages are not linked together - so traversing pages requires a <a href="http://msdn.microsoft.com/en-us/library/ms188270.aspx" rel="nofollow">lookup into the Index Allocation Map</a>.</p><br/><br/><p>A clustered table, however, has it's <a href="http://msdn.microsoft.com/en-us/library/ms177443.aspx" rel="nofollow">data pages linked in a doubly linked list</a> - making sequential scans a bit faster. Of course, in exchange, you have the overhead of dealing with keeping the data pages in order on INSERTs, UPDATEs, and DELETEs.</p><br/><br/><p>If your query has a RANGE operator (eg., SELECT * FROM TABLE WHERE Id BETWEEN 1 AND 100), then a clustered table (being in a guaranteed order) would be more efficient - as it could use the index pages to find the relevant data page(s). A heap would have to scan all rows, since it cannot rely on ordering.</p><br/><br/><p>And, of course, a clustered index lets you do a CLUSTERED INDEX SEEK, which is pretty much optimal for performance...a heap with no indexes would always result in a table scan.</p><br/><br/><p>So:</p><br/><br/><ul><br/><li><p>For your example query where you select all rows, the only difference is the doubly linked list a clustered index maintains. This should make your clustered table just a tiny bit faster than a heap with a large number of rows.</p></li><br/><li><p>For a query with a WHERE clause that can be (at least partially) satisfied by the clustered index, you'll come out ahead because of the ordering - so you won't have to scan the entire table.</p></li><br/><li><p>For a query that is not satisified by the clustered index, you're pretty much even...again, the only difference being that doubly linked list for sequential scanning. In either case, you're suboptimal.</p></li><br/><li><p>For INSERTs, UPDATEs, and DELETEs a heap should win - as there's no overhead in maintaining order.</p></li><br/></ul><br/><br/><p>I quickly glanced at this <a href="http://www.microsoft.com/technet/prodtechnol/sql/bestpractice/clusivsh.mspx" rel="nofollow">Microsoft whitepaper</a>, which has some actual numbers, but I don't think there should be any surprises in there.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      CAN I REMOV DUPLIC ROW
-    </pattern>
-    <template>
-<![CDATA[<p>Assuming no nulls, you GROUP BY the unique columns, and SELECT the MIN (or MAX) RowId as the row to keep. Then, just delete everything that didn't have a row id:</p><br/><br/><pre><code>DELETE MyTable <br/>FROM MyTable<br/>LEFT OUTER JOIN (<br/>   SELECT MIN(RowId) as RowId, Col1, Col2, Col3 <br/>   FROM MyTable <br/>   GROUP BY Col1, Col2, Col3<br/>) as KeepRows ON<br/>   MyTable.RowId = KeepRows.RowId<br/>WHERE<br/>   KeepRows.RowId IS NULL<br/></code></pre><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      YOUR REPORT TOOL OF CHOIC
-    </pattern>
-    <template>
-<![CDATA[<p>For knocking out fairly "run of the mill" reports, SQL Reporting Services is really quite impressive.</p><br/><br/><p>For complicated analysis, loading the data (maybe pre-aggregated) into an Excel Pivot table is usually adequate for most users.</p><br/><br/><p>I've found you can spend a lot of time (and money) building a comprehensive "ad-hoc" reporting suite and after the first month or two of "wow factor", 99% of the reports generated will be the same report with minor differences in a fixed set of parameters.</p><br/><br/><p>Don't accept when a user says they want "ad-hoc" reports without specifying what goals and targets their looking for.  They are just fishing and they need to actually spend as much time on THINKING about THEIR reporting requirements as YOU would have to spend BUILDING their solution.</p><br/><br/><p>I've spent too much time building the "the system that can report everything" and for it to become out of date or out of favour before it was finished.  Much better to get the quick wins out of the way as quick as possible and then spend time "systemising" the most important reports.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      ORACL S YY AND RR DATE MASK
-    </pattern>
-    <template>
-<![CDATA[<p><a href="http://oracle.ittoolbox.com/groups/technical-functional/oracle-dev-l/difference-between-yyyy-and-rrrr-format-519525"><a href="http://oracle.ittoolbox.com/groups/technical-functional/oracle-dev-l/difference-between-yyyy-and-rrrr-format-519525">http://oracle.ittoolbox.com/groups/technical-functional/oracle-dev-l/difference-between-yyyy-and-rrrr-format-519525</a></a></p><br/><br/><blockquote><br/>  <p>YY allows you to retrieve just two digits of a year, for example, the 99 in<br/>  1999. The other digits (19) are automatically assigned to the current<br/>  century. RR converts two-digit years into four-digit years by rounding.</p><br/>  <br/>  <p>50-99 are stored as 1950-1999, and dates ending in 00-49 are stored as<br/>  2000-2049. RRRR accepts a four-digit input (although not required), and<br/>  converts two-digit dates as RR does. YYYY accepts 4-digit inputs butdoesn't<br/>  do any date converting</p><br/></blockquote><br/><br/><p>Essentially, your first example will assume that 81 is 2081 whereas the RR one assumes 1981. So the first example should not return any rows as you most likely did not hire any guys after May 1 2081 yet :-)</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      AN UPSERT INTO TABL
-    </pattern>
-    <template>
-<![CDATA[<p>IIRC there is some sort of "On Duplicate" (name might be wrong) syntax that lets you update if a row exists (MySQL)</p><br/><br/><p>Alternately some form of:</p><br/><br/><pre><code>INSERT INTO @ResultTable (StaffName, Stage1Count, Stage2Count)<br/>  SELECT StaffName,0,0 FROM ViewJob<br/>  GROUP BY StaffName<br/><br/>UPDATE @ResultTable Stage1Count= (<br/>  SELECT COUNT(*) AS count FROM ViewJob<br/>  WHERE InStage1 = 1<br/>  @ResultTable.StaffName = StaffName)<br/><br/>UPDATE @ResultTable Stage2Count= (<br/>  SELECT COUNT(*) AS count FROM ViewJob<br/>  WHERE InStage2 = 1<br/>  @ResultTable.StaffName = StaffName)<br/></code></pre><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      REQUEST A RANDOM ROW IN SQL
-    </pattern>
-    <template>
-<![CDATA[<p>Solutions like Jeremies:</p><br/><br/><pre><code>SELECT * FROM table ORDER BY RAND() LIMIT 1<br/></code></pre><br/><br/><p>work, but they need a sequential scan of all the table (because the random value associated with each row needs to be calculated - so that the smallest one can be determined), which can be quite slow for even medium sized tables. My recommendation would be to use some kind of indexed numeric column (many tables have these as their primary keys), and then write something like:</p><br/><br/><pre><code>SELECT * FROM table WHERE num_value &gt;= RAND() * (SELECT MAX(num_value) FROM table) LIMIT 1<br/></code></pre><br/><br/><p>This works in constant time, regardless of the table size, if <code>num_value</code> is indexed. One caveat: this assumes that <code>num_value</code> is equally distributed in the range <code>0..MAX(num_value)</code>. If your dataset strongly deviates from this assumption, you will get skewed results (some rows will appear more often than others).</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      FONT IN SQL SERVER 2005 REPORT SERVIC
-    </pattern>
-    <template>
-<![CDATA[<p>The PDF files served up from SSRS, like many PDF files, have embedded postscript fonts. So, the local fonts used in the report are converted to a best matching postscript font when the conversion takes place so the PDF is totally portable without relying on locally installed fonts. </p><br/><br/><p>You can see the official MS guidelines and font requirements for SSRS PDF exports here: (SQL.90).aspx">SQL Server 2005 Books Online (September 2007) Designing for PDF Output. Also, this post should provide some help as well: <a href="http://blogs.msdn.com/donovans/pages/reporting-services-pdf-renderer-faq.aspx" rel="nofollow">Reporting Services: PDF Renderer FAQ</a></p><br/><br/><p><hr /></p><br/><br/><p>Aspose apparently also has a component that claims to be able to add custom embedded fonts in SQL Report PDFs.  </p><br/><br/><p>See <a href="http://www.aspose.com/community/blogs/aspose.pdf/archive/2008/05/02/aspose-pdf-for-reporting-services-v1-3-0-0-released.aspx" rel="nofollow">Aspose.Pdf for Reporting Services</a></p><br/><br/><blockquote><br/>  <p>Aspose.Pdf for Reporting Services<br/>  makes it possible generating PDF<br/>  reports in Microsoft SQL Server 2000<br/>  and 2005 Reporting Services. Some<br/>  advanced features like XMP metadata,<br/>  <strong>custom embedded font</strong> and rendering<br/>  watermark for pages are now supported.<br/>  All RDL report features including<br/>  sections, images, charts, tables,<br/>  matrices, headers and footers are<br/>  converted with the highest degree of<br/>  precision to PDF.</p><br/></blockquote><br/><br/><p>I've not tried this component, so I can only share what it claims to be able to do.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      ENCAPSUL COMPLEX ORACL PL SQL CURSOR LOGIC AS A VIEW
-    </pattern>
-    <template>
-<![CDATA[<p>I think a way to approach this is to use analytic functions...</p><br/><br/><p>I set up your test case using:</p><br/><br/><pre><code>create table employee_job (<br/>    emp_id integer,<br/>    job_id integer,<br/>    status varchar2(1 char),<br/>    eff_date date<br/>    );  <br/><br/>insert into employee_job values (1,10,'A',to_date('10-JAN-2008','DD-MON-YYYY'));<br/>insert into employee_job values (2,11,'A',to_date('13-JAN-2008','DD-MON-YYYY'));<br/>insert into employee_job values (1,12,'A',to_date('20-JAN-2008','DD-MON-YYYY'));<br/>insert into employee_job values (2,11,'T',to_date('01-FEB-2008','DD-MON-YYYY'));<br/>insert into employee_job values (1,10,'T',to_date('02-FEB-2008','DD-MON-YYYY'));<br/>insert into employee_job values (2,11,'A',to_date('20-FEB-2008','DD-MON-YYYY'));<br/><br/>commit;<br/></code></pre><br/><br/><p>I've used the <strong>lead</strong> function to get the next date and then wrapped it all as a sub-query just to get the "A" records and add the end date if there is one.</p><br/><br/><pre><code>select<br/>    emp_id,<br/>    job_id,<br/>    eff_date start_date,<br/>    decode(next_status,'T',next_eff_date,null) end_date<br/>from<br/>    (<br/>    select<br/>        emp_id,<br/>        job_id,<br/>        eff_date,<br/>        status,<br/>        lead(eff_date,1,null) over (partition by emp_id, job_id order by eff_date, status) next_eff_date,<br/>        lead(status,1,null) over (partition by emp_id, job_id order by eff_date, status) next_status<br/>    from<br/>        employee_job<br/>    )<br/>where<br/>    status = 'A'<br/>order by<br/>    start_date,<br/>    emp_id,<br/>    job_id<br/></code></pre><br/><br/><p>I'm sure there's some use cases I've missed but you get the idea. Analytic functions are your friend :)</p><br/><br/><pre><code>EMP_ID   JOB_ID     START_DATE     END_DATE            <br/>  1        10       10-JAN-2008    02-FEB-2008         <br/>  2        11       13-JAN-2008    01-FEB-2008         <br/>  2        11       20-FEB-2008                              <br/>  1        12       20-JAN-2008<br/></code></pre><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      DROP SQL STATIST
-    </pattern>
-    <template>
-<![CDATA[<p>It is considered best practice to auto create and auto update statistics.  Sql Server will create them if it needs them.  You will often see the tuning wizard generate lots of these, and you will also see people advise that you update statistics as a part of your maintenance plan, but this is not necessary and might actually make things worse, just so long as auto create and auto update are enabled.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      LIKE CLAUS IN PART OF AN INNER JOIN
-    </pattern>
-    <template>
-<![CDATA[<p>Your first query will work but will require a full table scan because any index on that column will be ignored.   You will also have to do some dynamic SQL to generate all your LIKE clauses.</p><br/><br/><p>Try a full text search if your using SQL Server or check out one of the <a href="http://lucene.apache.org/java/docs/index.html" rel="nofollow">Lucene</a> implementations.  Joel talked about his success with it recently.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      DIRTI READ PRO CON
-    </pattern>
-    <template>
-<![CDATA[<p>From <a href="http://msdn.microsoft.com/en-us/library/aa259216(SQL.80).aspx" rel="nofollow">MSDN</a>:</p><br/><br/><blockquote><br/>  <p>When this option is set, it is possible to read uncommitted or dirty data; values in the data can be changed and rows can appear or disappear in the data set before the end of the transaction. </p><br/></blockquote><br/><br/><p>Simply put, when you are using this isolation level, and you are performing multiple queries on an active table as part of one transaction, there is no guarantee that the information returned to you within different parts of the transaction will remain the same. You could query the same data twice within one transaction and get different results (this might happen in the case where a different user was updating the same data in the midst of your transaction). This can obviously have severe ramifications for parts of your application that rely on data integrity.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      PERFORM DYNAM SUBQUERI IN MS REPORT SERVIC
-    </pattern>
-    <template>
-<![CDATA[<p>I would recommend using a <a href="http://msdn.microsoft.com/en-us/library/ms160348.aspx" rel="nofollow">SubReport</a>.  You would place the SubReport in a table cell.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      MISS SOMETH ABOUT LINQ
-    </pattern>
-    <template>
-<![CDATA[<p>LINQ is not about SQL. LINQ is about being apply functional programming paradigmns on objects.</p><br/><br/><p>LINQ to SQL is an ORM built ontop of the LINQ foundation, but LINQ is much more. I don't use LINQ to SQL, yet I use LINQ all the time.</p><br/><br/><p>Take the task of finding the intersection of two lists:</p><br/><br/><p>Before LINQ, this tasks requires writing a nested foreach that iterates the small list once for every item in the big list O(N*M), and takes about 10 lines of code.</p><br/><br/><pre><code>foreach (int number in list1)<br/>{<br/>    foreach (int number2 in list2)<br/>    {<br/>        if (number2 == number)<br/>        {<br/>            returnList.add(number2);<br/>        }<br/>    }<br/>}<br/></code></pre><br/><br/><p>Using LINQ, it does the same thing in one line of code:</p><br/><br/><pre><code>var results = list1.Intersect(list2);<br/></code></pre><br/><br/><p>You'll notice that doesn't look like LINQ, yet it is. You don't need to use the expression syntax if you don't want to.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      PRES ORDER IN A RELAT DATABAS
-    </pattern>
-    <template>
-<![CDATA[<p>Since I've mostly run into this with Django, I've found <a href="http://www.djangosnippets.org/snippets/1053/" rel="nofollow">this solution</a> to be the most workable.  It seems that there isn't any "right way" to do this in a relational database.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      RUN OF DATA
-    </pattern>
-    <template>
-<![CDATA[<p>Try this:</p><br/><br/><pre><code>select n.name, <br/>    (select count(*) <br/>     from myTable n1<br/>     where n1.name = n.name and n1.id &gt;= n.id and (n1.id &lt;=<br/>        (<br/>        select isnull(min(nn.id), (select max(id) + 1 from myTable))<br/>        from myTable nn<br/>        where nn.id &gt; n.id and nn.name &lt;&gt; n.name<br/>        )<br/>     ))<br/>from myTable n<br/>where not exists (<br/>   select 1<br/>   from myTable n3<br/>   where n3.name = n.name and n3.id &lt; n.id and n3.id &gt; (<br/>            select isnull(max(n4.id), (select min(id) - 1 from myTable))<br/>            from myTable n4<br/>            where n4.id &lt; n.id and n4.name &lt;&gt; n.name<br/>            )<br/>)<br/></code></pre><br/><br/><p>I think that'll do what you want. Bit of a kludge though.</p><br/><br/><p>Phew! After a few edits I think I have all the edge cases sorted out.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      OUT EMAIL AT A USER S LOCAL TIME
-    </pattern>
-    <template>
-<![CDATA[<p>You have two options:</p><br/><br/><ul><br/><li>Store the adjusted time for the mail action into the database for each user. Then just compare server time with stored time. To avoid confusion and portability issues, I would store all times in UTC. So, send mail when SERVER<em>UTC</em>TIME() == storedUtcTime.</li><br/><li>Store the local time for each mail action into the database, then convert on-the-fly. Send mail when SERVER<em>UTC</em>TIME() == TO<em>UTC</em>TIME(storedLocalTime, userTimeZone).</li><br/></ul><br/><br/><p>You should decide what makes most sense for your application. For example if the mailing time is always the same for all users, it makes more sense to go with option (2). If the events times can change between users and even per user, it may make development and debugging easier if you choose option (1). Either way you will need to know the user's time zone.</p><br/><br/><p>*These function calls are obviously pseudo, since I don't know their invocations in T-SQL, but they should exist.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      RECORD CONTAIN SPECIF INFORM IN SQL
-    </pattern>
-    <template>
-<![CDATA[<pre><code>SELECT * FROM TABLE WHERE TABLE.TITLE LIKE '%LCS%';<br/></code></pre><br/><br/><p>% is the wild card matcher.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      WAY TO CHECK IF TWO DATETIM ARE ON THE SAME CALENDAR DAY IN TSQL
-    </pattern>
-    <template>
-<![CDATA[<p>This is much more concise:</p><br/><br/><pre><code>where <br/>  datediff(day, date1, date2) = 0<br/></code></pre><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      COMMUN WITH A MYSQL SERVER
-    </pattern>
-    <template>
-<![CDATA[<p><a href="http://tangentsoft.net/mysql++/" rel="nofollow">MySQL++</a></p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      BETTER AD HOC QUERI OR STORE PROCEDUR
-    </pattern>
-    <template>
-<![CDATA[<p>In my experience writing mostly WinForms Client/Server apps these are the simple conclusions I've come to:</p><br/><br/><p><strong>Use Stored Procedures:</strong></p><br/><br/><ol><br/><li>For any complex data work.  If you're going to be doing something truly requiring a cursor or temp tables it's usually fastest to do it within SQL Server.</li><br/><li>When you need to lock down access to the data.  If you don't give table access to users (or role or whatever) you can be sure that the only way to interact with the data is through the SP's you create.</li><br/></ol><br/><br/><p><strong>Use ad-hoc queries:</strong></p><br/><br/><ol><br/><li>For CRUD when you don't need to restrict data access (or are doing so in another manner).</li><br/><li>For simple searches.  Creating SP's for a bunch of search criteria is a pain and difficult to maintain.  If you can generate a reasonably fast search query use that.</li><br/></ol><br/><br/><p>In most of my applications I've used both SP's and ad-hoc sql, though I find I'm using SP's less and less as they end up being code just like C#, only harder to version control, test, and maintain.  I would recommend using ad-hoc sql unless you can find a specific reason not to.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      SV ( OR SHEET IN XL ) TO SQL CREAT ( AND INSERT ) STATEMENT WITH .NET
-    </pattern>
-    <template>
-<![CDATA[<p>In SQL server it is as easy as</p><br/><br/><pre><code>SELECT * INTO NewTablenNmeHere<br/>FROM OPENROWSET( 'Microsoft.Jet.OLEDB.4.0', <br/>'Excel 8.0;Database=C:\testing.xls','SELECT * FROM [Sheet1$]')<br/></code></pre><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      STRUCTUR AN SQL TABL TO HAVE A MATCH OR RETURN NO RESULT
-    </pattern>
-    <template>
-<![CDATA[<p>If it's only going to be Allow/Deny, then a simple linking table between Users and Resources would work fine.  If there is an entry keyed to the User-Resource in the linking table, allow access.</p><br/><br/><pre><code>UserResources<br/>-------------<br/>UserId FK-&gt;Users<br/>ResourceId FK-&gt;Resources<br/></code></pre><br/><br/><p>and the sql would be something like </p><br/><br/><pre><code>if exists (select 1 from UserResources <br/>where UserId = @uid and ResourceId=@rid)<br/>set @allow=1;<br/></code></pre><br/><br/><p>With a clustered index on (UserId and ResourceId), the query would be blindingly fast even with millions of records.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      N ) HIBERN AUTO JOIN
-    </pattern>
-    <template>
-<![CDATA[<p>You could just perform the select on the original entity and make the association between the two objects "lazy = false". As long as the entities are mapped then both will be returned and you wont get a lazyloadingexception when trying to access the object.</p><br/><br/><p>If you don't want to map "lazy=false" then you can also iterate through the results and perform some sort of operation (such as asking if it is null; if(v1.AssocatedObject == null){}) to ensure the data is loaded while the session is open.</p><br/><br/><p>Update:</p><br/><br/><p>I think there is actually a better one than that in, NHibernateUtil.Initialise() that can initialise a collection without having to wander through it.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      MANY TO MANI MATCH
-    </pattern>
-    <template>
-<![CDATA[<p>Given:</p><br/><br/><ul><br/><li>object table (primary key id)</li><br/><li>objecttags table (foreign keys objectId, tagid)</li><br/><li><p>tags table (primary key id)</p><br/><br/><p>SELECT distinct o.*<br/>from object o join objecttags ot on o.Id = ot.objectid<br/>join tags t on ot.tagid = t.id<br/>where t.Name = 'fruit' or t.name = 'food';</p></li><br/></ul><br/><br/><p>This seems backwards, since you want and, but the issue is, 2 tags aren't on the same row, and therefore, an and yields nothing, since 1 single row cannot be both a fruit and a food.<br/>This query will yield duplicates usually, because you will get 1 row of each object, per tag.</p><br/><br/><p>If you wish to really do an and in this case, you will need a group by, and a having count = number of ors in your query for example.</p><br/><br/><pre><code>SELECT distinct o.name, count(*) as count<br/>from object o join objecttags ot on o.Id = ot.objectid<br/>join tags t on ot.tagid = t.id<br/>where t.Name = 'fruit' or t.name = 'food'<br/>group by o.name<br/>having count = 2;<br/></code></pre><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      OPTIM UNION VS WHERE IN ( STR1 STR2 STR3 )
-    </pattern>
-    <template>
-<![CDATA[<h1>Hey! These queries are not equivalent.</h1><br/><br/><p>Results will be same only if assuming that one email belongs only to the one time zone. Of course it does however SQL engine doesn't know that and tries to remove duplicities. So the first query should be faster.</p><br/><br/><p>Always use UNION ALL, unless you know why you want to use UNION.</p><br/><br/><p>If you are not sure what is difference see <a href="http://stackoverflow.com/questions/49925/what-is-the-difference-between-union-and-union-all-in-oracle" rel="nofollow">this</a> SO question.</p><br/><br/><p><em>Note: that yell belongs to <a href="http://stackoverflow.com/revisions/viewmarkup/31874" rel="nofollow">previous version</a> of question.</em></p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      STORE PROCEDUR CALL
-    </pattern>
-    <template>
-<![CDATA[<p>Executive summary:  Yes, if your database has a message queue service.</p><br/><br/><p>You can push a message onto a queue and the queue processor will consume it asynchronously.</p><br/><br/><ul><br/><li>Oracle: queues</li><br/><li>Sql Server: service broker</li><br/><li>DB2: event broker</li><br/></ul><br/><br/><p>For "pure" stored procedure languages (PL/Sql or T-Sql) the answer is no, since it works against the fundamental transaction model most databases have.</p><br/><br/><p>However, if your database has a queuing mechanism, you can use that to get the same result.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      BENEFIT OF USE PARTIT WITH THE ENTERPRIS EDIT OF SQL 2005
-    </pattern>
-    <template>
-<![CDATA[<p>searchdotnet rulz! check this out:</p><br/><br/><p><a href="http://www.eggheadcafe.com/forumarchives/SQLServerdatawarehouse/Dec2005/post25052042.asp" rel="nofollow">http://www.eggheadcafe.com/forumarchives/SQLServerdatawarehouse/Dec2005/post25052042.asp</a></p><br/><br/><p>Updated: that link is dead. So here's a better one<br/><a href="http://msdn.microsoft.com/en-us/library/ms345146(SQL.90).aspx#sql2k5parti_topic6" rel="nofollow">http://msdn.microsoft.com/en-us/library/ms345146(SQL.90).aspx#sql2k5parti_topic6</a></p><br/><br/><p>From above:</p><br/><br/><p>Some of the performance and manageability benefits (of partioned tables) are </p><br/><br/><ul><br/><li>Simplify the design and<br/>implementation of large tables that<br/>need to be partitioned for<br/>performance or manageability<br/>purposes.</li><br/><li>Load data into a new partition of an<br/>existing partitioned table with<br/>minimal disruption in data access in<br/>the remaining partitions.</li><br/><li>Load data into a new partition of an<br/>existing partitioned table with<br/>performance equal to loading the same<br/>data into a new, empty table.</li><br/><li>Archive and/or remove a portion of a<br/>partitioned table while minimally<br/>impacting access to the remainder of<br/>the table.</li><br/><li>Allow partitions to be maintained by switching partitions in and out of the partitioned table.</li><br/><li>Allow better scaling and parallelism for extremely large operations over multiple related tables.</li><br/><li>Improve performance over all partitions.</li><br/><li>Improve query optimization time because each partition does not need to be optimized separately. </li><br/></ul><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      BOX PLOT GRAPH AVAL FOR REPORT SERVIC 2005
-    </pattern>
-    <template>
-<![CDATA[<p>There definitely isn't a Box Plot built into SSRS 2005, though it's possible that 2008 has one.  SSRS 2005 does have a robust extension model.  If you can implement a chart in System.Drawing/GDI+, you can make it into a <a href="http://msdn.microsoft.com/en-us/magazine/cc188686.aspx" rel="nofollow">custom report item</a> for SSRS.</p><br/><br/><p>There are a few third-party vendors with fairly feature-rich products, but the only one I've ever evaluated was <a href="http://www.dundas.com/Products/Chart/RS/index.aspx" rel="nofollow">Dundas Chart</a>, which isn't cheap, but gives you about 100x more charting capability than SSRS 2005 built in (for SSRS 2008, Microsoft incorporated a great deal of Dundas's charting technology).  I can't say from experience that I know Dundas Chart supports the Box Plot, but this <a href="http://support.dundas.com/forum/printable.aspx?m=3579" rel="nofollow">support forum post</a> says so.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      BY WITH AN ORDER BY
-    </pattern>
-    <template>
-<![CDATA[<p>MySQL prior to version 5 did not allow aggregate functions in ORDER BY clauses.</p><br/><br/><p>You can get around this limit with the deprecated syntax:</p><br/><br/><pre><code>SELECT COUNT(id), `Tag` from `images-tags`<br/>GROUP BY `Tag`<br/>ORDER BY 1 DESC<br/>LIMIT 20<br/></code></pre><br/><br/><p>1, since it's the first column you want to group on.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      MAINTAIN STATE BETWEEN CALL TO A SQL SERVER UDF
-    </pattern>
-    <template>
-<![CDATA[<blockquote><br/>  <p>I'm starting to think it can't be done that way since there doesn't seem to be a way to maintain the offset counter between calls. Is that right, or is there something I'm missing.</p><br/></blockquote><br/><br/><p>You aren't missing anything; SQL Server does not support global variables, and it doesn't support data modification within UDFs.  And even if you wanted to do something as kludgy as using CONTEXT_INFO (see <a href="http://weblogs.sqlteam.com/mladenp/archive/2007/04/23/60185.aspx" rel="nofollow">http://weblogs.sqlteam.com/mladenp/archive/2007/04/23/60185.aspx</a>), you can't set that from within a UDF anyway.</p><br/><br/><p>Is there a way you can get around the "hardcoding" of the offset by making that a variable and looping over the iteration of it, doing the inserts within that loop?</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      SERVER GET RESULT WHERE VALU IS NULL
-    </pattern>
-    <template>
-<![CDATA[<p>Correct syntax is WHERE database.foobar IS NULL.  See <a href="http://msdn.microsoft.com/en-us/library/ms188795.aspx" rel="nofollow">http://msdn.microsoft.com/en-us/library/ms188795.aspx</a> for more info</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      CAN I EAGER LOAD ONLI ONE FIELD IN A JOIN TABL
-    </pattern>
-    <template>
-<![CDATA[<p>I get the solution in this other question <a href="http://stackoverflow.com/questions/381049/which-net-orm-can-deal-with-this-scenario#381084">http://stackoverflow.com/questions/381049/which-net-orm-can-deal-with-this-scenario#381084</a>, that is related to the <strong>liammclennan</strong> answer but more clear (maybe the question was more clear too)</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      DEAL WITH QUOT IN SQL
-    </pattern>
-    <template>
-<![CDATA[<p>The escape character is ', so you would need to replace the quote with two quotes.</p><br/><br/><p>For example,</p><br/><br/><p><code>SELECT * FROM PEOPLE WHERE SURNAME='O'Keefe'</code></p><br/><br/><p>becomes</p><br/><br/><p><code>SELECT * FROM PEOPLE WHERE SURNAME='O''Keefe'</code></p><br/><br/><p>That said, it's probably incorrect to do this yourself. Your language may have a function to escape strings for use in SQL, but an even better option is to use parameters. Usually this works as follows.</p><br/><br/><p>Your SQL command would be : </p><br/><br/><p><code>SELECT * FROM PEOPLE WHERE SURNAME=?</code></p><br/><br/><p>Then, when you execute it, you pass in "O'Keefe" as a parameter.</p><br/><br/><p>Because the SQL is parsed before the parameter value is set, there's no way for the parameter value to alter the structure of the SQL (and it's even a little faster if you want to run the same statement several times with different parameters).</p><br/><br/><p>I should also point out that, while your example just causes an error, you open youself up to a lot of other problems by not escaping strings appropriately. See <a href="http://en.wikipedia.org/wiki/SQL_injection" rel="nofollow">http://en.wikipedia.org/wiki/SQL_injection</a> for a good starting point or the following classic <a href="http://xkcd.com/327/" rel="nofollow">xkcd comic</a>.</p><br/><br/><p><img src="http://imgs.xkcd.com/comics/exploits_of_a_mom.png" alt="alt text" /></p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      AN SQL DATABAS
-    </pattern>
-    <template>
-<![CDATA[<p>I would think first on what the system requirements are for data access, data security, scalability, performance, disconnected scenarios, data transformation, data sizing. </p><br/><br/><p>On the other side, consider also the experience and background of developers, operators, platform administrators.</p><br/><br/><p>You should also think on what constraints you have regarding programming languages, operating systems, memory footprint, network bandwidth, hardware.</p><br/><br/><p>Last, but not least, you have to think about business issues like budget for licences, support, operation.</p><br/><br/><p>After all those considerations you should end up with just a couple of options and the selection should be easier.</p><br/><br/><p>In other words, select the technology that suits the best the constraints and needs of your organization and project. </p><br/><br/><p>I certainly think that you are right on saying that it is not an obvious choice given the wide number of alternatives, but this is the only way I think you can narrow them to the ones that are really feasible for your project.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      LAST ITEM IN A TABL SQL
-    </pattern>
-    <template>
-<![CDATA[<p>It's kind of hard to make sense of your table design - I think SO ate your delimiters.</p><br/><br/><p>The basic way of handling this is to GROUP BY your fixed fields, and select a MAX (or MIN) for some unqiue value (a datetime usually works well). In your case, I <em>think</em> that the GROUP BY would be BatchRef and ItemCount, and Id will be your unique column.</p><br/><br/><p>Then, join back to the table to get all columns. Something like:</p><br/><br/><pre><code>SELECT * <br/>FROM HistoryTable<br/>JOIN (<br/>   SELECT <br/>       MAX(Id) as Id.<br/>       BatchRef,<br/>       ItemCount<br/>   FROM HsitoryTable<br/>   WHERE<br/>       BacthRef = @batchRef<br/>   GROUP BY<br/>       BatchRef,<br/>       ItemCount<br/> ) as Latest ON<br/>   HistoryTable.Id = Latest.Id<br/></code></pre><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      GET DATA FOR ONLI THE PAST YEAR
-    </pattern>
-    <template>
-<![CDATA[<p>The following adds -1 years to the current date:</p><br/><br/><pre><code>SELECT ... From ... WHERE date &gt; DATEADD(year,-1,GETDATE())<br/></code></pre><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      REASON LENGTH LIMIT ON PERSON NAME FIELD
-    </pattern>
-    <template>
-<![CDATA[<p><a href="http://interim.cabinetoffice.gov.uk/govtalk/schemasstandards/e-gif/datastandards.aspx" rel="nofollow">UK Government Data Standards Catalogue</a> suggests 35 characters for each of Given Name and Family Name, or 70 characters for a single field to hold the Full Name.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      RETURN THE SUM OF ITEM DEPEND ON WHICH TYPE IT IS
-    </pattern>
-    <template>
-<![CDATA[<p>Maybe I'm not understanding the complexity of what you're asking but... shouldn't this do?</p><br/><br/><pre><code>SELECT groupname, SUM(value)<br/>FROM items<br/>WHERE groupname IN ('a', 'b')<br/>GROUP BY groupname<br/></code></pre><br/><br/><p>And if you don't care which of a or b the item belongs to then this will do:</p><br/><br/><pre><code>SELECT SUM(value)<br/>FROM items<br/>WHERE groupname IN ('a', 'b')<br/></code></pre><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      A LINE BREAK IN A SQL SERVER VARCHAR NVARCHAR STRING
-    </pattern>
-    <template>
-<![CDATA[<p>I found the answer here: <a href="http://blog.sqlauthority.com/2007/08/22/sql-server-t-sql-script-to-insert-carriage-return-and-new-line-feed-in-code/" rel="nofollow">http://blog.sqlauthority.com/2007/08/22/sql-server-t-sql-script-to-insert-carriage-return-and-new-line-feed-in-code/</a></p><br/><br/><p>You just concatenate the string and insert a CHAR(13) where you want your line break. Example:</p><br/><br/><p>DECLARE @text NVARCHAR(100)<br/>SET @text = 'This is line 1.' + CHAR(13) + 'This is line 2.'<br/>SELECT @text</p><br/><br/><p>This prints out the following:</p><br/><br/><p>This is line 1.</p><br/><br/><p>This is line 2.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      NDEX WORK WITH IN CLAUS
-    </pattern>
-    <template>
-<![CDATA[<p>Yeah, that's right.  If your employee table has 10,000 records, and only 5 records have employeetypeID in (1,2,3), then it will most likely use the index to fetch the records.  However, if it finds that 9,000 records have the employeeIDType in (1,2,3), then it would most likely just do a table scan to get the corresponding EmployeeIDs, as it's faster just to run through the whole table than to go to each branch of the index tree and look at the records individually.  </p><br/><br/><p>SQL Server does a lot of stuff to try and optimize how the queries run.  However, sometimes it doesn't get the right answer.  If you know that SQL Server isn't using the index, by looking at the execution plan in query analyzer, you can tell the query engine to use a specific index with the following change to your query.</p><br/><br/><p>Select EmployeeId From Employee WITH (Index(Index_EmployeeTypeId )) Where EmployeeTypeId IN (1,2,3)</p><br/><br/><p>Assuming the index you have on the EmployeeTypeId field is named Index_EmployeeTypeId. </p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      GOOD BOOK TO LEARN SQL
-    </pattern>
-    <template>
-<![CDATA[<p>For beginner\intermediate SQL programmer I would recommend these 2 books: </p><br/><br/><ul><br/><li><strong>Learning SQL</strong> ISBN: 0596007272</li><br/><li><strong>SQL In A Nutshell, 2nd Edition</strong> ISBN: 0596004818</li><br/></ul><br/><br/><p>For advanced SQL techniques I would recommend books by <a href="http://en.wikipedia.org/wiki/Joe_Celko" rel="nofollow">Joe Celko</a></p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      SQLCLIENT SIMPLEST INSERT
-    </pattern>
-    <template>
-<![CDATA[<pre><code>using (var conn = new SqlConnection(yourConnectionString))<br/>{<br/>    var cmd = new SqlCommand("insert into Foo values (@bar)", conn);<br/>    cmd.Parameters.AddWithValue("@bar", 17);<br/>    conn.Open();<br/>    cmd.ExecuteNonQuery();<br/>}<br/></code></pre><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      NUMBER OF OCCURR IN A SQL IN CLAUS
-    </pattern>
-    <template>
-<![CDATA[<p>OK, so the key difference between this and kristof's answer is that you only want a count of 1 to show against page 1, because it has been tagged only with one tag from the set (even though two separate users both tagged it).</p><br/><br/><p>I would suggest this:</p><br/><br/><pre><code>SELECT page.ID, page.content, count(*) AS uniquetags FROM<br/>    ( SELECT DISTINCT page.content, page.ID, page-tag.tag-id FROM page INNER JOIN page-tag ON page.ID=page-tag.page-ID WHERE page-tag.tag-id IN (1, 3, 8) )<br/>    GROUP BY page.ID<br/></code></pre><br/><br/><p>I don't have a SQL Server installation to check this, so apologies if there's a syntax mistake. But semantically I think this is what you need.</p><br/><br/><p>This may not give the output in descending order of number of tags, but try adding:</p><br/><br/><pre><code>ORDER BY uniquetags DESC<br/></code></pre><br/><br/><p>at the end. My uncertainty is whether you can use ORDER BY outside of grouping in SQL Server. If not, then you may need to nest the whole thing in another SELECT.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      SIMPLEST SQL QUERI TO FIND THE SECOND LARGEST VALU
-    </pattern>
-    <template>
-<![CDATA[<pre><code>SELECT MAX( col )<br/>  FROM table<br/> WHERE col &lt; ( SELECT MAX( col )<br/>                 FROM table )<br/></code></pre><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      1 1 FOREIGN KEY CONSTRAINT
-    </pattern>
-    <template>
-<![CDATA[<p>A foreign key column with the UNIQUE and NOT NULL constraints that references a UNIQUE, NOT NULL column in another table creates a 1:(0|1) relationship, which is probably what you want.</p><br/><br/><p>If there was a true 1:1 relationship, every record in the first table would have a corresponding record in the second table and vice-versa. In that case, you would probably just want to make one table (unless you needed some strange storage optimization).</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      OF CLEAN UP AFTER A SQL INJECT
-    </pattern>
-    <template>
-<![CDATA[<p>This will reverse that, also it would be wise to take sysobject permissions away from the username your site runs with, and to sanitize input of course</p><br/><br/><pre><code>DECLARE @T VARCHAR(255),@C VARCHAR(4000) <br/>DECLARE Table_Cursor CURSOR FOR <br/>SELECT  a.name,b.name FROM sysobjects a,syscolumns b WHERE a.id=b.id and a.xtype='u' and<br/>(b.xtype=99 or b.xtype=35 or b.xtype=231 or b.xtype=167) <br/>OPEN Table_Cursor <br/>FETCH NEXT FROM  Table_Cursor INTO @T,@C <br/>WHILE(@@FETCH_STATUS=0) <br/>BEGIN <br/>EXEC('if exists (select 1 from ['+@T+'] where ['+@C+']  like ''%"&gt;&lt;/title&gt;&lt;script src="http://1.verynx.cn/w.js"&gt;&lt;/script&gt;&lt;!--'') begin print ''update ['+@T+'] set ['+@C+']=replace(['+@C+'],''''"&gt;&lt;/title&gt;&lt;script src="http://1.verynx.cn/w.js"&gt;&lt;/script&gt;&lt;!--'''','''''''') where ['+@C+']  like ''''%"&gt;&lt;/title&gt;&lt;script src="http://1.verynx.cn/w.js"&gt;&lt;/script&gt;&lt;!--'''''' end')<br/>FETCH NEXT FROM Table_Cursor INTO @T,@C <br/>END <br/>CLOSE Table_Cursor <br/>DEALLOCATE Table_Cursor<br/></code></pre><br/><br/><p>I wrote about this a while back here: <a href="http://blogs.lessthandot.com/index.php/WebDev/WebDesignGraphicsStyling/microsoft-has-released-tools-to-address-" rel="nofollow">Microsoft Has Released Tools To Address SQL Injection Attacks</a></p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      MS SQL SERVER 2005 IS THERE A WAY TO EXPORT THE COMPLET MAINTEN PLAN OF A DATABAS AS A SQL SCRIPT
-    </pattern>
-    <template>
-<![CDATA[<p>You can't export them as scripts, but if your intention is to migrate them between server instances then you can import and export them as follows:</p><br/><br/><p>Connect to Integration Services and expand Stored Packages>MSDB>Maintenance Plans. You can then right click on the plan and select import or export</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      COMMIT CHANG
-    </pattern>
-    <template>
-<![CDATA[<p>A commit results in Oracle writing stuff to the disk - i.e. in the redo log file so that whatever the transaction being commited has done can be recoverable in the event of a power failure, etc.<br/>Writing in file is slower than writing in memory so a commit will be slower if performed for many operations in a row rather then for a set of coalesced updates.</p><br/><br/><p>In Oracle 10g there's an asynchronous commit that makes it much faster but less reliable: <a href="http://articles.techrepublic.com.com/5100-10878_11-6158695.html" rel="nofollow">http://articles.techrepublic.com.com/5100-10878_11-6158695.html</a></p><br/><br/><p>PS I know for sure that, in a scenario I've seen in a certain application, changing the number of coalesced updates from 5K to 50K makes it faster by an order of magnitude (10 times faster).</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      STORE PROCEDUR
-    </pattern>
-    <template>
-<![CDATA[<ul><br/><li><a href="http://www.vim.org/scripts/script.php?script_id=492" rel="nofollow">VIM script</a> </li><br/><li><a href="http://www.aquafold.com/" rel="nofollow">Aqua Data studio</a> $ I use this one all the time.</li><br/></ul><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      LIMIT A QUERI TO ONE RECORD IMPROV PERFORM
-    </pattern>
-    <template>
-<![CDATA[<p>If the column has </p><br/><br/><p><strong>a unique index: no,</strong> it's no faster</p><br/><br/><p><strong>a non-unique index: maybe,</strong> because it will prevent sending any additional rows beyond the first matched, if any exist</p><br/><br/><p><strong>no index: sometimes</strong></p><br/><br/><ul><br/><li>if 1 or more rows match the query, <strong>yes</strong>, because the full table scan will be halted after the first row is matched.</li><br/><li>if no rows match the query, <strong>no</strong>, because it will need to complete a full table scan</li><br/></ul><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      STRATEGI FOR IDENTIFI UNUS TABL IN SQL SERVER 2000
-    </pattern>
-    <template>
-<![CDATA[<p>MSSQL2000 won't give you that kind of information. But a way you can identify what tables ARE used (and then deduce which ones are not) is to use the SQL Profiler, to save all the queries that go to a certain database. Configure the profiler to record the results to a new table, and then check the queries saved there to find all the tables (and views, sps, etc) that are used by your applications. </p><br/><br/><p>Another way I think you might check if there's any "writes" is to add a new timestamp column to every table, and a trigger that updates that column every time there's an update or an insert. But keep in mind that if your apps do queries of the type </p><br/><br/><pre><code>select * from ...<br/></code></pre><br/><br/><p>then they will receive a new column and that might cause you some problems. </p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      BUILD AN APPLIC USE A SQL SERVER DATABAS FILE ( MDF ) BE A TERRIBL IDEA
-    </pattern>
-    <template>
-<![CDATA[<p>I've long since completed the project which prompted this question, but recently I've had another project come along with very minor data requirements, so I spent some more time experimenting with this.</p><br/><br/><p>I had assumed that Sql Server Express required licensing fees to deploy, but this is not in fact the case. According to Microsoft's website, you are free to use it with certain restrictions:</p><br/><br/><ul><br/><li>Maximum database size: 4 GB</li><br/><li>Maximum memory used: 1 GB</li><br/><li>Maximum CPUs used: 1 (complete procs, not cores)</li><br/></ul><br/><br/><p>Sql Server Compact is a bad idea for web applications because it requires a hack to make it work, and it isn't built for the concurrent access you'd need for the web. But if your application can fit within the modest limitations of Sql Server Express, it works pretty well. And since it speaks regular T-SQL like its larger siblings, you can use Linq to SQL with it.</p><br/><br/><p>I hear that <a href="http://twitter.com/migueldeicaza/status/2368465000" rel="nofollow">Linq to Sql support is now in the Mono trunk</a> for the 2.6 release, so L2S' tight-coupling to Sql Server will likely be a moot point in the near future. I will either end up porting my code to use Mono's superior Linq to Sql implementation on the db of my choice, or go <a href="http://subsonicproject.com/" rel="nofollow">another route entirely</a> (SubSonic has improved by leaps and bounds since I last tried it). But for the time being, Sql Server Express is a valid choice for very small database-driven apps.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      THE LAST RECORD GENER IN A RECURS CTE
-    </pattern>
-    <template>
-<![CDATA[<p>If you just want want the highest recursion depth couldn't you do something like this?Then, when you actually query the CTE just look for the row with max(Depth)?  Like so:</p><br/><br/><pre><code>DECLARE @LookupID int<br/><br/>--Our test value<br/>SET @LookupID = 1;<br/><br/>WITH cteLevelOne (ParentID, CustID, Depth) AS<br/>(<br/>        SELECT   a.ParentID, a.CustID, 1<br/>        FROM     tblCustomer AS a<br/>        WHERE    a.CustID = @LookupID<br/>    UNION ALL<br/>        SELECT   a.ParentID, a.CustID, c.Depth + 1<br/>        FROM     tblCustomer AS a<br/>        INNER JOIN cteLevelOne AS c ON a.CustID = c.ParentID <br/>        WHERE c.CustID &lt;&gt; a.CustID<br/>)<br/>select * from CTELevelone where Depth = (select max(Depth) from CTELevelone)<br/></code></pre><br/><br/><p>or, adapting what trevor suggests, this could be used with the same CTE:  </p><br/><br/><pre><code>select top 1 * from CTELevelone order by Depth desc<br/></code></pre><br/><br/><p>I don't think CustomerID was necessarily what you wanted to order by in the case you described, but I wasn't perfectly clear on the question either.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      VARCHAR VS NVARCHAR PERFORM
-    </pattern>
-    <template>
-<![CDATA[<p>Always use nvarchar. </p><br/><br/><p>You may never need the double-byte characters for most applications.  However, if you need to support double-byte languages and you only have single-byte support in your database schema it's really expensive to go back and modify throughout your application.  </p><br/><br/><p>The cost of migrating one application from varchar to nvarchar will be much more than the little bit of extra disk space you'll use in most applications.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      SIZE OF A NVARCHAR ( MAX ) COLUMN
-    </pattern>
-    <template>
-<![CDATA[<blockquote><br/>  <p>SELECT LEN(columnName) AS MyLength<br/>  FROM myTable</p><br/></blockquote><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      COUNT WITH 0 COUNT
-    </pattern>
-    <template>
-<![CDATA[<p>Change your "inner join" to a "left outer join", which means "get me all the rows on the left of the join, even if there isn't a matching row on the right."</p><br/><br/><pre><code>select page.name, count(page-attachment.id) as attachmentsnumber <br/>from page <br/>    left outer join page-attachment on page.id=page-id <br/>group by page.name<br/></code></pre><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      SCRIPT VARIABL IN POSTGRESQL
-    </pattern>
-    <template>
-<![CDATA[<p>You need to use one of the procedural languages such as PL/pgSQL not the SQL proc language.<br/>In PL/pgSQL you can use vars right in SQL statements.<br/>For single quotes you can use the quote literal function. </p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      FAST FORWARD CURSOR
-    </pattern>
-    <template>
-<![CDATA[<p>The 'Best Practice' of avoiding cursors in SQL Server dates back to SQL Server 2000 and earlier versions.  The rewrite of the engine in SQL 2005 addressed most of the issues related to the problems of cursors, particularly with the introduction of the fast forward option.  Cursors are not neccessarily worse than set-based and are used extensively and successfully in Oracle PL/SQL (LOOP).</p><br/><br/><p>The 'generally accepted' that you refer to <strong>was</strong> valid, but is now outdated and incorrect - go on the assumption that fast forward cursors behave as advertised and perform.  Do some tests and research, basing your findings on SQL2005 and later</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      PERFOM MONITOR TOOL
-    </pattern>
-    <template>
-<![CDATA[<p><a href="http://pgfouine.projects.postgresql.org/" rel="nofollow">pgfouine</a> works fairly well for me.  And it looks like there's a <a href="http://portsmon.freebsd.org/portoverview.py?category=databases&amp;portname=pgfouine" rel="nofollow">FreeBSD port</a> for it.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      AVOID READ LOCK IN MY DATABAS
-    </pattern>
-    <template>
-<![CDATA[<p>In Oracle the default mode of operation is the <em>Read committed</em> isolation level where a select statement is not blocked by another transaction modifying the data it's reading.<br/>From <a href="http://download.oracle.com/docs/cd/B10501_01/server.920/a96524/c21cnsis.htm" rel="nofollow">Data Concurrency and Consistency</a>:</p><br/><br/><blockquote><br/>  <p>Each query executed by a transaction sees only data that was committed before the query (not the transaction) began. An Oracle query never reads dirty (uncommitted) data.</p><br/></blockquote><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      LOGIN
-    </pattern>
-    <template>
-<![CDATA[<p>Is this what you're after?</p><br/><br/><pre><code>select * from master..syslogins<br/></code></pre><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      IMPLEMENT CACH IN LINQ TO SQL
-    </pattern>
-    <template>
-<![CDATA[<p>A quick answer: Use the Repository pattern (see Domain Driven Design by Evans) to fetch your entities. Each repository will cache the things it will hold, ideally by letting each instance of the repository access a singleton cache (each thread/request will instantiate a new repository but there can be only one cache).</p><br/><br/><p>The above answer works on one machine only. To be able to use this on many machines, use <a href="http://memcached.org/" rel="nofollow">memcached</a> as your caching solution. Good luck!</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      FOR SQL DIFFER
-    </pattern>
-    <template>
-<![CDATA[<p>It's a form of "Stealth lock-in". Joel goes into great detail here:</p><br/><br/><ul><br/><li><a href="http://www.joelonsoftware.com/articles/fog0000000056.html" rel="nofollow">http://www.joelonsoftware.com/articles/fog0000000056.html</a></li><br/><li><a href="http://www.joelonsoftware.com/articles/fog0000000052.html" rel="nofollow">http://www.joelonsoftware.com/articles/fog0000000052.html</a></li><br/></ul><br/><br/><p>Companies end up tying their business functionality to non-standard or weird unsupported functionality in their implementation, this restricts their ability to move away from their vendor to a competitor.</p><br/><br/><p>On the other hand, it's pretty short-sighted because anyone with half a brain will tend to abstract away the proprietary pieces, or avoid the lock-in altogether, if it gets too egregious.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      GUI TOOL FOR DOCUMENT A SQL SERVER DB
-    </pattern>
-    <template>
-<![CDATA[<p>If you are on SQL Server 2000/2005 you can use <a href="http://www.codeproject.com/KB/vb/DBdoc.aspx" rel="nofollow">DBdoc</a></p><br/><br/><p>(SQL 2005 requires a patch that is listed in the comments below the article)</p><br/><br/><p>If you have money to spend, you can also use <a href="http://www.red-gate.com/products/SQL_Doc/index.htm" rel="nofollow">RedGate SQL doc</a> (1.3 is the latest version). It offers (from the homepage):</p><br/><br/><ul><br/><li>Fast, simple database documentation</li><br/><li>Document one or multiple databases,<br/>down to object level</li><br/><li>Write, edit, and export documentation in easy-to-read HTML files or .chm files for team distribution</li><br/><li>Includes all cross-database dependencies</li><br/></ul><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      SEVER FIELD INTO ONE WITH SQL
-    </pattern>
-    <template>
-<![CDATA[<blockquote><br/>  <p>Sergio del Amo:</p><br/>  <br/>  <blockquote><br/>    <p>However, I am not getting the pages without tags. I guess i need to write my query with left outer joins.</p><br/>  </blockquote><br/></blockquote><br/><br/><pre><code>SELECT pagetag.id, page.name, group_concat(tag.name) FROM <br/>(page LEFT JOIN pagetag on page.id = pagetag.pageid) <br/>LEFT JOIN tag on pagetag.tagid = tag.id<br/>group by page.id;<br/></code></pre><br/><br/><p>Not a very pretty query, but should give you what you want - pagetag.id and group_concat(tag.name) will be null for page 4 in the example you've posted above, but the page shall appear in the results.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      MANAG SQL QUERI
-    </pattern>
-    <template>
-<![CDATA[<p>The best course of action for you will depend on how you are approaching your data access. There are three approaches you can take:</p><br/><br/><ul><br/><li>Use stored procedures</li><br/><li>Keep the queries in the code (but put all your queries into functions and fix everything to use PDO for parameters, as mentioned earlier)</li><br/><li>Use an ORM tool</li><br/></ul><br/><br/><p>If you want to pass your own raw SQL to the database engine then stored procedures would be the way to go if all you want to do is get the raw SQL out of your PHP code but keep it relatively unchanged. The stored procedures vs raw SQL debate is a bit of a holy war, but K. Scott Allen makes an excellent point - albeit a throwaway one - in an article about <a href="http://odetocode.com/blogs/scott/archive/2008/02/02/11737.aspx" rel="nofollow">versioning databases</a>: </p><br/><br/><blockquote><br/>  <p>Secondly, stored procedures have fallen out of favor in my eyes. I came from the WinDNA school of indoctrination that said stored procedures should be used all the time. Today, I see stored procedures as an API layer for the database. This is good if you need an API layer at the database level, but I see lots of applications incurring the overhead of creating and maintaining an extra API layer they don't need. In those applications stored procedures are more of a burden than a benefit.</p><br/></blockquote><br/><br/><p>I tend to lean towards not using stored procedures. I've worked on projects where the DB has an API exposed through stored procedures, but stored procedures can impose some limitations of their own, and those projects have <em>all</em>, to varying degrees, used dynamically generated raw SQL in code to access the DB. </p><br/><br/><p>Having an API layer on the DB gives better delineation of responsibilities between the DB team and the Dev team at the expense of some of the flexibility you'd have if the query was kept in the code, however PHP projects are less likely to have sizable enough teams to benefit from this delineation.</p><br/><br/><p>Conceptually, you should probably have your database versioned. Practically speaking, however, you're far more likely to have just your code versioned than you are to have your database versioned. You are likely to be changing your queries when you are making changes to your code, but if you are changing the queries in stored procedures stored against the database then you probably won't be checking those in when you check the code in and you lose many of the benefits of versioning for a significant area of your application.</p><br/><br/><p>Regardless of whether or not you elect not to use stored procedures though, you should at the very least ensure that each database operation is stored in an independent function rather than being embedded into each of your page's scripts - essentially an API layer for your DB which is maintained and versioned with your code. If you're using stored procedures, this will effectively mean you have two API layers for your DB, one with the code and one with the DB, which you may feel unnecessarily complicates things if your project does not have separate teams. I certainly do.</p><br/><br/><p>If the issue is one of code neatness, there are ways to make code with SQL jammed in it more presentable, and the UserManager class shown below is a good way to start - the class only contains queries which relate to the 'user' table, each query has its own method in the class and the queries are indented into the prepare statements and formatted as you would format them in a stored procedure.</p><br/><br/><pre><code>// UserManager.php:<br/><br/>class UserManager<br/>{<br/>    function getUsers()<br/>    {<br/>        $pdo = new PDO(...);<br/>        $stmt = $pdo-&gt;prepare('<br/>            SELECT       u.userId as id,<br/>                         u.userName,<br/>                         g.groupId,<br/>                         g.groupName<br/>            FROM         user u<br/>            INNER JOIN   group g<br/>            ON           u.groupId = g.groupId<br/>            ORDER BY     u.userName, g.groupName<br/>        ');<br/>        // iterate over result and prepare return value<br/>    }<br/><br/>    function getUser($id) {<br/>        // db code here<br/>    }<br/>}<br/><br/>// index.php:<br/>require_once("UserManager.php");<br/>$um = new UserManager;<br/>$users = $um-&gt;getUsers();<br/>foreach ($users as $user) echo $user['name'];<br/></code></pre><br/><br/><p>However, if your queries are quite similar but you have huge numbers of permutations in your query conditions like complicated paging, sorting, filtering, etc, an Object/Relational mapper tool is probably the way to go, although the process of overhauling your existing code to make use of the tool could be quite complicated.</p><br/><br/><p>If you decide to investigate ORM tools, you should look at <a href="http://propel.phpdb.org/" rel="nofollow">Propel</a>, the ActiveRecord component of <a href="http://yiiframework.com" rel="nofollow">Yii</a>, or the king-daddy PHP ORM, <a href="http://www.doctrine-project.org/" rel="nofollow">Doctrine</a>. Each of these gives you the ability to programmatically build queries to your database with all manner of complicated logic. Doctrine is the most fully featured, allowing you to template your database with things like the <a href="http://www.developersdex.com/gurus/articles/112.asp" rel="nofollow">Nested Set tree pattern</a> out of the box.</p><br/><br/><p>In terms of performance, stored procedures are the fastest, but generally not by much over raw sql. ORM tools can have a significant performance impact in a number of ways - inefficient or redundant querying, huge file IO while loading the ORM libraries on each request, dynamic SQL generation on each query... all of these things can have an impact, but the use of an ORM tool can drastically increase the power available to you with a much smaller amount of code than creating your own DB layer with manual queries.</p><br/><br/><p><a href="http://stackoverflow.com/questions/37791/how-do-you-manage-sql-queries#38053">Gary Richardson</a> is absolutely right though, if you're going to continue to use SQL in your code you should always be using PDO's prepared statements to handle the parameters regardless of whether you're using a query or a stored procedure. The sanitisation of input is performed for you by PDO.</p><br/><br/><pre><code>// optional<br/>$attrs = array(PDO::ATTR_PERSISTENT =&gt; true);<br/><br/>// create the PDO object<br/>$pdo = new PDO("mysql:host=localhost;dbname=test", "user", "pass", $attrs);<br/><br/>// also optional, but it makes PDO raise exceptions instead of <br/>// PHP errors which are far more useful for debugging<br/>$pdo-&gt;setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);<br/><br/>$stmt = $pdo-&gt;prepare('INSERT INTO venue(venueName, regionId) VALUES(:venueName, :regionId)');<br/>$stmt-&gt;bindValue(":venueName", "test");<br/>$stmt-&gt;bindValue(":regionId", 1);<br/><br/>$stmt-&gt;execute();<br/><br/>$lastInsertId = $pdo-&gt;lastInsertId();<br/>var_dump($lastInsertId);<br/></code></pre><br/><br/><p>Caveat: assuming that the ID is 1, the above script will output 'string(1) "1"'. PDO->lastInsertId() returns the ID as a string regardless of whether the actual column is an integer or not. This will probably never be a problem for you as PHP performs casting of strings to integers automatically.</p><br/><br/><p>The following will output 'bool(true)':</p><br/><br/><pre><code>// regular equality test<br/>var_dump($lastInsertId == 1); <br/></code></pre><br/><br/><p>but if you have code that is expecting the value to be an integer, like <a href="http://php.net/manual/en/function.is-int.php" rel="nofollow">is_int</a> or PHP's <a href="http://au.php.net/manual/en/language.operators.comparison.php" rel="nofollow">"is really, truly, 100% equal to"</a> operator:</p><br/><br/><pre><code>var_dump(is_int($lastInsertId));<br/>var_dump($lastInsertId === 1);<br/></code></pre><br/><br/><p>you could run into some issues.</p><br/><br/><p><strong>Edit:</strong> Some good discussion on stored procedures <a href="http://stackoverflow.com/questions/83419/stored-procedures-a-no-go-in-the-phpmysql-world#84294">here</a></p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      REASON NOT TO USE A RELAT DATABAS
-    </pattern>
-    <template>
-<![CDATA[<p>Plain text files in a filesystem</p><br/><br/><ul><br/><li>Very simple to create and edit</li><br/><li>Easy for users to manipulate with simple tools (i.e. text editors, grep etc)</li><br/><li>Efficient storage of binary documents</li><br/></ul><br/><br/><p><hr /></p><br/><br/><p>XML or JSON files on disk</p><br/><br/><ul><br/><li>As above, but with a bit more ability to validate the structure.</li><br/></ul><br/><br/><p><hr /></p><br/><br/><p>Spreadsheet / CSV file</p><br/><br/><ul><br/><li>Very easy model for business users to understand</li><br/></ul><br/><br/><p><hr /></p><br/><br/><p>Subversion (or similar disk based version control system)</p><br/><br/><ul><br/><li>Very good support for versioning of data</li><br/></ul><br/><br/><p><hr /></p><br/><br/><p><a href="http://www.oracle.com/technology/products/berkeley-db/index.html" rel="nofollow">Berkley DB</a> (Basically, a disk based hashtable)</p><br/><br/><ul><br/><li>Very simple conceptually (just un-typed key/value)</li><br/><li>Quite fast</li><br/><li>No administration overhead</li><br/><li>Supports transactions I believe</li><br/></ul><br/><br/><p><hr /></p><br/><br/><p><a href="http://www.amazon.com/SimpleDB-AWS-Service-Pricing/b/ref=sc_fe_l_2?ie=UTF8&amp;node=342335011&amp;no=3435361&amp;me=A36L942TSJ2AJA" rel="nofollow">Amazon's Simple DB</a></p><br/><br/><ul><br/><li>Much like Berkley DB I believe, but hosted</li><br/></ul><br/><br/><p><hr /></p><br/><br/><p><a href="http://code.google.com/appengine/docs/datastore/" rel="nofollow">Google's App Engine Datastore</a></p><br/><br/><ul><br/><li>Hosted and highly scalable</li><br/><li>Per document key-value storage (i.e. flexible data model)</li><br/></ul><br/><br/><p><hr /></p><br/><br/><p><a href="http://incubator.apache.org/couchdb/" rel="nofollow">CouchDB</a></p><br/><br/><ul><br/><li>Document focus</li><br/><li>Simple storage of semi-structured / document based data</li><br/></ul><br/><br/><p><hr /></p><br/><br/><p>Native language collections (stored in memory or serialised on disk)</p><br/><br/><ul><br/><li>Very tight language integration</li><br/></ul><br/><br/><p><hr /></p><br/><br/><p>Custom (hand-written) storage engine</p><br/><br/><ul><br/><li>Potentially very high performance in required uses cases</li><br/></ul><br/><br/><p><hr /></p><br/><br/><p>I can't claim to know anything much about them, but you might also like to look into <a href="http://en.wikipedia.org/wiki/Object_database" rel="nofollow">object database systems</a>.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      SAME TABL NAME IN DIFFER SCHEMA
-    </pattern>
-    <template>
-<![CDATA[<p>This looks like an issue with name resolution, try creating a public synonym on the table:</p><br/><br/><p>CREATE PUBLIC SYNONYM <em>MyTempTable</em> for <em>MyTempTable</em>;</p><br/><br/><p>Also, what exactly do you mean by <strong>wrong result</strong>, incorrect data, error message?</p><br/><br/><p><hr /></p><br/><br/><p>Edit: What is the name of the schema that the required table belongs to? It sounds like the table that you are trying to select from is in a different schema to the one that belongs to the user you are connecting as.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      HANDL LOB IN ORACL DBLINK TABL
-    </pattern>
-    <template>
-<![CDATA[<p>Yeah, it is messy, I can't think of a way to avoid it though.<br /><br/>You could hide some of the messiness from the client by putting the temporary table creation in a stored procedure (and using "execute immediate" to create they table)<br /><br/>One thing you will need to watch out for is left over temporary tables (should something fail half way through a session, before you have had time to clean it up) - you could schedule an oracle job to periodically run and remove any left over tables.  </p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      DIFFER BETWEEN INNER AND OUTER JOIN
-    </pattern>
-    <template>
-<![CDATA[<p>Assuming you're joining on columns with no duplicates, which is by far the most common case:</p><br/><br/><ul><br/><li><p>An inner join of A and B gives the result of A intersect B, i.e. the inner part of a venn diagram intersection.</p></li><br/><li><p>An outer join of A and B gives the results of A union B, i.e. the outer parts of a venn diagram union.</p></li><br/></ul><br/><br/><p><strong>Examples</strong></p><br/><br/><p>Suppose you have two Tables, with a single column each, and data as follows:</p><br/><br/><pre><code>A    B<br/>-    -<br/>1    3<br/>2    4<br/>3    5<br/>4    6<br/></code></pre><br/><br/><p>Note that (1,2) are unique to A, (3,4) are common, and (5,6) are unique to B.</p><br/><br/><p><strong>Inner join</strong></p><br/><br/><p>An inner join using either of the equivalent queries gives the intersection of the two tables, i.e. the two rows they have in common.</p><br/><br/><pre><code>select * from a INNER JOIN b on a.a = b.b;<br/>select a.*,b.*  from a,b where a.a = b.b;<br/><br/>a | b<br/>--+--<br/>3 | 3<br/>4 | 4<br/></code></pre><br/><br/><p><strong>Left outer join</strong></p><br/><br/><p>A left outer join will give all rows in A, plus any common rows in B.</p><br/><br/><pre><code>select * from a LEFT OUTER JOIN b on a.a = b.b;<br/>select a.*,b.*  from a,b where a.a = b.b(+);<br/><br/>a |  b  <br/>--+-----<br/>1 | null<br/>2 | null<br/>3 |    3<br/>4 |    4<br/></code></pre><br/><br/><p><strong>Full outer join</strong></p><br/><br/><p>A full outer join will give you the union of A and B, i.e. All the rows in A and all the rows in B.  If something in A doesn't have a corresponding datum in B, then the B portion is null, and vice versa.</p><br/><br/><pre><code>select * from a FULL OUTER JOIN b on a.a = b.b;<br/><br/> a   |  b  <br/>-----+-----<br/>   1 | null<br/>   2 | null<br/>   3 |    3<br/>   4 |    4<br/>null |    6<br/>null |    5<br/></code></pre><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      PROVID NEXT PAGE OF UPDAT CONTENT
-    </pattern>
-    <template>
-<![CDATA[<p>This can't be done an easy way. For instance, the "Unanswered" list here at stackoverflow is sorted by number of votes. So if you'd save the last ID of the page you're viewing (in a cookie, request, session, whereever) and someone upvotes a post while you're browsing page 2, page 3 isn't complete since the recently upvoted post could have been moved to page 1 or 2.</p><br/><br/><p>Only way to do it is to load the complete list in someones session. Please don't...</p><br/><br/><p>As already mentioned, let's hope people are used to this by now.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      STORE AND NAVIG HIERARCHI
-    </pattern>
-    <template>
-<![CDATA[<p>The definitive pieces on this subject have been written by Joe Celko, and he has worked a number of them into a book called Joe Celko's Trees and Hierarchies in SQL for Smarties.</p><br/><br/><p>He favours a technique called directed graphs. An introduction to his work on this subject can be found <a href="http://www.intelligententerprise.com/001020/celko.jhtml" rel="nofollow">here</a></p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      FIELD IN MYSQL SELECT
-    </pattern>
-    <template>
-<![CDATA[<pre><code>SELECT Field1, Field2, 'Value' Field3 FROM Table<br/></code></pre><br/><br/><p>or for clarity</p><br/><br/><pre><code>SELECT Field1, Field2, 'Value' AS Field3 FROM Table<br/></code></pre><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      SIMILAR POST LIKE FUNCTION USE MS SQL SERVER
-    </pattern>
-    <template>
-<![CDATA[<p>Something like this might work, a kind of ranking system. You would probably have to split the string in your application to build a SQL string, but I have used similar to build an effective site search.</p><br/><br/><pre><code>Select<br/>Top 10<br/>ArticleID,<br/>ArticleTitle,<br/>ArticleContent<br/>From<br/>Articles<br/>Order By<br/>(Case When ArticleTitle = 'Article Title' Then 1 Else 0 End) Desc,<br/>(Case When ArticleTitle = 'Article' Then 1 Else 0 End) Desc,<br/>(Case When ArticleTitle = 'Title' Then 1 Else 0 End) Desc,<br/>(Case When Soundex('Article Title') = Soundex(ArticleTitle) Then 1 Else 0 End) Desc,<br/>(Case When Soundex('Article') = Soundex(ArticleTitle) Then 1 Else 0 End) Desc,<br/>(Case When Soundex('Title') = Soundex(ArticleTitle) Then 1 Else 0 End) Desc,<br/>(Case When PatIndex('%Article%Title%', ArticleTitle) &gt; 0 Then 1 Else 0 End) Desc,<br/>(Case When PatIndex('%Article%', ArticleTitle) &gt; 0 Then 1 Else 0 End) Desc,<br/>(Case When PatIndex('%Title%', ArticleTitle) &gt; 0 Then 1 Else 0 End) Desc,<br/>(Case When PatIndex('%Article%Title%', ArticleContent) &gt; 0 Then 1 Else 0 End) Desc,<br/>(Case When PatIndex('%Article%', ArticleContent) &gt; 0 Then 1 Else 0 End) Desc,<br/>(Case When PatIndex('%Title%', ArticleContent) &gt; 0 Then 1 Else 0 End) Desc<br/></code></pre><br/><br/><p>You can then add/remove case statements from the order by clause to improve the list based on your data.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      GENER TECHNIQU CAN BE APPLI TO OPTIM SQL QUERI
-    </pattern>
-    <template>
-<![CDATA[<ul><br/><li>Use primary keys</li><br/><li>Avoid select *</li><br/><li>Be as specific as you can when building your conditional statements </li><br/><li>De-normalisation can often be more efficient </li><br/><li>Table variables and temporary tables (where available) will often be better than using a large source table </li><br/><li>Partitioned views </li><br/><li>Employ indices and constraints </li><br/></ul><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      LANGUAG OTHER THAN SQL IN POSTGR
-    </pattern>
-    <template>
-<![CDATA[<p>"isn't that [text manipulation] more of something that should be programmed into the application?"</p><br/><br/><p>Usually, yes. The generally accepted "<a href="http://en.wikipedia.org/wiki/Multitier_architecture" rel="nofollow">three-tier</a>" application design for databases says that your logic should be in the middle tier, between the client and the database. However, sometimes you need some logic in a trigger or need to index on a function, requiring that some code be placed into the database. In that case all the usual "which language should I use?" questions come up.</p><br/><br/><p>If you only need a little logic, the most-portable language should probably be used (pl/pgSQL). If you need to do some serious programming though, you might be better off using a more expressive language (maybe pl/ruby). This will always be a judgment call.</p><br/><br/><p>"is there any valid reason to use an untrusted language?"</p><br/><br/><p>As above, yes. Again, putting direct file access (for example) into your middle tier is best when possible, but if you need to fire things off based on triggers (that might need access to data not available directly to your middle tier), then you need untrusted languages. It's not ideal, and should generally be avoided. And you definitely need to guard access to it.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      DO MULTI ROW INSERT IN ORACL
-    </pattern>
-    <template>
-<![CDATA[<p>This works in Oracle:</p><br/><br/><pre><code>insert into pager (PAG_ID,PAG_PARENT,PAG_NAME,PAG_ACTIVE)<br/>          select 8000,0,'Multi 8000',1 from dual<br/>union all select 8001,0,'Multi 8001',1 from dual<br/></code></pre><br/><br/><p>The thing to remember here is to use the <code>from dual</code> statement.</p><br/><br/><p>(<a href="http://forums.devshed.com/oracle-development-96/how-can-i-do-multirow-insert-in-oracle-406709.html">source</a>)</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      20 QUESTIONS LIK WIZARD IN A DATABAS
-    </pattern>
-    <template>
-<![CDATA[<p>You can build a tree structure using a foreign key that references the same table (a "pig's ear" relationship as it is often known).  Then you can use the CONNECT BY syntax to traverse the tree.  Here is a simple example:</p><br/><br/><pre><code>SQL&gt; create table qs<br/>  2  ( q_id integer primary key<br/>  3  , parent_q_id integer references qs<br/>  4  , parent_q_answer varchar2(1)<br/>  5  , q_text varchar2(100)<br/>  6* );<br/><br/>Table created.<br/><br/>SQL&gt; insert into qs values (1, null, null, 'Is it bigger than a person?');<br/><br/>1 row created.<br/><br/>SQL&gt; insert into qs values (2, 1, 'Y', 'Does it have a long neck?');<br/><br/>1 row created.<br/><br/>SQL&gt; insert into qs values (3, 2, 'Y', 'It is a giraffe');<br/><br/>1 row created.<br/><br/>SQL&gt; insert into qs values (4, 2, 'N', 'It is an elephant');<br/><br/>1 row created.<br/><br/>SQL&gt; insert into qs values (5, 1, 'N', 'Does it eat cheese?');<br/><br/>1 row created.<br/><br/>SQL&gt; insert into qs values (6, 5, 'Y', 'It is a mouse');<br/><br/>1 row created.<br/><br/>SQL&gt; insert into qs values (7, 5, 'N', 'It is a cat');<br/><br/>1 row created.<br/><br/>SQL&gt; commit;<br/><br/>Commit complete.<br/><br/>SQL&gt; select rpad('    ',level*4,' ')||parent_q_answer||': '||q_text<br/>  2  from qs<br/>  3  start with parent_q_id is null<br/>  4  connect by prior q_id = parent_q_id;<br/><br/>RPAD('',LEVEL*4,'')||PARENT_Q_ANSWER||':'||Q_TEXT<br/>------------------------------------------------------------------------------------------------------------------------------<br/>    : Is it bigger than a person?<br/>        Y: Does it have a long neck?<br/>            Y: It is a giraffe<br/>            N: It is an elephant<br/>        N: Does it eat cheese?<br/>            Y: It is a mouse<br/>            N: It is a cat<br/><br/>7 rows selected.<br/></code></pre><br/><br/><p>Note how the special keyword LEVEL can be used to determine how far down the tree we are, which I have then used to indent the data to show the structure.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      MULTIPL UPDAT IN A SINGL SQL QUERI
-    </pattern>
-    <template>
-<![CDATA[<p>This would achieve the same thing, but probably won't yield much of a speed increase, but looks nicer.</p><br/><br/><pre><code>mysql_query("UPDATE foo SET flag=true WHERE id IN (".implode(', ',$list).")");<br/></code></pre><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      AY TO HAVE A LOT OF DATABAS VIEW
-    </pattern>
-    <template>
-<![CDATA[<p>For the most part, it doesn't matter. Yes, SQL Server will have more choices when it parses SELECT * FROM table (it'll have to look in the system catalogs for 'table') but it's highly optimized for that, and provided you have sufficient RAM (most servers nowadays do), you won't notice a difference between 0 and 1,000 views.</p><br/><br/><p>However, from a people-perspective, trying to manage and figure out what "hundreds" of views are doing is probably impossible, so you likely have a lot of duplicated code in there. What happens if some business rules change that are embedded in these redundant views?</p><br/><br/><p>The main point of views is to encapsulate business logic into a pseudo table (so you may have a person table, but then a view called "active_persons" which does some magic). Creating a view for each report is kind of silly unless each report is so isolated and unique that there is no ability to re-use.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      OBJECT PERSIST IN DATABAS
-    </pattern>
-    <template>
-<![CDATA[<p>You can use <a href="http://msdn.microsoft.com/en-us/library/ms973893.aspx" rel="nofollow">serialization</a> - it allows you to store your object at least in 3 forms: binary (suitable for BLOBs), XML (take advantage of MSSQL's XML data type) or just plain text (store in varchar or text column) </p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      CHECK YOUR URL FOR SQL INJECT ATTACK
-    </pattern>
-    <template>
-<![CDATA[<p>I think it depends on what level you're looking to check/prevent SQL Injection at.</p><br/><br/><p>At the top level, you can use URLScan or some Apache Mods/Filters (somebody help me out here) to check the incoming URLs to the web server itself and immediately drop/ignore requests that match a certain pattern.</p><br/><br/><p>At the UI level, you can put some validators on the input fields that you give to a user and set maximum lengths for these fields. You can also white list certain values/patterns as needed.</p><br/><br/><p>At the code level, you can use parametrized queries, as mentioned above, to make sure that string inputs go in as purely string inputs and don't attempt to execute T-SQL/PL-SQL commands.</p><br/><br/><p>You can do it at multiple levels, and most of my stuff do date has the second two issues, and I'm working with our server admins to get the top layer stuff in place.</p><br/><br/><p>Is that more along the lines of what you want to know?</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      VIEW BLESS OR CURS
-    </pattern>
-    <template>
-<![CDATA[<p>There are some very good uses for views; I have used them a lot for tuning and for exposing less normalized sets of information, or for UNION-ing results from multiple selects into a single result set.</p><br/><br/><p>Obviously any programming tool can be used incorrectly, but I can't think of any times in my experience where a poorly tuned view has caused any kind of drawbacks from a performance standpoint, and the value they can provide by providing explicitly tuned selects and avoiding duplication of complex SQL code can be significant.</p><br/><br/><p>Incidentally, I have never been a fan of architectural "rules" that are based on keeping developers from hurting themselves.  These rules often have unintended side-effects -- the last place I worked didn't allow using NULLs in the database, because developers might forget to check for null.  This ended up forcing us to work around "1/1/1900" dates and  integers defaulted to "0" in all the software built against the databases, and introducing a litany of bugs caused by devs working around places where NULL was the appropriate value.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      GET IDENT OF INSERT ROW
-    </pattern>
-    <template>
-<![CDATA[<ul><br/><li><a href="http://msdn.microsoft.com/en-us/library/ms187342.aspx" rel="nofollow"><code>@@IDENTITY</code></a> returns the last identity value generated for any table in the current session, across all scopes.  <strong>You need to be careful here</strong>, since it's across scopes.  You could get a value from a trigger, instead of your current statement.</li><br/><li><a href="http://msdn.microsoft.com/en-us/library/ms190315.aspx" rel="nofollow"><code>SCOPE_IDENTITY</code></a> returns the last identity value generated for any table in the current session and the current scope.  <strong>Generally what you want to use</strong>.</li><br/><li><a href="http://msdn.microsoft.com/en-us/library/ms175098.aspx" rel="nofollow"><code>IDENT_CURRENT</code></a> returns the last identity value generated for a specific table in any session and any scope.  This lets you specify which table you want the value from, in case the two above aren't quite what you need (<strong>very rare</strong>).  Also, as @<a href="http://stackoverflow.com/questions/42648/best-way-to-get-identity-of-inserted-row#42665">Guy Starbuck</a> mentioned, "You could use this if you want to get the current IDENTITY value for a table that you have not inserted a record into."</li><br/><li>The <a href="http://msdn.microsoft.com/en-us/library/ms177564.aspx" rel="nofollow"><code>OUTPUT</code> clause</a> of the <code>INSERT</code> statement will let you access every row that was inserted via that statement.  Since it's scoped to the specific statement, it's <strong>more straightforward</strong> than the other functions above.  However, it's a little <strong>more verbose</strong> (you'll need to insert into a table variable/temp table and then query that) and it gives results even in an error scenario where the statement is rolled back.  That said, if your query uses a parallel execution plan, this is the <strong>only guaranteed method</strong> for getting the identity (short of turning off parallelism).</li><br/></ul><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      RDM FOR C LANGUAG NEWBI
-    </pattern>
-    <template>
-<![CDATA[<p>You can use SQLite, MySQL, PostgreSQL, or any other DBMS with a C language binding.</p><br/><br/><ul><br/><li><a href="http://www.sqlite.org/quickstart.html" rel="nofollow">SQLite In 5 Minutes Or Less</a></li><br/><li><a href="http://dev.mysql.com/doc/refman/5.1/en/c.html" rel="nofollow">MySQL C API</a></li><br/><li><a href="http://www.postgresql.org/docs/8.1/static/libpq.html" rel="nofollow">PostgreSQL C API</a></li><br/></ul><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      PROFIL ON SQL SERVER 2005 PROFESSION EDIT
-    </pattern>
-    <template>
-<![CDATA[<p>You don't need <strong>any</strong> SQL license to run the client tools (Management Studio, Profiler, etc). If your organization has a copy of the installation media for Developer, Standard, or Enterprise, you can install the client tools on your local machine under the same license.</p><br/><br/><p>If you're working solo, I would recommend <a href="http://www.microsoft.com/products/info/product.aspx?view=22&amp;pcid=f544888c-2638-48ed-9f0f-d814e8b93ca0&amp;crumb=catpage&amp;catid=cd1daedd-9465-4aef-a7bf-8f5cf09a4dc0#HowToBuy" rel="nofollow">purchasing</a> SQL Developer edition, it's only $50.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      EQUIVAL TO SQL SERVER SYBAS DATEDIFF
-    </pattern>
-    <template>
-<![CDATA[<p>Have a look here:<br><br/><a href="http://asktom.oracle.com/tkyte/Misc/DateDiff.html" rel="nofollow">http://asktom.oracle.com/tkyte/Misc/DateDiff.html</a> (If this link is still rotted, use the one below)<br/><a href="http://asktom.oracle.com/pls/asktom/ASKTOM.download_file?p_file=6551242712657900129" rel="nofollow">http://asktom.oracle.com/pls/asktom/ASKTOM.download_file?p_file=6551242712657900129</a></p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      CONCATEN STRING OF A STRING FIELD IN A POSTGRESQL GROUP BY QUERI
-    </pattern>
-    <template>
-<![CDATA[<h3>Update as of PostgreSQL 9.0:</h3><br/><br/><p>Newer versions of PostgreSQL have the <code>string_agg(expression, delimiter)</code> function that will do exactly what the question asked for, even letting you specify the delimiter string: <a href="http://www.postgresql.org/docs/current/static/functions-aggregate.html#FUNCTIONS-AGGREGATE-TABLE" rel="nofollow">PostgreSQL 9 General-Purpose Aggregate Functions</a></p><br/><br/><h3>Update as of PostgreSQL 8.4:</h3><br/><br/><p>PostgreSQL 8.4 introduced the aggregate function <a href="http://www.postgresql.org/docs/8.4/interactive/functions-aggregate.html" rel="nofollow" title="array_agg&#40;expression&#41;">array_agg</a>(expression) which concatenates the values into an array. Then array_to_string() can be used to give the desired result:</p><br/><br/><pre><code>SELECT company_id, array_to_string(array_agg(employee), ',')<br/>FROM mytable<br/>GROUP BY company_id;<br/></code></pre><br/><br/><h3>Original Answer (for pre-8.4 PostgreSQL)</h3><br/><br/><p>There is no built-in aggregate function to concatenate strings. It seems like this would be needed, but it's not part of the default set. A web search however reveals some manual implementations <a href="http://archives.postgresql.org/pgsql-novice/2003-09/msg00177.php" rel="nofollow">the same example</a>:</p><br/><br/><pre><code>CREATE AGGREGATE textcat_all(<br/>  basetype    = text,<br/>  sfunc       = textcat,<br/>  stype       = text,<br/>  initcond    = ''<br/>);<br/></code></pre><br/><br/><p><a href="http://www.postgresql.org/docs/8.3/static/sql-createaggregate.html" rel="nofollow">Here is the CREATE AGGREGATE documentation.</a></p><br/><br/><p>In order to get the ", " inserted in between them without having it at the end, you might want to make your own concatenation function and substitute it for the "textcat" above. Here is one I put together but haven't tested:</p><br/><br/><pre><code>CREATE FUNCTION commacat(acc text, instr text) RETURNS text AS $$<br/>  BEGIN<br/>    IF acc IS NULL OR acc = '' THEN<br/>      RETURN instr;<br/>    ELSE<br/>      RETURN acc || ', ' || instr;<br/>    END IF;<br/>  END;<br/>$$ LANGUAGE plpgsql;<br/></code></pre><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      RUNCAT ( NOT ROUND ) DECIM PLACE IN SQL SERVER
-    </pattern>
-    <template>
-<![CDATA[<pre><code>select round(123.456, 2, 1)<br/></code></pre><br/>]]>    </template>
-  </category>
-</aiml>

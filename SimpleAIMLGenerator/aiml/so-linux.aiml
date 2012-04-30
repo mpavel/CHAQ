@@ -1,586 +1,0 @@
-<?xml version="1.0" ?>
-<aiml version="1.0">
-  <meta content="SimpleAIMLGenerator" name="author"/>
-  <meta content="en" name="language"/>
-  <category>
-    <pattern>
-      GETTIMEOFDAY ( ) GUARANTE TO BE OF MICROSECOND RESOLUT
-    </pattern>
-    <template>
-<![CDATA[<p>Maybe. But you have bigger problems. <code>gettimeofday()</code> can result in incorrect timings if there are processes on your system that change the timer (ie, ntpd). On a "normal" linux, though, I believe the resolution of <code>gettimeofday()</code> is 10us. It can jump forward and backward and time, consequently, based on the processes running on your system. This effectively makes the answer to your question no.</p><br/><br/><p>You should look into <code>clock_gettime(CLOCK_MONOTONIC)</code> for timing intervals. It suffers from several less issues due to things like multi-core systems and external clock settings.</p><br/><br/><p>Also, look into the clock_getres() function.</p>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      GTK IMPLEMENT OF MESSAGEBOX
-    </pattern>
-    <template>
-<![CDATA[<p>Hmm, ok.  I'd suggest code like this, then:</p><br/><br/><pre><code>typedef struct {<br>    int type;<br>    int result;<br>} DialogData;<br><br>static gboolean<br>display_dialog(gpointer user_data)<br>{<br>    DialogData *dialog_data = user_data;<br>    GtkWidget *dialog;<br><br>    if (dialog_data-&gt;type &amp; MB_YESNO)<br>        dialog = gtk_message_dialog_new(...);<br>    else<br>        dialog = gtk_message_dialog_new(...);<br><br>    // Set title, etc.<br><br>    dialog_data-&gt;result = gtk_dialog_run(...);<br><br>    gtk_main_quit();  // Quits the main loop run in MessageBox()<br><br>    return FALSE;<br>}<br><br>int MessageBox(...)<br>{<br>    DialogData dialog_data;<br><br>    dialog_data.type = type;<br><br>    gtk_idle_add(display_dialog, &amp;dialog_data);<br><br>    gtk_main();<br><br>    // Do stuff based on dialog_data.result<br>}<br></code></pre><br/><br/><p>The struct is because you need to pass around a couple pieces of data.  The <code>gtk_idle_add()</code> call adds a method to be run when the main loop is running and idle, and the <code>FALSE</code> return value from the <code>display_dialog()</code> call means that it's only run once.  After we get the result from the dialog, we quit the main loop.  That'll cause the <code>gtk_main()</code> in your main <code>MessageBox()</code> method to return, and you'll be able to access the result from there.</p><br/><br/><p>Hope this helps!</p>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      ROOT PERMISS ON A FILE INSID OF VI
-    </pattern>
-    <template>
-<![CDATA[<p><code>%</code> is replaced with the current file name, thus you can use:</p><br/><br/><pre><code>:w !sudo tee %<br/></code></pre><br/><br/><p>(<code>vim</code> will detect that the file has been changed and ask whether you want to it to be reloaded.)</p><br/><br/><p>As a shortcut, you can define define your own command. Put the following in your <code>.vimrc</code>:</p><br/><br/><pre><code>command W w !sudo tee % &gt;/dev/null<br/></code></pre><br/><br/><p>With the above you can type <code>:W&lt;Enter&gt;</code> to save the file. Since I wrote this, I have found a nicer way (in my opinion) to do this:</p><br/><br/><pre><code>cmap w!! w !sudo tee &gt;/dev/null %<br/></code></pre><br/><br/><p>This way you can type <code>:w!!</code> and it will be expanded to the full command line, leaving the cursor at the end, so you can replace the <code>%</code> with a file name of your own, if you like.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      A LONGTIM WINDOW USER KNOW WHEN START TO USE LINUX
-    </pattern>
-    <template>
-<![CDATA[<p>If you only have shell access to your host, a number of issues are already taken care of for you, (you don't have to maintain the system yourself).</p><br/><br/><p>The useful commands depend on what you primarily want to do, such as interacting with your source control system via command line (<em>you do use source control, don't you?</em>)  You already know how to use vim and navigate through the filesystem using <code>cd and <code>ls, so that is a great start.</p><br/><br/><p>Most useful commands:</p><br/><br/><ul><br/><li><a href="http://www.linuxmanpages.com/man1/ls.1.php" rel="nofollow">ls</a><br/><ul><br/><li>list files in current directory (like Windows <code>dir</code>)</li><br/></ul></li><br/><li><a href="http://www.linuxmanpages.com/man1/cd.1.php" rel="nofollow">cd</a><br/><ul><br/><li>change directory</li><br/></ul></li><br/><li><a href="http://www.linuxmanpages.com/man1/cp.1.php" rel="nofollow">cp</a><br /><br/><ul><br/><li>copying file(s)</li><br/><li>example: <pre><code>$&gt; cp {file1} {file2}<br /><br/>$&gt; cp /home/jms/file1.txt /home/jms/file1-copy.txt</code></pre></li><br/></ul></li><br/><li><a href="http://www.linuxmanpages.com/man1/mv.1.php" rel="nofollow">mv</a><br /><br/><ul><br/><li>moving or renaming file(s)</li><br/><li>example - rename file1.txt: <pre><code>$&gt; mv {file1} {file2}<br/>$&gt; mv /home/jms/file1.txt /home/jms/file_1_new_name.txt</code></pre> </li><br/><li>example - move file1.txt: <pre><code>$&gt; mv /home/jms/file1.txt /home/jms/myfiles/file1.txt </code></pre>    </li><br/></ul></li><br/><li><a href="http://www.linuxmanpages.com/man1/man.1.php" rel="nofollow">man</a><br /><br/><ul><br/><li>see the manual pages for a command</li><br/><li>example: <pre><code><a href="http://www.thinkgeek.com/tshirts/frustrations/5b7e/" rel="nofollow">$&gt; man woman</a><br/>$&gt; Segmentation fault (core dumped)</code></pre></li><br/></ul></li><br/><li><a href="http://www.linuxmanpages.com/man1/find.1.php" rel="nofollow">find</a><br/><ul><br/><li>search through directories recursively</li><br/></ul></li><br/><li><a href="http://www.linuxmanpages.com/man1/grep.1.php" rel="nofollow">grep</a><br /><br/><ul><br/><li>search for pattern matches</li><br/></ul></li><br/><li><a href="http://www.linuxmanpages.com/man1/wc.1.php" rel="nofollow">wc</a><br/><ul><br/><li>word count / character count / line count </li><br/><li>example: counting the files in a the current directory (uses ls and wc)<pre><code>$&gt; ls | wc -l</code></pre></li><br/><li>example: count the files that contain .txt in your home directory (uses find, grep, and wc)<pre><code>$&gt; find /home/jms | grep *.txt | wc -l</code></pre></li><br/></ul></li><br/><li><a href="http://www.linuxmanpages.com/man1/less.1.php" rel="nofollow">less</a><br/><ul><br/><li>lightweight file viewer</li><br/></ul></li><br/><li><a href="http://www.linuxmanpages.com/man1/head.1.php" rel="nofollow">head</a><br/><ul><br/><li>see the first few lines of a file</li><br/></ul></li><br/><li><a href="http://www.linuxmanpages.com/man1/tail.1.php" rel="nofollow">tail</a><br/><ul><br/><li>see the last few lines of a file (useful for realtime logging)</li><br/><li>example: monitor a logfile as logging occurs while an application is running<pre></code>$&gt; tail -f /var/log/somelogfile.log</code></pre></li><br/></ul></li><br/><li><a href="http://www.linuxmanpages.com/man1/passwd.1.php" rel="nofollow">passwd</a><br/><ul><br/><li>change your password</li><br/><li>example: will act on current user and prompt for old/new password<pre><code>$&gt; passwd</code></pre></li><br/><li>example: will change password for the user named someuser<pre><code>$&gt; passwd someuser</code></pre></li><br/></ul></li><br/><li><a href="http://www.linuxmanpages.com/man1/ssh.1.php" rel="nofollow">ssh</a><br/><ul><br/><li>secure shell for logging into remote systems</li><br/></ul></li><br/><li><a href="http://www.linuxmanpages.com/man1/touch.1.php" rel="nofollow">touch</a><br/><ul><br/><li>set file "last modified" time to now (creates a new file if none exists)</li><br/></ul></li><br/><li><a href="http://www.linuxmanpages.com/man1/rm.1.php" rel="nofollow">rm</a><br/><ul><br/><li>remove a file</li><br/><li>can also remove files and directories recursively</li><br/></ul></li><br/><li><a href="http://www.linuxmanpages.com/man1/mkdir.1.php" rel="nofollow">mkdir</a> / <a href="http://www.linuxmanpages.com/man1/rmdir.1.php" rel="nofollow">rmdir</a><br/><ul><br/><li>create or remove a directory</li><br/></ul></li><br/><li><a href="http://www.linuxmanpages.com/man1/df.1.php" rel="nofollow">df</a><br/><ul><br/><li>check free disk space on volumes</li><br/></ul></li><br/><li><a href="http://www.linuxmanpages.com/man1/du.1.php" rel="nofollow">du</a><br/><ul><br/><li>check used disk space on a directory (recursively)</li><br/></ul></li><br/><li><a href="http://www.linuxmanpages.com/man1/ln.1.php" rel="nofollow">ln</a><br/><ul><br/><li>make a new file/directory that is a "link" to another (such as a symbolic link)</li><br/><li>example (symbolic link): <pre>$> ln -s /path/to/destination</pre></li><br/></ul></li><br/><li><a href="http://www.linuxmanpages.com/man1/kill.1.php" rel="nofollow">kill</a><br/><ul><br/><li>kill/stop a running process</li><br/></ul></li><br/><li><a href="http://www.linuxmanpages.com/man1/chmod.1.php" rel="nofollow">chmod</a>, <a href="http://www.linuxmanpages.com/man1/chown.1.php" rel="nofollow">chown</a><br/><ul><br/><li>change permissions / ownership for files.</li><br/></ul></li><br/><li><a href="http://www.linuxmanpages.com/man8/sudo.8.php" rel="nofollow">sudo</a><br/><ul><br/><li>run a command with superuser (ie "root") privileges</li><br/><li>your web host may not give you permission to do this</li><br/></ul></li><br/><li><a href="http://www.linuxmanpages.com/man1/vi.1.php" rel="nofollow">vi</a><br/><ul><br/><li>a text editor included with every linux installation</li><br/></ul></li><br/></ul><br/><br/><p>A number of these items you will have an easier time learning by experimentation.</p><br/><br/><p>A very <a href="http://tldp.org/LDP/abs/html/" rel="nofollow">comprehensive guide to bash scripting</a> might also be of use.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      EDITING VIEW SOFTWAR
-    </pattern>
-    <template>
-<![CDATA[<p>I may be old fashioned, but I prefer my text editor.  </p><br/><br/><p>I use emacs, and it has a fairly decent xml mode.  </p><br/><br/><p>Most good text editors will have decent syntax hi-lighting and tag matching facilities.  Your IDE might already do it (IntelliJ idea does, and I believe Eclipse does as well).  Good text editors will be able to deal with <em>huge</em> files, but some text editors may not be able to handle them.  How big are we talking about?</p>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      INPUT REDIRECT ODDITI
-    </pattern>
-    <template>
-<![CDATA[<p>Allright, I figured it out!</p><br/><br/><p>This is a hard bug to catch, but results from the way pipes are handled in Unix. Every element of a pipeline runs in a separate process. When the read command sets var1 and var2, is sets them it its own subshell, not the parent shell. So when the subshell exits, the values of var1 and var2 are lost. You can, however, try doing </p><br/><br/><pre><code>var1 = $(echo "Hello")<br>echo var1<br></code></pre><br/><br/><p>which returns the expected answer. Unfortunately this only works for single variables, you can't set many at a time. In order to set multiple variables at a time you must either read into one variable and chop it up into multiple variables or use something like this:</p><br/><br/><pre><code>set -- $(echo "Hello World")<br>var1="$1" var2="$2"<br>echo $var1<br>echo $var2<br></code></pre><br/><br/><p>While I admit it's not as elegant as using a pipe, it works. Of course you should keep in mind that read was meant to read from files into variables, so making it read from standard input should be a little harder.</p>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      IDE FOR LINUX
-    </pattern>
-    <template>
-<![CDATA[<p><a href="http://projects.gnome.org/gedit/" rel="nofollow">gedit</a></p><br/><br/><ul><br/><li>Syntax highlighting</li><br/><li>Fast, lightweight</li><br/><li>Tabs</li><br/><li>GUI</li><br/></ul><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      EDITOR FOR LINUX ( BESID VI )
-    </pattern>
-    <template>
-<![CDATA[<p>Emacs is a wonderful text editor.  It has huge power once you become a power user.  You can access a shell, have as many files open as you want in as many sub-windows and an extremely powerful scripting support that lets you add all kinds of neat features.</p><br/><br/><p>I have been using a ruby-mode which adds syntax highlighting and whatnot to ruby, and the same exists for every major language.</p><br/><br/><p>If you keep at it, you can use exclusively the keyboard and never touch the mouse, which increases your editing speed by a significant margin.</p><br/><br/><p>If you want to start with something a lot more basic though, gedit is nice... it has built in syntax highlighting as well for most languages based on the filename extension.  It comes with the OS as well (though emacs you can easily install with apt-get or some similar package finder utility).</p><br/><br/><p>UPDATE: I think gedit is exclusively GUI based though, so it would be useful to learn emacs in case you are stuck with just a shell (it is fully featured in both shell and graphical mode).</p><br/><br/><p>FURTHER UPDATE: Just FYI, I am not trying to push Emacs over Vim, it's just what I use, and it's a great editor (as I'm sure Vim is too).  It is daunting at first (as I'm sure Vim is too), but the question was about text editors on Linux besides vi... Emacs seems the logical choice to me, but gedit is a great simple text editor with some nice features if that's all you are looking for.</p>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      FILE AND SCRIPT THAT EXECUT ON BOOT
-    </pattern>
-    <template>
-<![CDATA[<p>If you're adding something that needs to be started up and shut down gracefully, like a server daemon that keeps files open, creating an /etc/init.d-style script and then symlinking it into the /etc/rc?.d directory is the right thing to do.  </p><br/><br/><p>The name of the file in /etc/rc?.d is actually important; the S* scripts are run on startup in the the order you see when doing a ls -l; if your startup process depends on other things (like networking), be sure it runs after the networking startup script.  The numbers after the S are to set the sequence.  Things that start last need to be shut down first (before the things they depend upon are shut down), so if your startup entry is named S99mydaemon, symlink it as K01mydaemon to shut it down.  </p><br/><br/><p>Make note of the different runlevels on the system, 3 (/etc/rc3.d) is multi-user with a text login and 5 is multi-user with with a graphical login.  </p><br/><br/><p>/etc/rc.local is just an individual script on Red Hat-like systems; add commands that do not require a cleanup process to it.  rc.local entries run last.  </p><br/><br/><p>The startup process goes like this (on System V-like systems): </p><br/><br/><ul><br/><li>The bootloader finishes it's thing</li><br/><li>/etc/rc.sysinit is run - don't change this as patches may overwrite it.</li><br/><li>/etc/inittab is consulted to see what runlevel the system should be put into, and any commands for that runlevel are run.  see man inittab if you're curious about this file.</li><br/><li>/etc/rc?.d (where ? = runlevel) S* scripts are run</li><br/><li>/etc/rc.local is run</li><br/></ul>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      PERSON LINUX WEB SERVER
-    </pattern>
-    <template>
-<![CDATA[<p>This article has some of the best ways to lock things down:</p><br/><br/><p><a href="http://www.petefreitag.com/item/505.cfm" rel="nofollow">http://www.petefreitag.com/item/505.cfm</a></p><br/><br/><p>Some highlights:</p><br/><br/><ul><br/><li>Make sure no one can browse the directories</li><br/><li>Make sure only root has write privileges to everything, and only root has read privileges to certain config files</li><br/><li>Run mod_security</li><br/></ul><br/><br/><p>The article also takes some pointers from this book:</p><br/><br/><p><a href="http://spendfish.com/product/0596007248" rel="nofollow">Apache Securiy</a> (O'Reilly Press)</p><br/><br/><p>As far as distros, I've run Debain and Ubuntu, but it just depends on how much you want to do. I ran Debian with no X and just ssh'd into it whenever i needed anything. That is a simple way to keep overhead down. Or Ubuntu has some nice GUI things that make it easy to control Apache/MySQL/PHP.</p>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      FIND THE AGE OF A LONG RUN LINUX PROCESS
-    </pattern>
-    <template>
-<![CDATA[<p>Found an answer that works for me:</p><br/><br/><pre><code>ps -eo uid,pid,etime | egrep '^ *user-id' | egrep ' ([0-9]+-)?([0-9]{2}:?){3}' | awk '{print $2}' | xargs -I{} kill {}<br></code></pre><br/><br/><p>(Where <em>user-id</em> is a specific user's ID with long-running processes.)</p><br/><br/><p>The second regular expression matches the a time that has an optional days figure, followed by an hour, minute, and second component, and so is at least one hour in length.</p>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      MY CUSTOM KEY IN DEBIAN
-    </pattern>
-    <template>
-<![CDATA[<p>I can't say for certain because I'm not using Debian but if you're using Gnome the easiest way is to run gnome-keybinding-properties (System &gt; Preferences &gt; Keyboard Shortcuts)</p><br/><br/><p>Instead of typing a shortcut such as Ctrl+M, hit the button on your keyboard.</p><br/><br/><p>If you would prefer to do this via command line or with a different desktop environment, this may help: <a href="http://www.tldp.org/HOWTO/Keyboard-and-Console-HOWTO-14.html" rel="nofollow">Unusual keys and keyboards</a></p>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      MESSAG BOX FROM A BASH SCRIPT IN LINUX
-    </pattern>
-    <template>
-<![CDATA[<p>I believe <a href="http://live.gnome.org/Zenity" rel="nofollow">Zenity</a> will do what you want.  It's specifically designed for displaying GTK dialogs from the command line, and it's available as an <a href="http://packages.ubuntu.com/hardy/zenity" rel="nofollow">Ubuntu package</a>.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      UP PUBLIC KEY AUTHENT
-    </pattern>
-    <template>
-<![CDATA[<p>If you have SSH installed, you should be able to run..</p><br/><br/><pre><code>ssh-keygen<br/></code></pre><br/><br/><p>Then go through the steps, you'll have two files, id<em>rsa and id</em>rsa.pub (the first is your private key, the second is your public key - the one you copy to remote machines)</p><br/><br/><p>Then, connect to the remote machine you want to login to, to the file <code>~/.ssh/authorized_keys</code> add the contents of your that id_rsa<strong>.pub</strong> file.</p><br/><br/><p>Oh, and chmod 600 all the id_rsa* files (both locally and remote), so no other users can read them.</p><br/><br/><p>Then, when you do <code>ssh remote.machine</code>, it should ask you for the key's password, not the remote machine.</p><br/><br/><p><hr /></p><br/><br/><p>To make it nicer to use, you can use ssh-agent to hold the decrypted keys in memory - this means you don't have to type your keypair's password every single time. To launch the agent, you run</p><br/><br/><pre><code>`ssh-agent`<br/></code></pre><br/><br/><p>On some distros, ssh-agent is started automatically. If you run <code>echo $SSH_AUTH_SOCK</code> and it shows a path (probably in /tmp/) it's already setup, so you can skip the previous command.</p><br/><br/><p>Then to add your key, you do</p><br/><br/><pre><code>ssh-add ~/.ssh/id_rsa<br/></code></pre><br/><br/><p>and enter your passphrase. It's stored until you remove it (using the <code>ssh-add -D</code> command, which removes all keys from the agent)</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      REDEFIN VERSION PACKAG ETC
-    </pattern>
-    <template>
-<![CDATA[<p>Some notes:</p><br/><br/><ul><br/><li>you didn't mention how config.h was included - with quotes or angle brackets.  See <a href="http://stackoverflow.com/questions/21593/what-is-the-difference-between-include-filename-and-include-filename" rel="nofollow">this other question</a> for more information on the difference.  In short, config.h is typically included with quotes, not angle brackets, and this should make the preprocessor prefer the config.h from the project's own directory (which is usually what you want)</li><br/><li>You say that a subproject should be including the enclosing project's config.h  Normally this is not at all what you want.  The subproject is standalone, and its PACKAGE and VERSION should be the one of that subproject, not yours.  If you include libxml in your xmlreader project for example, you would still want the libxml code to be compiled with PACKAGE libxml and VERSION (whatever the libxml version is).</li><br/><li>It is usually a big mistake to have config.h be included from public headers.  config.h is always private to your project or the subproject, and should only be included from .c files.  So, if your vendor's documentation says to include their "vendor.h" and that public header includes config.h somehow, then that is a no-no.  Similarly, if your project is a library, don't include config.h anywhere from your publically installed headers.</li><br/></ul><br/><br/><p>Hope that helps!</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      GLOBU TOOLKIT VIRTUAL MACHIN
-    </pattern>
-    <template>
-<![CDATA[<p>The link to <a href="http://workspace.globus.org/vm/marketplace.html" rel="nofollow">http://workspace.globus.org/vm/marketplace.html</a> appears to be broken now. I think the new location is <a href="http://scienceclouds.org/marketplace/" rel="nofollow">http://scienceclouds.org/marketplace/</a>.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      MOVE FROM C + + TO PYTHON ... OR ANOTH LANGUAG
-    </pattern>
-    <template>
-<![CDATA[<blockquote><br/>  <p>I like the idea of not needing to compile the programs each time we make a change. I understand that the interpreted languages probably wont hit the same performance we currently get.</p><br/></blockquote><br/><br/><p>This is the biggest issue; can you live with the performance hit. You could try to use Python and <a href="http://www.python.org/doc/ext/intro.html" rel="nofollow" title="http://www.scribd.com/doc/2547864/msnetformattingstrings">extending it with your current C++ modules</a> for the performance heavy parts. Still, switching your entire system seems like a big effort if the only reason is the lack of C++ talent. Hiring people who know C++ seems like the cheaper option.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      VMWARE SERVER UNDER LINUX SECONDARI NIC CONNECT
-    </pattern>
-    <template>
-<![CDATA[<p>I believe you can set the desired solution up by rerunning the vmware configuration script.  And doing a custom network setup, so that both NIC's are mapped to your vmware instance.  I would recommend making eth0 the 2nd NIC since it will be easier for Linux to use by default.  Then make eth1 the 1st NIC.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      A FILE BUT SHOW SEVER SURROUND LINE
-    </pattern>
-    <template>
-<![CDATA[<p>For GNU grep you can use <code>-B num</code> to set how many lines before the match and <code>-A num</code> for the number of lines after the match.</p><br/><br/><p><code>grep -B 3 -A 2 foo README.txt</code></p><br/><br/><p>If you want the same amount of lines before and after you can use <code>-C num</code>.</p><br/><br/><p><code>grep -C 3 foo README.txt</code></p><br/><br/><p>This will show 3 lines before and 3 lines after.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      REMOT DIRECTORI UP TO D
-    </pattern>
-    <template>
-<![CDATA[<p>How "real-time" do you want the syncing?  I would still lean toward rsync since you know it is going to be fully supported on both platforms (Windows, too, with cygwin) and you can run it via a cron job.  I have a super-simple bash file that I run on my system (this does <b>not</b> remove old files):</p><br/><br/><pre><code>#!/bin/sh<br/>rsync -avrz --progress --exclude-from .rsync_exclude_remote . remote_login@remote_computer:remote_dir    <br/><br/># options<br/>#   -a  archive<br/>#   -v  verbose<br/>#   -r  recursive<br/>#   -z  compress<br/></code></pre><br/><br/><p>Your best bet is to set it up and try it out.  The -n (dry-run) option is your friend!</p><br/><br/><p>Keep in mind that rsync (at least in cgywin) does not support unicode file names (as of 16 Aug 2008).</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      CRITIC GUI APPLIC ( WINDOWS LINUX )
-    </pattern>
-    <template>
-<![CDATA[<p>First off, I would put some time into trying out a few <a href="http://www.google.com/search?q=VB.NET+to+C%23+converter&amp;ie=utf-8&amp;oe=utf-8&amp;aq=t&amp;rls=org.mozilla:en-US:official&amp;client=firefox-a" rel="nofollow">VB.NET to C# converters</a>.  You're basically porting syntax, and there's no reason to do that by hand if you don't have to.  Sure, you might have to clean up what comes out of the converter, but that's way better than a by-hand conversion.</p><br/><br/><p>Now, as for your questions:</p><br/><br/><blockquote><br/>  <p>1) does it make sense to do a GUI in winforms but the expensive stuff in native, unmanaged C/C++ ?</p><br/></blockquote><br/><br/><p>Not yet.  Wait until you've done the conversion, and then find out where you're actually spending your time.  There's no reason to jump into mixing C/C++ with C# until you find out that it's necessary.  You may find that dropping into unsafe C# is sufficient.  Even that may be unnecessary.  You might just need to optimize algorithms.  Find out what your bottlenecks are and <em>then</em> decide how to fix them.</p><br/><br/><blockquote><br/>  <p>2) any recommendations for a good cross platform windowing kit that would fit for the scenario described above? </p><br/></blockquote><br/><br/><p>I'd be looking into <a href="http://www.mono-project.com" rel="nofollow">mono</a> for sure.  That's really the best you can do if you're going with C#.  It's pretty much either mono or another rewrite in another language when/if you move to Linux.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      DEVELOP
-    </pattern>
-    <template>
-<![CDATA[<p>You might find this book, <a href="http://pragprog.com/titles/eband3/hello-android" rel="nofollow">Hello Android</a>, helpful. It includes information on getting started, installing the tools and so on. I've not read it, myself, but the company behind it is pretty solid.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      DIFFER BETWEEN THE ON EXIT ( ) AND ATEXIT ( ) FUNCTION
-    </pattern>
-    <template>
-<![CDATA[<p>According to <a href="http://www.delorie.com/gnu/docs/glibc/libc_560.html" rel="nofollow">this link</a> I found, it seems there are a few differences.  <code>on_exit</code> will let you pass in an argument that is passed in to the <code>on_exit</code> function when it is called... which might let you set up some pointers to do some cleanup work on when it is time to exit.</p><br/><br/><p>Furthermore, it appears that <code>on_exit</code> was a SunOS specific function that may not be compatible on all platforms... so you may want to stick with atexit, despite it being more restrictive.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      CRON JOB WORK PROPERLI
-    </pattern>
-    <template>
-<![CDATA[<p>Are you sure the temporary file is being created correctly when running as a cron job? The working directory for your script will either be specified in the HOME environment variable, or the /etc/passwd entry for the user that installed the cron job. If deploy does not have write permissions for the directory in which it is executing, then you could specify an absolute path for the dump file to fix the problem.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      DATABAS ERD TOOL FOR LINUX
-    </pattern>
-    <template>
-<![CDATA[<p>As a stop gap, I've installed DBDesigner via Wine (I should have just done that first) since that's what my Windows developers are using, but will look at both of these as well.  The Eclipse plugin would be ideal if it's decent.</p><br/><br/><p>Thanks.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      RECOMMEND A JAVA PROFIL
-    </pattern>
-    <template>
-<![CDATA[<p>A list of <a href="http://java-source.net/open-source/profilers" rel="nofollow">Open source JAVA profilers</a> that you may find useful.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      GENER FROM XHTML IN A LAMP ENVIRON
-    </pattern>
-    <template>
-<![CDATA[<p>I used <a href="http://www.easysw.com/htmldoc/" rel="nofollow">HTMLDoc</a> about 8 years ago and it did a good job of turning HTML tables with some basic formatting into a decent PDF report. There also seems to be an <a href="http://www.htmldoc.org/" rel="nofollow">open source version</a> as well.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      SCRIPT LOCAT LINUX ( DEBIAN ETCH )
-    </pattern>
-    <template>
-<![CDATA[<p>the  information i got:</p><br/><br/><pre><code>/usr/local/sbin     custom script meant for root<br/>/usr/local/bin      custom script meant for all users including non-root<br/></code></pre><br/><br/><p>chatlog snips from irc.debian.org #debian:</p><br/><br/><pre><code>(02:48:49) c33s: question: where is the _correct_ location, to put custom scripts<br/>for the root user (like a script on a webserver for createing everything needed <br/>for a new webuser)? is it /bin, /usr/local/bin,...? /usr/local/scripts is <br/>mentioned in (*link to this page*)<br/>(02:49:15) Hydroxide: c33s: typically /usr/local/sbin<br/>(02:49:27) Hydroxide: c33s: no idea what /usr/local/scripts would be<br/>(02:49:32) Hydroxide: it's nonstandard<br/>(02:49:53) Hydroxide: if it's a custom script meant for all users including <br/>non-root, then /usr/local/bin<br/>(02:52:43) Hydroxide: c33s: Debian follows the Filesystem Hierarchy Standard, <br/>with a very small number of exceptions, which is online in several formats at <br/>http://www.pathname.com/fhs/ (also linked from http://www.debian.org/devel/ and <br/>separately online at http://www.debian.org/doc/packaging-manuals/fhs/fhs-2.3.html)<br/>(02:53:03) Hydroxide: c33s: if you have the debian-policy package installed, it's <br/>also in several formats at /usr/share/doc/debian-policy/fhs/ on your system<br/>(02:53:37) Hydroxide: c33s: most linux distributions follow that standard, though <br/>usually less strictly and with more deviations than Debian.<br/></code></pre><br/><br/><p>thanks go out to Hydroxide</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      LINUX BACKUP SOLUT
-    </pattern>
-    <template>
-<![CDATA[<p>I think you might want to look at <a href="http://www.bacula.org/en/dev-manual/Bacula_Users_Guide.html" rel="nofollow">Bacula</a>, which 'comes in the night and sucks the essence from your computers*'. It's a fairly powerful backup tool which should be able to help you manage a set of complex backup tools.</p><br/><br/><p>*at least, that's what the user guide says :)</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      SUBVERS MANAG TOOL
-    </pattern>
-    <template>
-<![CDATA[<p>I would recommend SVN Access: <a href="http://www.jaj.com/projects/svnaccess/" rel="nofollow">http://www.jaj.com/projects/svnaccess/</a> or <a href="http://freshmeat.net/projects/svnaccess/" rel="nofollow">http://freshmeat.net/projects/svnaccess/</a><br/>I have used it as is, and have modified it for an enterprise-wide solution at my day job.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      GENER ASCII CODE 2 AND 3 IN A BASH COMMAND LINE
-    </pattern>
-    <template>
-<![CDATA[<p>Ctrl-V escapes the next keystoke.  That's how you can get a Ctrl-C out: Ctrl-V Ctrl-C</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      LSOF EQUIVAL FOR WINDOW
-    </pattern>
-    <template>
-<![CDATA[<p>Use <a href="http://technet.microsoft.com/en-us/sysinternals/bb896653.aspx" rel="nofollow" title="Process Explorer">Process Explorer</a> from the Sysinternals Suite, the Find Handle or DLL function will let you search for the process with that file open.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      RESOLUT OF A VNC SESSION IN LINUX
-    </pattern>
-    <template>
-<![CDATA[<p>Real VNC server 4.4 includes support for Xrandr, which allows resizing the VNC.  Start the server with:</p><br/><br/><pre><code>vncserver -geometry 1600x1200 -randr 1600x1200,1440x900,1024x768<br/></code></pre><br/><br/><p>Then resize with:</p><br/><br/><pre><code>xrandr -s 1600x1200<br/>xrandr -s 1440x900<br/>xrandr -s 1024x768<br/></code></pre><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      PARTIT TERABYT DRIVE IN A LINUX DEVELOP MACHIN
-    </pattern>
-    <template>
-<![CDATA[<p>My standard strategy for normal "utility" boxes is to give them a swap partition twice the size of their RAM, a 1GB /boot partition and leave the rest as one vast partition.  Whilst I see why some people want a separate /var, separate /home, etc., if I only have trusted users and I'm not running some production service, I don't think the reasons I've heard to date apply.  Instead, I do my best to avoid any resizing, or any partition becoming too small - which is best achieved with one huge partition.</p><br/><br/><p>As for the size of swap and /boot - if your machine has 4GB memory, you may not want to have double that in swap.  It's nonetheless wise to at least have some.  Even if you nonetheless have double, you're using a total of 9GB, for 0.9% of your new drive.  /boot can be smaller than 1GB, this is just my standard "will not become full, ever" size.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      SEND A FILE AS AN EMAIL ATTACH USE LINUX COMMAND LINE
-    </pattern>
-    <template>
-<![CDATA[<p>From looking at <code>man mailx</code>, the mailx program does not have an option for attaching a file. You could use another program such as mutt.</p><br/><br/><pre><code>echo "This is the message body" | mutt -a file.to.attach -s "subject of message" recipient@domain.com<br/></code></pre><br/><br/><p>Command line options for mutt can be shown with <code>mutt -h</code>.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      CORE DUMP IN LINUX
-    </pattern>
-    <template>
-<![CDATA[<p>This depends on what shell you are using.  If you are using bash, then the ulimit command controls several settings relating to program execution, such as whether you should dump core.  If you type</p><br/><br/><pre><code>ulimit -c unlimited<br/></code></pre><br/><br/><p>then that will tell bash that its programs can dump cores of any size.  You can specify a size such as 52M instead of unlimited if you want, but in practice this shouldn't be necessary since the size of core files will probably never be an issue for you.</p><br/><br/><p>In tcsh, you'd type</p><br/><br/><pre><code>limit coredumpsize unlimited<br/></code></pre><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      STACK TRACE ON UNIX SYSTEM AUTOMAT
-    </pattern>
-    <template>
-<![CDATA[<p>If you are on systems with the BSD <a href="http://linux.die.net/man/3/backtrace" rel="nofollow"><code>backtrace</code></a> functionality available (Linux, OSX 1.5, BSD of course), you can do this programmatically in your signal handler.</p><br/><br/><p>For example (<a href="http://www-128.ibm.com/developerworks/linux/library/l-cppexcep.html?ca=dgr-lnxw07ExceptionTricks" rel="nofollow"><code>backtrace</code> code derived from IBM example</a>): </p><br/><br/><pre><code>#include &lt;execinfo.h&gt;<br/>#include &lt;signal.h&gt;<br/>#include &lt;stdio.h&gt;<br/>#include &lt;stdlib.h&gt;<br/><br/>void sig_handler(int sig)<br/>{<br/>    void * array[25];<br/>    int nSize = backtrace(array, 25);<br/>    char ** symbols = backtrace_symbols(array, nSize);<br/><br/>    for (int i = 0; i &lt; nSize; i++)<br/>    {<br/>        puts(symbols[i]);;<br/>    }<br/><br/>    free(symbols);<br/><br/>    signal(sig, &amp;sig_handler);<br/>}<br/><br/>void h()<br/>{<br/>    kill(0, SIGSEGV);<br/>}<br/><br/>void g()<br/>{<br/>    h();<br/>}<br/><br/>void f()<br/>{<br/>    g();<br/>}<br/><br/>int main(int argc, char ** argv)<br/>{<br/>    signal(SIGSEGV, &amp;sig_handler);<br/>    f();<br/>}<br/></code></pre><br/><br/><p>Output:</p><br/><br/><pre><code>0   a.out                               0x00001f2d sig_handler + 35<br/>1   libSystem.B.dylib                   0x95f8f09b _sigtramp + 43<br/>2   ???                                 0xffffffff 0x0 + 4294967295<br/>3   a.out                               0x00001fb1 h + 26<br/>4   a.out                               0x00001fbe g + 11<br/>5   a.out                               0x00001fcb f + 11<br/>6   a.out                               0x00001ff5 main + 40<br/>7   a.out                               0x00001ede start + 54<br/></code></pre><br/><br/><p>This doesn't get bonus points for the optional features (except not requiring a GUI), however, it does have the advantage of being very simple, and not requiring any additional libraries or programs.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      MATCH LINUX DEVIC PATH TO WINDOW DRIVE NAME
-    </pattern>
-    <template>
-<![CDATA[<p>Partitions have UUIDs associated with them. I don't know how to find these in Windows but in linux you can find the UUID for each partition with:</p><br/><br/><blockquote><br/>  <p>sudo vol_id -u device (e.g. /dev/sda1)</p><br/></blockquote><br/><br/><p>If there is an equivilent function in Windows you could simply store the UUIDs for whatever partition they pick then iterate through all known partitions in linux and match the UUIDs.</p><br/><br/><p><strong>Edit:</strong> This may be a linux-only thing, and it may speficially be the volid util that generates these from something (instead of reading off meta-data for the drive). Having said that, there is nothing stopping you getting the source for volid and checking out what it does.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      PIPE HANDL
-    </pattern>
-    <template>
-<![CDATA[<p>I decided to write a slightly more detailed explanation.</p><br/><br/><p>The "magic" here lies in the operating system. Both programs do start up at roughly the same time, and run at the same time (the operating system assigns them slices of time on the processor to run) as every other simultaneously running process on your computer (including the terminal application and the kernel). So, before any data gets passed, the processes are doing whatever initialization necessary. In your example, tail is parsing the '-20' argument and cat is parsing the 'file.txt' argument and opening the file. At some point tail will get to the point where it needs input and it will tell the operating system that it is waiting for input. At some other point (either before or after, it doesn't matter) cat will start passing data to the operating system using stdout. This goes into a buffer in the operating system. The next time tail gets a time slice on the processor after some data has been put into the buffer by cat, it will retrieve some amount of that data (or all of it) which leaves the buffer on the operating system. When the buffer is empty, at some point tail will have to wait for cat to output more data. If cat is outputting data much faster than tail is handling it, the buffer will expand. cat will eventually be done outputting data, but tail will still be processing, so cat will close and tail will process all remaining data in the buffer. The operating system will signal tail when their is no more incoming data with an EOF. Tail will process the remaining data. In this case, tail is probably just receiving all the data into a circular buffer of 20 lines, and when it is signalled by the operating system that there is no more incoming data, it then dumps the last twenty lines to its own stdout, which just gets displayed in the terminal. Since tail is a much simpler program than cat, it will likely spend most of the time waiting for cat to put data into the buffer.</p><br/><br/><p>On a system with multiple processors, the two programs will not just be sharing alternating time slices on the same processor core, but likely running at the same time on separate cores.</p><br/><br/><p>To get into a little more detail, if you open some kind of process monitor (operating system specific) like 'top' in Linux you will see a whole list of running processes, most of which are effectively using 0% of the processor. Most applications, unless they are crunching data, spend most of their time doing nothing. This is good, because it allows other processes to have unfettered access to the processor according to their needs. This is accomplished in basically three ways. A process could get to a sleep(n) style instruction where it basically tells the kernel to wait n milliseconds before giving it another time slice to work with. Most commonly a program needs to wait for something from another program, like 'tail' waiting for more data to enter the buffer. In this case the operating system will wake up the process when more data is available. Lastly, the kernel can preempt a process in the middle of execution, giving some processor time slices to other processes. 'cat' and 'tail' are simple programs. In this example, tail spends most of it's time waiting for more data on the buffer, and cat spends most of it's time waiting for the operating system to retrieve data from the harddrive. The bottleneck is the speed (or slowness) of the physical medium that the file is stored on. That perceptible delay you might detect when you run this command for the first time is the time it takes for the read heads on the disk drive to seek to the position on the harddrive where 'file.txt' is. If you run the command a second time, the operating system will likely have the contents of file.txt cached in memory, and you will not likely see any perceptible delay (unless file.txt is very large, or the file is no longer cached.)</p><br/><br/><p>Most operations you do on your computer are IO bound, which is to say that you are usually waiting for data to come from your harddrive, or from a network device, etc.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      BROKEN SYMLINK WITH PYTHON
-    </pattern>
-    <template>
-<![CDATA[<p>A common Python saying is that it's easier to ask forgiveness than permission.  While I'm not a fan of this statement in real life, it does apply in a lot of cases.  Usually you want to avoid code that chains two system calls on the same file, because you never know what will happen to the file in between your two calls in your code.</p><br/><br/><p>A typical mistake is to write something like:</p><br/><br/><pre><code>if os.path.exists(path):<br/>    os.unlink(path)<br/></code></pre><br/><br/><p>The second call (os.unlink) may fail if something else deleted it after your if test, raise an Exception, and stop the rest of your function from executing.  (You might think this doesn't happen in real life, but we just fished another bug like that out of our codebase last week - and it was the kind of bug that left a few programmers scratching their head and claiming 'Heisenbug' for the last few months)</p><br/><br/><p>So, in your particular case, I would probably do:</p><br/><br/><pre><code>try:<br/>    os.stat(path)<br/>except OSError, e:<br/>    if e.errno == errno.ENOENT:<br/>        print 'path %s does not exist or is a broken symlink' % path<br/>    else:<br/>        raise e<br/></code></pre><br/><br/><p>The annoyance here is that stat returns the same error code for a symlink that just isn't there and a broken symlink.</p><br/><br/><p>So, I guess you have no choice than to break the atomicity, and do something like</p><br/><br/><pre><code>if not os.path.exists(os.readlink(path)):<br/>    print 'path %s is a broken symlink' % path<br/></code></pre><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      DEV TTI # ( NOTIC THE LITTL S )
-    </pattern>
-    <template>
-<![CDATA[<p><a href="http://www.linuxselfhelp.com/HOWTO/Text-Terminal-HOWTO-6.html" rel="nofollow">see this</a></p><br/><br/><blockquote><br/>  <p>For a pseudo terminal pair such as<br/>  ptyp3 and ttyp3, the pty... is the<br/>  master or controlling terminal and the<br/>  tty... is the slave. There are only 16<br/>  ttyp's: ttyp0-ttypf (f is a<br/>  hexadecimal digit). <strong>To get more<br/>  pairs, the 3 letters q, r, s may be<br/>  used instead of p</strong>. For example the<br/>  pair ttys8, ptys8 is a pseudo terminal<br/>  pair. The master and slave are really<br/>  the same "port" but the slave is used<br/>  by the application program and the<br/>  master is used by a network program<br/>  (or the like) which supplies (and<br/>  gets) data to/from the slave port.</p><br/></blockquote><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      PACH ALONGSID ANOTH WEB SERVER
-    </pattern>
-    <template>
-<![CDATA[<p>You can't have two processes bound to the same port on the same IP address. You can add another IP address to the box and have each server listen on one.</p><br/><br/><p>Another option is to proxy pass one server to the other. With Apache, you could do something like:</p><br/><br/><pre><code>NameVirtualHost *<br/>&lt;virtualhost *&gt;<br/>  ServerName other.site.com<br/><br/>  # assumes CherryPy listens on port 8080<br/>  ProxyPass / &lt;http://127.0.0.1:8080/&gt;<br/>  ProxyPassReverse / &lt;http://127.0.0.1:8080/&gt;<br/>&lt;/Virtualhost&gt;<br/></code></pre><br/><br/><p>That's a pretty quick example, but you can always check the <a href="http://httpd.apache.org/docs/2.2/mod/mod_proxy.html" rel="nofollow">ProxyPass documentation</a>. Remember though, the application being proxyed to will get 127.0.0.1 in it's logs instead of the requester's IP address. Some web servers (apache does with <a href="http://stderr.net/apache/rpaf/" rel="nofollow">mod_rpaf</a>) can substitute the X-Forwarded-For header in place of the wrong IP address. Possibly CherryPy has this?</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      SETUP MEMCACH ON CENTO TO WORK WITH APACH AND PHP
-    </pattern>
-    <template>
-<![CDATA[<p><a href="http://crazytoon.com/2008/01/20/memcached-how-do-you-install-memcached-centos-64-bit-linux-redhat-fedora/" rel="nofollow">This page</a> should help you get started. although it is about 64 bit, normal 32 bit installation would follow most of the same steps.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      IDE FOR LINUX
-    </pattern>
-    <template>
-<![CDATA[<p>Actually, I recently made the switch from Visual Studio (<em>years</em> of experience there) to Linux and the first thing I did was try to find a reasonable IDE.</p><br/><br/><p>And then I noticed that this simply isn't how you work there*, and I threw everything out, spent a few days reading manuals, set up my shell (bash), set up a GVIM environment, learned the GCC/binutils toolchain, <code>make</code> and <code>gdb</code> and lived happily ever after.</p><br/><br/><p>There are certainly disadvantages but I am sure that I work much more productive since making the switch.</p><br/><br/><p>*) It <em>really</em> isn't! And that's not an anachronism either because the toolchain described above is incredibly mature and powerful. Any IDE has to replicate hundreds of unique features to get anywhere near the power of these tools that have been honed to the point of perfection for decades. The learning curve might be quite steep, but much less so than I expected.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      CLASSIC ASP IN LINUX
-    </pattern>
-    <template>
-<![CDATA[<p>I'm not sure what you're asking here, but if you are simply looking for a text-editor, my recommendations would be:</p><br/><br/><p>Console-based:</p><br/><br/><ul><br/><li>jed (simple, with a DOS Edit-like menubar, supports syntax-highlighing)</li><br/><li>nano / pico (even simpler)</li><br/></ul><br/><br/><p>X-based:</p><br/><br/><ul><br/><li>Kate (KDE, syntax-highlighing)</li><br/><li>Mousepad (like notepad)</li><br/><li>SciTE (syntax-highlighing)</li><br/></ul><br/><br/><p>There are of course likely to be a gazillion other text-editors better than the ones listed above, but these are the ones I tend to use.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      GET TO KNOW LINUX OR BSD KERNEL INTERN
-    </pattern>
-    <template>
-<![CDATA[<p>In college, I had an operating systems class where we used a <a href="http://rads.stackoverflow.com/amzn/click/0003458903" rel="nofollow">book by Tanenbaum</a>.  In the class, we implemented a device driver in the <a href="http://minix1.woodhull.com/teaching/teach_ver.html" rel="nofollow">Minix operating system</a>.  It was a lot of fun, and we learned a lot.</p><br/><br/><p>One thing to note though, if you pick Minix, it is designed for learning.  It is a microkernel, while Linux and BSD are a monolithic kernel, so what you learn may not be 100% translatable to be able to work with Linux or BSD, but you can still gain a lot out of it, without having to process quite as much information.</p><br/><br/><p>As a side note, if you've read <a href="http://rads.stackoverflow.com/amzn/click/0066620732" rel="nofollow">Just for Fun</a>, Linus actually was playing with Minix before he wrote Linux, but it just wasn't enough for his purposes.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      LINUX C C + + IDE FOR A LOW R SCREEN
-    </pattern>
-    <template>
-<![CDATA[<p><a href="http://codeblocks.org/" rel="nofollow">Code::Blocks</a> is a highly configurable IDE. You can set up the various windows in any configuration, disable tool strips, etc. It is also, IMO, the C/C++ IDE for Linux with the best and most powerful modern features (debugging, code completion, code folding, <a href="http://www.codeblocks.org/features" rel="nofollow">etc</a>.)</p><br/><br/><p>You may be able to gain more usable screen space by changing the window manager theme.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      VALU FROM DIFFER FILE INTO ONE CSV FILE
-    </pattern>
-    <template>
-<![CDATA[<p>file 1:</p><br/><br/><pre><br/>1<br/>2<br/>3<br/></pre><br/><br/><p>file2:</p><br/><br/><pre><br/>2<br/>4<br/>6<br/></pre><br/><br/><blockquote><br/>  <p>paste --delimiters=\; file1 file2</p><br/></blockquote><br/><br/><p>Will yield:</p><br/><br/><pre><br/>1;2<br/>3;4<br/>5;6<br/></pre><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      LANG TO ASCII
-    </pattern>
-    <template>
-<![CDATA[<p><code>LANG=en_NZ</code> is correct. However, you must make locale files for <code>en_NZ</code>.</p><br/><br/><p>For Ubuntu, edit <code>/var/lib/locales/supported.d/local</code> and add <code>en_NZ ISO-8859-1</code> to the file. If your system is another distribution (including Debian), the location will be different. Look at <code>/usr/sbin/locale-gen</code> and see where it stores this info.</p><br/><br/><p>Afterwards, run <code>locale-gen</code> to create the <code>en_NZ</code> locale file. Hope this helps!</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      YOU RECOMMEND SOME GUID ABOUT EPOL ON LINUX
-    </pattern>
-    <template>
-<![CDATA[<p>Here's an introduction to Epoll, a pretty basic tutorial: <a href="http://blog.kovyrin.net/2006/04/13/epoll-asynchronous-network-programming/" rel="nofollow">http://blog.kovyrin.net/2006/04/13/epoll-asynchronous-network-programming/</a></p><br/><br/><p>A more complete example can be found here: <a href="https://banu.com/blog/2/how-to-use-epoll-a-complete-example-in-c/" rel="nofollow">https://banu.com/blog/2/how-to-use-epoll-a-complete-example-in-c/</a></p><br/><br/><p>Also, the man pages: <a href="http://man-wiki.net/index.php/4%3aepoll" rel="nofollow">http://man-wiki.net/index.php/4:epoll</a></p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      TRAFFIC SHAPE BY USE SSH ON PORT 443
-    </pattern>
-    <template>
-<![CDATA[<p>I'm not sure it's true that any given ssh packet "looks" the same as any given https packet.</p><br/><br/><p>However, over their lifetime they don't behave the same way.  The session set up and tear down don't look alike (SSH offer a plain text banner during initial connect, for one thing).  Also, typically wouldn't an https session be short lived?  Connect, get your data, disconnect, whereas ssh would connect and persist for long periods of time?  I think perhaps using 443 instead of 22 might get past naive filters, but I don't think it would fool someone specifically looking for active attempts to bypass their filters.</p><br/><br/><p>Is throttling ssh a common occurrence?  I've experienced people blocking it, but I don't think I've experienced throttling.  Heck, I usually use ssh tunnels to bypass other blocks since people don't usually care about it.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      MONO SUPPORT SYSTEM.DRAW AND SYSTEM.DRAWING.PRINT
-    </pattern>
-    <template>
-<![CDATA[<p>From the <a href="http://www.mono-project.com/FAQ:_General" rel="nofollow">Mono docs</a>, I think yes:</p><br/><br/><blockquote><br/>  <p>Managed.Windows.Forms (aka<br/>  System.Windows.Forms): A complete and<br/>  cross platform, System.Drawing based<br/>  Winforms implementation.</p><br/></blockquote><br/><br/><p>It also useful if you run the <a href="http://www.mono-project.com/Moma" rel="nofollow">Mono Migration Analyzer</a> first.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      OPEN A FILE IN NON EXCLUS MODE
-    </pattern>
-    <template>
-<![CDATA[<blockquote><br/>  <p>Is there a way to open file in a non-exclusive way,</p><br/></blockquote><br/><br/><p>Yes, using Win32, passing the various FILE_SHARE_Xxxx flags to CreateFile.</p><br/><br/><blockquote><br/>  <p>is it cross platform?</p><br/></blockquote><br/><br/><p>No, it requires platform-specific code.</p><br/><br/><p>Due to annoying backwards compatibility concerns (DOS applications, being single-tasking, assume that nothing can delete a file out from under them, i.e. that they can fclose() and then fopen() without anything going amiss; Win16 preserved this assumption to make porting DOS applications easier, Win32 preserved this assumption to make porting Win16 applications easier, and it's awful), Windows defaults to opening files exclusively.</p><br/><br/><p>The underlying OS infrastructure supports deleting/renaming open files  (although I believe it does have the restriction that memory-mapped files cannot be deleted, which I think isn't a restriction found on *nix), but the default opening semantics do not.</p><br/><br/><p>C++ has no notion of any of this; the C++ operating environment is much the same as the DOS operating environment--no other applications running concurrently, so no need to control file sharing.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      CHOOS A LINUX UNIX BSD DISTRIBUT
-    </pattern>
-    <template>
-<![CDATA[<p><strong>Differences between Linux, *nix and BSD</strong><br/>A quite general way of looking at it is the unices have paid for the certifications and licences from Open Group that allow them to use the name but in this day and age they all do much the same, can run the same software and can be made to operate (on the surface) in similar ways.</p><br/><br/><p>Another way of looking at it is one that causes lots of confusion and arguments.  Linux is a Kernel and Unices are an operating systems.  This is why most Linux distributions are considered GNU/Linux by diehards and free software supporters because the tools come from the GNU project.  This is less clear in this day and age where many Unix admins and users replace at least a few of the supplied tools with the GNU tools.</p><br/><br/><p>BSD sits across both camps because BSD is a Unix based on it's history but is a free unix unlike many of it's competitors.  </p><br/><br/><p><strong>What features should you be looking for? and where to find them?</strong><br/>This is really subjective and as I'm a freesoftware guy this might offend a few people but I think any of the systems that have been developed by teams of user/developers will have all the 'right' tools and features from the off so I'm going to list a few that I think fit firmly in this camp.  This list isn't exhaustive but is pretty indicative of those from this method of development with the strongest user/developer bases.</p><br/><br/><ul><br/><li>Debian GNU/Linux</li><br/><li>Slackware GNU/Linux</li><br/><li>NetBSD</li><br/><li>FreeBSD</li><br/><li>OpenBSD</li><br/></ul><br/><br/><p>There are also distros based on the above such as Ubuntu which are also great choices because they inherit many of the good points from their ancestors.</p><br/><br/><p><strong>Main features to look for.</strong><br/>Ease of administration.  Most of the above provide usable tools for maintainance and software install with my personal top from the Linux and BSD worlds for this being Debian and FreeBSD.</p><br/><br/><p>Peer support, all of the above have a wonderful community of users with FAQs and mailing list archives answering the majority of questions you might have.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      SET UP AN OPENID PROVID ( SERVER ) IN UBUNTU
-    </pattern>
-    <template>
-<![CDATA[<p>I personnally used <a href="http://siege.org/projects/phpMyID/">phpMyID</a> just for StackOverflow. It's a simple two-files PHP script to put somewhere on a subdomain. Of course, it's not as easy as installing a .deb, but since OpenID relies completely on HTTP, I'm not sure it's advisable to install a self-contained server...</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      EXTRACT DATA FROM A FILEMAK PRO DATABAS IN A SCRIPT
-    </pattern>
-    <template>
-<![CDATA[<p>It has been a <strong>really</strong> long time since I did anything with FileMaker Pro, but I know that it does have capabilities for an ODBC (and JDBC) connection to be made to it (however, I don't know how, or if, that translates to the linux/perl/python world though).  </p><br/><br/><p>This article shows how to share/expose your FileMaker data via ODBC &amp; JDBC:<br /><br/><a href="http://www.filemaker.com/help/15-Using%20ODBC2.html" rel="nofollow">Sharing FileMaker Pro data via ODBC or JDBC</a>   </p><br/><br/><p>From there, if you're able to create an ODBC/JDBC connection you could query out data as needed.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      3.2.2 CONTENT ASSIST NOT FIND CLASS IN THE PROJECT
-    </pattern>
-    <template>
-<![CDATA[<p>Thanks for your last comment it worked partially.<br/>If there is any kind of errors, the content assist wont work. Once fixed, it partially works.<br/>I say partially because, there appear to be a bug, when I do Perl EPIC inheritance ex: </p><br/><br/><pre><code>package FG::CatalogueFichier;<br/>use FG::Catalogue;<br/>our @ISA = qw(FG::Catalogue);<br/>use strict;<br/></code></pre><br/><br/><p>, the inheritted subroutines are not displayed in the content assist.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      DISTUTIL DOE ANYON KNOW HOW TO USE IT
-    </pattern>
-    <template>
-<![CDATA[<p>See the <a href="http://docs.python.org/dist/simple-example.html" rel="nofollow">distutils simple example</a>. That's basically what it is like, except real install scripts usually contain a bit more information. I have not seen any that are fundamentally more complicated, though. In essence, you just give it a list of what needs to be installed. Sometimes you need to give it some mapping dicts since the source and installed trees might not be the same.</p><br/><br/><p>Here is a real-life (anonymized) example:</p><br/><br/><pre><code>#!/usr/bin/python <br/><br/>from distutils.core import setup <br/><br/>setup (name = 'Initech Package 3', <br/>          description = "Services and libraries ABC, DEF", <br/>          author = "That Guy, Initech Ltd", <br/>          author_email = "that.guy@initech.com", <br/>          version = '1.0.5', <br/>          package_dir = {'Package3' : 'site-packages/Package3'}, <br/>          packages = ['Package3', 'Package3.Queries'], <br/>          data_files = [ <br/>                       ('/etc/Package3', ['etc/Package3/ExternalResources.conf']) <br/>          ])<br/></code></pre><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      THE FILENAM OF A TEMPFIL TO USE IN LINUX
-    </pattern>
-    <template>
-<![CDATA[<p>You can use the <a href="http://www.linuxmanpages.com/man3/mkstemp.3.php" rel="nofollow"><code>mkstemp(3)</code></a> function for this purpose. Another alternative is the <a href="http://www.linuxmanpages.com/man3/tmpfile.3.php" rel="nofollow"><code>tmpfile(3)</code></a> function.<br/>Which one of them you choose depends on whether you want the file to be opened as a C library file stream (which <code>tmpfile</code> does), or a direct file descriptor (<code>mkstemp</code>). The <code>tmpfile</code> function also deletes the file automatically when you program finishes.</p><br/><br/><p>The advantage of using these functions is that they avoid race conditions between determining the unique filename and creating the file -- so that two programs won't try to create the same file at the same time, for example.</p><br/><br/><p>See the man pages for both functions for more details.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      GIST FILE EXTENS MIME TYPE IN LINUX
-    </pattern>
-    <template>
-<![CDATA[<p>Use <code>xdg-utils</code> from <a href="http://portland.freedesktop.org/wiki/" rel="nofollow">freedesktop.org Portland</a>.</p><br/><br/><p>Register the icon for the MIME type:</p><br/><br/><pre><code>xdg-icon-resource install --context mimetypes --size 48 myicon-file-type.png x-application-mytype<br/></code></pre><br/><br/><p>Create a configuration file (<a href="http://standards.freedesktop.org/shared-mime-info-spec/shared-mime-info-spec-latest.html" rel="nofollow">freedesktop Shared MIME documentation)</a>:</p><br/><br/><pre><code>&lt;?xml version="1.0"?&gt;<br/> &lt;mime-info xmlns='http://www.freedesktop.org/standards/shared-mime-info'&gt;<br/>   &lt;mime-type type="application/x-mytype"&gt;  <br/>   &lt;comment&gt;A witty comment&lt;/comment&gt;<br/>   &lt;comment xml:lang="it"&gt;Uno Commento&lt;/comment&gt;<br/>   &lt;glob pattern="*.myapp"/&gt;<br/>  &lt;/mime-type&gt;<br/> &lt;/mime-info&gt;<br/></code></pre><br/><br/><p>Install the configuration file:</p><br/><br/><pre><code>xdg-mime install mytype-mime.xml<br/></code></pre><br/><br/><p>This gets your files recognized and associated with an icon. <a href="http://portland.freedesktop.org/xdg-utils-1.0/xdg-mime.html" rel="nofollow"><code>xdg-mime default</code></a> can be used for associating an application with the MIME type after you get a <a href="http://portland.freedesktop.org/xdg-utils-1.0/xdg-desktop-menu.html" rel="nofollow"><code>.desktop</code></a> file installed.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      NANT AND DUAL PLATFORM BUILD BEST WAY TO BUILD ON WINDOW AND MONO LINUX
-    </pattern>
-    <template>
-<![CDATA[<p>This shouldn't be a particularly difficult excercise. We do some fairly similar stuff on one of my projects since half of it runs on Java using Ant to run relevant targets, and the other half is .Net (C#) for the UI. The projects get run on windows machines for development, but the servers (Java) run linux, but in the UAT environment (linux) we need to run the nunits (integration tests). The real trick (not really a difficult trick) behind this is having a NAnt build file that can run in both environments which seems to be the same thing you're trying to do here.</p><br/><br/><p>Of course you realise you'll need to install NAnt on Mono first:</p><br/><br/><pre><code>$ export MONO_NO_UNLOAD=1<br/>$ make clean<br/>$ make<br/>$ mono bin/NAnt.exe clean build<br/></code></pre><br/><br/><p>And then your build file needs to be written in such a way that it seperates concerns. Some parts of the build file written for windows will not work in linux for example. So you really just need to divide it up ito specific targets in the build file. After that, there are a number of ways you can run a specific targets from the command line. An example might look like this:</p><br/><br/><pre><code>&lt;project name="DualBuild"&gt;<br/>  &lt;property name="windowsDotNetPath" value="C:\WINDOWS\Microsoft.NET\Framework\v3.5" /&gt;<br/>  &lt;property name="windowsSolutionPath" value="D:\WorkingDirectory\branches\1234\source" /&gt;<br/>  &lt;property name="windowsNUnitPath" value="C:\Program Files\NUnit-Net-2.0 2.2.8\bin" /&gt;<br/>  &lt;property name="monoPath" value="You get the idea..." /&gt;<br/><br/>  &lt;target name="BuildAndTestOnWindows" depends="WinUpdateRevision, WinBuild, WinTest" /&gt;<br/>  &lt;target name="BuildAndTestOnLinux" depends="MonoUpdateRevision, MonoBuild, MonoTest" /&gt;<br/><br/>  &lt;target name="WinUpdateRevision"&gt;<br/>    &lt;delete file="${windowsSolutionPath}\Properties\AssemblyInfo.cs" /&gt;<br/>    &lt;exec program="subwcrev.exe" basedir="C:\Program Files\TortoiseSVN\bin\"<br/>          workingdir="${windowsSolutionPath}\Properties"<br/>          commandline="${windowsSolutionPath} .\AssemblyInfoTemplate.cs<br/>                       .\AssemblyInfo.cs" /&gt;<br/>    &lt;delete file="${windowsSolutionPath}\Properties\AssemblyInfo.cs" /&gt;<br/>    &lt;exec program="subwcrev.exe" basedir="C:\Program Files\TortoiseSVN\bin\"<br/>          workingdir="${windowsSolutionPath}\Properties"<br/>          commandline="${windowsSolutionPath} .\AssemblyInfoTemplate.cs <br/>                       .\AssemblyInfo.cs" /&gt;<br/>  &lt;/target&gt;<br/><br/>  &lt;target name="WinBuild"&gt;<br/>    &lt;exec program="msbuild.exe"<br/>          basedir="${windowsDotNetPath}"<br/>          workingdir="${windowsSolutionPath}"<br/>          commandline="MySolution.sln /logger:ThoughtWorks.CruiseControl.MsBuild.XmlLogger,<br/>                       ThoughtWorks.CruiseControl.MsBuild.dll;msbuild-output.xml <br/>                       /nologo /verbosity:normal /noconsolelogger <br/>                       /p:Configuration=Debug /target:Rebuild" /&gt;<br/>  &lt;/target&gt;<br/><br/>  &lt;target name="WinTest"&gt;<br/>    &lt;exec program="NCover.Console.exe"<br/>          basedir="C:\Program Files\NCover"<br/>          workingdir="${windowsSolutionPath}"&gt;<br/>      &lt;arg value="//x &amp;quot;ClientCoverage.xml&amp;quot;" /&gt;<br/>      &lt;arg value="&amp;quot;C:\Program Files\NUnit-Net-2.0 2.2.8\bin<br/>                       \nunit-console.exe&amp;quot; <br/>                       MySolution.nunit /xml=nunit-output.xml /nologo" /&gt;<br/>    &lt;/exec&gt;<br/>  &lt;/target&gt;<br/><br/>  &lt;target name="MonoUpdateRevision"&gt;<br/>    You get the idea...<br/>  &lt;/target&gt;<br/><br/><br/>  &lt;target name="MonoBuild"&gt;<br/>    You get the idea...<br/>  &lt;/target&gt;<br/><br/>  &lt;target name="MonoTest"&gt;<br/>    You get the idea...<br/>  &lt;/target&gt;<br/><br/>&lt;/project&gt;<br/></code></pre><br/><br/><p>For brevity, I've left both sides out. The neat thing is you can use NUnit as well as NAnt on both environments and that makes things really easy from a dependency point of view. And for each executable you can swap out for others that work in that environment, for example (xBuild for MSBuild, and svn for tortoise etc)</p><br/><br/><p>For more help on Nunit etc on Mono, check out <a href="http://blog.coryfoy.com/2006/02/nunitnant-and-mono-on-linux/" rel="nofollow">this fantastic post</a>.</p><br/><br/><p>Hope that helps,</p><br/><br/><p>Cheers,</p><br/><br/><p>Rob G</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      CUSTOM LINUX LIVE CD
-    </pattern>
-    <template>
-<![CDATA[<p>One key piece of advice I can give is that most LiveCDs use a compressed filesystem called squashfs to cram as much data on the CD as possible.  Since you don't need compression, you could run the mksquashfs step (present in most tutorials) with -noDataCompression and -noFragmentCompression to save on decompression time.  You may even be able to drop the squashfs approach entirely, but this would require some restructuring.  This may actually be slower depending on your CD-ROM read speed vs. CPU speed, but it's worth looking into.</p><br/><br/><p>This <a href="https://help.ubuntu.com/community/LiveCDCustomization" rel="nofollow">Ubuntu tutorial</a> was effective enough for me to build a LiveCD based on 8.04.  It may be useful for getting the feel of how a LiveCD is composed, but I would probably <strong>not</strong> recommend using an Ubuntu LiveCD.  </p><br/><br/><p>If at all possible, find a minimal LiveCD and build up with only minimal stripping out, rather than stripping down a huge LiveCD like Ubuntu.  There are some situations in which the smaller distros are using smaller/faster <em>alternatives</em> rather than just leaving something out.  If you want to get seriously hardcore, you could look at <a href="http://www.linuxfromscratch.org/" rel="nofollow">Linux From Scratch</a>, and include <em>only</em> what you want, but that's probably more time than you want to spend.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      FOR VB.NET CODE TO LINUX PLATFORM EXIST
-    </pattern>
-    <template>
-<![CDATA[<p>Here's a link to the <a href="http://www.mono-project.com/MoMA" rel="nofollow">Mono Migration Analyzer</a> to get started.  It will help you pinpoint Microsoft specific calls, but you'll probably have to do the db conversion and data access layer manually.  You may be surprised - mono does have a System.Data.SqlClient namespace so you may not have much work to do.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      NUMBER OF OPEN FILE LIMIT IN LINUX
-    </pattern>
-    <template>
-<![CDATA[<p>You could always try doing a <code>ulimit -n 2048</code>.  This will only reset the limit for your current shell and the number you specify must not exceed the hard limit</p><br/><br/><p>Each operating system has a different hard limit setup in a configuration file.  For instance, the hard open file limit on Solaris can be set on boot from /etc/system.</p><br/><br/><pre><code>set rlim_fd_max = 166384<br/>set rlim_fd_cur = 8192<br/></code></pre><br/><br/><p>On OS X, this same data must be set in /etc/sysctl.conf.</p><br/><br/><pre><code>kern.maxfilesperproc=166384<br/>kern.maxfiles=8192<br/></code></pre><br/><br/><p>Under Linux, these settings are often in /etc/limits.conf.</p><br/><br/><p>There are two kinds of limits:</p><br/><br/><ul><br/><li><strong>soft</strong> limits are simply the currently enforced limits</li><br/><li><strong>hard</strong> limits mark the maximum value which cannot be exceeded by setting a soft limit</li><br/></ul><br/><br/><p>Soft limits could be set by any user while hard limits are changeable only by root.<br/>Limits are a property of a process. They are inherited when a child process is created so system-wide limits should be set during the system initialization in init scripts and user limits should be set during user login for example by using pam_limits.</p><br/><br/><p>There are often defaults set when the machine boots.  So, even though you may reset your ulimit in an individual shell, you may find that it resets back to the previous value on reboot.  You may want to grep your boot scripts for the existence ulimit commands if you want to change the default. </p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      WHAT IS THE BEST WAY TO ESTIM THE CODE STATIC DATA SIZE OF PROGRAM
-    </pattern>
-    <template>
-<![CDATA[<p>"size" is the traditional tool.  "readelf" has a lot of options.</p><br/><br/><pre><code>$ size /bin/sh<br/>   text    data     bss     dec     hex filename<br/> 712739   37524   21832  772095   bc7ff /bin/sh<br/></code></pre><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      GUI DEVELOP
-    </pattern>
-    <template>
-<![CDATA[<p>Your best bet may be to port it to a cross-platform widget library such as <a href="http://en.wikipedia.org/wiki/WxWidgets" rel="nofollow">wxWidgets</a>, which would give you portability to any platform wxWidgets supports.</p><br/><br/><p>It's also important to make the distinction between Gnome libraries and GTK, and likewise KDE libraries and Qt. If you write the code to use GTK or Qt, it should work fine for users of any desktop environment, including less popular ones like XFCE. If you use other Gnome or KDE-specific libraries to do non-widget-related tasks, your app would be less portable between desktop environments.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      P INVOK IN MONO
-    </pattern>
-    <template>
-<![CDATA[<p>Working, usable and stable. It's well tested since quite a lot of mono's own low-level functionality has to be marshaled through it to the underlying operating system.</p><br/><br/><p>There are some <a href="http://www.mono-project.com/Interop_with_Native_Libraries" rel="nofollow">P/Invoke extensions</a> when compared to Microsoft .Net implementation (after all they deal with a single OS family and three architectures at most). Most notable of those would be that library mappings transform the library name to OS-specific variants (e.g. <code>mylib.dll</code> searches for <code>mylib.so</code> on Linux, <code>mylib.dylib</code> on OS X and so on) and take into account various other system specific conventions. There is also a <a href="http://www.mono-project.com/Config_DllMap" rel="nofollow">DLLMap</a> configuration extension which can be used if the default name translations are not enough. Usually it's convenient to have the same API of the binary lib exposed on different OSes, so that migrating between platforms only requires changes in the C code, not the .Net part.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      IMPROV MY PROGRAM EXPERI ON MY LINUX DESKTOP
-    </pattern>
-    <template>
-<![CDATA[<p>I've used by Ubuntu desktop for some coding sessions.  I haven't settled on an IDE, but if I'm not using gedit, I'll use emacs as my editor.  Sometimes I need to ssh to a remote server and edit from there, in which case emacs is preferred.  I'm just not the vi(m) type.</p><br/><br/><p>Maybe I'll try out Eclipse one day...</p><br/><br/><p>I love Compiz, but it does nothing for my coding experience.  It's just eye candy.  You can do desktop switching and Alt-Tab just fine without it.  Aside from that, Jeff Atwood's recommendations for good chair, multi-monitors, and simplistic background still apply for me.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      LIGHTWEIGHT DISTRO AND X WINDOW FOR DEVELOP
-    </pattern>
-    <template>
-<![CDATA[<p>I would recommend <a href="http://www.xubuntu.org/" rel="nofollow">Xubuntu</a>. It's based on Ubuntu/Debian and optimized for small footprint with the Xfce desktop environment. </p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      EXAMIN BERKELEY DB FILE FROM THE CLI
-    </pattern>
-    <template>
-<![CDATA[<p>Check out the <strong>db-utils</strong> package. If you use apt, you can install it with the following: <code>apt-get install db4.4-util</code></p><br/><br/><p>Additional links:</p><br/><br/><ul><br/><li><a href="http://rpmfind.net/linux/rpm2html/search.php?query=db-utils" rel="nofollow">http://rpmfind.net/linux/rpm2html/search.php?query=db-utils</a></li><br/><li><a href="http://packages.ubuntu.com/search?keywords=db4.4-util" rel="nofollow">http://packages.ubuntu.com/search?keywords=db4.4-util</a></li><br/><li><a href="http://www.linux.gr/cgi-bin/man/man2html?db4.4_dump+1" rel="nofollow">Man page of db4.4_dump</a></li><br/></ul><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      CONTROL SCRIPT ON UNIX
-    </pattern>
-    <template>
-<![CDATA[<p>Try Supervise, which is what qmail uses to keep track of it's services/startup applications:</p><br/><br/><p><a href="http://cr.yp.to/daemontools/supervise.html" rel="nofollow">http://cr.yp.to/daemontools/supervise.html</a></p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      CHECK IN LINUX WITH PYTHON IF A PROCESS IS STILL RUN
-    </pattern>
-    <template>
-<![CDATA[<p>Mark's answer is the way to go, after all, that's why the /proc file system is there. For something a little more copy/pasteable:</p><br/><br/><pre><code> &gt;&gt;&gt; import os.path<br/> &gt;&gt;&gt; os.path.exists("/proc/0")<br/> False<br/> &gt;&gt;&gt; os.path.exists("/proc/12")<br/> True<br/></code></pre><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      USER IN UBUNTU
-    </pattern>
-    <template>
-<![CDATA[<p>Without a home directory</p><br/><br/><pre><code>sudo useradd myuser<br/></code></pre><br/><br/><p>With home directory</p><br/><br/><pre><code>sudo useradd -m myuser<br/></code></pre><br/><br/><p>Then set the password</p><br/><br/><pre><code>sudo passwd myuser<br/></code></pre><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      THE WEB WHAT FONT SHOULD I USE TO CREAT AN EQUIVAL EXPERI CROSS PLATFORM
-    </pattern>
-    <template>
-<![CDATA[<p>Here are some good up-to-date listings of the most-installed fonts for PC, Mac, and Linux:</p><br/><br/><p><a href="http://www.codestyle.org/css/font-family/sampler-SansSerif.shtml" rel="nofollow">Sans serif font sampler and survey results</a></p><br/><br/><p><a href="http://www.codestyle.org/css/font-family/sampler-Serif.shtml" rel="nofollow">Serif font sampler and survey results</a></p><br/><br/><p>Hope this helps your decision!</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      VERSION CONTROL SYSTEM FOR MANAG HOME DIRECTORI
-    </pattern>
-    <template>
-<![CDATA[<p>I've had the same problem, and built a tool on top of Subversion that adds permission, ownership and secontext tracking, keeps the .svn directories out of the actually versioned trees, and adds a concept of layers so you can for example track all your config related to development, which you then only check out on machines you use for developing.</p><br/><br/><p>This has helped me organize my settings much better across the 50+ machines I log into.</p><br/><br/><p><a href="https://thomas.apestaart.org/thomas/trac/wiki/projects/savon" rel="nofollow">Here's the project page</a>.  It's still a little rough around the edges, but we also use it at work to version system configuration for our 60+ servers.</p><br/><br/><p>In general, any version control system that uses some sort of metadata files to track stuff is going to cause you pain as is when actually using it.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      UP TO D LIBFOUND ALTERN
-    </pattern>
-    <template>
-<![CDATA[<p>How about <a href="http://github.com/timburks/nufound" rel="nofollow">NuFound</a>?</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      UNMOUNT OF NFS MOUNT DIRECTORI
-    </pattern>
-    <template>
-<![CDATA[<p>You might try a lazy unmount. umount -l</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      DISK USAG GRAPHS CHART WITH CLI ONLI TOOL IN LINUX
-    </pattern>
-    <template>
-<![CDATA[<p>I would recommend <a href="http://munin.projects.linpro.no/" rel="nofollow">munin</a>. It is designed for exactly this sort of thing - graphing CPU usage, memory usage, disc-usage and such. sort of like MRTG (but MRTG is primarily aimed at graphing router's traffic, graphing anything but bandwidth with it is very hackish)</p><br/><br/><p>Writing Munin plugins is very easy (it was one of the projects goals). They can be written in almost anything (shell script, perl/python/ruby/etc, C, anything that can be execute and produce an output). The plugin output format is basically <code>disc1usage.value 1234</code>. And debugging the plugins is very easy (compared to MRTG)</p><br/><br/><p>I've set it up on my laptop to monitor disc-usage, bandwidth usage (by pulling data from my ISP's control panel, it graphs my two download "bins", uploads and newsgroup usage), load average and number of processes. Once I got it installed (currently slightly difficult on OS X, but it's trivial on Linux/FreeBSD), I had written a plugin in a few minutes, and it worked, first time!</p><br/><br/><p>I would describe how it's setup, but the munin site will do that far better than I could!</p><br/><br/><p>There's an example installation <a href="http://munin.ping.uio.no/" rel="nofollow">here</a></p><br/><br/><p>Some alternatives are nagios and cacti. You could also write something similar using rrdtool. Munin, MRTG and Cacti are basically all far-nicer-to-use systems based around this graphing tool.</p><br/><br/><p>If you want something really, really simple, you could do..</p><br/><br/><pre><code>import os<br/>import time<br/>while True:<br/>    disc_usage = os.system("df -h / | awk '{print $3}'")<br/>    log = open("mylog.txt")<br/>    log.write(disc_usage + "\n")<br/>    log.close()<br/>    time.sleep(60*5)<br/></code></pre><br/><br/><p>Then..</p><br/><br/><pre><code>f = open("mylog.txt")<br/>lines = f.readlines()<br/><br/># Convert each line to a float number<br/>lines = [float(cur_line) for cur_line in lines]<br/><br/># Get the biggest and smallest<br/>biggest = max(lines)<br/>smallest = min(lines)<br/><br/>for cur_line in lines:<br/>    base = (cur_line - smallest) + 1 # make lowest value 1<br/>    normalised = base / (biggest - smallest) # normalise value between 0 and 1<br/>    line_length = int(round(normalised * 28)) # make a graph between 0 and 28 characters wide<br/>    print "#" * line_length<br/></code></pre><br/><br/><p>That'll make a simple ascii graph of the disc usage. I <em>really really</em> don't recommend you use something like this. Why? The log file will get bigger, and bigger, and bigger. The graph will get progressively slower to graph. RRDTool uses a rolling-database system to store it's data, so the file will never get bigger than about 50-100KB, and it's consistently quick to graph as the file is a fixed length.</p><br/><br/><p>In short. If you want something to easily graph almost anything, use <a href="http://munin.projects.linpro.no/" rel="nofollow">munin</a>. If you want something smaller and self-contained, write something with RRDTool.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      MORE THAN 3GB OF VIDEO FRAM IN MEMORI ON 32 BIT OS
-    </pattern>
-    <template>
-<![CDATA[<p>How about creating a RAM drive and loading the file into that ... assuming the RAM drive supports the BIGMEM stuff for you.</p><br/><br/><p>You could use multiple processes: each process loads a view of the file as a shared memory segment, and the player process then maps the segments in turn as needed.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      WAY TO OPEN A FOLDER WINDOW IN LINUX
-    </pattern>
-    <template>
-<![CDATA[<p>os.system('xdg-open "%s"' % foldername)</p><br/><br/><p>xdg-open can be used for files/urls also</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      LINQ WITH A MYSQL DATABAS ON MONO
-    </pattern>
-    <template>
-<![CDATA[<p>The only (free) linq provider for MySql is <a href="http://code2code.net/DB%5FLinq/" rel="nofollow">DbLinq</a>, and I believe it is a long way from production-ready.</p><br/><br/><p>There is also <a href="http://www.devart.com/mysqlnet/" rel="nofollow">MyDirect.Net</a> which is commercial, but I have heard mixed reviews of it's capability.</p><br/><br/><p>I've read that MySql will be implementing the Linq to Entities API for the 5.3 version of the .net connector, but I don't know if there's even a timeline for that. In fact, MySql has been totally silent about Entity Framework support for months.</p><br/><br/><p><hr /></p><br/><br/><p>Addendum: The latest release of the MySql Connector/Net 6.0 has support for the EF according to the release notes. I have no idea how stable/useful this is, so I'd love to hear from anybody who have tried it.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      HARDWAR TO BUY FOR A NEW LINUX SERVER SYSTEM
-    </pattern>
-    <template>
-<![CDATA[<p>Check this out: removed newegg link, author choose similar hardware. See original post</p><br/><br/><p>This machine humming along at my house right now. Ubuntu 8.04.1 Server had no problems with any of the hardware. The only reason I have a IDE card was for legacy disks, you could use new disks and use the multiple SATA ports on it. 2GB is fine for my home server though you could go for way more. No case or hard disks since I used what I already had. Speedy machine and includes AMD's SVM instruction so you can get hardware virtualization support. To top it all off, the motherboard has just about everything on-board you could ever want including DSUB, DVI, and HDMI.</p><br/><br/><p>Update: Machine runs Samba, Apache HTTPD, MySQL, PHP, STunnel+Squid for work proxy all without breaking a sweat. No X. Every piece of hardware worked. Out of the box. The only minor tweak was to lm_sensors to name the temp values. That's it. I built and installed the machine myself.</p><br/><br/><p>Update2: Since you don't want to run X, the video card is moot. ANY card will work with minimal text-mode for installation and console access. Once the machine is installed just leave it connected to your network in a closet somewhere. Headless.</p><br/>]]>    </template>
-  </category>
-  <category>
-    <pattern>
-      OPTION AVAIL TO GET CRON S RESULT AND HOW TO SET THEM UP
-    </pattern>
-    <template>
-<![CDATA[<p>You could chuck file redirection onto either the command shown or the actual command in the crontab for both stdout and stderr - like <code>command &gt; /tmp/log.txt 2&gt;&amp;1</code> .</p><br/><br/><p>If you want several users to receive this log, you could insert a <code>MAILTO=nameofmailinglist</code> at the top of you cron file.</p><br/>]]>    </template>
-  </category>
-</aiml>
